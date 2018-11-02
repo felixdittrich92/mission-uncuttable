@@ -1,0 +1,258 @@
+\documentclass[twoside]{report}
+
+% ------
+% Umlaute
+\usepackage{ifluatex,ifxetex}
+\ifluatex
+  \usepackage{fontspec}
+\else
+  \ifxetex
+    \usepackage{fontspec}
+  \else
+    \usepackage{selinput}
+    \SelectInputMappings{
+      adieresis={ä},
+      germandbls={ß},
+    }
+    \usepackage[T1]{fontenc}
+    %\usepackage{textcomp}% optional
+    %\usepackage{lmodern}
+  \fi
+\fi
+
+% ------
+% Paper auf Deutsch
+\usepackage[ngerman]{babel}
+
+
+
+% ------
+% Page layout
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry}
+\usepackage[font=it]{caption}
+\usepackage{paralist}
+%\usepackage{multicol}
+
+
+% ------
+% Abstract
+\usepackage{abstract}
+	\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+	\renewcommand{\abstracttextfont}{\normalfont\small\itshape}
+
+
+% ------
+% Titling (section/subsection)
+\usepackage{titlesec}
+\renewcommand\thesection{\Roman{section}}
+\titleformat{\section}[block]{\Large\scshape\bfseries}{\thesection.}{1em}{}
+\setcounter{secnumdepth}{3}
+
+% ------
+% Tabellen über Seitenumbrüche hinweg
+\usepackage{longtable}
+
+% ------
+% Header/footer
+\usepackage{fancyhdr}
+	\pagestyle{fancy}
+	\fancyhead{}
+	\fancyfoot{}
+	\fancyhead[C]{Projektdokumentation $\bullet$ PROJEKTNAME $\bullet$ SS17$+$WS17/18}
+	\fancyfoot[RO,LE]{}
+
+
+% ------
+% Clickable URLs (optional)
+% \usepackage{hyperref}
+
+% ------
+% Literaturverweise mit Bibtex einbinden
+\usepackage[authoryear,sectionbib,round]{natbib}
+
+% ------
+% Bilder laden
+\usepackage[pdftex]{graphicx}
+
+% ------
+% Maketitle metadata
+\title{\vspace{-5mm}%
+	\fontsize{24pt}{10pt}\selectfont
+	\textbf{Projektdokumentation}
+	}	
+\author{%
+        % alle Autoren hier listen
+        % 
+	\large
+	\textsc{Autor I -- E-Mail} \\[2mm]
+	\textsc{Autor II -- E-Mail} \\[2mm]
+	\normalsize	HTWK Leipzig 
+	}
+\date{}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+% -------
+% Titel und Abstract über beide Spalten
+%\twocolumn[
+%\begin{@twocolumnfalse}
+
+\maketitle
+\thispagestyle{fancy}
+
+\tableofcontents
+
+%%%%
+%%%% Die Struktur des Dokuments bitte nicht aendern!!!
+%%%%
+
+\section{Anforderungsspezifikation}
+
+\subsection{Initiale Kundenvorgaben}
+
+Maecenas sed ultricies felis. Sed imperdiet dictum arcu a egestas. 
+In sapien ante, ultricies quis pellentesque ut, fringilla id sem. Proin justo libero, dapibus consequat auctor at, euismod et erat. Sed ut ipsum erat, iaculis vehicula lorem. Cras non dolor id libero blandit ornare. Pellentesque luctus fermentum eros ut posuere. Suspendisse rutrum suscipit massa sit amet molestie. Donec suscipit lacinia diam, eu posuere libero rutrum sed. Nam blandit lorem sit amet dolor vestibulum in lacinia purus varius. Ut tortor massa, rhoncus ut auctor eget, vestibulum ut justo.
+
+
+\subsection{Produktvision}
+
+
+Quisque vel arcu eget sapien euismod tristique rhoncus eu mauris. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras ligula lacus, dictum id scelerisque nec, venenatis vitae magna. Cras tristique porta elit, non tincidunt ligula placerat lobortis. Pellentesque quam enim, mattis in cursus eu, blandit et massa. Mauris aliquet turpis blandit elit vehicula sed posuere lectus facilisis. Donec blandit adipiscing tortor, quis lobortis purus eleifend vel. Nam a tellus at magna scelerisque blandit vel nec erat.
+
+
+% Das hier ist ein Absatz, der die Grafik in Abbildung~\ref{fig:bild1} detailliert erläutert, erklärt und interpretiert.
+
+% \begin{figure}[b]
+%   \centering
+%   \includegraphics[width=4.5cm]{bspbild1.png}
+%   \caption{Beispiel für ein einspaltiges Bild}
+%   \label{fig:bild1}
+% \end{figure}
+
+
+\subsection{Liste der funktionalen Anforderungen}
+
+XXX
+
+%
+% soll der Inhalt dieser Subsection in einer separaten Datei
+% (z.B. listefunktional.tex) liegen, dann kann dies mit dem
+% folgenden Kommando geschehen.
+%
+% \input{listefunktional}
+
+\subsection{Liste der nicht-funktionalen Anforderungen}
+
+XXX
+
+\subsection{Weitere Zuarbeiten zum Produktvisions-Workshop}
+
+XXX
+
+\subsubsection{Zuarbeit von Autor X}
+XXX
+\subsubsection{Zuarbeit von Autor Y}
+XXX
+
+\subsection{Liste der Kundengespräche mit Ergebnissen}
+
+XXX
+
+
+
+\section{Architektur und Entwurf}
+
+\subsection{Zuarbeiten der Teammitglieder}
+
+XXX
+
+\subsection{Entscheidungen des Technologieworkshops}
+
+XXX
+
+\subsection{Überblick über Architektur}
+
+XXX
+
+\subsection{Definierte Schnittstellen}
+
+XXX
+
+\subsection{Liste der Architekturentscheidungen}
+
+XXX (bewusste und unbewusste Entscheidungen mit zeitlicher Einordnung)
+
+
+
+\section{Prozess- und Implementationsvorgaben}
+
+\subsection{Definition of Done}
+
+XXX
+
+\subsection{Coding Style}
+
+XXX
+
+\subsection{Zu nutzende Werkzeuge}
+
+XXX
+
+
+%%%%%%%%%%%%
+%% Abschnitt mit den Sprints beginnt hier
+%%%%%%%%%%%%
+
+\section{Sprint 1}
+
+\input{sprint1}
+
+\section{Sprint 2}
+
+%% \input{sprint2}
+
+%%%%%% weitere Sprints analog
+
+
+\section{Dokumentation}
+
+\subsection{Handbuch}
+
+XXX
+
+\subsection{Installationsanleitung}
+
+XXX
+
+\subsection{Software-Lizenz}
+
+XXX
+
+
+\section{Projektabschluss}
+
+\subsection{Protokoll der Abnahme und Inbetriebnahme beim Kunden}
+
+XXX
+
+\subsection{Präsentation auf der Messe}
+
+Poster, Bericht
+
+\subsection{Abschließende Einschätzung durch Product-Owner}
+
+XXX
+
+\subsection{Abschließende Einschätzung durch Software-Architekt}
+
+XXX
+
+\subsection{Abschließende Einschätzung durch Team-Manager}
+
+XXX
+
+\end{document}
