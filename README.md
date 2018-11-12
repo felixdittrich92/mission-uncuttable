@@ -4,3 +4,5 @@
 
 - Sascha Rittig - *Product Owner*
 - Tim Jeske - *Software Architect*
+
+## How to freeze
