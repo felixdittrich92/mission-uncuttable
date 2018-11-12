@@ -5,6 +5,6 @@
 - Sascha Rittig - *Product Owner*
 - Tim Jeske - *Software Architect*
 - Felix Dittrich
-- Maximilian Fornaçon
-
+- Clemens Zwinzscher
+- Maximilian Fornacon
 ## How to freeze
