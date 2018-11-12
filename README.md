@@ -7,4 +7,5 @@
 - Felix Dittrich
 - Clemens Zwinzscher
 - Maximilian Fornacon
+- Johannes Müller
 ## How to freeze
