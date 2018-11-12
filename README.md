@@ -2,5 +2,5 @@
 
 ## Team
 
-- Product Owner: Sascha Rittig
-- Software Architect: Tim Jeske
+- Sascha Rittig - *Product Owner*
+- Tim Jeske - *Software Architect*
