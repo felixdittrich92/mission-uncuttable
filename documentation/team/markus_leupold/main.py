@@ -9,7 +9,9 @@ def main():
         print('usage: width height')
         sys.exit()
 
-    gui = grid_gui.GridGui(grid_model.GridModel(int(args[0]), int(args[1])))
+    gui = grid_game_gui.GridGameGui(
+        grid_game_model.GridGameModel(int(args[0]), int(args[1]))
+    )
     gui.mainloop()
 
 if __name__ == '__main__':

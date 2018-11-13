@@ -1,6 +1,6 @@
 import sys
 
-class GridModel:
+class GridGameModel:
     '''
     Describes a grid of boolean values for a game where the challenge is
     to switch the color of all boxes from white to black. If one box is
@@ -49,7 +49,7 @@ class GridModel:
 
         print('+' + '--' * self.__width + '+')  ## borderline
 
-    def add_grid_model_observer(self, grid_model_observer):
+    def add_grid_game_model_observer(self, grid_model_observer):
         self.__observer_list.append(grid_model_observer)
 
     def __notify_observers_grid_changed(self):
