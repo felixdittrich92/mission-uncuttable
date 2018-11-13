@@ -1,4 +1,4 @@
-import grid__game_model
+import grid_game_model
 import grid_game_gui
 import sys
 
