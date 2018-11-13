@@ -1,4 +1,4 @@
-# The Mission Uncuttable Project
+﻿# The Mission Uncuttable Project
 
 ## Team
 
@@ -7,4 +7,6 @@
 - Felix Dittrich
 - Clemens Zwinzscher
 - Maximilian Fornacon
+- Johannes Müller
+- Julian Oliver Böttcher
 ## How to freeze
