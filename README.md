@@ -1,4 +1,4 @@
-﻿# The Mission Uncuttable Project
+# The Mission Uncuttable Project
 
 ## Team
 
@@ -9,4 +9,5 @@
 - Maximilian Fornacon
 - Johannes Müller
 - Julian Oliver Böttcher
+- Valentin Ackva
 ## How to freeze
