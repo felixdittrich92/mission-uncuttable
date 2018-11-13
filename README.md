@@ -10,4 +10,5 @@
 - Johannes Müller
 - Julian Oliver Böttcher
 - Valentin Ackva
+- Alexander Bonin
 ## How to freeze
