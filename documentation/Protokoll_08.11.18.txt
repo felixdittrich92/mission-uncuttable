@@ -1,0 +1,62 @@
+# Protokoll - 08.11.18
+
+  Protokollanten: Maximilian Fornacon, Julian Oliver Böttcher
+  Es fehlen: Felix Dittrich
+
+## Abstimmung über Produktnamen
+  * jeder hat zwei Stimmen
+  Ergebnis: UbiCut
+
+## Diskussion über Bedürfnisse
+  * Vereinfachen von Schneiden
+  * Tracking
+  * Arbeitsersparnis
+  * Sharing? (Opal, YouTube, Mediaserver, etc.)
+  * Sicherung, Backup
+  * Weiterarbeiten an anderem Zeitpunkt
+  * Suchfunktion?
+
+## Funktionale Anforderungen
+  Siehe Präsentation
+  Nicht-funktionale Anforderungen
+  Siehe Präsentation
+
+##Produkt
+  * Schneiden, Bearbeiten, Exportieren, Importieren
+  * Tracking
+  * Texterstellung
+  * Footererstellung
+  * Speichern
+  * Automatisierter Schnitt
+  * Undo, Redo
+  * Audio recording
+  * Folientagging
+  * Tagging
+  * Verpixelung
+  * Korrekturen
+  * Farbdeseignwechsel
+  * Gliederung
+
+## 3 GUI Varianten
+  Siehe Präsentation
+  Ergebnis: Mischung aus 1. Und 3. Vorschlag
+  1. Ist ein wenig unübersichtlich
+  3. ist ein wenig zu einfach
+
+## Erweiterungspotential
+  Siehe Präsentation
+
+## Zielgruppe
+  Siehe Präsentation
+  Mindestziel = funktionierendes Schnittprogramm
+  Zielgruppe ist DAU
+
+##Alleinstellungsmerkmal
+  Siehe Präsentation
+
+##Konkurrenz
+  Lecture Capture als Konkurrent
+  Authoring on the fly Freiburg(Automatisierung?)
+  Magix ständig erweiterbar, Gefahr!
+
+Kosten werden beim n�chsten mal besprochen
