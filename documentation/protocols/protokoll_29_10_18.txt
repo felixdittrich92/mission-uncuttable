@@ -1,0 +1,34 @@
+# Protokoll erstes Treffen
+
+Protokollant: Clemens Zwinzscher
+Datum: 29.10.2018
+gefehlt: Valentin
+
+## Programmieraufgabe in Python
+    * kleines Spiel mit GUI in 2 Wochen programmieren
+
+## Ideen Projekt
+    * bearbeitetes speichern und später weiter bearbeiten (eigenes Dateiformat?)
+    * 3 Videospuren (Weicker, Folie, Visualizer)
+    * Audio zuschneiden -> extra Audiospur
+    * Aufnahmeknopf -> Mikrofon erkennen
+    * Folie länger einblenden / externes Bild
+    * Browser mit eingelesenen Videos -> drag & drop
+    * Gliederung (aus Folien auslesen?) -> Gliederungspunkt unten einblenden
+    * Daten analysieren und einteilen (Folie/Tafel/Visualizer) und automatisch in einzelne Szenen schneiden
+    * Leiste mit Werkzeugen (Zoombutton, Schnitt)
+    * kleines Fenster in der Ecke
+    * Originalvideo einblendbar
+    * alles automatisieren
+
+## git
+    * master branch (was der Kunde sieht)
+    * development branch (code muss trotzdem lauffähig sein)
+    * bei neuer Aufgabe(ticket): neue branch aus development (nach feature benennen) -> merge mit development
+    * vor push -> tests
+    * release: aus master
+
+## Programmierrichtlinien
+    * es wird noch eine Vorgabe geben (zb variablennamen) -> linter?
+    * Kommentare und git commit Beschreibung: auf englisch
+    * Dokumentation schreiben -> für jede Methode Beschreibung und Parameter
