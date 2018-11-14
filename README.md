@@ -12,4 +12,5 @@
 - Valentin Ackva
 - Alexander Bonin
 - Markus Leupold
+- Jeremy Risy
 ## How to freeze
