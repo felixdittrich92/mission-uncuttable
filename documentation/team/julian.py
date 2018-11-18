@@ -1,9 +1,16 @@
 from tkinter import *
 from tkinter import messagebox
 
-"""Wie schon gesagt kann man das gesamte Programm noch verbessern wie es zum Beispiel in noch mehr Unterprogramme 
+
+"""
+Verbesserungsvorschläge:
+- Verwendung von Klassen (eine Klasse pro Datei)
+- Trennung in Datenmodell, Logik und Darstellung
+- +
+Wie schon gesagt kann man das gesamte Programm noch verbessern wie es zum Beispiel in noch mehr Unterprogramme 
 gleidern, allgemeiner schreiben sodass man es besser wiederverwenden kann und mit Schleifen codearmer machen kann.
-Allerdings fehlt mir die Zeit dafür."""
+Allerdings fehlt mir die Zeit dafür.
+"""
 
 def selectgamesize():
     gamesize = IntVar ()
