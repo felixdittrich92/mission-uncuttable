@@ -1,6 +1,14 @@
 from tkinter import *
 from tkinter import messagebox
 
+"""
+- mehrere Klassen verwenden
+- nur eine Klasse pro Datei (außer private Klassen)
+- Trennung von Datenmodell, Logik und Darstellungs
+- Verwendung von Schleifen, Arrays und allgemein gültigen Funktionen zur Reduzierung des Codes
+- Code abstrahieren und wiederverwenden!!!
+- bessere Logik überlegen
+"""
 
 def selectgamesize():
     gamesize = IntVar ()
