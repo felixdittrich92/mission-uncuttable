@@ -2,6 +2,11 @@ import grid_game_model
 import grid_game_gui
 import sys
 
+"""
+Ist gut gemacht, brauche ich nichts groß bemängeln, außer fehlender Funktionalität
+(keine Gewinnnachricht, kein Restartbutton, keine Größenauswahl in der GUI)
+und MVC pattern sollte nochmal genau angeguckt werden
+"""
 
 def main():
     args = sys.argv[1:]
