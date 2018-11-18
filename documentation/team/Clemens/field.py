@@ -1,5 +1,9 @@
 class Field:
 
+    """
+    Feld sollte keine GUI Elemente besitzen (Buttons)
+    stattdessen Booleans
+    """
     def __init__(self, size):
         self.size = size
         self.buttons = []

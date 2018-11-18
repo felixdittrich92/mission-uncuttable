@@ -2,7 +2,9 @@ import tkinter as tk
 from tkinter import messagebox
 from field import Field
 
-
+"""
+Logik sollte nicht in der Darstellung sein
+"""
 class Window(tk.Frame):
 
     def __init__(self, master=None):
