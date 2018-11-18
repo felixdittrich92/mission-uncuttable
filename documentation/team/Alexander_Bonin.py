@@ -1,5 +1,16 @@
 from tkinter import *
 
+"""
+Verbesserungsvorschläge:
+- mehrere Klassen verwenden
+- nur eine Klasse pro Datei (außer private Klassen)
+- Trennung von Datenmodell, Logik und Darstellung
+- Statt 1 und 2 als Werte zu benutzen eignen sich Booleans
+  diese können auch einfacher invertiert werden (not)
+- Methodennamen sollten noch eindeutiger bzw. ausdrücklicher sein
+"""
+
+# constanten groß und oben zu schreiben ist gut
 WINDOW_SIZE = 600  # pixels
 GRID_LINE_WIDTH = 2  # pixels
 
