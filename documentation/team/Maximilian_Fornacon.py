@@ -2,6 +2,12 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 
+"""
+Verbesserungsvorschläge:
+- nur eine Klasse pro Datei (außer private Klassen)
+- Trennung von Datenmodell, Logik und Darstellung
+- Code sieht grundlegend gut aus
+"""
 
 class MainWindow(QtWidgets.QMainWindow):
 
