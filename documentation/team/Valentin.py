@@ -1,8 +1,11 @@
 from tkinter import Tk, Button, messagebox
-
+"""
+Logik, Modell und Darstellung sollten getrennt sein
+"""
 class Board:
 
-    size = 4
+    size = 4 # ? ich denke das ist ein unnötiger Ausdruck
+    # Attribute eine Klasse sollten in der _init_ Methode initialisiert werden
 
     def __init__(self, size):
         self.size=size
@@ -13,7 +16,7 @@ class Board:
             for x in range(size):
                 self.fields[x, y] = self.empty
 
-class GUI:
+class GUI: #  nur eine Klasse pro Datei, außer es handelt sich um eine private Klasse
 
     def __init__(self, size):
         self.app = Tk()
@@ -37,7 +40,7 @@ class GUI:
         button3.grid(row=self.board.size + 1, column=1, sticky="WE")
         self.update()
 
-    def three(self):
+    def three(self): # Feld sollte neu erstellt werden
         if self.board.size == 4:
             self.app.destroy()
             self.gui = GUI(3)
@@ -46,8 +49,8 @@ class GUI:
 
     def four(self):
         if self.board.size == 3:
-            self.app.destroy()
-            self.gui = GUI(4)
+            self.app.destroy() # es sollte nur das Feld neu erstellt und die Darstellung aktualisiert werden
+            self.gui = GUI(4) # die Gui sollte nicht neu erstellt werden
         else:
             return None
 
@@ -60,7 +63,7 @@ class GUI:
         i = 0
         for x in range(self.board.size):
             for y in range(self.board.size):
-                if self.buttons[x, y].cget('bg') == 'black':
+                if self.buttons[x, y].cget('bg') == 'black': # Logic auf der Darstellung ist nicht gut
                     i = i +1
                 else:
                     break
