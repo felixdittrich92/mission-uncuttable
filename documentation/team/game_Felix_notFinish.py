@@ -4,7 +4,15 @@ import subprocess
 
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication, QSizePolicy,)
 
-
+"""
+Verbesserungsvorschläge:
+- mehrere Klassen verwenden
+- nur eine Klasse pro Datei (außer private Klassen)
+- Trennung von Datenmodell, Logik und Darstellung
+- Verwendung von Schleifen, Arrays und allgemein gültigen Funktionen zur Reduzierung des Codes
+- Code abstrahieren und wiederverwenden!!!
+- bessere Logik überlegen
+"""
 class basicWindow(QWidget):
 
     def __init__(self):
