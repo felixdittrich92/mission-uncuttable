@@ -1,0 +1,55 @@
+# IDE Files
+.idea
+
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+MANIFEST
+
+# Pyinstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unittest / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Sphinx Documentation
+docs/_build/
+
+# Pybuilder
+target/
+
+# pyenv
+.python-version
+
+# Enviroments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
