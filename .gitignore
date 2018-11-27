@@ -1,5 +1,6 @@
 # IDE Files
 .idea
+.vscode
 
 # Byte-compiled
 __pycache__/
