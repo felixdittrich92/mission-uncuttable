@@ -17,9 +17,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 dist/
-doc/_build
 MANIFEST
 
 # Pyinstaller
@@ -43,7 +41,7 @@ nosetests.xml
 .pytest_cache/
 
 # Sphinx Documentation
-docs/_build/
+doc/_build/
 
 # Pybuilder
 target/
