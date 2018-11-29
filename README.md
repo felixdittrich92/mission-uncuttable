@@ -15,6 +15,10 @@
 - Jeremy Risy
 
 ## Setup
+```
+git clone https://gitlab.imn.htwk-leipzig.de/weicker/mission-uncuttable.git
+cd mission-uncuttable/code/
+```
 Enviroment erschaffen:
 ```
 python3 -m venv venv
@@ -29,7 +33,6 @@ call venv\scripts\activate.bat
 ```
 Bibliotheken installieren:
 ```
-pip install fbs PyQt5==5.9.2 PyInstaller==3.4
 pip3 install -r requirements.txt
 
 ```
@@ -46,5 +49,10 @@ fbs freeze
 ## Einen Installer für die eigene Plattform erstellen
 ```
 fbs installer
+
+```
+## Vor einem Commit
+```
+pip3 freeze > requirements.txt
 
 ```
