@@ -6,6 +6,7 @@ before_script:
   - pip3 install --upgrade pip setuptools
   - ls
   - cd code/
+  - apk add py3-qt5
   - pip3 install wheel
   - pip3 install -r requirements.txt
 

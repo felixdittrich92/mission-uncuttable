@@ -10,7 +10,6 @@ pefile==2018.8.8
 pluggy==0.8.0
 py==1.7.0
 PyInstaller==3.4
-PyQt5==5.9.2
 pytest==4.0.1
 sip==4.19.8
 six==1.11.0
