@@ -1,8 +1,13 @@
 # IDE Files
+idea/*
+vscode/*
 .idea
 .vscode
+*.DS_Store
+.settings
 
 # Byte-compiled
+**/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -14,6 +19,7 @@ __pycache__/
 .Python
 build/
 dist/
+doc/_build
 MANIFEST
 
 # Pyinstaller
