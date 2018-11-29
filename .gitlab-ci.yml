@@ -1,4 +1,5 @@
 before_script:
+  - $alias pip="pip3"
   - apk add --update --no-cache python3-dev
   - python3 -m ensurepip
   - rm -r /usr/lib/python*/ensurepip
