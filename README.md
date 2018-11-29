@@ -34,6 +34,7 @@ call venv\scripts\activate.bat
 ```
 Bibliotheken installieren:
 ```
+pip3 install wheel
 pip3 install -r requirements.txt
 
 ```
