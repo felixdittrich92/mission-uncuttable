@@ -17,6 +17,7 @@
 ## Setup
 ```
 git clone https://gitlab.imn.htwk-leipzig.de/weicker/mission-uncuttable.git
+git checkout development
 cd mission-uncuttable/code/
 ```
 Enviroment erschaffen:
