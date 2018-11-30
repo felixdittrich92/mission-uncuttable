@@ -17,6 +17,8 @@ test:
 production:
   type: deploy
   script:
+  - pip3 install PyQt5==5.9.2
+  - pip3 install sip==4.19.8
   - ln -s /lib/libc.musl-x86_64.so.1 ldd
   - ln -s /lib /lib64  
   - fbs freeze
