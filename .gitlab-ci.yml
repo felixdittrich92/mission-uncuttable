@@ -17,7 +17,7 @@ test:
 production:
   type: deploy
   script:
-  - apk add ruby ruby-dev rubygems build-essential
+  - apk add ruby ruby-dev rubygems
   - gem install --no-ri --no-rdoc fpm
   - fbs freeze
   - fbs installer
