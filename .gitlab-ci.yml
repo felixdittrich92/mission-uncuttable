@@ -8,7 +8,7 @@ before_script:
   - cd code/
   - apk add py3-qt5
   - pip3 install wheel
-  - pip3 install -r requirements.txt
+  - pip3 install -r production.txt
 
 test:
   script:
