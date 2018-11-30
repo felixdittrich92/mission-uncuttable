@@ -17,7 +17,6 @@ test:
 production:
   type: deploy
   script:
-  - pip3 install PyQt5
   - pip3 install sip
   - ln -s /lib/libc.musl-x86_64.so.1 ldd
   - ln -s /lib /lib64  
