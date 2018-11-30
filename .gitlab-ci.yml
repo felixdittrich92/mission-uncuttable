@@ -17,6 +17,5 @@ test:
 production:
   type: deploy
   script:
-  - gem install --no-ri --no-rdoc fpm
   - fbs freeze
   - fbs installer
