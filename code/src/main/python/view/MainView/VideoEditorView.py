@@ -2,12 +2,16 @@ from fbs_runtime.application_context import ApplicationContext
 from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtWidgets
 import sys
+import os
 
+print("cwd:", os.getcwd())
+print("listdir:", os.listdir("."))
+print("Ist da?", os.path.isfile("main_window.ui"))
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        uic.loadUi('src/main/python/view/MainView/main_window.ui', self)
+        uic.loadUi('view/MainView/main_window.ui', self)
 
 
 class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
