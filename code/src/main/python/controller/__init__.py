@@ -1,1 +1,1 @@
-from .videoeditor_controller import VideoEditorController
+from controller.videoeditor_controller import VideoEditorController
