@@ -11,11 +11,16 @@ before_script:
   - pip3 install -r production.txt
 
 test:
+  stage: test
+  tags:
+    - docker-in-docker
   script:
   - pytest
 
 production:
   type: deploy
+  tags:
+    - docker-in-docker
   script:
   - pip3 install sip
   - ln -s /lib/libc.musl-x86_64.so.1 ldd
