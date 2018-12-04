@@ -22,7 +22,6 @@ production:
   tags:
     - docker-in-docker
   script:
-  - pip3 install sip
   - ln -s /lib/libc.musl-x86_64.so.1 ldd
   - ln -s /lib /lib64  
   - fbs freeze
