@@ -6,11 +6,16 @@ before_script:
   - pip3 install -r requirements.txt
 
 test:
+  stage: test
+  tags: 
+    - docker-in-docker
   script:
   - pytest
 
 production:
   type: deploy
+  tags:
+    - docker-in-docker
   script:
   - apt-get install ruby ruby-dev rubygems build-essential
   - gem install --no-ri --no-rdoc fpm
