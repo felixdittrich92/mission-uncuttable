@@ -104,6 +104,30 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuProgramm">
+    <property name="title">
+     <string>Programm</string>
+    </property>
+    <addaction name="actionEinstellungen"/>
+   </widget>
+   <widget class="QMenu" name="menuProjekt">
+    <property name="title">
+     <string>Projekt</string>
+    </property>
+    <addaction name="actionneu"/>
+    <addaction name="action_ffnen"/>
+    <addaction name="actionspeichern"/>
+    <addaction name="actionspeichern_als"/>
+    <addaction name="actionProjekteinstellugen"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+   </widget>
+   <addaction name="menuProgramm"/>
+   <addaction name="menuProjekt"/>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -114,6 +138,36 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionEinstellungen">
+   <property name="text">
+    <string>Einstellungen</string>
+   </property>
+  </action>
+  <action name="actionneu">
+   <property name="text">
+    <string>neu</string>
+   </property>
+  </action>
+  <action name="action_ffnen">
+   <property name="text">
+    <string>öffnen</string>
+   </property>
+  </action>
+  <action name="actionspeichern">
+   <property name="text">
+    <string>speichern</string>
+   </property>
+  </action>
+  <action name="actionspeichern_als">
+   <property name="text">
+    <string>speichern als</string>
+   </property>
+  </action>
+  <action name="actionProjekteinstellugen">
+   <property name="text">
+    <string>Projekteinstellugen</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
