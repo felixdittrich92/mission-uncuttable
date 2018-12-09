@@ -1,30 +1,17 @@
 <RCC>
-  <qresource prefix="icon">
-    <file>back.svg</file>
-    <file>fast-forward.svg</file>
-    <file>next.svg</file>
-    <file>next-1.svg</file>
-    <file>pause.svg</file>
-    <file>play-button.svg</file>
-    <file>previous.svg</file>
-    <file>rewind.svg</file>
-    <file>speaker.svg</file>
-    <file>stop.svg</file>
-    <file>up-arrow.svg</file>
-  </qresource>
-  <qresource prefix="icon png">
-    <file>../preview_buttons_png/back.png</file>
-    <file>../preview_buttons_png/down-arrow.png</file>
-    <file>../preview_buttons_png/fast-forward.png</file>
-    <file>../preview_buttons_png/next.png</file>
-    <file>../preview_buttons_png/next-1.png</file>
-    <file>../preview_buttons_png/pause.png</file>
-    <file>../preview_buttons_png/play-button.png</file>
-    <file>../preview_buttons_png/plus.png</file>
-    <file>../preview_buttons_png/previous.png</file>
-    <file>../preview_buttons_png/rewind.png</file>
-    <file>../preview_buttons_png/speaker.png</file>
-    <file>../preview_buttons_png/stop.png</file>
-    <file>../preview_buttons_png/up-arrow.png</file>
+  <qresource prefix="icons png">
+    <file>png/013-previous.png</file>
+    <file>png/012-up-arrow.png</file>
+    <file>png/011-rewind.png</file>
+    <file>png/010-speaker.png</file>
+    <file>png/009-down-arrow.png</file>
+    <file>png/008-fast-forward.png</file>
+    <file>png/007-next-1.png</file>
+    <file>png/006-back.png</file>
+    <file>png/005-plus.png</file>
+    <file>png/004-next.png</file>
+    <file>png/003-stop.png</file>
+    <file>png/002-play-button.png</file>
+    <file>png/001-pause.png</file>
   </qresource>
 </RCC>

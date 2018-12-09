@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QSplitter" name="horizontalSplitter">
       <property name="sizeIncrement">
        <size>
@@ -54,11 +54,17 @@
         </property>
        </widget>
        <widget class="QFrame" name="toprightFrame">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>200</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="accessibleDescription">
+         <string/>
         </property>
         <property name="autoFillBackground">
          <bool>false</bool>
@@ -73,26 +79,142 @@
          <enum>QFrame::Raised</enum>
         </property>
         <widget class="QPushButton" name="pushButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
-           <x>260</x>
-           <y>230</y>
-           <width>89</width>
-           <height>25</height>
+           <x>300</x>
+           <y>330</y>
+           <width>28</width>
+           <height>24</height>
           </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="toolTip">
           <string/>
+         </property>
+         <property name="statusTip">
+          <string/>
+         </property>
+         <property name="whatsThis">
+          <string/>
+         </property>
+         <property name="accessibleName">
+          <string notr="true"/>
+         </property>
+         <property name="accessibleDescription">
+          <string/>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../icons/preview_buttons/resource.qrc">
+           <normaloff>:/icons png/png/002-play-button.png</normaloff>
+           <normalon>:/icons png/png/001-pause.png</normalon>:/icons png/png/002-play-button.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string notr="true"/>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="geometry">
+          <rect>
+           <x>342</x>
+           <y>330</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
          </property>
          <property name="text">
           <string/>
          </property>
          <property name="icon">
           <iconset resource="../../../icons/preview_buttons/resource.qrc">
-           <normaloff>:/icon/play-button.svg</normaloff>
-           <normalon>:/icon/pause.svg</normalon>:/icon/play-button.svg</iconset>
+           <normaloff>:/icons png/png/008-fast-forward.png</normaloff>:/icons png/png/008-fast-forward.png</iconset>
          </property>
          <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="geometry">
+          <rect>
+           <x>259</x>
+           <y>330</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../icons/preview_buttons/resource.qrc">
+           <normaloff>:/icons png/png/011-rewind.png</normaloff>:/icons png/png/011-rewind.png</iconset>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="geometry">
+          <rect>
+           <x>380</x>
+           <y>329</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../icons/preview_buttons/resource.qrc">
+           <normaloff>:/icons png/png/007-next-1.png</normaloff>:/icons png/png/007-next-1.png</iconset>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="geometry">
+          <rect>
+           <x>215</x>
+           <y>330</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../icons/preview_buttons/resource.qrc">
+           <normaloff>:/icons png/png/006-back.png</normaloff>:/icons png/png/006-back.png</iconset>
+         </property>
+         <property name="flat">
           <bool>true</bool>
          </property>
         </widget>
