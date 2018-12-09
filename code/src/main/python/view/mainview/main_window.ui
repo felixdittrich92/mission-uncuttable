@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QSplitter" name="horizontalSplitter">
       <property name="sizeIncrement">
        <size>
@@ -60,8 +60,11 @@
           <height>0</height>
          </size>
         </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <property name="styleSheet">
-         <string notr="true">background: rgb(255, 250, 170);</string>
+         <string notr="true">background: rgbrgb(9, 25, 51);</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -69,6 +72,30 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>260</x>
+           <y>230</y>
+           <width>89</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../icons/preview_buttons/resource.qrc">
+           <normaloff>:/icon/play-button.svg</normaloff>
+           <normalon>:/icon/pause.svg</normalon>:/icon/play-button.svg</iconset>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QFrame" name="bottomFrame">
@@ -101,7 +128,7 @@
      <x>0</x>
      <y>0</y>
      <width>1254</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -116,6 +143,8 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../../../icons/preview_buttons/resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
