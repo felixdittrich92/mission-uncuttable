@@ -9,8 +9,8 @@ import sys
 
 class AppContext(ApplicationContext):
     def run(self):
-        # videoEditorView = VideoEditorView()
-        # videoEditorController = VideoEditorController(videoEditorView)
+        #videoEditorView = VideoEditorView()
+        #videoEditorController = VideoEditorController(videoEditorView)
         startView = StartView()
         startController = StartController(startView)
         return self.app.exec_()

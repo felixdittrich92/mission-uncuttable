@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import uic
-from PyQt5 import QtWidgets
-from view import VideoEditorView
-
 import os
+
+from view import VideoEditorView
+from controller import VideoEditorController
 
 
 class StartView(QMainWindow):
@@ -17,7 +17,3 @@ class StartView(QMainWindow):
 
     def show(self):
         self.showNormal()
-
-    def showVideoEditor(self):
-        videoeditor = VideoEditorView()
-        videoeditor.exec_()
