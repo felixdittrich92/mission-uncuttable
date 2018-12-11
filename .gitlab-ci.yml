@@ -24,6 +24,5 @@ production:
   script:
   - ln -s /lib/libc.musl-x86_64.so.1 ldd
   - ln -s /lib /lib64 
-  - python3 configure.py --sip-module PyQt5.sip --no-tools
   - fbs freeze
   - fbs installer
