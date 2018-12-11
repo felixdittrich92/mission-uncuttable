@@ -70,7 +70,7 @@
          <bool>false</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true">background: rgbrgb(9, 25, 51);</string>
+         <string notr="true">background: rgbrgb(90, 25, 51);</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -79,20 +79,7 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="2" column="0">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>171</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="3">
+         <item row="2" column="4">
           <widget class="QPushButton" name="pushButton">
            <property name="enabled">
             <bool>false</bool>
@@ -128,9 +115,9 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../../../icons/preview_buttons/resource.qrc">
-             <normaloff>:/icons png/png/002-play-button.png</normaloff>
-             <normalon>:/icons png/png/001-pause.png</normalon>:/icons png/png/002-play-button.png</iconset>
+            <iconset>
+             <normaloff>:/icons/002-play-button.png</normaloff>
+             <normalon>:/icons/002-play-button.png</normalon>:/icons/002-play-button.png</iconset>
            </property>
            <property name="shortcut">
             <string notr="true"/>
@@ -143,7 +130,7 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="6">
+         <item row="2" column="7">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -156,27 +143,27 @@
            </property>
           </spacer>
          </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="pushButton_5">
+         <item row="2" column="3">
+          <widget class="QPushButton" name="pushButton_3">
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../../icons/preview_buttons/resource.qrc">
-             <normaloff>:/icons png/png/006-back.png</normaloff>:/icons png/png/006-back.png</iconset>
+            <iconset>
+             <normaloff>:/icons png/png/011-rewind.png</normaloff>:/icons png/png/011-rewind.png</iconset>
            </property>
            <property name="flat">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="4">
+         <item row="2" column="5">
           <widget class="QPushButton" name="pushButton_2">
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../../icons/preview_buttons/resource.qrc">
+            <iconset>
              <normaloff>:/icons png/png/008-fast-forward.png</normaloff>:/icons png/png/008-fast-forward.png</iconset>
            </property>
            <property name="autoDefault">
@@ -187,13 +174,34 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="5">
+         <item row="2" column="2">
+          <widget class="QPushButton" name="pushButton_5">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/icons png/png/006-back.png</normaloff>:/icons png/png/006-back.png</iconset>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>00:00:00</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="6">
           <widget class="QPushButton" name="pushButton_4">
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../../icons/preview_buttons/resource.qrc">
+            <iconset>
              <normaloff>:/icons png/png/007-next-1.png</normaloff>:/icons png/png/007-next-1.png</iconset>
            </property>
            <property name="flat">
@@ -201,28 +209,34 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="text">
-            <string/>
+         <item row="2" column="1">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-           <property name="icon">
-            <iconset resource="../../../icons/preview_buttons/resource.qrc">
-             <normaloff>:/icons png/png/011-rewind.png</normaloff>:/icons png/png/011-rewind.png</iconset>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>171</width>
+             <height>20</height>
+            </size>
            </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-          </widget>
+          </spacer>
          </item>
-         <item row="1" column="0" colspan="7">
+         <item row="1" column="0" colspan="10">
           <widget class="QSlider" name="horizontalSlider">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
-         <item row="0" column="0" colspan="7">
+         <item row="2" column="9">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>01:01:00</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="10">
           <widget class="QGraphicsView" name="graphicsView"/>
          </item>
         </layout>
@@ -275,6 +289,7 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="../../../icons/preview_buttons/resource.qrc"/>
+  <include location="buttons.qrc"/>
  </resources>
  <connections/>
 </ui>
