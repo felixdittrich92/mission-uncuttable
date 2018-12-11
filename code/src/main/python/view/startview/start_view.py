@@ -2,9 +2,6 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import uic
 import os
 
-from view import VideoEditorView
-from controller import VideoEditorController
-
 
 class StartView(QMainWindow):
     """

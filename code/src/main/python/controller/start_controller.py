@@ -1,18 +1,16 @@
-import sys
-
 from controller import VideoEditorController
 from view import VideoEditorView
 
 
 class StartController:
     def __init__(self, view):
-        self.startView = view
-        self.startView.show()
+        self.start_view = view
+        self.start_view.show()
 
-        self.startView.pushButton.clicked.connect(self.openVideoEditor)
+        self.start_view.pushButton.clicked.connect(self.open_video_editor)
 
-    def openVideoEditor(self):
+    def open_video_editor(self):
         v = VideoEditorView()
-        videoEditorController = VideoEditorController(v)
+        video_editor_controller = VideoEditorController(v)
 
 
