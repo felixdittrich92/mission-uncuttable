@@ -1,7 +1,7 @@
 from fbs_runtime.application_context import ApplicationContext
 from controller import VideoEditorController
 from view import VideoEditorView
-from controller import StartController
+from controller import MainController
 from view import StartView
 
 import sys
@@ -12,7 +12,8 @@ class AppContext(ApplicationContext):
         # video_editor_view = VideoEditorView()
         # video_editor_controller = VideoEditorController(video_editor_view)
         start_view = StartView()
-        start_controller = StartController(start_view)
+        __main_controller = MainController(start_view)
+        __main_controller.start()
         return self.app.exec_()
 
 
