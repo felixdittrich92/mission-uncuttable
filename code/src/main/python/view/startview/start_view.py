@@ -12,17 +12,12 @@ class StartView(QMainWindow):
         path = os.path.abspath('src/main/python/view/startview')
         uic.loadUi(path + '/start_view.ui', self)
         self.new_project_frame.hide()
-        self.new_project_button.clicked.connect(self.switch_frame_to_new_project)
-        self.back_button.clicked.connect(self.switch_frame_to_start)
+        self.new_project_button.clicked.connect(self.switch_frame)
+        self.back_button.clicked.connect(self.switch_frame)
 
     def show(self):
         self.showNormal()
 
-    def switch_frame_to_new_project(self):
-        self.start_frame.hide()
-        self.new_project_frame.show()
-
-    def switch_frame_to_start(self):
-        self.start_frame.show()
-        self.new_project_frame.hide()
-
+    def switch_frame(self):
+        self.start_frame.setHidden(not self.start_frame.isHidden())
+        self.new_project_frame.setHidden(not self.new_project_frame.isHidden())
