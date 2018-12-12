@@ -6,7 +6,9 @@ import sys
 
 
 class AppContext(ApplicationContext):
+
     def run(self):
+        """Starts the application using 'MainController' with the 'StartView'."""
         start_view = StartView()
         __main_controller = MainController(start_view)
         __main_controller.start()
