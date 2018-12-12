@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>UbiCut</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -275,6 +275,30 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuProgramm">
+    <property name="title">
+     <string>Programm</string>
+    </property>
+    <addaction name="actionEinstellungen"/>
+   </widget>
+   <widget class="QMenu" name="menuProjekt">
+    <property name="title">
+     <string>Projekt</string>
+    </property>
+    <addaction name="actionNeu"/>
+    <addaction name="actionOeffnen"/>
+    <addaction name="actionSpeichern"/>
+    <addaction name="actionSpeichern_als"/>
+    <addaction name="actionProjekteinstellugen"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+   </widget>
+   <addaction name="menuProgramm"/>
+   <addaction name="menuProjekt"/>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -285,6 +309,36 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionEinstellungen">
+   <property name="text">
+    <string>Einstellungen</string>
+   </property>
+  </action>
+  <action name="actionNeu">
+   <property name="text">
+    <string>Neu</string>
+   </property>
+  </action>
+  <action name="actionOeffnen">
+   <property name="text">
+    <string>Öffnen</string>
+   </property>
+  </action>
+  <action name="actionSpeichern">
+   <property name="text">
+    <string>Speichern</string>
+   </property>
+  </action>
+  <action name="actionSpeichern_als">
+   <property name="text">
+    <string>Speichern als</string>
+   </property>
+  </action>
+  <action name="actionProjekteinstellugen">
+   <property name="text">
+    <string>Projekteinstellugen</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
