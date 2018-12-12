@@ -114,10 +114,10 @@
     <property name="title">
      <string>Projekt</string>
     </property>
-    <addaction name="actionneu"/>
-    <addaction name="action_ffnen"/>
-    <addaction name="actionspeichern"/>
-    <addaction name="actionspeichern_als"/>
+    <addaction name="actionNeu"/>
+    <addaction name="actionOeffnen"/>
+    <addaction name="actionSpeichern"/>
+    <addaction name="actionSpeichern_als"/>
     <addaction name="actionProjekteinstellugen"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -143,24 +143,24 @@
     <string>Einstellungen</string>
    </property>
   </action>
-  <action name="actionneu">
+  <action name="actionNeu">
    <property name="text">
-    <string>neu</string>
+    <string>Neu</string>
    </property>
   </action>
-  <action name="action_ffnen">
+  <action name="actionOeffnen">
    <property name="text">
-    <string>öffnen</string>
+    <string>Öffnen</string>
    </property>
   </action>
-  <action name="actionspeichern">
+  <action name="actionSpeichern">
    <property name="text">
-    <string>speichern</string>
+    <string>Speichern</string>
    </property>
   </action>
-  <action name="actionspeichern_als">
+  <action name="actionSpeichern_als">
    <property name="text">
-    <string>speichern als</string>
+    <string>Speichern als</string>
    </property>
   </action>
   <action name="actionProjekteinstellugen">
