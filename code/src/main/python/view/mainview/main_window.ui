@@ -115,9 +115,9 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>:/icons/002-play-button.png</normaloff>
-             <normalon>:/icons/002-play-button.png</normalon>:/icons/002-play-button.png</iconset>
+            <iconset resource="../../../icons/preview_buttons/resource.qrc">
+             <normaloff>:/icons png/png/002-play-button.png</normaloff>
+             <normalon>:/icons png/png/001-pause.png</normalon>:/icons png/png/002-play-button.png</iconset>
            </property>
            <property name="shortcut">
             <string notr="true"/>
@@ -149,7 +149,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../../../icons/preview_buttons/resource.qrc">
              <normaloff>:/icons png/png/011-rewind.png</normaloff>:/icons png/png/011-rewind.png</iconset>
            </property>
            <property name="flat">
@@ -163,7 +163,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../../../icons/preview_buttons/resource.qrc">
              <normaloff>:/icons png/png/008-fast-forward.png</normaloff>:/icons png/png/008-fast-forward.png</iconset>
            </property>
            <property name="autoDefault">
@@ -180,7 +180,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../../../icons/preview_buttons/resource.qrc">
              <normaloff>:/icons png/png/006-back.png</normaloff>:/icons png/png/006-back.png</iconset>
            </property>
            <property name="flat">
@@ -201,7 +201,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../../../icons/preview_buttons/resource.qrc">
              <normaloff>:/icons png/png/007-next-1.png</normaloff>:/icons png/png/007-next-1.png</iconset>
            </property>
            <property name="flat">
@@ -289,7 +289,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="../../../icons/preview_buttons/resource.qrc"/>
-  <include location="buttons.qrc"/>
  </resources>
  <connections/>
 </ui>
