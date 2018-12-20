@@ -1,0 +1,33 @@
+Protokoll Meeting am 17.12.2018
+Mission Uncuttable
+Softwareprojekt Bachelor und Projektmanagementpraktikum Master
+
+Anwesend:
+Abwesend:
+Protokollführer: Markus Leupold
+
+TOP 1: Organisatorisches
+ - Projektdokumentation
+    - Es hat noch fast niemand etwas zur Technologierecherche und zum
+      ersten Sprint aufgeschrieben
+ - Prozess- und Implementationsvorgaben
+    - Vorstellung der Vorgaben durch Tim (Softwarearchitekt)
+    - Definition of Done
+       - Coding Style
+ - Sprintdokumentation
+    - Jeder Sprint muss dokumentiert werden
+    - Jeder Entwickler muss mindestens einen Sprint dokumentieren
+
+TOP 2: Zweiter Sprint
+ - Zeitraum 17.12.18 -- 10.01.18
+ - Weitere Befassung mit GUI
+ - Einige Aufgaben des ersten Sprints sind noch zu erledigen
+   (v.a. Timeline und Layout)
+ - Einige neue Aufgaben, die sich mit erster Funktionalität
+   beschäftigen
+ - Sprint muss wesentlich produktiver werden als der erste
+ - Aufwandsschätzung soll künftig über ein App ablaufen (noch nicht
+   bei diesem Sprint, da bereits zum heutigen Tag der Sprint startet
+   und noch nicht alle die App haben)
+
+TOP 3: Produktlogo-Workshop
