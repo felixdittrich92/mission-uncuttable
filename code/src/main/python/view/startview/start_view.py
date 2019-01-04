@@ -25,11 +25,6 @@ class StartView(QMainWindow):
         self.new_project_frame.hide()
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
-        self.shortcut = QShortcut(QKeySequence("Ctrl+O"), self)
-        self.shortcut.activated.connect(self.test)
-
-    def test(self):
-        print("executed")
 
     def show(self):
         """Starts the start-window normal (not maximized)."""
