@@ -4,21 +4,21 @@ Fragen der Bachelor
 -keine
 
 Was jeder in der ersten Woche im Sprint 1 gemacht hat und was er noch vor hat zu tun.
-Johannes,Jeremey haben sich mit dem Filemanager Entwurf beschäftigt
+Johannes,Jeremey haben sich mit dem Filemanager Entwurf beschÃ¤ftigt
 Max,Felix haben die Tasks Fenster und Layout erfolgreich bearbeitet
 
-Tim erklärt UML-Datei mit Projektstruktur
-Tim erläutert Code-Conventions
-Tim erläutert Umgang mit neuen Bibliotheken:
+Tim erklrt UML-Datei mit Projektstruktur
+Tim erlÃ¤utert Code-Conventions
+Tim erlÃ¤utert Umgang mit neuen Bibliotheken:
 	-requirements.txt
 	-
 
-Sascha erinnerung Produktvision Auformuliert in LatexDoku-Dokument zu schreiben.
-Sascha legt Overleafdokument für Doku an.
+Sascha erinnerung Produktvision Ausformuliert in LatexDoku-Dokument zu schreiben.
+Sascha legt Overleafdokument fÃ¼r Doku an.
 Sascha LanParty erstmal abgesagt
 
-zusage von Weicker dass wir fBs benutzen dürfen
+zusage von Weicker dass wir fBs benutzen dÃ¼rfen
 
-Felix hat ein Kurztutorial für PyQt Editor ins Git gepusht
+Felix hat ein Kurztutorial fÃ¼r PyQt Editor ins Git gepusht
 ------------
 niemand fehlt 
