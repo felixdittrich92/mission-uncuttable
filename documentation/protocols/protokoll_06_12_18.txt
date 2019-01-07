@@ -1,0 +1,15 @@
+Protokoll 06.12.18
+Maximilian Fornacon
+
+Fehlt: Sascha Rittig, Felix Dittrich, Johannes Müller
+
+Fortschrittsbesprechung der einzelnen Tasks
+	* Timelineentwürfe angeschaut und diskutiert (MU-63 & MU-94)
+	* Filemanager besprochen (MU-95)
+	* Startview (MU-54)
+
+Es wurde eine neues LaTeX-Dokument für die Produktvision auf Overleaf erstellt:
+	https://www.overleaf.com/1249814454cwvnscdrjths
+
+Arbeiten an der Designpattern Aufgabe
+	
