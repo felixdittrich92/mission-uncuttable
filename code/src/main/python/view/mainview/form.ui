@@ -14,9 +14,6 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="7">
-    <widget class="QGraphicsView" name="graphicsView"/>
-   </item>
    <item row="1" column="2">
     <widget class="QPushButton" name="pushButton_4">
      <property name="text">
@@ -45,7 +42,7 @@
     </widget>
    </item>
    <item row="1" column="3">
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="playButton">
      <property name="text">
       <string>PushButton</string>
      </property>
@@ -77,6 +74,9 @@
       <string>PushButton</string>
      </property>
     </widget>
+   </item>
+   <item row="0" column="0" colspan="7">
+    <widget class="QGraphicsView" name="graphicsView"/>
    </item>
   </layout>
  </widget>
