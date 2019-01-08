@@ -42,16 +42,17 @@ class PreviewView(QWidget):
         backButton.setIcon(QIcon(iconback))
         forwardButton.setIcon(QIcon(iconforward))
 
-        self.label = QLabel(self)
-        self.label.move(280, 120)
-        self.label.resize(640, 480)
+        self.videoLabel = self.findChild(QLabel, "videoLabel")
+
+        self.videoLabel.move(280, 120)
+        self.videoLabel.resize(960, 720)
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
 
     @pyqtSlot(QImage)
     def setImage(self, image):
-       self.label.setPixmap(QPixmap.fromImage(image))
+       self.videoLabel.setPixmap(QPixmap.fromImage(image))
 
 class Thread(QThread):
     changePixmap = pyqtSignal(QImage)
@@ -63,7 +64,7 @@ class Thread(QThread):
             if ret:
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 convertToQtFormat = QImage(rgbImage.data, rgbImage.shape[1], rgbImage.shape[0], QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                p = convertToQtFormat.scaled(1280, 720, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
 
 
