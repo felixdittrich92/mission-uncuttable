@@ -70,7 +70,7 @@
          <bool>false</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true">background: rgbrgb(90, 25, 51);</string>
+         <string notr="true">background: rgbrgb(30, 30, 30);</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
