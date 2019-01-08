@@ -1,15 +1,10 @@
-from PyQt5.QtWidgets import QWidget, QPushButton
-from PyQt5 import uic
-from PyQt5 import QtGui
-from PyQt5.QtGui import QIcon 
-#from PyQt5 import QObject
-import os
-
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QMainWindow
+from PyQt5 import uic, QtGui
+from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QMainWindow, QPushButton
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtCore import Qt
 import sys
+import os
 
 import cv2 
 import numpy
