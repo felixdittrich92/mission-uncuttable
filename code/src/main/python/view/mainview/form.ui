@@ -76,7 +76,14 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="7">
-    <widget class="QGraphicsView" name="graphicsView"/>
+    <widget class="QLabel" name="label">
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
