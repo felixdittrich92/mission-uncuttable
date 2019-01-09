@@ -1,0 +1,24 @@
+Protokoll Sascha Rittig 29.11.2018
+
+Fragen der Bachelor
+-keine
+
+Was jeder in der ersten Woche im Sprint 1 gemacht hat und was er noch vor hat zu tun.
+Johannes,Jeremey haben sich mit dem Filemanager Entwurf beschäftigt
+Max,Felix haben die Tasks Fenster und Layout erfolgreich bearbeitet
+
+Tim erklrt UML-Datei mit Projektstruktur
+Tim erläutert Code-Conventions
+Tim erläutert Umgang mit neuen Bibliotheken:
+	-requirements.txt
+	-
+
+Sascha erinnerung Produktvision Ausformuliert in LatexDoku-Dokument zu schreiben.
+Sascha legt Overleafdokument für Doku an.
+Sascha LanParty erstmal abgesagt
+
+zusage von Weicker dass wir fBs benutzen dürfen
+
+Felix hat ein Kurztutorial für PyQt Editor ins Git gepusht
+------------
+niemand fehlt 
