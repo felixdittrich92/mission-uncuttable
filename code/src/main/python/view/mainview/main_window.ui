@@ -279,7 +279,7 @@
     <property name="title">
      <string>Programm</string>
     </property>
-    <addaction name="actionEinstellungen"/>
+    <addaction name="action_settings"/>
    </widget>
    <widget class="QMenu" name="menuProjekt">
     <property name="title">
@@ -309,7 +309,7 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionEinstellungen">
+  <action name="action_settings">
    <property name="text">
     <string>Einstellungen</string>
    </property>
