@@ -1,0 +1,10 @@
+Protokoll vom 3. Dezember 2018
+
+Protokollant: Alexander Bonin
+
+Es fehlen: Felix Dittrich, Johannes Müller
+
+Alle berichten von ihren Fortschritten.
+	- Im wesentlichen funktioniert nur das Fenster.
+
+Es werden Probleme, die beim Ausführen des Programms auftreten, gelöst.

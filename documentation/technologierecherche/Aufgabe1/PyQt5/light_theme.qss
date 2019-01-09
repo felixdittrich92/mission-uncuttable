@@ -1,0 +1,32 @@
+QWidget {
+    font: 9pt "Ubuntu";
+    border-width: 2px;
+    border-style: solid;
+    border-color: #b8b8b8;
+    border-radius: 4px;
+}
+
+QDialog {
+    border: none;
+}
+
+QFrame {
+    border-width: 2px;
+    border-style: solid;
+}
+
+QLabel, QCheckBox {
+    border: none;
+}
+
+QPushButton, QComboBox {
+    padding: 2px;
+}
+
+QSlider {
+    border: none;
+}
+
+QLineEdit {
+    padding: 2px;
+}
