@@ -1,0 +1,32 @@
+SOFTWAREPROJEKT | PROTOKOLL MEETING AM 01.11.18
+
+Anwesend: alle außer "Exodia"
+Protokollant: Markus Leupold
+
+Situation:
+ - es ist gerade alles etwas dringend, da nächste Woche eine Produktvision
+   fertig sein muss
+
+Verschiedene besprochene Dinge
+  - 4 Aufgaben verteilen:
+    1. Wie kann eine GUI aussehen?
+    2. Wie unterscheided sich das Produkt von der Konkurrenz?
+    3. Welches Erweiterungspotenzial bietet das Projekt?
+    4. Welche Bedürfnisse der Zielgruppen kann oder muss das Endprodukt erfüllen?
+    -> Deadline 08.11.18 (Damit Sascha noch mal drüberlesen kann)
+  - Projektname
+    -> MissionUncuttable (gewählt aus 9 Vorschlägen)
+  - Fragen an Herr Weicker
+    - Was will Herr Weicker als erstes sehen?
+  - nächstes Treffen
+    - Montag findet nicht statt, da unnötig für aktuell anstehende Dinge
+  - Programmieraufgabe: Abgabe eine Woche nach hinten geschoben (12.11.18)
+  - Teambuilding
+    - gefundener Termin: 09.11.18 19:30 (Zeitfestlegung eher vorläufig)
+
+Einführung in Python
+  - grundlegende Eigenschaften von Python
+  - Installation von Python und IDE
+    - Erklärung der benötigten Zusatzprogramme (pip3, pipenv, virtualenv)
+  - Festlegung des Linters: flake8 (allerdings ist es okay, wenn erstmal nur der Linter
+    von Pycharm verwendet wird)

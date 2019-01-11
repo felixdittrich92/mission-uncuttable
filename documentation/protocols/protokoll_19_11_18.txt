@@ -1,0 +1,13 @@
+Protokoll Sascha Rittig 19.11.2018
+
+Tim Vortrag/Aufgaben:
+
+-Pytesting:Zu vorgegeben Projekt mit dem Modul "Pytest" tests schreiben 
+	-Tim beantwortet Fragen dazu
+	
+-Desingpattern
+	-Aufgabe: Vortrag erstellen
+		Clemens - Dekorierer
+		Julian  - Adapter
+		
+

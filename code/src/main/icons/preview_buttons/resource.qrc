@@ -1,0 +1,17 @@
+<RCC>
+  <qresource prefix="icons png">
+    <file>png/013-previous.png</file>
+    <file>png/012-up-arrow.png</file>
+    <file>png/011-rewind.png</file>
+    <file>png/010-speaker.png</file>
+    <file>png/009-down-arrow.png</file>
+    <file>png/008-fast-forward.png</file>
+    <file>png/007-next-1.png</file>
+    <file>png/006-back.png</file>
+    <file>png/005-plus.png</file>
+    <file>png/004-next.png</file>
+    <file>png/003-stop.png</file>
+    <file>png/002-play-button.png</file>
+    <file>png/001-pause.png</file>
+  </qresource>
+</RCC>
