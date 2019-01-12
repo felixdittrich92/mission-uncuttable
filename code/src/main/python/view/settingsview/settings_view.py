@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import uic
 import os
 
 
-class SettingsView(QWidget):
+class SettingsView(QMainWindow):
     """A class used as the View for the settings window."""
     def __init__(self):
         """Loads the UI-file and the shortcuts."""

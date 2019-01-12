@@ -1,5 +1,8 @@
+from PyQt5.QtWidgets import QAction
 from controller import SettingsController
 from view import SettingsView
+
+sys.path.append("..view.settingsview")
 
 class VideoEditorController:
     """
@@ -9,7 +12,7 @@ class VideoEditorController:
     """
     def __init__(self, view):
         self.__video_editor_view = view
-        self.__video_editor_view.action_settings.connect(self.__start_settings_controller)
+        self.__video_editor_view.action_settings.triggered.connect(self.__start_settings_controller)
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
@@ -25,6 +28,6 @@ class VideoEditorController:
 
     def __start_settings_controller(self):
         "Opens the settings window"
-        settings_view = SettingsView()
+        settings_view = SettingsView(self)
         self.__settings_controller = SettingsController(settings_view)
         self.__settings_controller.start()
