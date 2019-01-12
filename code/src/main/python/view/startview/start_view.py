@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QShortcut
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import uic
+from config import Settings
 import os
 
 
@@ -25,6 +25,9 @@ class StartView(QMainWindow):
         self.new_project_frame.hide()
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
+
+        self.settings = Settings()
+        self.settings.get_settings()
 
     def show(self):
         """Starts the start-window normal (not maximized)."""
