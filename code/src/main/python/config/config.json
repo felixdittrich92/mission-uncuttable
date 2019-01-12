@@ -1,4 +1,6 @@
 {
+  "language": "de",
   "start_maximized": true,
+  "design": "default",
   "some_setting": "example"
 }

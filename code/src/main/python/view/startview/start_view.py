@@ -26,8 +26,14 @@ class StartView(QMainWindow):
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
 
-        self.settings = Settings()
-        self.settings.get_settings()
+        settings = Settings.get_instance()
+
+        self.settings = settings.get_settings()
+        for x in self.settings:
+            print(self.settings[x])
+
+        self.example_setting = settings.get_setting("some_setting")
+        print("get wanted setting: " + self.example_setting)
 
     def show(self):
         """Starts the start-window normal (not maximized)."""
