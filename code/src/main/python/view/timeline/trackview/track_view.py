@@ -5,12 +5,12 @@ from view.timeline.timeableview import TimeableView
 
 
 class TrackView(QtWidgets.QGraphicsView):
-    def __init__(self, width, height, scene):
+    def __init__(self, width, height):
         super(TrackView, self).__init__()
 
         self.width = width
         self.height = height
-        self.scene = scene
+        self.scene = QtWidgets.QGraphicsScene()
 
         self.setAcceptDrops(True)
 
