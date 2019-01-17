@@ -88,6 +88,12 @@ class TimeableView(QGraphicsRectItem):
                 if w <= 9:
                     return
 
+                new_x_pos = self.x_pos + diff
+                r = QtCore.QRectF(new_x_pos, 0, w, self.height)
+                colliding = self.scene().items(r)
+                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                    return
+
                 self.width = w
                 self.setRect(self.boundingRect())
                 self.x_pos = self.x_pos + diff
@@ -97,13 +103,15 @@ class TimeableView(QGraphicsRectItem):
             diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
                     - self.mouse_press_pos.x())
 
-            # if self.scene().itemAt(mouse_event.scenePos(), QtGui.QTransform()) is not None:
-            #     return
-
             if diff <= self.scene().width():
                 rect.setRight(diff)
                 w = rect.size().width()
                 if w <= 9:
+                    return
+
+                r = QtCore.QRectF(self.x_pos, 0, w, self.height)
+                colliding = self.scene().items(r)
+                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
                     return
 
                 self.width = w
@@ -114,6 +122,13 @@ class TimeableView(QGraphicsRectItem):
 
     def move_on_track(self, mouse_event):
         new_pos_x = mouse_event.scenePos().x() - self.mouse_press_pos.x()
+
+        r = QtCore.QRectF(new_pos_x, 0, self.width, self.height)
+        colliding = self.scene().items(r)
+
+        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+            return
+
         if new_pos_x >= 0 and new_pos_x + self.width <= self.scene().width():
             self.x_pos = new_pos_x
             self.setPos(self.x_pos, 0)
