@@ -2,5 +2,16 @@
   "language": "de",
   "start_maximized": true,
   "design": "default",
-  "some_setting": "example"
+  "some_setting": "example",
+  "name": "Georg",
+  "alter": 47,
+  "verheiratet": false,
+  "beruf": null,
+  "kinder": [
+    {
+      "name": "Lukas",
+      "alter": 19,
+      "schulabschluss": "Realschule"
+    }
+  ]
 }
