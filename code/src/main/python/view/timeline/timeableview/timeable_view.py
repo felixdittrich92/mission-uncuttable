@@ -1,42 +1,174 @@
-# import os
-# import sys
-
+from PyQt5 import QtCore
+from PyQt5 import QtGui
 from PyQt5 import QtWidgets
-from PyQt5 import uic
+from PyQt5.QtWidgets import QGraphicsItem
+from PyQt5.QtWidgets import QGraphicsRectItem
 
 
-class TimeableView(QtWidgets.QWidget):
-    def __init__(self, timeable_name, width, height):
+class TimeableView(QGraphicsRectItem):
+    def __init__(self, name, width, height, x_pos):
         super(TimeableView, self).__init__()
-        self.timeable_name = timeable_name
+
+        self.name = name
         self.width = width
         self.height = height
+        self.x_pos = x_pos
 
-        self.setup_ui()
+        self.setRect(self.boundingRect())
+        self.setPos(self.x_pos, 0)
 
-    def setup_ui(self):
-        # path = os.path.abspath('src/main/python/view/timeableview/')
-        # uic.loadUi(path + '/timeable_widget.ui', self)
-        uic.loadUi('timeable_view.ui', self)
-        self.findChild(QtWidgets.QLabel, 'name').setText(self.timeable_name)
-        self.resize(self.width, self.height)
+        self.setFlag(QGraphicsRectItem.ItemIsSelectable, True)
+        self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges, True)
+        self.setAcceptHoverEvents(True)
+
+        self.handle_selected = None
+        self.mouse_press_pos = None
+        self.mouse_press_rect = None
+
+        self.handle_left = 1
+        self.handle_right = 2
+
+        self.handles = {}
+        self.update_handles_pos()
+
+    def boundingRect(self):
+        return QtCore.QRectF(QtCore.QRectF(0, 0, self.width, self.height))
+
+    def paint(self, painter, option, widget):
+        self.brush = QtGui.QBrush(QtGui.QColor(214, 104, 83))
+        painter.setBrush(self.brush)
+        painter.drawRect(self.rect())
+        painter.drawText(QtCore.QPointF(0, 10), self.name)
 
     # rightclick menu
     def contextMenuEvent(self, event):
         event.accept()
-        self._show_context_menu(self, event.globalPos())
+        self._show_context_menu(self, event.screenPos())
 
     def _show_context_menu(self, button, pos):
         menu = QtWidgets.QMenu()
-        menu.addAction('umbennenen')
-        menu.addAction('löschen')
+
+        delete = QtWidgets.QAction('löschen')
+        menu.addAction(delete)
+        delete.triggered.connect(self.delete)
+
         menu.exec_(pos)
 
+    def delete(self):
+        self.scene().removeItem(self)
 
-# nur zum testen wie es aussieht
-# eigentlich werden die timeables in eine spur eingefügt
-# if __name__ == '__main__':
-#     app = QtWidgets.QApplication(sys.argv)
-#     t = TimeableView("Video 1", 300, 100)
-#     t.show()
-#     app.exec_()
+    def update_handles_pos(self):
+        self.handles[self.handle_left] = QtCore.QRectF(
+            self.rect().left(), self.rect().center().y() - self.height / 2, 4,
+            self.height)
+
+        self.handles[self.handle_right] = QtCore.QRectF(
+            self.rect().right() - 4, self.rect().center().y() - self.height / 2, 4,
+            self.height)
+
+    def handle_at(self, point):
+        for k, v, in self.handles.items():
+            if v.contains(point):
+                return k
+
+        return None
+
+    def resize(self, mouse_event):
+        rect = self.rect()
+
+        # self.prepareGeometryChange()
+
+        if self.handle_selected == self.handle_left:
+            diff = (self.mouse_press_rect.left() + mouse_event.pos().x()
+                    - self.mouse_press_pos.x())
+
+            if diff + self.scenePos().x() >= 0:
+                rect.setLeft(diff)
+                w = rect.size().width()
+                if w <= 9:
+                    return
+
+                new_x_pos = self.x_pos + diff
+                r = QtCore.QRectF(new_x_pos, 0, w, self.height)
+                colliding = self.scene().items(r)
+                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                    return
+
+                self.width = w
+                self.setRect(self.boundingRect())
+                self.x_pos = self.x_pos + diff
+                self.setPos(self.x_pos, 0)
+
+        elif self.handle_selected == self.handle_right:
+            diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
+                    - self.mouse_press_pos.x())
+
+            if diff <= self.scene().width():
+                rect.setRight(diff)
+                w = rect.size().width()
+                if w <= 9:
+                    return
+
+                r = QtCore.QRectF(self.x_pos, 0, w, self.height)
+                colliding = self.scene().items(r)
+                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                    return
+
+                self.width = w
+                self.setRect(self.boundingRect())
+                self.setPos(self.x_pos, 0)
+
+        self.update_handles_pos()
+
+    def move_on_track(self, mouse_event):
+        new_pos_x = mouse_event.scenePos().x() - self.mouse_press_pos.x()
+
+        r = QtCore.QRectF(new_pos_x, 0, self.width, self.height)
+        colliding = self.scene().items(r)
+
+        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+            return
+
+        if new_pos_x >= 0 and new_pos_x + self.width <= self.scene().width():
+            self.x_pos = new_pos_x
+            self.setPos(self.x_pos, 0)
+
+    def hoverMoveEvent(self, event):
+        handle = self.handle_at(event.pos())
+        if handle is None:
+            cursor = QtCore.Qt.OpenHandCursor
+        else:
+            cursor = QtCore.Qt.SizeHorCursor
+
+        self.setCursor(cursor)
+
+        QGraphicsItem.hoverMoveEvent(self, event)
+
+    def hoverLeaveEvent(self, event):
+        self.setCursor(QtCore.Qt.ArrowCursor)
+        QGraphicsItem.hoverLeaveEvent(self, event)
+
+    def mousePressEvent(self, event):
+        self.handle_selected = self.handle_at(event.pos())
+        self.mouse_press_pos = event.pos()
+        self.mouse_press_rect = self.rect()
+
+        QGraphicsItem.mousePressEvent(self, event)
+
+    def mouseMoveEvent(self, event):
+        if self.handle_selected is not None:
+            self.resize(event)
+        else:
+            self.setCursor(QtCore.Qt.ClosedHandCursor)
+
+            self.move_on_track(event)
+
+        QGraphicsItem.mouseMoveEvent(self, event)
+
+    def mouseReleaseEvent(self, event):
+        self.setCursor(QtCore.Qt.OpenHandCursor)
+        QGraphicsItem.mouseReleaseEvent(self, event)
+
+        self.handle_selected = None
+        self.mouse_press_pos = None
+        self.mouse_press_rect = None
