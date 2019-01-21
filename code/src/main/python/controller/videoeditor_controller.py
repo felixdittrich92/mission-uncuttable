@@ -1,8 +1,7 @@
 from PyQt5.QtWidgets import QAction
-from controller import SettingsController
-from view import SettingsView
+from .settings_controller import SettingsController
+from code.src.main.python.view.settingsview import SettingsView
 
-sys.path.append("..view.settingsview")
 
 class VideoEditorController:
     """
