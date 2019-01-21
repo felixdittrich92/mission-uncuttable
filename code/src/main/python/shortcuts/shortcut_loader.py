@@ -13,12 +13,15 @@ class ShortcutLoader:
         """
         Creates the shortcuts.
 
-        Queries all entries of the 'key_combination' dictionary and creates a shortcut for the given starter key(s) and
-        the execution keys from the dictionary and assigns a symbolic operation.
+        Queries all entries of the 'key_combination' dictionary and creates a
+        shortcut for the given starter key(s) and the execution keys from the
+        dictionary and assigns a symbolic operation.
 
-        @param window QMainWindow the shortcut gets assigned to
+        @type  window: QMainWindow
+        @param window: The Window, the shortcut gets assigned to.
         """
         self.loaded_shortcuts = []
         for key in self.key_combinations:
             key_sequence = self.starter + key
-            self.loaded_shortcuts.append(Shortcut(window, key_sequence, self.key_combinations[key]))
+            shortcut = Shortcut(window, key_sequence, self.key_combinations[key])
+            self.loaded_shortcuts.append(shortcut)
