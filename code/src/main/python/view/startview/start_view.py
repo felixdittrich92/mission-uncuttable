@@ -31,13 +31,10 @@ class StartView(QMainWindow):
         settings = Settings.get_instance()
 
         self.settings = settings.get_settings()
-        for x in self.settings:
-            print(self.settings[x])
+        print(self.settings.language)
+        print(self.settings.kinder[0].name)
 
-        self.example_setting = settings.get_setting("some_setting")
-        self.second_level_setting = settings.get_setting("kinder#name")
-        print("get wanted setting: " + self.example_setting)
-        print("second-level-setting: " + self.second_level_setting)
+
 
     def show(self):
         """Starts the start-window normal (not maximized)."""

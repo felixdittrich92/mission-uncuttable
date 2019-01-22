@@ -2,13 +2,17 @@ import json
 import os
 import sys
 
+import config
+
+from collections import namedtuple
+
 
 class Settings:
     """
     A Class, using the singleton pattern, that loads the settings file
 
-    By default the config.json is loaded. When a 'userconfig.json' exists, the
-    settings saved in 'userconfig.json' override those, the 'config.json'
+    By default the config.py is loaded. When a 'userconfig.json' exists, the
+    settings saved in 'userconfig.json' override those, the 'config.py'
     contains.
     """
     __instance = None
@@ -30,9 +34,13 @@ class Settings:
         """
         Virtually private constructor.
 
-        Loads the settings file for default settings and the users custom
-        settings. If 'userconfig.json" contains values that are different from
-        the values in 'config.json', this values will be overwritten.
+        Loads the settings file (config.py) for default settings and the users
+        custom settings. If 'userconfig.json" contains values that are
+        different from the values in 'config.py', this values will be
+        overwritten.
+        Then the JSON gets converted into an object, where the settings can
+        be accessed via dot-notation.
+
         """
 
         if Settings.__instance is not None:
@@ -40,41 +48,29 @@ class Settings:
         else:
             Settings.__instance = self
 
-            config = os.path.join(sys.path[0], 'config/config.json')
-            userconfig = os.path.join(sys.path[0], 'config/userconfig.json')
+            user_config = os.path.join(sys.path[0], 'config/userconfig.json')
+            if os.path.exists(user_config):
+                with open(user_config, 'r') as read_file:
+                    self.user_config_data = json.load(read_file)
+                    config.default_settings.update(self.user_config_data)
+                    self.parsed_data = config.default_settings
 
-            with open(config, 'r') as read_file:
-                self.default_data = json.load(read_file)
-
-            if os.path.exists(userconfig):
-                with open(userconfig, 'r') as read_file:
-                    self.userconfig_data = json.load(read_file)
-                    self.default_data.update(self.userconfig_data)
-                    self.parsed_data = self.default_data
             else:
-                self.parsed_data = self.default_data
+                self.parsed_data = config.default_settings
+
+            self.parsed_json = json.dumps(self.parsed_data, ensure_ascii=False)
+
+            self.settings = json.loads(
+                self.parsed_json,
+                object_hook=lambda d: namedtuple('X', d.keys())(*d.values())
+            )
 
     def get_settings(self):
         """
-        Getter that returns all settings as a dictionary.
+        Getter that returns all settings as a object.
 
-        @return: dictionary of settings
+        @return: object of settings
         """
-        return self.parsed_data
+        return self.settings
 
-    def get_setting(self, wanted_setting):
-        """
-        Method that returns a specific value for a setting. There are two
-        levels of settings. Level-one-settings are those, that have a single
-        value assigned to them. Level-two-settings are objects in JSON with
-        their own list of settings.
 
-        @param wanted_setting: The setting, the value should be returned.
-        @return: the wanted settings value as a string
-        """
-        if "#" in wanted_setting:
-            wanted_level_one, wanted_level_two = wanted_setting.split('#')
-            level_two_settings = self.parsed_data[wanted_level_one]
-            return level_two_settings[wanted_level_two]
-        elif wanted_setting in self.parsed_data:
-            return self.parsed_data[wanted_setting]
