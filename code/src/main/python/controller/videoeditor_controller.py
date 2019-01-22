@@ -1,4 +1,3 @@
-from PyQt5.QtWidgets import QAction
 from .settings_controller import SettingsController
 from view.settingsview import SettingsView
 

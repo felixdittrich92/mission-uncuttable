@@ -14,4 +14,4 @@ class SettingsView(QMainWindow):
 
     def show(self):
         """Starts the settings window maximized."""
-        self.showMaximized()
+        self.showNormal()

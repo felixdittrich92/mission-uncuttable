@@ -7,13 +7,9 @@ class SettingsController:
     def __init__(self, view):
         self.__settings_view = view
 
-    def __show_view(self):
-        """Calls show() of 'SettingsView'."""
-        self.__settings_view.show()
-
     def start(self):
         """Calls '__show_view()' of SettingsController"""
-        self.__show_view()
+        self.__settings_view.show()
 
     def stop(self):
         """Closes the settings window."""
