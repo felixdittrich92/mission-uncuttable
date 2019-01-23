@@ -1,11 +1,18 @@
 from wand.image import Image as wa
 
-"""currently save as a own image"""
-def convert():
-    pdf = wa(filename = "XXX.pdf", resolution = 720)
-    pdfImage = pdf.convert("jpeg")
-    i = 1
-    for img in pdfImage.sequence:
-        page = wa(image = img)
-        page.save(filename = str(i) + ".jpg") 
-        i += 1
+class Presentation:
+        
+        def __init__(self, path, filename):
+                print('Image erstellt')
+                pass
+
+        def convert(self, path, filename):
+                pdf = wa(file = path + filename, resolution = 720)
+                pdf_image = pdf.convert("jpeg")
+                i = 1
+                for img in pdf_image.sequence:
+                        page = wa(image = img)
+                        #filename = (str(1) + ".jpg")
+                        slide[i] = Slide(i, page)
+                        i += 1
+
