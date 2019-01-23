@@ -1,24 +1,29 @@
 QWidget {
-    background-color: #222222;
+    background-color: #1E1E1E;
  }
  
  QLineEdit {
-    background-color: aliceblue;
-    color: #618b38;
-    font-style: italic;
-    font-weight: bold;
+    background-color: 1E1E1E;
+    color: #ffffff;
  }
  
  QLabel {
-    background-color: #222222;
+    background-color: #1E1E1E;
     color: #ffffff;
  }
- 
+
+ QComboBox {
+   background-color: #333131;
+   color: #ffffff;
+ }
+
+ QRadioButton {
+   background-color: #333131;
+   color: #ffffff; 
+   border: 2px solid white;  
+ }
  QPushButton {
-    background-color: #8b0000;
+    background-color: #1E1E1E;
     color: #ffffff;
-    border-radius: 5px;
-    border-style: none;
-    height: 25px;
  }
  
