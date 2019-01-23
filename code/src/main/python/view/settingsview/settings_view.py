@@ -14,18 +14,16 @@ class SettingsView(QMainWindow):
         comboBox = self.findChild(QComboBox, "comboBox")
         comboBox.currentIndexChanged.connect(self.selectionChange)
         self.setStyleSheet(open(path + '/style_dark.qss', "r").read())
-        
-        
+
     def selectionChange(self,i):
         path = os.path.abspath('src/main/python/view/settingsview')
-        print('itemchanged') 
-        if(i == 1):
-            self.setStyleSheet('QPushButton {background-color: #A3C1DA; color: red;}')
-        else:
+        print('itemchanged')
+        if(i == 0):
             self.setStyleSheet(open(path + '/style_dark.qss', "r").read())
-        self.update()
-
-
+        else:
+            self.setStyleSheet(open(path + '/style_light.qss', "r").read())
+            
+        self.update()    
 
     def show(self):
         """Starts the settings window maximized."""
