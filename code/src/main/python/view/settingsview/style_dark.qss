@@ -3,7 +3,7 @@ QWidget {
  }
  
  QLineEdit {
-    background-color: 1E1E1E;
+    background-color: #1E1E1E;
     color: #ffffff;
  }
  
@@ -18,9 +18,9 @@ QWidget {
  }
 
  QRadioButton {
-   background-color: #333131;
+   /* background-color: #333131; */
    color: #ffffff; 
-   border: 2px solid white;  
+   /* border: 2px solid white;   */
  }
  QPushButton {
     background-color: #1E1E1E;

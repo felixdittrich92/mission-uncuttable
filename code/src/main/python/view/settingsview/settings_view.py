@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget
+from PyQt5.QtWidgets import QMainWindow, QWidget, QComboBox
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import uic
 import os
@@ -11,8 +11,20 @@ class SettingsView(QMainWindow):
         super(SettingsView, self).__init__()
         path = os.path.abspath('src/main/python/view/settingsview')
         uic.loadUi(path + '/settings_window.ui', self)
-        settingWindow = self.findChild(QWidget, "centralwidget")
-        settingWindow.setStyleSheet(open(path + '/style_dark.qss', "r").read())
+        comboBox = self.findChild(QComboBox, "comboBox")
+        comboBox.currentIndexChanged.connect(self.selectionChange)
+        self.setStyleSheet(open(path + '/style_dark.qss', "r").read())
+        
+        
+    def selectionChange(self,i):
+        path = os.path.abspath('src/main/python/view/settingsview')
+        print('itemchanged') 
+        if(i == 1):
+            self.setStyleSheet('QPushButton {background-color: #A3C1DA; color: red;}')
+        else:
+            self.setStyleSheet(open(path + '/style_dark.qss', "r").read())
+        self.update()
+
 
 
     def show(self):
