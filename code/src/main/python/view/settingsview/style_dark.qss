@@ -1,29 +1,44 @@
 QWidget {
-    background-color: #1E1E1E;
- }
+   background-color: #2e2e2e;
+}
  
- QLineEdit {
-    background-color: #1E1E1E;
-    color: #ffffff;
- }
+QLineEdit {
+   background-color: #2e2e2e;
+   color: #ffffff;
+}
  
- QLabel {
-    background-color: #1E1E1E;
-    color: #ffffff;
- }
+QMainWindwo {
+   background-color: #2e2e2e;
+}
 
- QComboBox {
+QLabel {
+   background-color: #292828;
+   color: #ffffff;
+}
+
+QComboBox {
    background-color: #333131;
    color: #ffffff;
- }
+}
 
- QRadioButton {
+QTabWidget {
+   background-color: #292828;
+   color: #ffffff;
+   border: 1px solid #292828;
+}
+
+QRadioButton {
    /* background-color: #333131; */
    color: #ffffff; 
    /* border: 2px solid white;   */
- }
- QPushButton {
-    background-color: #1E1E1E;
-    color: #ffffff;
- }
+}
+QPushButton {
+   background-color: #292828;
+   color: #ffffff;
+}
+
+QWidget {
+   background-color: #292828;
+   color: #ffffff;  
+}
  

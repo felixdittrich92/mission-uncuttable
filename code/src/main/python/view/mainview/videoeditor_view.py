@@ -14,6 +14,9 @@ class VideoEditorView(QMainWindow):
         path = os.path.abspath('src/main/python/view/mainview')
         uic.loadUi(path + '/main_window.ui', self)
         self.previewlayout = self.findChild(QVBoxLayout, "preview")
+
+        self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())
+    
         previewview = PreviewView()
         self.previewlayout.addWidget(previewview)
 

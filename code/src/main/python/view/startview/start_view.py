@@ -22,6 +22,8 @@ class StartView(QMainWindow):
         super(StartView, self).__init__()
         path = os.path.abspath('src/main/python/view/startview')
         uic.loadUi(path + '/start_view.ui', self)
+        self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())
+
         self.new_project_frame.hide()
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
