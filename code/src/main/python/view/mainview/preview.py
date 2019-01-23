@@ -54,7 +54,7 @@ class Thread(QThread):
 
     def run(self):
         cap = cv2.VideoCapture('./video.mp4')
-        while True:
+        while False:
             ret, frame = cap.read()
             if ret:
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
