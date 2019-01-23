@@ -27,7 +27,7 @@
      <enum>QTabWidget::West</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -116,6 +116,12 @@
       </item>
       <item row="5" column="3">
        <widget class="QRadioButton" name="radioButton">
+        <property name="accessibleName">
+         <string notr="true"/>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -286,7 +292,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

@@ -24,6 +24,7 @@ QComboBox {
 QTabWidget {
    background-color: #292828;
    color: #ffffff;
+   border: 1px solid #292828;
 }
 
 QRadioButton {
