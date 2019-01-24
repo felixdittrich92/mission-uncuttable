@@ -1,0 +1,23 @@
+Protokoll 22.11.2018
+
+Technologierecherche:
+1. GUI Frameworks:
+   	Folgende drei GUI Frameworks kommen in die engere Auswahl, wobei PyQT5 der Favorit ist.
+	a.	PyGObject
+	b.	PyQt5
+	c.	wxPython
+2. Videoediting:
+	Folgende zwei Frameworks kommen in die engere Auswahl, aktueller Favorit ist MoviePy, 		jedoch wird OpenShot nochmals genauer betrachet.
+	a.	MoviePy
+	b.	OpenShot
+	3.	OpenCV
+4.	FaceTracking Biblotheken
+	Klarer Empfehlung von Felix:
+	a.	TensorFlow
+5.	Ghostscript
+	JSON klarer Favorit, quasi Standard für Ghostscripts
+	a.	JSON
+6.	Crossplattforming
+	Entweder Fbs genauer anschauen (jedoch lizenz genauer überprüfen) oder PyInstaller.
+	Beides klare Favoriten. Fbs wäre wesentlich einfacher zu installieren.
+

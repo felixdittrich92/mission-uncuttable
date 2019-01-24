@@ -1,0 +1,22 @@
+# Protokoll 20.Dezember
+## Anwesenheit
+* Alex
+* Julian
+* Clemens
+* Markus
+* Jeremy
+* Tim
+
+## Wer hat was gemacht?
+Mitglieder hatten wenig Zeit wegen vielen Belegen. Kein Fortschritt. 
+
+## Wer macht was?
+* Markus: Timeline Entwurf 
+* Clemens: View für Track und Timeable
+* Alex: Problem mit Icons
+* Julian: Einstellungsfenster
+
+## Weiteres
+Wie arbeitet man in Feature Branches und merged sie richtig in Development? Wie wird zu Remote-Branches gepushed? 
+Git Probleme besprochen.
+Probleme mit QtDesigner und Pfaden.
