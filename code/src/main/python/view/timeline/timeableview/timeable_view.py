@@ -209,6 +209,8 @@ class TimeableView(QGraphicsRectItem):
         self.scene().render(painter, QtCore.QRectF(), self.sceneBoundingRect())
         painter.end()
 
+        self.setVisible(False)
+
         # write timeable data
         item_data = QtCore.QByteArray()
         data_stream = QtCore.QDataStream(item_data, QtCore.QIODevice.WriteOnly)
@@ -228,6 +230,8 @@ class TimeableView(QGraphicsRectItem):
         # delete the timeable if the the item was succesfully dropped
         if (drag.exec_(QtCore.Qt.MoveAction) == QtCore.Qt.MoveAction):
             self.delete()
+        else:
+            self.setVisible(True)
 
     def hoverMoveEvent(self, event):
         """
