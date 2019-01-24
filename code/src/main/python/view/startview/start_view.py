@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QShortcut
+from PyQt5.QtGui import QKeySequence
 from PyQt5 import uic
 import os
 
