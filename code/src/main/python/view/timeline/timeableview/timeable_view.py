@@ -1,8 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QGraphicsItem
-from PyQt5.QtWidgets import QGraphicsRectItem
+from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
 
 
 class TimeableView(QGraphicsRectItem):
@@ -35,6 +34,7 @@ class TimeableView(QGraphicsRectItem):
         self.setPos(self.x_pos, 0)
 
         self.setFlag(QGraphicsRectItem.ItemIsSelectable, True)  # necessary for moving
+        self.setFlag(QGraphicsItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
 
         self.handle_selected = None
@@ -187,17 +187,6 @@ class TimeableView(QGraphicsRectItem):
 
         @param mouse_event: the event parameter from the mouseMoveEvent function
         """
-        # if mouse_event.pos().y() < 0 or mouse_event.pos().y() > self.height:
-        #     itemData = QtCore.QByteArray()
-
-        #     mimeData = QtCore.QMimeData()
-        #     mimeData.setData('ubicut/timeable', itemData)
-
-        #     drag = QtGui.QDrag(mouse_event.widget())
-        #     drag.setMimeData(mimeData)
-
-        #     drag.exec_()
-
         new_pos_x = mouse_event.scenePos().x() - self.mouse_press_pos.x()
 
         # check if theres another Timeable at the given position
@@ -210,6 +199,35 @@ class TimeableView(QGraphicsRectItem):
         if new_pos_x >= 0 and new_pos_x + self.width <= self.scene().width():
             self.x_pos = new_pos_x
             self.setPos(self.x_pos, 0)
+
+    def start_drag(self, mouse_event):
+        # get qpixmap from the timeable
+        r = self.boundingRect()
+        pixmap = QtGui.QPixmap(r.width(), r.height())
+        painter = QtGui.QPainter(pixmap)
+        painter.drawRect(r)
+        self.scene().render(painter, QtCore.QRectF(), self.sceneBoundingRect())
+        painter.end()
+
+        # write timeable data
+        item_data = QtCore.QByteArray()
+        data_stream = QtCore.QDataStream(item_data, QtCore.QIODevice.WriteOnly)
+        QtCore.QDataStream.writeString(data_stream, str.encode(self.name))
+        QtCore.QDataStream.writeInt(data_stream, self.width)
+
+        mimeData = QtCore.QMimeData()
+        mimeData.setData('ubicut/timeable', item_data)
+
+        # start drag
+        drag = QtGui.QDrag(self.scene())
+        drag.setMimeData(mimeData)
+        drag.setHotSpot(QtCore.QPoint(self.width / 2, self.height / 2))
+
+        drag.setPixmap(pixmap)
+
+        # delete the timeable if the the item was succesfully dropped
+        if (drag.exec_(QtCore.Qt.MoveAction) == QtCore.Qt.MoveAction):
+            self.delete()
 
     def hoverMoveEvent(self, event):
         """
@@ -250,13 +268,18 @@ class TimeableView(QGraphicsRectItem):
 
     def mouseMoveEvent(self, event):
         """
-        called when mouse is pressed and moved, calls the move or resize function
+        called when mouse is pressed and moved, calls the move, drag or resize function
         according to selected handle
         """
         if self.handle_selected == self.handle_middle:
             self.setCursor(QtCore.Qt.ClosedHandCursor)
 
-            self.move_on_track(event)
+            # start drag event only when cursor leaves current track
+            if event.pos().y() < 0 or event.pos().y() > self.height:
+                self.start_drag(event)
+            else:
+                self.move_on_track(event)
+
         else:
             self.resize(event)
 
