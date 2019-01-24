@@ -9,10 +9,13 @@ from .content_adjustable_connectable_scroll_area import \
 
 
 class TimelineScrollArea(QFrame):
+    """
+    Todo: doc
+    """
+
     def __init__(self, parent=None):
         super(TimelineScrollArea, self).__init__(parent)
 
-        self.content_frame = QFrame()
         self.horizontal_scrollbar = QScrollBar(Qt.Horizontal)
         self.vertical_scrollbar = QScrollBar(Qt.Vertical)
         self.track_frame = TrackFrame()
@@ -27,17 +30,16 @@ class TimelineScrollArea(QFrame):
             = ConnectableScrollArea()
 
         self.setLayout(QGridLayout())
-        self.layout().addWidget(self.content_frame, 0, 0)
-        self.layout().addWidget(self.vertical_scrollbar, 0, 1)
-        self.layout().addWidget(self.horizontal_scrollbar, 1, 0)
 
-        self.content_frame.setLayout(QGridLayout())
-        self.content_frame.layout() \
+        self.layout() \
             .addWidget(self.time_bar_scroll_area, 0, 1)
-        self.content_frame.layout() \
+        self.layout() \
             .addWidget(self.track_frame_scroll_area, 1, 1)
-        self.content_frame.layout() \
+        self.layout() \
             .addWidget(self.track_button_frame_scroll_area, 1, 0)
+
+        self.layout().addWidget(self.vertical_scrollbar, 0, 2, 2, 1)
+        self.layout().addWidget(self.horizontal_scrollbar, 2, 0, 1, 2)
 
         self.time_bar_scroll_area.setWidget(self.time_bar)
         self.track_frame_scroll_area.setWidget(self.track_frame)
