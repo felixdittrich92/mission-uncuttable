@@ -40,6 +40,7 @@ class TrackView(QtWidgets.QGraphicsView):
         self.setStyleSheet('background-color: black')
 
     def add_timeable(self, timeable):
+        # TODO check for colliding items
         self.scene.addItem(timeable)
 
     def dragEnterEvent(self, event):
@@ -67,7 +68,7 @@ class TrackView(QtWidgets.QGraphicsView):
             width = QtCore.QDataStream.readInt(stream)
 
             # check if theres already another timeable at the drop position
-            rect = QtCore.QRectF(event.pos().x() - width / 2, 0, 100, self.height)
+            rect = QtCore.QRectF(event.pos().x() - width / 2, 0, width, self.height)
             colliding = self.scene.items(rect)
             if not colliding:
                 # add new timeable
