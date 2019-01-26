@@ -1,4 +1,4 @@
-from .size_connectable_frame import SizeLinkableFrame
+from .size_linkable_frame import SizeLinkableFrame
 
 
 class TrackFrame(SizeLinkableFrame):
