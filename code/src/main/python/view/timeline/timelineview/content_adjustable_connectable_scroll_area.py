@@ -24,17 +24,23 @@ from PyQt5.QtCore import pyqtSlot
 
 class ContentAdjustableConnectableScrollArea(ConnectableScrollArea):
     """
-    A special scroll area which can be controlled by external scroll
-    bars and can be set to automatically fit its contents.
-
-    For information about the scrolling connections see the
-    documentation of view.timeline.timelineview.connectable_scroll_area.
+    Extends the ConnectableScrollArea to one which can be set to
+    automatically fit its contents.
 
     The ContentAdjustableConnectableScrollArea can adjust its size so
     that its viewport perfectly fits the widget of the scroll area.
-    The adjusting behaviour can be turned on and off for horizontal and
-    vertical adjustment independently by calling
-    set_adjusting_to_width() or set_adjusting_to_height().
+    The adjusting behaviour can be turned on and off for both horizontal
+    and vertical adjustment independently.
+
+    The scrolling connections of the ConnectableScrollArea still can be
+    used. For more information see the documentation of
+    view.timeline.timelineview.connectable_scroll_area \
+        .ConnectableScrollArea
+
+    Method overview:
+    set_adjusting_to_width      -- Turn the width adjustment on or off.
+    set_set_adjusting_to_height -- Turn the height adjustment on or off.
+
 
     Note that this scroll area should only hold a widget which is
     size-connectable (like e.g.
@@ -57,7 +63,7 @@ class ContentAdjustableConnectableScrollArea(ConnectableScrollArea):
 
     def set_adjusting_to_width(self, b):
         """
-        Turns the adjustment to the widget's width on or off.
+        Turn the width adjustment on or off.
 
         :param b:   boolean value; True means adjustment on, False means
                     adjustment off
@@ -72,7 +78,7 @@ class ContentAdjustableConnectableScrollArea(ConnectableScrollArea):
 
     def set_adjusting_to_height(self, b):
         """
-        Turns the adjustment to the widget's height on or off.
+        Turn the height adjustment on or off.
 
         :param b:   boolean value; True means adjustment on, False means
                     adjustment off
@@ -88,19 +94,19 @@ class ContentAdjustableConnectableScrollArea(ConnectableScrollArea):
     @pyqtSlot(int)
     def __adjust_to_width(self, width):
         """
-        Calculates the needed width of the scroll area for the given
-        widget width and sets it to the scroll area.
+        Calculate the needed width of the scroll area for the given
+        widget width and set it to the scroll area.
 
         :param width: The widget width the scroll area should adjust to
         """
         widget_border_width = self.width() - self.viewport().width()
-        self.setFixedWidth(width + widget_border_width)\
+        self.setFixedWidth(width + widget_border_width)
 
     @pyqtSlot(int)
     def __adjust_to_height(self, height):
         """
-        Calculates the needed height of the scroll area for the given
-        widget height and sets it to the scroll area.
+        Calculate the needed height of the scroll area for the given
+        widget height and set it to the scroll area.
 
         :param height:  The widget height the scroll area should adjust
                         to

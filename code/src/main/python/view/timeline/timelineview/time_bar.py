@@ -1,25 +1,21 @@
-from .size_connectable_frame import SizeConnectableFrame
+from .size_connectable_frame import SizeLinkableFrame
 
-class TimeBar(SizeConnectableFrame):
+
+class TimeBar(SizeLinkableFrame):
     """
-    Can it be so hard to describe a time bar? In my head it is so
-    simple, but I can't find words for the image in my mind :(
+    Extends SizeLinkableFrame to a frame showing a time bar.
 
-    The TimeBar is simply a drawing consisting of a horizontal line
-    going over the full width of the widget. On this line there are
-    equally spaced small vertical lines. Every fifth one is a little
-    longer than the others and every tenth one is even longer than
-    these. The vertical lines shall give a visual association of time
-    points with Timeables in the Timeline.
-    Important time points are written to the corresponding position of
-    the TimeBar.
-
-    The TimeBar is drawn according to the zoom factor of the
-    TimelineView so that at every time the TimeBar fits the needs to be
-    as useful as possible for the user.
+    Not very implemented yet. So you have nothing to expect except for
+    a few buttons making scrolling movement in the GUI visible. And it's
+    orange!
     """
 
     def __init__(self, parent=None):
+        """
+        Create a TimeBar with a simple debug look.
+
+        :param parent: the parent component
+        """
         super(TimeBar, self).__init__(parent)
 
         # setting the size

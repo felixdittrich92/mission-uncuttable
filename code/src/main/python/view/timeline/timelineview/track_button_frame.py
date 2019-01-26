@@ -1,12 +1,21 @@
-from .size_connectable_frame import SizeConnectableFrame
+from .size_connectable_frame import SizeLinkableFrame
 
 
-class TrackButtonFrame(SizeConnectableFrame):
+class TrackButtonFrame(SizeLinkableFrame):
     """
-    Todo: doc
+    Extends SizeLinkableFrame to a frame which is mainly intended to
+    display TrackButtons.
+
+    The TrackButtonFrame has the size-linkable property. For information
+    on how to use this see the SizeLinkableFrame class.
     """
 
     def __init__(self, parent=None):
+        """
+        Create an empty TrackButtonFrame without any size linkage.
+
+        :param parent: the parent component
+        """
         super(TrackButtonFrame, self).__init__(parent)
 
         # set size
