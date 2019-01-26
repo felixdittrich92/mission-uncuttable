@@ -34,7 +34,6 @@ class TimeableView(QGraphicsRectItem):
         self.setPos(self.x_pos, 0)
 
         self.setFlag(QGraphicsRectItem.ItemIsSelectable, True)  # necessary for moving
-        self.setFlag(QGraphicsItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
 
         self.handle_selected = None
@@ -49,32 +48,25 @@ class TimeableView(QGraphicsRectItem):
         self.update_handles_pos()
 
     def boundingRect(self):
-        """
-        Overwritten Qt Function that defines the outer bounds of the item as a rectangle.
-        """
+        """overwritten Qt Function that defines the outer bounds of the item as a rectangle."""
         return QtCore.QRectF(QtCore.QRectF(0, 0, self.width, self.height))
 
     def paint(self, painter, option, widget):
-        """
-        Overwritten Qt function that paints the item.
-        """
+        """overwritten Qt function that paints the item."""
         self.brush = QtGui.QBrush(QtGui.QColor(214, 104, 83))
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
-        # todo: don't draw text if width is too small
-        painter.drawText(QtCore.QPointF(1, 15), self.name)
+        # only draw name if it fits on the timeable
+        if painter.fontMetrics().width(self.name) <= self.width:
+            painter.drawText(QtCore.QPointF(1, 15), self.name)
 
     def contextMenuEvent(self, event):
-        """
-        defines a rightclick event on the timeable
-        """
+        """defines a rightclick event on the timeable"""
         event.accept()
         self._show_context_menu(self, event.screenPos())
 
     def _show_context_menu(self, button, pos):
-        """
-        shows a context menu, called from contextMenuEvent
-        """
+        """shows a context menu, called from contextMenuEvent"""
         menu = QtWidgets.QMenu()
 
         delete = QtWidgets.QAction('löschen')
@@ -84,9 +76,7 @@ class TimeableView(QGraphicsRectItem):
         menu.exec_(pos)
 
     def delete(self):
-        """
-        removes the timeable from the track
-        """
+        """removes the timeable from the track"""
         self.scene().removeItem(self)
 
     def update_handles_pos(self):
@@ -201,6 +191,12 @@ class TimeableView(QGraphicsRectItem):
             self.setPos(self.x_pos, 0)
 
     def start_drag(self, mouse_event):
+        """
+        starts a drag event and sends necessary data via mime types
+
+        called from mouseMoveEvent() when mouse leaves current track,
+        deletes the current timeable if drop was succesfull
+        """
         # get qpixmap from the timeable
         r = self.boundingRect()
         pixmap = QtGui.QPixmap(r.width(), r.height())
@@ -209,6 +205,7 @@ class TimeableView(QGraphicsRectItem):
         self.scene().render(painter, QtCore.QRectF(), self.sceneBoundingRect())
         painter.end()
 
+        # hide timeable while dragging
         self.setVisible(False)
 
         # write timeable data
@@ -252,9 +249,7 @@ class TimeableView(QGraphicsRectItem):
         QGraphicsItem.hoverMoveEvent(self, event)
 
     def hoverLeaveEvent(self, event):
-        """
-        called when mouse leaves the timeable, sets cursor back to normal arrow cursor
-        """
+        """called when mouse leaves the timeable, sets cursor back to normal arrow cursor"""
         self.setCursor(QtCore.Qt.ArrowCursor)
 
         QGraphicsItem.hoverLeaveEvent(self, event)
@@ -290,9 +285,7 @@ class TimeableView(QGraphicsRectItem):
         QGraphicsItem.mouseMoveEvent(self, event)
 
     def mouseReleaseEvent(self, event):
-        """
-        called when mouse button is released, resets selected handle and mouse press pos
-        """
+        """called when mouse button is released, resets selected handle and mouse press pos"""
         self.setCursor(QtCore.Qt.OpenHandCursor)
 
         self.handle_selected = None
