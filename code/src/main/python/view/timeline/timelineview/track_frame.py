@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QVBoxLayout
 from .size_linkable_frame import SizeLinkableFrame
 
 
@@ -18,13 +19,14 @@ class TrackFrame(SizeLinkableFrame):
         """
         super(TrackFrame, self).__init__(parent)
 
-        self.setFixedSize(5000, 3000)
-
-        # debug look (everything works just as good ad before if you
-        # remove this code):
-        from PyQt5.QtWidgets import QGridLayout, QPushButton
-        self.setLayout(QGridLayout())
-        for i in range(30):
-            for j in range(4):
-                self.layout().addWidget(QPushButton(str(i) + "," + str(j)), j, i)
+        self.setLayout(QVBoxLayout())
         self.setStyleSheet("background-color: orange")
+
+    def add_track(self, track):
+        """
+        Adds a TrackView to the TrackFrame
+
+        :param track: the Track to add
+        """
+        self.layout().addWidget(track)
+        self.adjustSize()
