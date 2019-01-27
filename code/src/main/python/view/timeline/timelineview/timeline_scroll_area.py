@@ -60,9 +60,9 @@ class TimelineScrollArea(QFrame):
         self.__init_scroll_areas()
 
         self.__track_frame = TrackFrame()
-        self.track_frame.setObjectName("track_frame")
+        self.__track_frame.setObjectName("track_frame")
         self.__track_button_frame = TrackButtonFrame()
-        self.track_button_frame.setObjectName("track_button_frame")
+        self.__track_button_frame.setObjectName("track_button_frame")
         self.__time_bar = TimeBar()
 
         self.__time_bar_scroll_area.setWidget(self.__time_bar)
