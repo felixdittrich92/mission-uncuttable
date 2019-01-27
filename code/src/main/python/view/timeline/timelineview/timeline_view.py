@@ -7,19 +7,31 @@ from .timeline_scroll_area import TimelineScrollArea
 
 
 class TimelineView(QFrame):
+    """
+    Extends QFrame to the toplevel widget of the timeline view which
+    shows the tracks and provides tools and controls to view and
+    manipulate them.
+
+    The widget consists of a toolbar and a TimelineScrollArea. The
+    latter one really fulfills the task of displaying the tracks.
+    """
     def __init__(self, parent=None):
+        """
+        Create a TimelineView with a new toolbar and TimelineScrollArea.
+
+        :param parent: the parent component
+        """
         super(TimelineView, self).__init__(parent)
         path = os.path.abspath('src/main/python/view/timeline/timelineview')
-        uic.loadUi(path + '/timeline_widget.ui', self)
+        uic.loadUi(path + '/timeline_view.ui', self)
         self.layout().addWidget(TimelineScrollArea())
 
         self.__show_debug_info_on_gui()
 
     def __show_debug_info_on_gui(self):
         """
-        Sets up different background colors for the TimelineView and
-        its own children. Besides this there is a label added to every
-        component which shows the component's name.
+        Setup the component somehow so that something can be seen which
+        makes it possible to say if something works properly or not.
         """
         toolbar_frame = self.findChild(QObject, 'toolbarFrame')
         toolbar_frame.setStyleSheet('background-color: brown')

@@ -1,1 +1,7 @@
-from .timelineview import timeline_view
+"""
+Todo: doc
+"""
+
+from . import timelineview
+from . import timeableview
+from . import trackview

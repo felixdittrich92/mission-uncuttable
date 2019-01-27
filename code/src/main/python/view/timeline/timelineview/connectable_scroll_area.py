@@ -4,52 +4,55 @@ from PyQt5.QtCore import Qt
 
 class ConnectableScrollArea(QScrollArea):
     """
-    A special ScrollArea which lets you take control by using external
-    ScrollBars. It can be very useful if you want to control multiple
-    ScrollAreas at once with only one ScrollBar.
+    Extends the QScrollArea to a special ScrollArea which lets you take
+    control by using external ScrollBars. It can be very useful if you
+    want to control multiple ScrollAreas at once with only one
+    ScrollBar.
 
     Although this sounds very useful and convenient there is a
     restriction in using the ConnectableScrollArea: One single ScrollBar
     can only control multiple actions if they all use the same value
     range. Otherwise unexpected behaviour can occur.
 
-    ScrollBars can be connected by calling
-    connect_horizontal_scrollbar() or connect_vertical_scrollbar and
-    can be disconnected by calling disconnect_horizontal_scrollbar()
-    or disconnect_vertical_scrollbar().
+    Method overview:
+    connect_horizontal_scrollbar()    -- Connect the horizontal
+                                         scrolling actions to a scroll
+                                         bar.
+    connect_vertical_scrollbar()      -- Connect the vertical scrolling
+                                         actions to a scroll bar.
+    disconnect_horizontal_scrollbar() -- Remove the connection between
+                                         the horizontal scrolling
+                                         actions and a scroll bar.
+    disconnect_vertical_scrollbar()   -- Remove the connection between
+                                         the vertical scrolling actions
+                                         and a scroll bar.
 
-    If a ConnectableScrollArea is connected to a ScrollBar it does three
-    things:
-        1. It sets the range of the ScrollBar according to the size of
-           its widget (either horizontal or vertical)
-        2. It synchronizes itself with the ScrollBar so that
-            * every time the value of the ScrollBar changes the
-              ScrollArea adapts its viewport (according to the
-              orientation which the ScrollBar has been connected to)
-            * every time the size of the widget changes the range of the
-              scrollbar is adapted, too
-            * every time the ScrollArea gets scrolled by something else
-              the value of the ScrollBar is adapted
-        3. It shuts its own ScrollBar with the corresponding orientation
-           off because in most cases it won't be needed anymore
-
-    The shut-off ScrollBars can be turned on again at every time simply
-    by calling QAbstractScrollBar.setHorizontalScrollBarPolicy() or the
-    corresponding function for the vertical ScrollBar depending on
-    what's needed.
-
-    The ConnectableScrollArea remembers how many ScrollBars are
-    connected and shuts its own ScrollBars on again if all external
-    ones have been disconnected. Respectively, this happens for
-    horizontal and vertical direction independently.
+    If a ConnectableScrollArea gets connected to a ScrollBar three
+    things happen:
+     1. The range of the ScrollBar is set according to the size of the
+        scroll area's widget (either horizontal or vertical, depending
+        on the used method)
+     2. The scroll area is synchronized with the ScrollBar so that
+          * every time the value of the ScrollBar changes the ScrollArea
+            moves its widget inside the viewport (according to the
+            orientation which the ScrollBar has been connected to)
+          * every time the size of the widget changes the range of the
+            scrollbar is adapted, too
+          * every time the ScrollArea gets scrolled by something else
+            the value of the ScrollBar is adapted
+     3. The scroll area's own ScrollBars with the corresponding
+        orientation are shut off because in most cases it won't be
+        needed anymore.
+        The shut-off ScrollBars can be turned on again at every time
+        simply by setting the scroll area's ScrollBarPolicies manually.
+        The ConnectableScrollArea remembers how many ScrollBars are
+        connected and shuts its own ScrollBars on again if all external
+        ones have been disconnected. Respectively, this happens for
+        horizontal and vertical direction independently.
     """
 
     def __init__(self, parent=None):
-        """
-        Creates a ConnectableScrollArea which behaves just like any
-        normal scroll area after execution. Special behaviour can be
-        added afterwards.
-        """
+        """Create a ConnectableScrollArea without any connections."""
         super(ConnectableScrollArea, self).__init__(parent)
 
         self.__connections_horizontal = 0
@@ -57,8 +60,8 @@ class ConnectableScrollArea(QScrollArea):
 
     def connect_horizontal_scrollbar(self, foreign_scroll_bar):
         """
-        Connects the horizontal scrolling actions of this
-        ConnectableScrollArea to the given scroll bar.
+        Connect the horizontal scrolling actions to the
+        foreign_scroll_bar.
 
         :param foreign_scroll_bar:  the scroll bar to connect the scroll
                                     area to
@@ -80,8 +83,8 @@ class ConnectableScrollArea(QScrollArea):
 
     def connect_vertical_scrollbar(self, foreign_scroll_bar):
         """
-        Connects the vertical scrolling actions of this
-        ConnectableScrollArea to the given scroll bar.
+        Connect the vertical scrolling actions to the foreign scroll
+        bar.
 
         :param foreign_scroll_bar:  the scroll bar to connect the scroll
                                     area to
@@ -103,8 +106,8 @@ class ConnectableScrollArea(QScrollArea):
 
     def disconnect_horizontal_scrollbar(self, foreign_scroll_bar):
         """
-        Removes the connection between the scroll area's horizontal and
-        scrolling actions and the given scroll bar.
+        Remove the connection between the horizontal scrolling actions
+        and the foreign_scroll_bar.
 
         :param foreign_scroll_bar:  the scroll bar to disconnect the
                                     scroll area from
@@ -122,8 +125,8 @@ class ConnectableScrollArea(QScrollArea):
 
     def disconnect_vertical_scrollbar(self, foreign_scroll_bar):
         """
-        Removes the connection between the scroll area's vertical and
-        scrolling actions and the given scroll bar.
+        Remove the connection between the vertical scrolling actions
+        and the foreign_foreign_scroll_bar.
 
         :param foreign_scroll_bar:  the scroll bar to disconnect the
                                     scroll area from
