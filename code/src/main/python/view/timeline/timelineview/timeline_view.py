@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFrame, QLabel
+from PyQt5.QtWidgets import QFrame
 from PyQt5 import uic
 from PyQt5.QtCore import QObject
 import os
@@ -24,7 +24,10 @@ class TimelineView(QFrame):
         super(TimelineView, self).__init__(parent)
         path = os.path.abspath('src/main/python/view/timeline/timelineview')
         uic.loadUi(path + '/timeline_view.ui', self)
-        self.layout().addWidget(TimelineScrollArea())
+
+        timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
+        self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())
+        timeline_scroll_area.deleteLater()
 
         self.__show_debug_info_on_gui()
 
@@ -33,11 +36,6 @@ class TimelineView(QFrame):
         Setup the component somehow so that something can be seen which
         makes it possible to say if something works properly or not.
         """
-        toolbar_frame = self.findChild(QObject, 'toolbarFrame')
-        toolbar_frame.setStyleSheet('background-color: brown')
-        toolbar_frame.layout().insertWidget(
-            0, QLabel(toolbar_frame.objectName())
-        )
         self.setStyleSheet('background-color: yellow')
 
 
