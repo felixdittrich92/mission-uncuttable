@@ -50,7 +50,9 @@ class TimelineScrollArea(QFrame):
         self.horizontal_scrollbar = QScrollBar(Qt.Horizontal)
         self.vertical_scrollbar = QScrollBar(Qt.Vertical)
         self.track_frame = TrackFrame()
+        self.track_frame.setObjectName("track_frame")
         self.track_button_frame = TrackButtonFrame()
+        self.track_button_frame.setObjectName("track_button_frame")
         self.time_bar = TimeBar()
 
         self.time_bar_scroll_area \
