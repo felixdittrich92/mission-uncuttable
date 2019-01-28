@@ -33,7 +33,20 @@ class StartView(QMainWindow):
         self.settings = settings.get_settings()
         print(self.settings.language)
         print(self.settings.kinder[0].name)
-        settings.save_settings()
+
+        new_settings = {
+            "language": "spa",
+            "beruf": None,
+            "kinder": [
+                {
+                    "name": "Jason",
+                    "alter": 19,
+                    "schulabschluss": "Realschule"
+                }
+            ]
+        }
+
+        settings.save_settings(new_settings)
 
     def show(self):
         """Starts the start-window normal (not maximized)."""

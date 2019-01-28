@@ -83,14 +83,17 @@ class Settings:
         @type   new_settings: Dictionary
         @param  new_settings: Settings to be saved
         """
-        global file
         home = os.path.expanduser('~')
+        location = ""
         if platform.system() == 'Linux':
             location = os.path.join(home, '.config', 'ubicut')
-            if not os.path.exists(location):
-                os.makedirs(location)
+        elif platform.system() == 'Windows':
+            location = os.path.join(home, 'AppData', 'Roaming')
 
-            file = os.path.join(location, 'userconfig.json')
+        if not os.path.exists(location):
+            os.makedirs(location)
+
+        file = os.path.join(location, 'userconfig.json')
 
         with open(file, 'w') as outfile:        # writes json to file
             json.dump(new_settings, outfile, ensure_ascii=False)
