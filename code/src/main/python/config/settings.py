@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import platform
 
 import config
 
@@ -73,4 +74,10 @@ class Settings:
         """
         return self.settings
 
-
+    def save_settings(self):
+        home = os.path.expanduser('~')
+        if platform.system() == 'Linux':
+            location = os.path.join(home, '.config', 'ubicut')
+            if not os.path.exists(location):
+                print("nööööööööööööö")
+                os.makedirs(location)
