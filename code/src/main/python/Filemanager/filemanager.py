@@ -3,31 +3,26 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QPushButton, QListWidget
-
+from PyQt5 import uic
+from PyQt5.QtCore import QObject
+import os
 
 class Filemanager(QWidget):
 
     def __init__(self, parent=None):
         super(Filemanager, self).__init__(parent)
-
+        path = os.path.abspath('src/main/python/Filemanager')
+        uic.loadUi(path + '/filemanager.ui', self)
         self.setupUi()
         # self.retranslateUi()
 
     def setupUi(self):
         self.setObjectName("file_manager")
         #Dialog.resize(673, 280)
-        self.pushButton_3 = QPushButton(self)
-        self.pushButton_3.setGeometry(QtCore.QRect(100, 10, 75, 23))
-        self.pushButton_3.setObjectName("btnClear")
-        self.pushButton_2 = QPushButton(self)
-        self.pushButton_2.setGeometry(QtCore.QRect(10, 10, 75, 23))
-        self.pushButton_2.setObjectName("btnPickFile")
-        self.pushButton = QPushButton(self)
-        self.pushButton.setGeometry(QtCore.QRect(580, 10, 75, 23))
-        self.pushButton.setObjectName("btnExit")
-        self.listWidget = QListWidget(self)
+        self.pushButton_3 = self.findChild(QObject,'pushButton_3')
+        self.pushButton_2 = self.findChild(QObject,'pushButton_2')
+        self.listWidget = self.findChild(QObject,'listWidget')
         # self.retranslateUi(self)
-        self.pushButton.clicked.connect(self.exit)
         self.pushButton_2.clicked.connect(self.filePick)
         self.pushButton_3.clicked.connect(self.clearListWidget)
         QtCore.QMetaObject.connectSlotsByName(self)
