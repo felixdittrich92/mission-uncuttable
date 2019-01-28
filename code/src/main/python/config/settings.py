@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 import platform
 
 import config
@@ -41,7 +40,6 @@ class Settings:
         overwritten.
         Then the JSON gets converted into an object, where the settings can
         be accessed via dot-notation.
-
         """
 
         if Settings.__instance is not None:
@@ -74,18 +72,18 @@ class Settings:
         """
         return self.settings
 
-    def save_settings(self):
-        new_settings = {
-            "language": "de",
-            "beruf": None,
-            "kinder": [
-                {
-                    "name": "Amelie",
-                    "alter": 19,
-                    "schulabschluss": "Realschule"
-                }
-            ]
-        }
+    @staticmethod
+    def save_settings(new_settings):
+        """
+        Method that saves the custom user settings to a file.
+
+        Depending on the platform, the program is running on, a directory,
+        containing the json file is created.
+
+        @type   new_settings: Dictionary
+        @param  new_settings: Settings to be saved
+        """
+        global file
         home = os.path.expanduser('~')
         if platform.system() == 'Linux':
             location = os.path.join(home, '.config', 'ubicut')
@@ -94,5 +92,5 @@ class Settings:
 
             file = os.path.join(location, 'userconfig.json')
 
-            with open(file, 'w') as outfile:        # writes json to file
-                json.dump(new_settings, outfile)
+        with open(file, 'w') as outfile:        # writes json to file
+            json.dump(new_settings, outfile, ensure_ascii=False)
