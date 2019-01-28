@@ -48,8 +48,8 @@ class Settings:
             raise Exception("This class is a singleton!")
         else:
             Settings.__instance = self
-
-            user_config = os.path.join(sys.path[0], 'config/userconfig.json')
+            home = os.path.expanduser('~')
+            user_config = os.path.join(home, '.config', 'ubicut', 'userconfig.json')
             if os.path.exists(user_config):
                 with open(user_config, 'r') as read_file:
                     self.user_config_data = json.load(read_file)
@@ -68,16 +68,31 @@ class Settings:
 
     def get_settings(self):
         """
-        Getter that returns all settings as a object.
+        Getter that returns all settings as an object.
 
         @return: object of settings
         """
         return self.settings
 
     def save_settings(self):
+        new_settings = {
+            "language": "de",
+            "beruf": None,
+            "kinder": [
+                {
+                    "name": "Amelie",
+                    "alter": 19,
+                    "schulabschluss": "Realschule"
+                }
+            ]
+        }
         home = os.path.expanduser('~')
         if platform.system() == 'Linux':
             location = os.path.join(home, '.config', 'ubicut')
             if not os.path.exists(location):
-                print("nööööööööööööö")
                 os.makedirs(location)
+
+            file = os.path.join(location, 'userconfig.json')
+
+            with open(file, 'w') as outfile:        # writes json to file
+                json.dump(new_settings, outfile)
