@@ -1,9 +1,11 @@
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout,QSplitter
 from PyQt5 import uic
 from shortcuts import ShortcutLoader
 import os
 from .preview import PreviewView
+
+from Filemanager.filemanager import Filemanager
 
 
 class VideoEditorView(QMainWindow):
@@ -18,7 +20,14 @@ class VideoEditorView(QMainWindow):
         self.previewlayout.addWidget(previewview)
 
         self.shortcuts = ShortcutLoader(self)
+        self.load_filemanager()
 
     def show(self):
         """Starts the video-editor-window maximized."""
         self.showMaximized()
+
+    def load_filemanager(self):
+        filemanager=Filemanager()
+        splitter=self.findChild(QSplitter,"verticalSplitter")
+        splitter.replaceWidget(0,filemanager)
+        filemanager.show()
