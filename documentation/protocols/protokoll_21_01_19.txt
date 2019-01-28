@@ -1,0 +1,38 @@
+Protokoll 21.01.2019
+Protokollant: Clemens Zwinzscher
+
+Markus: Timeline Layout erstellt
+Johannes: Filemanager öffnet sich, Programm beendet sich aus unbekanntem Grund
+
+Retrospektive:
+- jeder sagt wie er Sprint einschätzt auf Skala von -1 bis 1
+- jeder schreibt etwas positives und negatives auf
+
+pro:
+- Fortschritt Timeline
+- Programmierworkshop
+- es geht mit Doku voran
+
+con:
+- Pünktlichkeit bei Meetings
+- fehlende Motivation
+- fehlende Kommunikation
+- Doku nicht vollständig
+- wenig Zeit (wegen Prüfungen)
+- Doku aufwändig
+- nicht so viel geschafft wie geplant war
+- fehlende Anwesenheit beim Team Building
+
+maßnahmen:
+- sagen wenn man nicht kommen kann
+- zu Programmierworkshops kommen
+- Doku schreiben
+- fester Zeitplan (3h einplanen)
+- Tasks kleiner machen, damit Fortschritt spürbar wird
+- teambuilding früher planen
+
+Vergleich mit letzter Retrospektive
+- bei development funkioniert settings fenster nicht
+- jetzt mehr untertasks
+- langsam ist man in Qt eingearbeitet
+- es hat mehr Kommunikation stattgefunden
