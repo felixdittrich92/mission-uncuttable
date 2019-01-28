@@ -1,0 +1,22 @@
+Protokoll 24.01.2019
+Protokollant: Clemens Zwinzscher
+
+gefehlt: Julian (unentschuldigt)
+
+was hat jeder gemacht:
+- Jeremy/Johannes: Filemanager fertig
+- Markus: Timeline Widget
+- Valentin/Alex: Designpreferences
+- Max: einlesen von Einstellungen, eigene Einstellungen, todo: speichern
+- Clemens: Spuren in Timeline, todo: zwischen Spuren verschieben
+- Felix: pdf einlesen, in jpeg umwandeln
+
+was stellt jeder vor:
+- Valentin: Projekt generell
+- Markus: Timeline (scrollareas mit scrollbars koppeln)
+- Clemens: Timeable Klasse (verschieben, vergrößern)
+- Jeremy/Johannes: Filemanager
+- Alex: Videopreview oder Settingswindow
+- Felix: Fenster, pdfs einlesen
+- Max: shortcuts, einlesen Einstellungen
+- Julian: ?

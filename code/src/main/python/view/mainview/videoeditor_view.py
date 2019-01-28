@@ -1,3 +1,4 @@
+from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QVBoxLayout,QSplitter
 from PyQt5 import uic
@@ -6,6 +7,8 @@ import os
 from .preview import PreviewView
 
 from Filemanager.filemanager import Filemanager
+
+from view.timeline.timelineview.timeline_view import TimelineView
 
 
 class VideoEditorView(QMainWindow):
@@ -21,6 +24,21 @@ class VideoEditorView(QMainWindow):
 
         self.shortcuts = ShortcutLoader(self)
         self.load_filemanager()
+
+        self.load_timeline_widget()
+
+    def load_timeline_widget(self):
+        """
+        Replaces the 'bottomFrame'-named QObject with a new instance of
+        TimelineView. The widget doesn't have any real content yet after
+        execution of this method.
+        """
+        splitter = self.findChild(QObject, 'horizontalSplitter')
+        bottom_frame = self.findChild(QObject, 'bottomFrame')
+        i = splitter.indexOf(bottom_frame)
+        timeline_view = TimelineView()
+        splitter.replaceWidget(i, timeline_view)
+        timeline_view.show()
 
     def show(self):
         """Starts the video-editor-window maximized."""
