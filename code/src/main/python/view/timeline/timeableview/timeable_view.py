@@ -119,15 +119,11 @@ class TimeableView(QGraphicsRectItem):
 
         @param mouse_event: the event parameter from the mouseMoveEvent function
         """
-        rect = self.rect()
-
         if self.handle_selected == self.handle_left:
-            diff = (self.mouse_press_rect.left() + mouse_event.pos().x()
-                    - self.mouse_press_pos.x())
+            diff = mouse_event.pos().x() - self.mouse_press_pos.x()
 
             if diff + self.scenePos().x() >= 0:
-                rect.setLeft(diff)
-                w = rect.size().width()
+                w = self.width - diff
                 if w <= 9 or w > self.max_width:
                     return
 
@@ -149,6 +145,7 @@ class TimeableView(QGraphicsRectItem):
                     - self.mouse_press_pos.x())
 
             if diff <= self.scene().width():
+                rect = self.rect()
                 rect.setRight(diff)
                 w = rect.size().width()
                 if w <= 9 or w > self.max_width:
