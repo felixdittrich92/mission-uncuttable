@@ -88,7 +88,7 @@ class Settings:
         if platform.system() == 'Linux':
             location = os.path.join(home, '.config', 'ubicut')
         elif platform.system() == 'Windows':
-            location = os.path.join(home, 'AppData', 'Roaming')
+            location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
 
         if not os.path.exists(location):
             os.makedirs(location)
