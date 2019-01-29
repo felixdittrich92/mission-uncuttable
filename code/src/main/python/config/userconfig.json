@@ -1,0 +1,10 @@
+{
+  "language": "en",
+  "kinder":
+    [{
+      "name": "Lisa",
+      "alter": 19,
+      "schulabschluss": "Realschule"
+    }],
+  "verheiratet": true
+}
