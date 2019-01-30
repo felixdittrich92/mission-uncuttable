@@ -130,4 +130,3 @@ class TimelineScrollArea(QFrame):
         makes it possible to say if something works properly or not.
         """
         self.setStyleSheet('background-color: blue')
-
