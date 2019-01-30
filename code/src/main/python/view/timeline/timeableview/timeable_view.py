@@ -26,9 +26,10 @@ class TimeableView(QGraphicsRectItem):
 
         self.name = name
         self.width = width
-        self.max_width = width
         self.height = height
         self.x_pos = x_pos
+        self.resizable_left = 0
+        self.resizable_rigth = 0
 
         self.setRect(self.boundingRect())
         self.setPos(self.x_pos, 0)
@@ -122,45 +123,40 @@ class TimeableView(QGraphicsRectItem):
         if self.handle_selected == self.handle_left:
             diff = mouse_event.pos().x() - self.mouse_press_pos.x()
 
-            if diff + self.scenePos().x() >= 0:
-                w = self.width - diff
-                if w <= 9 or w > self.max_width:
-                    return
-
-                new_x_pos = self.x_pos + diff
-                r = QtCore.QRectF(new_x_pos, 0, w, self.height)
-                colliding = self.scene().items(r)
-                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
-                    return
-
-                self.width = w
-                self.setRect(self.boundingRect())
-                self.x_pos = self.x_pos + diff
-                self.setPos(self.x_pos, 0)
-            else:
+            w = self.width - diff
+            if w <= 9 or diff + self.scenePos().x() < 0 or diff < self.resizable_left:
                 return
+
+            new_x_pos = self.x_pos + diff
+            r = QtCore.QRectF(new_x_pos, 0, w, self.height)
+            colliding = self.scene().items(r)
+            if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                return
+
+            self.width = w
+            self.setRect(self.boundingRect())
+            self.x_pos = self.x_pos + diff
+            self.setPos(self.x_pos, 0)
+            self.resizable_left -= diff
 
         elif self.handle_selected == self.handle_right:
             diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
-                    - self.mouse_press_pos.x())
+                    - self.mouse_press_pos.x() - self.width)
 
-            if diff <= self.scene().width():
-                rect = self.rect()
-                rect.setRight(diff)
-                w = rect.size().width()
-                if w <= 9 or w > self.max_width:
-                    return
+            w = self.width + diff
 
-                r = QtCore.QRectF(self.x_pos, 0, w, self.height)
-                colliding = self.scene().items(r)
-                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
-                    return
-
-                self.width = w
-                self.setRect(self.boundingRect())
-                self.setPos(self.x_pos, 0)
-            else:
+            if w > self.scene().width() or w <= 9 or diff > self.resizable_rigth:
                 return
+
+            r = QtCore.QRectF(self.x_pos, 0, w, self.height)
+            colliding = self.scene().items(r)
+            if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                return
+
+            self.width = w
+            self.setRect(self.boundingRect())
+            self.setPos(self.x_pos, 0)
+            self.resizable_rigth -= diff
 
         self.update_handles_pos()
 
