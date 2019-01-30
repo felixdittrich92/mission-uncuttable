@@ -13,7 +13,7 @@ class TimeableView(QGraphicsRectItem):
     to another Track.
     """
 
-    def __init__(self, name, width, height, x_pos):
+    def __init__(self, name, width, height, x_pos, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -22,7 +22,7 @@ class TimeableView(QGraphicsRectItem):
         @param height: timeable heigth, should be the same as track heigth
         @param x_pos: position on the track
         """
-        super(TimeableView, self).__init__()
+        super(TimeableView, self).__init__(parent)
 
         self.name = name
         self.width = width
@@ -206,6 +206,8 @@ class TimeableView(QGraphicsRectItem):
         data_stream = QtCore.QDataStream(item_data, QtCore.QIODevice.WriteOnly)
         QtCore.QDataStream.writeString(data_stream, str.encode(self.name))
         QtCore.QDataStream.writeInt(data_stream, self.width)
+        QtCore.QDataStream.writeInt(data_stream, self.resizable_left)
+        QtCore.QDataStream.writeInt(data_stream, self.resizable_rigth)
 
         mimeData = QtCore.QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
