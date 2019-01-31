@@ -1,7 +1,6 @@
 altgraph==0.16.1
 atomicwrites==1.2.1
 attrs==18.2.0
-colorama==0.4.0
 fbs==0.4.7
 future==0.17.1
 gitignore-parser==0.0.3
@@ -14,13 +13,8 @@ opencv-python==3.4.5.20
 pefile==2018.8.8
 pluggy==0.8.0
 py==1.7.0
-PyGUI==2.5.4
 PyInstaller==3.4
 PyQt5==5.9.2
-PyQt5-sip==4.19.13
 pytest==4.0.1
-pywin32==224
-pywin32-ctypes==0.2.0
 sip==4.19.8
 six==1.11.0
-Wand==0.4.5
