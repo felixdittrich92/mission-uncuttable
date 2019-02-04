@@ -28,8 +28,10 @@ class TimeableView(QGraphicsRectItem):
         self.width = width
         self.height = height
         self.x_pos = x_pos
+
         self.resizable_left = 0
         self.resizable_rigth = 0
+        self.name_visible = False
 
         self.setRect(self.boundingRect())
         self.setPos(self.x_pos, 0)
@@ -60,6 +62,9 @@ class TimeableView(QGraphicsRectItem):
         # only draw name if it fits on the timeable
         if painter.fontMetrics().width(self.name) <= self.width:
             painter.drawText(QtCore.QPointF(1, 15), self.name)
+            self.name_visible = True
+        else:
+            self.name_visible = False
 
     def contextMenuEvent(self, event):
         """defines a rightclick event on the timeable"""
@@ -228,8 +233,11 @@ class TimeableView(QGraphicsRectItem):
     def hoverMoveEvent(self, event):
         """
         called when mouse hovers over Timeable,
-        sets the cursor according to the position of the mouse
+        sets the cursor according to the position of the mouse and shows timeable name
         """
+        if not self.name_visible:
+            self.setToolTip("<font color=\"#ffffff\">" + self.name + "</font>")
+
         # get handle at current position
         handle = self.handle_at(event.pos())
 
