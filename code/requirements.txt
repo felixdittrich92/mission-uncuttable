@@ -10,7 +10,7 @@ macholib==1.11
 more-itertools==4.3.0
 mutagen==1.41.1
 numpy==1.15.4
-opencv-python==3.4.5.20
+opencv-python==4.0.0.21
 pefile==2018.8.8
 pluggy==0.8.0
 py==1.7.0
