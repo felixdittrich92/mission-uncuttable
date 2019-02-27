@@ -36,23 +36,22 @@ class StartView(QMainWindow):
         self.new_project_frame.hide()
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
-
         settings = Settings.get_instance()
-
         self.settings = settings.get_settings()
-        print(self.settings.language)
-        print(self.settings.kinder[0].name)
 
         new_settings = {
-            "language": "spa",
-            "beruf": None,
-            "kinder": [
-                {
-                    "name": "Jason",
-                    "alter": 19,
-                    "schulabschluss": "Realschule"
-                }
-            ]
+        "color_theme":[{
+            "name":"Color Theme",
+            "category":"neudesign",
+            "type":"dropdown",
+            "setting":"dark"
+        }],
+        "Option_1":[{
+            "name":"Color Theme",
+            "category":"neudesign",
+            "type":"checkbox",
+            "setting":"dark"
+        }]
         }
 
         settings.save_settings(new_settings)
