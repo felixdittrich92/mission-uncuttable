@@ -1,0 +1,10 @@
+Anwesenheitsliste:  
+Tim, Sascha, Leopold, Jeremy, Markus, Valentin, Alexander, Julian (8:15 Uhr erschienen), Wang, Johannes
+
+Besprechung:
+	-Erstellen einer Pro- und Contra Liste zum Sprint
+	-Tipps: -PyQt4 Dokumentation lesen
+	-Vorstellen der Einzelteile nach dem Sprint
+	-Akzeptieren/ Ablehnen dieser mit Verbesserungsvorschlägen 
+	-Stellungnahme der einzelnen Parteien zum Erfolg/ Misserfolg 
+	-Endergebnis Erster Sprint: nicht erfüllt 
