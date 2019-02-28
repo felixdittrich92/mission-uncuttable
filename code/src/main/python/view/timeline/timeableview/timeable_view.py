@@ -25,6 +25,7 @@ class TimeableView(QGraphicsRectItem):
         super(TimeableView, self).__init__(parent)
 
         self.name = name
+        self.prepareGeometryChange()
         self.width = width
         self.height = height
         self.x_pos = x_pos
@@ -37,6 +38,7 @@ class TimeableView(QGraphicsRectItem):
         self.setPos(self.x_pos, 0)
 
         self.setFlag(QGraphicsRectItem.ItemIsSelectable, True)  # necessary for moving
+        self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
 
         self.handle_selected = None
@@ -59,7 +61,9 @@ class TimeableView(QGraphicsRectItem):
         self.brush = QtGui.QBrush(QtGui.QColor(214, 104, 83))
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
+
         # only draw name if it fits on the timeable
+        # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
             painter.drawText(QtCore.QPointF(1, 15), self.name)
             self.name_visible = True
@@ -67,23 +71,51 @@ class TimeableView(QGraphicsRectItem):
             self.name_visible = False
 
     def contextMenuEvent(self, event):
-        """defines a rightclick event on the timeable"""
+        """shows a menu on rightclick"""
         event.accept()
-        self._show_context_menu(self, event.screenPos())
 
-    def _show_context_menu(self, button, pos):
-        """shows a context menu, called from contextMenuEvent"""
         menu = QtWidgets.QMenu()
 
         delete = QtWidgets.QAction('löschen')
         menu.addAction(delete)
         delete.triggered.connect(self.delete)
 
-        menu.exec_(pos)
+        cut = QtWidgets.QAction('schneiden')
+        menu.addAction(cut)
+        cut.triggered.connect(lambda: self.cut(event.pos().x()))
+
+        menu.exec_(event.screenPos() + QtCore.QPoint(0, 5))
 
     def delete(self):
         """removes the timeable from the track"""
         self.scene().removeItem(self)
+
+    def cut(self, pos):
+        """
+        cuts the timeable in two parts
+
+        @param pos: x position on the timeable where it's cut
+        """
+        if pos < 9 and self.width >= 18:
+            return
+
+        # create the second timeable
+        new_timeable = TimeableView(self.name + '(2)', self.width - pos,
+                                    self.height, pos + self.x_pos)
+
+        # the bounding rect is dependent on the width so we have to call prepareGeometryChange
+        # otherwhise the program can randomly crash
+        self.prepareGeometryChange()
+        # own width gets reduced to the point where the rightclick was made
+        self.width = pos
+        # adjust own timeable
+        self.setRect(self.boundingRect())
+        self.setPos(self.x_pos, 0)
+
+        # add the new timeable to the scene
+        self.scene().addItem(new_timeable)
+
+        self.update_handles_pos()
 
     def update_handles_pos(self):
         """
@@ -138,6 +170,7 @@ class TimeableView(QGraphicsRectItem):
             if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
                 return
 
+            self.prepareGeometryChange()
             self.width = w
             self.setRect(self.boundingRect())
             self.x_pos = self.x_pos + diff
@@ -158,9 +191,9 @@ class TimeableView(QGraphicsRectItem):
             if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
                 return
 
+            self.prepareGeometryChange()
             self.width = w
             self.setRect(self.boundingRect())
-            self.setPos(self.x_pos, 0)
             self.resizable_rigth -= diff
 
         self.update_handles_pos()
@@ -226,7 +259,7 @@ class TimeableView(QGraphicsRectItem):
 
         # delete the timeable if the the item was succesfully dropped
         if (drag.exec_(QtCore.Qt.MoveAction) == QtCore.Qt.MoveAction):
-            self.delete()
+            self.scene().removeItem(self)
         else:
             self.setVisible(True)
 
