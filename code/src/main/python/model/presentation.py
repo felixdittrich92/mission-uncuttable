@@ -4,6 +4,7 @@ from slide import Slide
 
 class Presentation:
     """Class that divides a PDF into individual images and converts them to jpg"""
+
     def __init__(self):
         """Constructor of the class"""
         print('Image erstellt')

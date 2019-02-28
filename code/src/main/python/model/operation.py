@@ -1,10 +1,10 @@
 
 class Operation:
     def __init__(self, name):
-        self.___name = name
+        self.___name = name()
         
-    def do():
+    def do(self):
         pass
 
-    def undo():
+    def undo(self):
         pass

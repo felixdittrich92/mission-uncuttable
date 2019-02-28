@@ -1,12 +1,12 @@
 from history import History
 
 class Project:
-    def __init__(self):
+    def __init__(self, History):
         self.___path = " "
         self.___history = History
         
-    def save():
+    def save(self):
         pass
 
-    def save_as():
+    def save_as(self):
         pass
