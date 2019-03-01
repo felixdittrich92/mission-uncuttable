@@ -1,4 +1,5 @@
-from model import Presentation
+# from model import Presentation
+
 
 class Slide:
     """Constructor that saves the current page and page number"""
