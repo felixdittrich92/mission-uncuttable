@@ -1,8 +1,11 @@
-from .operation import Operation
+#from .operation import Operation
 
 class History:
-    def __init__(self, Operation):
-        self.operations = [Operation]
+    def __init__(self, operations = []):
+        if(len(operations) > 0):
+            self.operations = operations
+        else:
+            self.operations = []
         
     def apply_history(self):
         pass

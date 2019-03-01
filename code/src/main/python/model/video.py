@@ -9,12 +9,12 @@ class Video:
     def show_video(self, path, filename):
 
         cap = cv2.VideoCapture(file=path + filename)
-        if (cap.isOpened() == False):
+        if (cap.isOpened() is False):
             print("Error opening video stream or file")
 
         while(cap.isOpened()):
             frame = cap.read()
-            if cap.read() == True:
+            if cap.read() is True:
                 cv2.imshow('Frame', frame)
 
                 if cv2.waitKey(25) & 0xFF == ord('q'):
