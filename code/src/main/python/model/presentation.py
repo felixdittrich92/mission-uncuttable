@@ -1,5 +1,5 @@
 from wand.image import Image as wa
-from slide import Slide
+from model import Slide
 
 
 class Presentation:
@@ -20,3 +20,4 @@ class Presentation:
             slide = []
             slide.append(Slide(page_number, page))
             page_number += 1
+            print("Ich wurde erfolgreich ausgeführt")

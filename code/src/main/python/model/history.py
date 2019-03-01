@@ -1,4 +1,4 @@
-from operation import Operation
+from model import Operation
 
 class History:
     def __init__(self, Operation):

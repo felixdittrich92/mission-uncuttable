@@ -1,4 +1,4 @@
-from history import History
+from model import History
 
 class Project:
     def __init__(self, History):
