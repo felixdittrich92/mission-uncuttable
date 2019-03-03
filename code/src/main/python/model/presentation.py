@@ -1,5 +1,5 @@
 from wand.image import Image as wa
-from model import Slide
+from .slide import Slide
 
 
 class Presentation:

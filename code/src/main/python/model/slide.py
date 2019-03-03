@@ -1,4 +1,4 @@
-# from model import Presentation
+# from .presentation import Presentation
 
 
 class Slide:

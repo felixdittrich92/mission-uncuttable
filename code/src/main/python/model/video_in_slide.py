@@ -1,7 +1,7 @@
 import numpy
 import cv2
 from model import Slide
-from model import Video
+from .video import Video
 
 
 class VideoInSlide:
