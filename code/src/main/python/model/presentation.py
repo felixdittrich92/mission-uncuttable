@@ -9,7 +9,7 @@ class Presentation:
         """Constructor of the class"""
         pass
 
-    def convert(path, filename, new_project_path, new_project_name):
+    def convert(self, path, filename, new_project_path, new_project_name):
         """a function that creates a new project folder split the pdf to pictures and save them in the new folder"""
         folder = Path(new_project_path, new_project_name)
         folder.mkdir(exist_ok=True) 
