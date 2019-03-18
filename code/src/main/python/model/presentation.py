@@ -1,5 +1,5 @@
 from pdf2image import convert_from_path
-import os
+from pathlib import Path
 
 
 class Presentation:
@@ -7,16 +7,14 @@ class Presentation:
 
     def __init__(self):
         """Constructor of the class"""
-        print('Image erstellt')
         pass
 
-    def convert(self, path, filename, folder_path, folder_name):
-        """a method that creates a new project folder split the pdf to pictures and save them in the new folder"""
-        folder = os.path.join(folder_path, folder_name)
-        os.makedirs(folder)
-        pages = convert_from_path(os.path.join(path, filename), 300)
-        os.chdir(folder)
-        page_number = 1
-        for page in pages:
-            page.save("{}.jpg".format(page_number), 'JPEG')
-            page_number += 1
+    def convert(path, filename, new_project_path, new_project_name):
+        """a function that creates a new project folder split the pdf to pictures and save them in the new folder"""
+        folder = Path(new_project_path, new_project_name)
+        folder.mkdir(exist_ok=True) 
+        input_file = Path(path, filename)
+        pages = convert_from_path(str(input_file), 300)
+        for page_number, page in enumerate(pages, start=1):
+            target = folder / f"{page_number:03d}.jpg"
+            page.save(str(target),  'JPEG')
