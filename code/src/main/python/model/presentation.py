@@ -5,7 +5,7 @@ import cv2
 from PIL import Image
 from pathlib import Path
 
-def convert(self, file_path, filename, new_project_path, new_project_name):
+def convert(file_path, filename, new_project_path, new_project_name):
     """a function that creates a new project folder takes a pdf-file and split it into pictures which will save in the new folder"""
     folder = Path(new_project_path, new_project_name)
     folder.mkdir(exist_ok=True) 
@@ -23,7 +23,7 @@ def convert(self, file_path, filename, new_project_path, new_project_name):
     files.sort()
 
 
-def check_color(self, file_path, filename, left_pixel, upper_pixel, right_pixel, lower_pixel):
+def check_color(file_path, filename, left_pixel, upper_pixel, right_pixel, lower_pixel):
     """a function that checks if the place in the picture for video is free"""
     """description: left_pixel and upper_pixel are the (x,y) points for the video place like (0,0) in a coordinate system, right_pixel and lower_pixel are the coordinates of the lower right corner"""
     """@return: true / false"""
