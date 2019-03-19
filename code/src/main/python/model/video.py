@@ -1,7 +1,7 @@
 #import numpy
 #import cv2
 
-
+#useless
 class Video:
     def __init__(self):
         pass

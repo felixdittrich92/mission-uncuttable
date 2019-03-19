@@ -3,7 +3,7 @@
 #from model import Slide
 #from .video import Video
 
-
+#useless
 class VideoInSlide:
     def __init__(self):
         pass
