@@ -7,24 +7,45 @@ from PIL import Image
 from pathlib import Path
 import shutil
 
-def convert(file_path, filename, new_project_path, new_project_name):
-    """a function that takes a path and a PDF file, converts them to JPG, and then saves the individual images
-    in the new created folder"""
-    folder = Path(new_project_path, new_project_name)
-    folder.mkdir(exist_ok=True) 
-    input_file = Path(file_path, filename)
-    pages = convert_from_path(str(input_file), 250)
-    files = []
-    for page_number, page in enumerate(pages, start=1):
-        target = folder / f"{page_number:03d}.jpg"
-        page.save(str(target),  'JPEG')
-    for file in os.listdir(folder):
-        files.append(file)
 
-    files.sort()
+def convert(file_path, filename, new_project_path, new_project_name):
+    """
+    a function that takes a path and a PDF file, converts them to JPG, and then saves the individual images
+    in the new created folder
+    
+    @param file_path: the path to the pdf
+    @param filename: the name of the pdf
+    @param new_project_path: path for the new project
+    @param new_project_name: name for the new project
+    """
+    pdf_file = Path(file_path, filename)
+    check_pdf = fnmatch(pdf_file, '*.pdf')
+    if check_pdf == True:
+        folder = Path(new_project_path, new_project_name)
+        folder.mkdir(exist_ok=True) 
+        input_file = Path(file_path, filename)
+        pages = convert_from_path(str(input_file), 250)
+        files = []
+        for page_number, page in enumerate(pages, start=1):
+            target = folder / f"{page_number:03d}.jpg"
+            page.save(str(target),  'JPEG')
+        for file in os.listdir(folder):
+            files.append(file)
+
+        files.sort()
+    else:
+        print("the datatype must be .pdf")
+
 
 def add_file_to_project(file_path, filename, project_path, project_name):
-    """a function which takes a file and write it in the specific folder if the file has a usefull format"""
+    """
+    a function which takes a file and write it in the specific folder if the file has a usefull format
+    
+    @param file_path: path to the file
+    @param filename: name of the file
+    @param project_path: the path from the project folder
+    @param project_name: the name of the folder
+    """
     folder = Path(project_path, project_name)
     file_to_add = Path(file_path, filename)
     check_jpg = fnmatch(file_to_add, '*.jpg')
@@ -39,18 +60,30 @@ def add_file_to_project(file_path, filename, project_path, project_name):
     else:
         print("the datatype must be .jpg or .mp4 or .png")
 
+
 def delete_folder(project_path, project_name):
-    """a function which delete a project folder and all files"""
+    """
+    a function which delete a project folder and all files
+    
+    @param project_path: the path to the folder
+    @param project_name: the name of the folder
+    """
     folder = Path(project_path, project_name)
     shutil.rmtree(folder, ignore_errors=True)
+
 
 def check_color(file_path, filename, y1, y2, x1, x2):
     """
     a function which checks if the place for a video is free to show it 
-    @param y1: Point(x,min) in a coordinate system for the region of interrest
+
+    @param file_path: the path to the file
+    @param filename: the name of the file
+    @param y1: Point(x,min) in a coordinate system for the region of interest
     @param y2: Point(x,max)
     @param x1: Point(min, y)
     @param x2: Point(max, y)
+
+    @return: True if region of interest is completly white or gray
     """
     input_file = Path(file_path, filename)
     white = 255
@@ -65,31 +98,45 @@ def check_color(file_path, filename, y1, y2, x1, x2):
     else:
         return False
     
-# not finished ToDo behind this point
-def picture_in_presentation(img, img_overlay, pos, alpha_mask):
-    """a function which set a smaller picture over a bigger picture and can make it transparent"""
-    img.setflags(write = 1)
-    x, y = pos
 
-    y1, y2 = max(0, y), min(img.shape[0], y + img_overlay.shape[0])
-    x1, x2 = max(0, x), min(img.shape[1], x + img_overlay.shape[1])
+def picture_in_presentation(file_path, filename, file_path_small_img, small_img, y1, y2, x1, x2, x_offset, y_offset):
+    """
+    a function which takes two images and overlay the second one above the first one if place is white
 
-    y1o, y2o = max(0, -y), min(img_overlay.shape[0], img.shape[0] - y)
-    x1o, x2o = max(0, -x), min(img_overlay.shape[1], img.shape[1] - x)
+    @param file_path: the path to the presentation image
+    @param filename: the name of the presentation image
+    @param file_path_small_img: the path to the overlay image
+    @param small_img: the name of the overlay image
+    @param y1: Point(x,min) in a coordinate system for the region of interest
+    @param y2: Point(x,max)
+    @param x1: Point(min, y)
+    @param x2: Point(max, y)
+    @param x_offset: width point for overlay start point
+    @param y_offset: height point for overlay start point
 
-    if y1 >= y2 or x1 >= y2o or x1o >= x2o:
-        return
-    
-    channels = img.shape[2]
+    @return: a image with a overlay or a image without a overlay
 
-    alpha = alpha_mask[y1o:y2o, x1o:x2o]
-    alpha_inv = 1.0 - alpha
+    """
+    large_img = Path(file_path, filename)
+    large_img = cv2.imread(str(large_img))
 
-    for c in range(channels):
-        img[y1:y2, x1:x2, c] = (alpha * img_overlay[y1o:y2o, x1o:x2o, c] + alpha_inv * img[y1:y2, x1:x2, c])
+    small_img = Path(file_path_small_img, small_img)
+    small_img = cv2.imread(str(small_img))
+    small_img = cv2.resize(small_img, (250, 200))
 
-    return img
+    #x_offset = 1009 #only for resolution 250
+    #y_offset = 710 #only for resolution 250
 
+    if check_color(file_path, filename, y1, y2, x1, x2) == True:
+        large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
+        #cv2.imwrite('test.jpg', large_img)
+        return large_img
+    else:
+        #cv2.imwrite('test.jpg', large_img)
+        return large_img
+
+
+# dont use / in progress
 def video_in_slide(file_path, filename, video_path, videoname, y1, y2, x1, x2):
     presentation_file = Path(file_path, filename)
     video_file = Path(video_path, videoname)
