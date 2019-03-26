@@ -24,7 +24,7 @@ def convert_pdf(file_path, filename, new_project_path, new_project_name):
     if check_pdf == True:
         folder = Path(new_project_path, new_project_name)
 
-         if os.path.exists(folder):
+        if os.path.exists(folder):
             print("Error: folder exists select a new project name")
             return
 
