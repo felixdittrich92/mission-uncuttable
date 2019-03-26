@@ -46,16 +46,9 @@ def add_file_to_project(file_path, filename, project_path, project_name):
     @param project_path: the path from the project folder
     @param project_name: the name of the folder
     """
-    folder = Path(project_path, project_name)
     file_to_add = Path(file_path, filename)
-    check_jpg = fnmatch(file_to_add, '*.jpg')
-    check_mp4 = fnmatch(file_to_add, '*.mp4')
-    check_png = fnmatch(file_to_add, '*.png')
-    if check_jpg == True:
-        shutil.copy(str(file_to_add), str(folder))
-    elif check_mp4 == True:
-        shutil.copy(str(file_to_add), str(folder))
-    elif check_png == True:
+    if file_to_add.suffix in ['.jpg', '.mp4', '.png']:
+        folder = Path(project_path, project_name)
         shutil.copy(str(file_to_add), str(folder))
     else:
         print("the datatype must be .jpg or .mp4 or .png")
@@ -99,7 +92,7 @@ def check_color(file_path, filename, y1, y2, x1, x2):
         return False
     
 
-def picture_in_presentation(file_path, filename, file_path_small_img, small_img, y1, y2, x1, x2, x_offset, y_offset):
+def picture_in_presentation(file_path, filename, file_path_small_img, small_img, y1, y2, x1, x2):
     """
     a function which takes two images and overlay the second one above the first one if place is white
 
@@ -111,21 +104,21 @@ def picture_in_presentation(file_path, filename, file_path_small_img, small_img,
     @param y2: Point(x,max)
     @param x1: Point(min, y)
     @param x2: Point(max, y)
-    @param x_offset: width point for overlay start point
-    @param y_offset: height point for overlay start point
 
     @return: a image with a overlay or a image without a overlay
 
     """
     large_img = Path(file_path, filename)
     large_img = cv2.imread(str(large_img))
+    height = large_img.shape[0]
+    width = large_img.shape[1]
 
     small_img = Path(file_path_small_img, small_img)
     small_img = cv2.imread(str(small_img))
     small_img = cv2.resize(small_img, (250, 200))
 
-    #x_offset = 1009 #only for resolution 250
-    #y_offset = 710 #only for resolution 250
+    x_offset = width - 250 #only for resolution 250 
+    y_offset = height - 235 #only for resolution 250 
 
     if check_color(file_path, filename, y1, y2, x1, x2) == True:
         large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
