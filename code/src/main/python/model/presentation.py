@@ -31,10 +31,11 @@ def convert_pdf(file_path, filename, new_project_path, new_project_name):
         folder.mkdir(exist_ok=True) 
         pages = convert_from_path(str(input_file), 250)
         files = []
-
+    
+        #images = Slide()
         for page_number, page in enumerate(pages, start=1):
             target = folder / f"{page_number:03d}.jpg"
-            page.save(str(target),  'JPEG')
+            page.save(str(target),  'JPEG')  #in Klasse slide speichern  # page.save(images, 'JPEG')
 
         for file in os.listdir(folder):
             files.append(file)
@@ -74,7 +75,7 @@ def convert_mp4(file_path, filename, new_project_path, new_project_name):
             if not ret:
                 break
             else:
-                cv2.imwrite(os.path.join(folder, "%04d.jpg" % current_frame), frame)
+                cv2.imwrite(os.path.join(folder, "%04d.jpg" % current_frame), frame) #in Klasse Video speichern
                 current_frame += 1
 
         cap.release()
@@ -182,7 +183,7 @@ def picture_in_presentation(file_path, filename, file_path_small_img, small_img,
         return large_img
 
 
-# dont use / in progress
+# dont use / in progress andere Idee
 def video_in_slide(file_path, filename, video_path, videoname, y1, y2, x1, x2):
     presentation_file = Path(file_path, filename)
     video_file = Path(video_path, videoname)
