@@ -51,8 +51,18 @@ fbs freeze
 ## Einen Installer für die eigene Plattform erstellen
 ```
 fbs installer
+```
+
+## Das Installer Paket auf Debian/Ubuntu Installieren
+```
+sudo dpkg -i target/UbiCut.deb
+```
+
+## UbiCut auf Debian/Ubuntu deinstallieren
+sudo dpkg --purge UbiCut
 
 ```
+
 ## Vor einem Commit
 ```
 pip3 freeze > requirements.txt
