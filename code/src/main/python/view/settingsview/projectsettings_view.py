@@ -3,13 +3,13 @@ from PyQt5 import uic
 import os
 
 
-class SettingsView(QMainWindow):
+class ProjectSettingsView(QMainWindow):
     """A class used as the View for the settings window."""
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
-        super(SettingsView, self).__init__()
+        super(ProjectSettingsView, self).__init__()
         path = os.path.abspath('src/main/python/view/settingsview')
-        uic.loadUi(path + '/settings_window.ui', self)
+        uic.loadUi(path + '/projectsettings_window.ui', self)
 
         # centering the window
         rectangle = self.frameGeometry()
