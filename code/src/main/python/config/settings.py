@@ -1,6 +1,6 @@
 import json
 import os
-import sys
+import platform
 
 import config
 
@@ -40,15 +40,14 @@ class Settings:
         overwritten.
         Then the JSON gets converted into an object, where the settings can
         be accessed via dot-notation.
-
         """
 
         if Settings.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
             Settings.__instance = self
-
-            user_config = os.path.join(sys.path[0], 'config/userconfig.json')
+            home = os.path.expanduser('~')
+            user_config = os.path.join(home, '.config', 'ubicut', 'userconfig.json')
             if os.path.exists(user_config):
                 with open(user_config, 'r') as read_file:
                     self.user_config_data = json.load(read_file)
@@ -67,10 +66,34 @@ class Settings:
 
     def get_settings(self):
         """
-        Getter that returns all settings as a object.
+        Getter that returns all settings as an object.
 
         @return: object of settings
         """
         return self.settings
 
+    @staticmethod
+    def save_settings(new_settings):
+        """
+        Method that saves the custom user settings to a file.
 
+        Depending on the platform, the program is running on, a directory,
+        containing the json file is created.
+
+        @type   new_settings: Dictionary
+        @param  new_settings: Settings to be saved
+        """
+        home = os.path.expanduser('~')
+        location = ""
+        if platform.system() == 'Linux':
+            location = os.path.join(home, '.config', 'ubicut')
+        elif platform.system() == 'Windows':
+            location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
+
+        if not os.path.exists(location):
+            os.makedirs(location)
+
+        file = os.path.join(location, 'userconfig.json')
+
+        with open(file, 'w') as outfile:        # writes json to file
+            json.dump(new_settings, outfile, ensure_ascii=False)

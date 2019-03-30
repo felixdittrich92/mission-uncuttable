@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 from PyQt5 import uic
 from config import Settings
 import os
@@ -24,6 +24,13 @@ class StartView(QMainWindow):
         super(StartView, self).__init__()
         path = os.path.abspath('src/main/python/view/startview')
         uic.loadUi(path + '/start_view.ui', self)
+
+        # centering the window
+        rectangle = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+        rectangle.moveCenter(center_point)
+        self.move(rectangle.topLeft())
+
         self.new_project_frame.hide()
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
@@ -34,7 +41,19 @@ class StartView(QMainWindow):
         print(self.settings.language)
         print(self.settings.kinder[0].name)
 
+        new_settings = {
+            "language": "spa",
+            "beruf": None,
+            "kinder": [
+                {
+                    "name": "Jason",
+                    "alter": 19,
+                    "schulabschluss": "Realschule"
+                }
+            ]
+        }
 
+        settings.save_settings(new_settings)
 
     def show(self):
         """Starts the start-window normal (not maximized)."""
