@@ -1,6 +1,9 @@
 from fbs_runtime.application_context import ApplicationContext
 from controller import MainController
 from view import StartView
+from config import Resources
+import os
+
 
 import sys
 
@@ -12,7 +15,7 @@ class AppContext(ApplicationContext):
 
         #start = Presentation()                                      
         #start.convert(r"C:\Users\felix\Desktop", "kickoff18.pdf")
-            
+        Resources(self)
         start_view = StartView()
         __main_controller = MainController(start_view)
         __main_controller.start()

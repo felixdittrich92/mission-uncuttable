@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 from PyQt5 import uic
+from config import Resources
 import os
 
 
@@ -8,8 +9,7 @@ class SettingsView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(SettingsView, self).__init__()
-        path = os.path.abspath('src/main/python/view/settingsview')
-        uic.loadUi(path + '/settings_window.ui', self)
+        uic.loadUi(Resources.get_instance().files.settingsview, self)
 
         # centering the window
         rectangle = self.frameGeometry()

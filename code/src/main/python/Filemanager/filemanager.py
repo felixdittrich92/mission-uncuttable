@@ -5,14 +5,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QPushButton, QListWidget
 from PyQt5 import uic
 from PyQt5.QtCore import QObject
+from config import Resources
 import os
 
 class Filemanager(QWidget):
 
     def __init__(self, parent=None):
         super(Filemanager, self).__init__(parent)
-        path = os.path.abspath('src/main/python/Filemanager')
-        uic.loadUi(path + '/filemanager.ui', self)
+        uic.loadUi(Resources.get_instance().files.filemanager, self)
         self.setupUi()
         # self.retranslateUi()
 
