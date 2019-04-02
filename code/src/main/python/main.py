@@ -4,7 +4,6 @@ from view import StartView
 from config import Resources
 import os
 
-
 import sys
 
 
@@ -13,7 +12,7 @@ class AppContext(ApplicationContext):
     def run(self):
         """Starts the application using 'MainController' with the 'StartView'."""
 
-        #start = Presentation()                                      
+        #start = Presentation()
         #start.convert(r"C:\Users\felix\Desktop", "kickoff18.pdf")
         Resources(self)
         start_view = StartView()
