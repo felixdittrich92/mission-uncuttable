@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QObject
 import os
 
+from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
 from view.timeline.timeableview import TimeableView
@@ -24,8 +25,8 @@ class TimelineView(QFrame):
         :param parent: the parent component
         """
         super(TimelineView, self).__init__(parent)
-        path = os.path.abspath('src/main/python/view/timeline/timelineview')
-        uic.loadUi(path + '/timeline_view.ui', self)
+
+        uic.loadUi(Resources.get_instance().files.timeline_view, self)
 
         timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())

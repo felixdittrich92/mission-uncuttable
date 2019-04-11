@@ -1,5 +1,8 @@
 from .settings_controller import SettingsController
 from view.settingsview import SettingsView
+from .projectsettings_controller import ProjectSettingsController
+from view.settingsview import ProjectSettingsView
+
 
 
 class VideoEditorController:
@@ -11,6 +14,7 @@ class VideoEditorController:
     def __init__(self, view):
         self.__video_editor_view = view
         self.__video_editor_view.action_settings.triggered.connect(self.__start_settings_controller)
+        self.__video_editor_view.action_projectsettings.triggered.connect(self.__start_projectsettings_controller)
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
@@ -29,3 +33,9 @@ class VideoEditorController:
         settings_view = SettingsView()
         self.__settings_controller = SettingsController(settings_view)
         self.__settings_controller.start()
+
+    def __start_projectsettings_controller(self):
+        "Opens the projectsettings window"
+        projectsettings_view = ProjectSettingsView()
+        self.__projectsettings_controller = ProjectSettingsController(projectsettings_view)
+        self.__projectsettings_controller.start()

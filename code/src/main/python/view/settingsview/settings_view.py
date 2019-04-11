@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import uic
+from config import Resources
 import os
 from config import Settings
 import json
@@ -11,15 +12,18 @@ class SettingsView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(SettingsView, self).__init__()
-        path = os.path.abspath('src/main/python/view/settingsview')
-        uic.loadUi(path + '/settings_window.ui', self)
-        comboBox = self.findChild(QComboBox, "comboBox")
-        comboBox.currentIndexChanged.connect(self.selectionChange)
+        uic.loadUi(Resources.get_instance().files.settingsview, self)
         self.setStyleSheet(open(path + '/style_dark.qss', "r").read())
-        
-        settings = Settings.get_instance()
+        comboBox.currentIndexChanged.connect(self.selectionChange)
+        comboBox = self.findChild(QComboBox, "comboBox")
         self.settings = settings.get_dict_settings()
+        settings = Settings.get_instance()
 
+        # centering the window
+        rectangle = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+        rectangle.moveCenter(center_point)
+        self.move(rectangle.topLeft())
         self.addSettings(self.settings)
         
 

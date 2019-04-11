@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QVBoxLayout,QSplitter
 from PyQt5 import uic
 from shortcuts import ShortcutLoader
+from config import Resources
 import os
 from .preview import PreviewView
 
@@ -16,8 +17,7 @@ class VideoEditorView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
-        path = os.path.abspath('src/main/python/view/mainview')
-        uic.loadUi(path + '/main_window.ui', self)
+        uic.loadUi(Resources.get_instance().files.mainview, self)
         self.previewlayout = self.findChild(QVBoxLayout, "preview")
 
         self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())

@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 from PyQt5 import uic
 from config import Settings
-import os
+from config import Resources
 
 
 class StartView(QMainWindow):
@@ -22,9 +22,7 @@ class StartView(QMainWindow):
         'new_project_button' and 'back_button'.
         """
         super(StartView, self).__init__()
-        path = os.path.abspath('src/main/python/view/startview')
-        uic.loadUi(path + '/start_view.ui', self)
-        self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())
+        uic.loadUi(Resources.get_instance().files.startview, self)
 
 
         # centering the window

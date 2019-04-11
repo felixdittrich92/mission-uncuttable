@@ -135,7 +135,7 @@
     <addaction name="actionOeffnen"/>
     <addaction name="actionSpeichern"/>
     <addaction name="actionSpeichern_als"/>
-    <addaction name="actionProjekteinstellugen"/>
+    <addaction name="action_projectsettings"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -172,7 +172,7 @@
     <string>Speichern als</string>
    </property>
   </action>
-  <action name="actionProjekteinstellugen">
+  <action name="action_projectsettings">
    <property name="text">
     <string>Projekteinstellugen</string>
    </property>

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QMainWindow, QPushBut
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtCore import Qt
+from config import Resources
 import sys
 import os
 
@@ -16,11 +17,10 @@ VIDEORUNNING = False
 class PreviewView(QWidget):
     def __init__(self):
         super(PreviewView, self).__init__()
-        path = os.path.abspath('src/main/python/view/mainview')
         path2 = os.path.abspath('src/main/icons/preview_buttons/svg/')
 
-        uic.loadUi(os.path.join(path, 'form.ui'), self)
-        
+        uic.loadUi(Resources.get_instance().files.preview_view, self)
+
         playButton = self.findChild(QPushButton, "playButton")
         firstframeButton = self.findChild(QPushButton, "firstframeButton")
         lastframeButton = self.findChild(QPushButton, "lastframeButton")
@@ -63,6 +63,3 @@ class Thread(QThread):
                 convertToQtFormat = QImage(rgbImage.data, rgbImage.shape[1], rgbImage.shape[0], QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(1280, 720, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
-
-
-        
