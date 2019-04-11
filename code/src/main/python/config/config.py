@@ -1,7 +1,11 @@
 """
 In this file you can add settings by adding entrys to the dictionary.
-If you do so be careful to specify all details about your setting.
-category means in wich tab in the settings window your setting will be displayed.
+If you add Setting here, it's going to show up in the settings window 
+automatically! 
+So if you do, be careful to specify all details about your setting.
+"Values" contains a list with all possible values for the setting. Depending on
+the type it's just an empty string.
+"Current" is the default setting. This will be the changed by the user.
 """
 
 default_settings = {
@@ -9,31 +13,35 @@ default_settings = {
     "language":{
       "name":"Language",
       "type":"dropdown",
-      "value":"english"
+      "values":["English","German","Esperanto"],
+      "current":"english"
     },
   },
   "Design":{
     "color_theme":{
       "name":"Color Theme",
-      "type":"checkbox",
-      "value":"dark"
+      "type":"dropdown",
+      "values":["dark", "light"],
+      "current":"dark"
     },
     "option2":{
       "name":"Option 2",
       "type":"checkbox",
-      "value":"false"
+      "values":"",
+      "current":"false"
     },
     "option1":{
       "name":"Option 1",
-      "type":"checkbox",
-      "value":"true"
+      "type":"button",
+      "values":"",
+      "current":"true"
     },
   },
   "ShortCuts":{
     "option1":{
       "name":"Option 1",
       "type":"checkbox",
-      "value":"true"
-    }
+      "values":"",
+      "current":"true"    }
   }
 }
