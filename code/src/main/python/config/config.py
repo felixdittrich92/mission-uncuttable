@@ -1,35 +1,39 @@
+"""
+In this file you can add settings by adding entrys to the dictionary.
+If you do so be careful to specify all details about your setting.
+category means in wich tab in the settings window your setting will be displayed.
+"""
+
 default_settings = {
-  "color_theme":[{
-      "name":"Color Theme",
-      "category":"neudesign",
+  "Allgemein":{
+    "language":{
+      "name":"Language",
       "type":"dropdown",
-      "setting":"dark"
-  }],
-  "Option_1":[{
+      "value":"english"
+    },
+  },
+  "Design":{
+    "color_theme":{
       "name":"Color Theme",
-      "category":"neudesign",
       "type":"checkbox",
-      "setting":"dark"
-  }]
+      "value":"dark"
+    },
+    "option2":{
+      "name":"Option 2",
+      "type":"checkbox",
+      "value":"false"
+    },
+    "option1":{
+      "name":"Option 1",
+      "type":"checkbox",
+      "value":"true"
+    },
+  },
+  "ShortCuts":{
+    "option1":{
+      "name":"Option 1",
+      "type":"checkbox",
+      "value":"true"
+    }
+  }
 }
-
-
-
-
-# default_settings = {
-#   "language": "de",
-#   "start_maximized": True,
-#   "design": "default",
-#   "some_setting": "example",
-#   "name": "Georg",
-#   "alter": 47,
-#   "verheiratet": False,
-#   "beruf": None,
-#   "kinder": [
-#     {
-#       "name": "Lukas",
-#       "alter": 19,
-#       "schulabschluss": "Realschule"
-#     }
-#   ]
-# }

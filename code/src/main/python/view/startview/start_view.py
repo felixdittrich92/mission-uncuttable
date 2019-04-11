@@ -39,22 +39,22 @@ class StartView(QMainWindow):
         settings = Settings.get_instance()
         self.settings = settings.get_settings()
 
-        new_settings = {
-        "color_theme":[{
-            "name":"Color Theme",
-            "category":"neudesign",
-            "type":"dropdown",
-            "setting":"dark"
-        }],
-        "Option_1":[{
-            "name":"Color Theme",
-            "category":"neudesign",
-            "type":"checkbox",
-            "setting":"dark"
-        }]
-        }
+        # new_settings = {
+        # "color_theme":[{
+        #     "name":"Color Theme",
+        #     "category":"neudesign",
+        #     "type":"dropdown",
+        #     "setting":"dark"
+        # }],
+        # "Option_1":[{
+        #     "name":"Color Theme",
+        #     "category":"neudesign",
+        #     "type":"checkbox",
+        #     "setting":"dark"
+        # }]
+        # }
 
-        settings.save_settings(new_settings)
+        # settings.save_settings(new_settings)
 
     def show(self):
         """Starts the start-window normal (not maximized)."""
