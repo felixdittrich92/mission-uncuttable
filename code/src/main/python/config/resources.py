@@ -4,7 +4,7 @@ files = {
     "filemanager": "ui/filemanager.ui",
     "preview_view": "ui/form.ui",
     "mainview": "ui/main_window.ui",
-    "settingview": "ui/settings_window.ui",
+    "settingsview": "ui/settings_window.ui",
     "projectsettings_view": "ui/projectsettings_window.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
     "timeline_view": "ui/timeline_view.ui"
