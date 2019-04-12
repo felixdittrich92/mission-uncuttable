@@ -12,14 +12,11 @@ import numpy
 
 VIDEORUNNING = False
 
-
-
 class PreviewView(QWidget):
     def __init__(self):
         super(PreviewView, self).__init__()
-        path2 = os.path.abspath('src/main/icons/preview_buttons/svg/')
-
-        uic.loadUi(Resources.get_instance().files.preview_view, self)
+        RESOURCES = Resources.get_instance()
+        uic.loadUi(RESOURCES.files.preview_view, self)
 
         playButton = self.findChild(QPushButton, "playButton")
         firstframeButton = self.findChild(QPushButton, "firstframeButton")
@@ -27,12 +24,13 @@ class PreviewView(QWidget):
         backButton = self.findChild(QPushButton, "backButton")
         forwardButton = self.findChild(QPushButton, "forwardButton")
 
-        iconplay = QtGui.QPixmap(os.path.join(path2,'002-play-button.svg'))
-        iconfirstframe = QtGui.QPixmap(os.path.join(path2,'006-back.svg'))
-        iconlastframe = QtGui.QPixmap(os.path.join(path2,'007-next-1.svg'))
-        iconback = QtGui.QPixmap(os.path.join(path2,'013-previous.svg'))
-        iconforward = QtGui.QPixmap(os.path.join(path2,'004-next.svg'))
-        
+        iconplay = QtGui.QPixmap(RESOURCES.images.play_button)
+        iconpause = QtGui.QPixmap(RESOURCES.images.pause_button)
+        iconfirstframe = QtGui.QPixmap(RESOURCES.images.first_frame_button)
+        iconlastframe = QtGui.QPixmap(RESOURCES.images.last_frame_button)
+        iconback = QtGui.QPixmap(RESOURCES.images.back_button)
+        iconforward = QtGui.QPixmap(RESOURCES.images.forward_button)
+    
         playButton.setIcon(QIcon(iconplay))
         firstframeButton.setIcon(QIcon(iconfirstframe))
         lastframeButton.setIcon(QIcon(iconlastframe))
