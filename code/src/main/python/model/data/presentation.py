@@ -181,26 +181,3 @@ def picture_in_presentation(file_path, filename, file_path_small_img, small_img,
     else:
         #cv2.imwrite('test.jpg', large_img)
         return large_img
-
-
-# dont use / in progress andere Idee
-def video_in_slide(file_path, filename, video_path, videoname, y1, y2, x1, x2):
-    presentation_file = Path(file_path, filename)
-    video_file = Path(video_path, videoname)
-    if check_color(file_path, filename, y1, y2, x1, x2) == True:
-        cap = cv2.VideoCapture(str(video_file))
-        if(cap.isOpened() == False):
-            print("Error opening video stream or file")
-        while(cap.isOpened()):
-            ret, frame = cap.read()
-            if ret == True:
-                cv2.imshow('Frame', frame)
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    break
-            else:
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-    else:
-        img = cv2.imread(str(presentation_file), cv2.IMREAD_COLOR)
-        return img

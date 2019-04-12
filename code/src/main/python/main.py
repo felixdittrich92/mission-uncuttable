@@ -1,7 +1,6 @@
 from fbs_runtime.application_context import ApplicationContext
 from controller import MainController
 from view import StartView
-from model import Presentation
 
 import sys
 
