@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Projekteinstellungen</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -27,7 +27,7 @@
      <enum>QTabWidget::West</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -36,12 +36,12 @@
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Design</string>
+      <string>Platzhalter</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>ShortCuts</string>
+      <string>Platzhalter 2</string>
      </attribute>
     </widget>
    </widget>
