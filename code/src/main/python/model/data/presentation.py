@@ -7,90 +7,59 @@ from PIL import Image
 from pathlib import Path
 import shutil
 
+def create_project_folder(new_project_path, new_project_name):
+    """ 
+    a function which creates a project folder in the program
 
-def convert_pdf(file_path, filename, new_project_path, new_project_name):
+    @param new_project_path: path for the new project
+    @param new_project_name: name of the new project
+    """
+
+    folder = Path(new_project_path, new_project_name)
+
+    if os.path.exists(folder):
+            print("Error: folder exists select a new project name")
+            return
+    else:
+        folder.mkdir(exist_ok=False)
+
+
+
+def convert_pdf(file_path, filename, folder_path, folder_name):
     """
     a function that takes a path and a PDF file, converts them to JPG, and then saves the individual images
-    in the new created folder
+    in the project folder
     
     @param file_path: the path to the pdf
     @param filename: the name of the pdf
-    @param new_project_path: path for the new project
-    @param new_project_name: name for the new project
+    @param folder_path: path to the project folder
+    @param folder_name: name of the project folder
+
+    @return: returns a list with the single pictures of the pdf
     """
+
     input_file = Path(file_path, filename)
     check_pdf = fnmatch(input_file, '*.pdf')
-    
     if check_pdf == True:
-        folder = Path(new_project_path, new_project_name)
+        folder = Path(folder_path, folder_name)
 
-        if os.path.exists(folder):
-            print("Error: folder exists select a new project name")
-            return
-
-        folder.mkdir(exist_ok=True) 
         pages = convert_from_path(str(input_file), 250)
         files = []
-    
-        #images = Slide()
+
         for page_number, page in enumerate(pages, start=1):
             target = folder / f"{page_number:03d}.jpg"
-            page.save(str(target),  'JPEG')  #in Klasse slide speichern  # page.save(images, 'JPEG')
+            page.save(str(target),  'JPEG')
 
         for file in os.listdir(folder):
             files.append(file)
 
         files.sort()
+        return files
     else:
         print("the datatype must be .pdf")
 
-def convert_mp4(file_path, filename, new_project_path, new_project_name):
-    """
-    a function that takes a path and a mp4 file, split the video in frames, and then saves the individual images
-    in the new created folder
-    
-    @param file_path: the path to the pdf
-    @param filename: the name of the pdf
-    @param new_project_path: path for the new project
-    @param new_project_name: name for the new project
-    """
-    input_file = Path(file_path, filename)
-    check_mp4 = fnmatch(input_file, '*.mp4')
 
-    if check_mp4 == True:
-        folder = Path(new_project_path, new_project_name)
-
-        if os.path.exists(folder):
-            print("Error: folder exists select a new project name")
-            return
-
-        folder.mkdir(exist_ok=False) 
-        input_file = Path(file_path, filename)
-        cap = cv2.VideoCapture(str(input_file))
-        files = []
-        current_frame = 0
-
-        while (True):
-            ret, frame = cap.read()
-            if not ret:
-                break
-            else:
-                cv2.imwrite(os.path.join(folder, "%04d.jpg" % current_frame), frame) #in Klasse Video speichern
-                current_frame += 1
-
-        cap.release()
-        cv2.destroyAllWindows()
-    
-        for file in os.listdir(folder):
-            files.append(file)
-       
-        files.sort()
-
-    else:
-        print("the datatype must be .mp4")
-
-
-def add_file_to_project(file_path, filename, project_path, project_name):
+def add_file_to_project(file_path, filename, folder_path, folder_name):
     """
     a function which takes a file and write it in the specific folder if the file has a usefull format
     
@@ -102,20 +71,20 @@ def add_file_to_project(file_path, filename, project_path, project_name):
     file_to_add = Path(file_path, filename)
 
     if file_to_add.suffix in ['.jpg', '.mp4', '.png']:
-        folder = Path(project_path, project_name)
+        folder = Path(folder_path, folder_name)
         shutil.copy(str(file_to_add), str(folder))
     else:
         print("the datatype must be .jpg or .mp4 or .png")
 
 
-def delete_folder(project_path, project_name):
+def delete_folder(folder_path, folder_name):
     """
     a function which delete a project folder and all files
     
     @param project_path: the path to the folder
     @param project_name: the name of the folder
     """
-    folder = Path(project_path, project_name)
+    folder = Path(folder_path, folder_name)
     shutil.rmtree(folder, ignore_errors=True)
 
 
@@ -176,8 +145,83 @@ def picture_in_presentation(file_path, filename, file_path_small_img, small_img,
 
     if check_color(file_path, filename, y1, y2, x1, x2) == True:
         large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
-        #cv2.imwrite('test.jpg', large_img)
         return large_img
     else:
-        #cv2.imwrite('test.jpg', large_img)
         return large_img
+
+
+def large_video(folder_path, folder_name, video_path, video_name):
+    """
+    a function to get the part of the speaker from the "main video" and save it in the project folder
+
+    @param folder_path: path to the project folder
+    @param folder_name: the name of the project folder
+    @param video_path: the path to the video
+    @param video_name: the name of the "main video"
+
+    @return: a String to the new generated video
+    """
+
+    video_file = Path(video_path, video_name)
+    folder = Path(folder_path, folder_name)
+
+    cap = cv2.VideoCapture(str(video_file))
+
+    large_video_name = 'large_video.mp4'
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(os.path.join(folder,str(large_video_name)), fourcc , 21, (938, 530))
+
+    if(cap.isOpened() == False):
+        print("Error opening video stream or file")
+
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if ret == True:
+            frame = frame[275:805, 17:955]
+            out.write(frame)
+
+        else:
+            break
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+    new_large_video_path = Path(folder, large_video_name)
+    return new_large_video_path
+
+
+def small_video(folder_path, folder_name, video_path, video_name):
+    """
+    a function to get the part of the foil/visualiser from the "main video" and save it in the project folder
+
+    @param folder_path: path to the project folder
+    @param folder_name: the name of the project folder
+    @param video_path: the path to the video
+    @param video_name: the name of the "main video"
+
+    @return: a String to the new generated video
+    """
+    video_file = Path(video_path, video_name)
+    folder = Path(folder_path, folder_name)
+
+    cap = cv2.VideoCapture(str(video_file))
+
+    small_video_name = 'small_video.mp4'
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(os.path.join(folder,str(small_video_name)), fourcc , 21, (700, 530))
+    
+    if(cap.isOpened() == False):
+        print("Error opening video stream or file")
+
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if ret == True:
+            frame = frame[275:805, 1080:1780]
+            out.write(frame)
+
+        else:
+            break
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+    new_small_video_path = Path(folder, small_video_name)
+    return new_small_video_path
