@@ -6,6 +6,7 @@ from shortcuts import ShortcutLoader
 from config import Resources
 import os
 from .preview import PreviewView
+import qtsass
 
 from Filemanager.filemanager import Filemanager
 
@@ -20,8 +21,6 @@ class VideoEditorView(QMainWindow):
         uic.loadUi(Resources.get_instance().files.mainview, self)
         self.previewlayout = self.findChild(QVBoxLayout, "preview")
 
-        self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())
-    
         previewview = PreviewView()
         self.previewlayout.addWidget(previewview)
 
@@ -29,6 +28,7 @@ class VideoEditorView(QMainWindow):
         self.load_filemanager()
 
         self.load_timeline_widget()
+        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
 
     def load_timeline_widget(self):
         """

@@ -7,7 +7,9 @@ files = {
     "settingsview": "ui/settings_window.ui",
     "projectsettings_view": "ui/projectsettings_window.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
-    "timeline_view": "ui/timeline_view.ui"
+    "timeline_view": "ui/timeline_view.ui",
+    "qss_dark": "stylesheets/dark.qss",
+    "qss_light": "stylesheets/light.qss"
 }
 images = {
     "play_button": "images/buttons/002-play-button.svg",
@@ -21,6 +23,7 @@ strings = {
     "de": "strings/de/strings.xml",
     "en": "strings/en/strings.xml"
 }
+
 
 class Resources:
     """
@@ -51,7 +54,6 @@ class Resources:
         self.images = Category()
         for attribute, value in images.items():
             setattr(self.images, attribute, self.app.get_resource(value))
-
 class Category:
     pass
 
