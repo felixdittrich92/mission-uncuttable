@@ -4,6 +4,7 @@ from PyQt5 import uic
 
 import os
 
+from config import Resources
 from .track_button_frame import TrackButtonFrame
 from .time_bar import TimeBar
 from .track_frame import TrackFrame
@@ -50,8 +51,7 @@ class TimelineScrollArea(QFrame):
         :param parent: the parent component
         """
         super(TimelineScrollArea, self).__init__(parent)
-        path = os.path.abspath('src/main/python/view/timeline/timelineview')
-        uic.loadUi(path + '/timeline_scroll_area.ui', self)
+        uic.loadUi(Resources.get_instance().files.timeline_scrollarea_view, self)
 
         self.__horizontal_scroll_bar = None
         self.__vertical_scroll_bar = None

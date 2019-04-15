@@ -1,0 +1,33 @@
+Protokoll vom 12.4.2019:
+gechrieben von Julian Oliver Böttcher
+
+
+Johannes fehlt
+Jeremy ist aus dem Projekt ausgestiegen
+
+Besprechen der abgeschlossenen Tasks
+Untersuchen der Produktvision in der Overleaf Präsentation
+
+Felix zeigt wie seine Idee mit der Folienverarbeitung funktioniert
+
+Sascha erklärt, dass der Videoschnitt innerhalb der nächsten 3 Wochen fertig sein
+Funktionen die bis dahin implementiert werden müssen:
+Video und Bilder müssen ins Programm importiert werden können
+Video muss zerteilt und vergrößert werden können
+Preview muss vorhanden sein
+Video muss zusammengefügt in der PreView angeschaut werden können
+Video muss exportiert werden können
+
+Audio muss importiert/exportiert werden können
+Video muss mit Audio zusammenfügbar sein
+
+Programm muss wie Designskonzept aussehen, darum kümmert sich Max
+
+
+Openshot Bibliothek wird für den Videoschnitt benutzt 
+
+Julian sagt, dass er sich gerne öfter treffen möchte um effektiver arbeiten zu können.
+
+Aufgabe ist vorerst sich in die Openshot-Bib reinzulesen
+
+
