@@ -1,11 +1,9 @@
 from fbs_runtime.application_context import ApplicationContext
 from controller import MainController
 from view import StartView
-<<<<<<< HEAD
-=======
+
 from config import Resources
 import os
->>>>>>> 350a202b95370858fb67003ffb8e08515a66849c
 
 import sys
 
