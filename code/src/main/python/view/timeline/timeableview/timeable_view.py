@@ -4,6 +4,10 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
 
 
+TIMEABLE_MIN_WIDTH = 9
+RESIZE_AREA_WIDTH = 4
+
+
 class TimeableView(QGraphicsRectItem):
     """
     A View for a single Timeable representing a Video- or Audioclip. A Timeable
@@ -96,7 +100,7 @@ class TimeableView(QGraphicsRectItem):
 
         @param pos: x position on the timeable where it's cut
         """
-        if pos < 9 and self.width >= 18:
+        if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
             return
 
         # create the second timeable
@@ -126,15 +130,16 @@ class TimeableView(QGraphicsRectItem):
         """
         # handle for resizing on the left side
         self.handles[self.handle_left] = QtCore.QRectF(
-            self.rect().left(), 0, 4, self.height)
+            self.rect().left(), 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for resizing on the right side
         self.handles[self.handle_right] = QtCore.QRectF(
-            self.rect().right() - 4, 0, 4, self.height)
+            self.rect().right() - RESIZE_AREA_WIDTH, 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for moving
         self.handles[self.handle_middle] = QtCore.QRectF(
-            self.rect().left() + 4, 0, self.width - 8, self.height)
+            self.rect().left() + RESIZE_AREA_WIDTH, 0, self.width - (2 * RESIZE_AREA_WIDTH),
+            self.height)
 
     def handle_at(self, point):
         """
@@ -161,7 +166,8 @@ class TimeableView(QGraphicsRectItem):
             diff = mouse_event.pos().x() - self.mouse_press_pos.x()
 
             w = self.width - diff
-            if w <= 9 or diff + self.scenePos().x() < 0 or diff < self.resizable_left:
+            if w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0 \
+               or diff < self.resizable_left:
                 return
 
             new_x_pos = self.x_pos + diff
@@ -183,7 +189,8 @@ class TimeableView(QGraphicsRectItem):
 
             w = self.width + diff
 
-            if w > self.scene().width() or w <= 9 or diff > self.resizable_rigth:
+            if w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH \
+               or diff > self.resizable_rigth:
                 return
 
             r = QtCore.QRectF(self.x_pos, 0, w, self.height)
