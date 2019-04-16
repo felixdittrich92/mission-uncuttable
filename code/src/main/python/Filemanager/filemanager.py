@@ -7,6 +7,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QObject
 from config import Resources
 import os
+from PIL import Image
 
 class Filemanager(QWidget):
 
@@ -44,6 +45,15 @@ class Filemanager(QWidget):
         self.fillListWidget(fileNames)
 
     def fillListWidget(self, filenames):
+        file = filenames[0]
+        if file.endswith(".jpg"):
+            image = Image.open(file)
+            image.show()
+
+        print(file)
+        print(filenames)
+        
+
         self.listWidget.addItems(filenames)
 
     def clearListWidget(self):

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QApplicat
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
+import cv2
 
 
 class MainWindow(QMainWindow):
