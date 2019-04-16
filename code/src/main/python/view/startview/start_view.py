@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 from PyQt5 import uic
 from config import Settings
-import os
+from config import Resources
 
 
 class StartView(QMainWindow):
@@ -22,8 +22,8 @@ class StartView(QMainWindow):
         'new_project_button' and 'back_button'.
         """
         super(StartView, self).__init__()
-        path = os.path.abspath('src/main/python/view/startview')
-        uic.loadUi(path + '/start_view.ui', self)
+        uic.loadUi(Resources.get_instance().files.startview, self)
+
 
         # centering the window
         rectangle = self.frameGeometry()
@@ -34,26 +34,25 @@ class StartView(QMainWindow):
         self.new_project_frame.hide()
         self.new_project_button.clicked.connect(self.switch_frame)
         self.back_button.clicked.connect(self.switch_frame)
-
         settings = Settings.get_instance()
-
         self.settings = settings.get_settings()
-        print(self.settings.language)
-        print(self.settings.kinder[0].name)
 
-        new_settings = {
-            "language": "spa",
-            "beruf": None,
-            "kinder": [
-                {
-                    "name": "Jason",
-                    "alter": 19,
-                    "schulabschluss": "Realschule"
-                }
-            ]
-        }
+        # new_settings = {
+        # "color_theme":[{
+        #     "name":"Color Theme",
+        #     "category":"neudesign",
+        #     "type":"dropdown",
+        #     "setting":"dark"
+        # }],
+        # "Option_1":[{
+        #     "name":"Color Theme",
+        #     "category":"neudesign",
+        #     "type":"checkbox",
+        #     "setting":"dark"
+        # }]
+        # }
 
-        settings.save_settings(new_settings)
+        # settings.save_settings(new_settings)
 
     def show(self):
         """Starts the start-window normal (not maximized)."""

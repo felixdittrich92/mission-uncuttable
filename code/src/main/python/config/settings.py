@@ -59,6 +59,8 @@ class Settings:
 
             self.parsed_json = json.dumps(self.parsed_data, ensure_ascii=False)
 
+            self.dict = json.loads(self.parsed_json)
+
             self.settings = json.loads(
                 self.parsed_json,
                 object_hook=lambda d: namedtuple('X', d.keys())(*d.values())
@@ -71,6 +73,14 @@ class Settings:
         @return: object of settings
         """
         return self.settings
+
+    def get_dict_settings(self):
+        """
+        Getter that returns all settings as a dictionary.
+
+        @return:  dictionary with all settings
+        """
+        return self.dict
 
     @staticmethod
     def save_settings(new_settings):

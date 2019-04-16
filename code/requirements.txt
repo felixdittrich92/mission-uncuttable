@@ -14,13 +14,10 @@ opencv-python==4.0.0.21
 pefile==2018.8.8
 pluggy==0.8.0
 py==1.7.0
-PyGUI==2.5.4
 PyInstaller==3.4
 PyQt5==5.9.2
 PyQt5-sip==4.19.13
 pytest==4.0.1
-pywin32==224
-pywin32-ctypes==0.2.0
 sip==4.19.8
 six==1.11.0
 pdf2image==1.4.2
