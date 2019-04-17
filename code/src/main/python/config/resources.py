@@ -9,8 +9,17 @@ files = {
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
     "timeline_view": "ui/timeline_view.ui"
 }
-media = {
-
+images = {
+    "play_button": "images/buttons/002-play-button.svg",
+    "pause_button": "images/buttons/001-pause.svg",
+    "first_frame_button": "images/buttons/006-back.svg",
+    "last_frame_button": "images/buttons/007-next-1.svg",
+    "back_button": "images/buttons/013-previous.svg",
+    "forward_button": "images/buttons/004-next.svg"
+}
+strings = {
+    "de": "strings/de/strings.xml",
+    "en": "strings/en/strings.xml"
 }
 
 class Resources:
@@ -39,9 +48,9 @@ class Resources:
         self.files = Category()
         for attribute, value in files.items():
             setattr(self.files, attribute, self.app.get_resource(value))
-        self.media = Category()
-        for attribute, value in media.items():
-            setattr(self.media, attribute, self.app.get_resource(value))
+        self.images = Category()
+        for attribute, value in images.items():
+            setattr(self.images, attribute, self.app.get_resource(value))
 
 class Category:
     pass
