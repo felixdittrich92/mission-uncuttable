@@ -1,0 +1,24 @@
+Protokoll 15.04.2019
+Ersteller: Felix
+fehlt: Johannes
+
+Themen:
+
+-Openshot:
+- Timeline über JSON ?
+- direkt einfügen ?
+
+kleine Openshoteinführung
+
+Planning neuer Tasks bzw. was im neuen Sprint (4) erledigt werden soll
+
+- Erklärung der neuen Tasks
+- Aufteilung der Tasks
+
+Präsentation was über die Semesterferien erledigt wurde:
+
+Tasks:
+Folienverarbeitung/Videoverarbeitung
+Erkennung Sprecher
+Video in Tafelbild und Folien/Visualiser teilen
+
