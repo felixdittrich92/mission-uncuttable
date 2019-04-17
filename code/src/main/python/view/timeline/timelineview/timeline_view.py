@@ -74,4 +74,4 @@ class TimelineView(QFrame):
         Setup the component somehow so that something can be seen which
         makes it possible to say if something works properly or not.
         """
-        self.setStyleSheet('background-color: yellow')
+        # self.setStyleSheet('background-color: yellow')

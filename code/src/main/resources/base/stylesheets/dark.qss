@@ -27,3 +27,7 @@ QMenuBar::item::pressed, QMenu {
 QMenu::item::selected {
     background-color: #212D40;
 }
+
+QButton#track_button {
+    background: black;
+}

@@ -20,7 +20,7 @@ class TrackFrame(SizeLinkableFrame):
         super(TrackFrame, self).__init__(parent)
 
         self.setLayout(QVBoxLayout())
-        self.setStyleSheet("background-color: orange")
+        # self.setStyleSheet("background-color: orange")
 
     def add_track(self, track):
         """

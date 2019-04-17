@@ -20,7 +20,7 @@ class TrackButtonFrame(SizeLinkableFrame):
         super(TrackButtonFrame, self).__init__(parent)
 
         self.setLayout(QVBoxLayout())
-        self.setStyleSheet('background-color: orange')
+        # self.setStyleSheet('background-color: orange')
 
     def add_button(self, button):
         """
@@ -28,5 +28,6 @@ class TrackButtonFrame(SizeLinkableFrame):
 
         :param button: the button to add
         """
+        button.setObjectName('track_button')
         self.layout().addWidget(button)
         self.adjustSize()

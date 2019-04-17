@@ -37,7 +37,7 @@ class TrackView(QtWidgets.QGraphicsView):
         self.scene.setSceneRect(0, 0, self.width, self.height)
         self.setScene(self.scene)
 
-        self.setStyleSheet('background-color: black')
+        # self.setStyleSheet('background-color: black')
 
     def add_timeable(self, timeable):
         # TODO check for colliding items
