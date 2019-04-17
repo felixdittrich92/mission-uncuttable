@@ -1,3 +1,29 @@
+QMainWindow, QMenuBar {
+    background-color: #11151C;
+}
+
+QFrame{
+    background-color: #212D40;
+    border: 1px solid #364156;
+}
+
+QMenuBar, QMenu {
+  color: #F5F5F5;
+}
+
 QMenuBar {
-    background-color: #2f0099;
+    border-bottom: 2px solid #364156;
+    padding: 2px;
+}
+
+QMenuBar::item::selected {
+    background-color: transparent;
+}
+
+QMenuBar::item::pressed, QMenu {
+    background-color: #364156;
+}
+
+QMenu::item::selected {
+    background-color: #212D40;
 }
