@@ -59,12 +59,11 @@ sudo dpkg -i target/UbiCut.deb
 ```
 
 ## UbiCut auf Debian/Ubuntu deinstallieren
+```
 sudo dpkg --purge UbiCut
-
 ```
 
 ## Vor einem Commit
 ```
 pip3 freeze > requirements.txt
-
 ```
