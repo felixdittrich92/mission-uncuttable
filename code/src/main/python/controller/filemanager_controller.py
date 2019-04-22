@@ -1,4 +1,5 @@
 import sys
+import os
 
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -43,7 +44,7 @@ class Filemanager(QWidget):
 
         if last_element.endswith(('.jpg','.JPEG','.JPG')):
             picture = Image.open(last_element)
-            picture.thumbnail(((200,200)), Image.ANTIALIAS)
+            picture.thumbnail(((72,72)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(last_element[:20] + "...", self.listWidget)
             item.setStatusTip(last_element)
