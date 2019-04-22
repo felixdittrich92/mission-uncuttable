@@ -55,20 +55,38 @@
    </item>
    <item>
     <widget class="QListWidget" name="listWidget">
-     <property name="dragEnabled">
+     <property name="showDropIndicator" stdset="0">
       <bool>true</bool>
+     </property>
+     <property name="dragEnabled">
+      <bool>false</bool>
      </property>
      <property name="dragDropOverwriteMode">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="dragDropMode">
-      <enum>QAbstractItemView::DragDrop</enum>
+      <enum>QAbstractItemView::DragOnly</enum>
      </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
+     <property name="resizeMode">
+      <enum>QListView::Adjust</enum>
+     </property>
+     <property name="gridSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
      <property name="viewMode">
       <enum>QListView::IconMode</enum>
+     </property>
+     <property name="modelColumn">
+      <number>0</number>
+     </property>
+     <property name="uniformItemSizes">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
