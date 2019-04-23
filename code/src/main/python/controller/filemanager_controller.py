@@ -79,7 +79,6 @@ class Filemanager(QWidget):
 
         self.listWidget.clear()
 
-    def 
 
 def main():
     app = QApplication(sys.argv)
