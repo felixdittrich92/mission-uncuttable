@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="toolTipDuration">
-   <number>2</number>
+   <number>-1</number>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -62,16 +62,16 @@
       <bool>true</bool>
      </property>
      <property name="toolTipDuration">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::DoubleClicked</set>
      </property>
      <property name="showDropIndicator" stdset="0">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="dragEnabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="dragDropOverwriteMode">
       <bool>true</bool>
@@ -80,15 +80,15 @@
       <enum>QAbstractItemView::DragDrop</enum>
      </property>
      <property name="defaultDropAction">
-      <enum>Qt::MoveAction</enum>
+      <enum>Qt::CopyAction</enum>
      </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <property name="iconSize">
       <size>
-       <width>100</width>
-       <height>100</height>
+       <width>0</width>
+       <height>0</height>
       </size>
      </property>
      <property name="movement">
@@ -117,6 +117,9 @@
      </property>
      <property name="batchSize">
       <number>100</number>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
      <property name="selectionRectVisible">
       <bool>false</bool>
