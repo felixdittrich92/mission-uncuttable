@@ -20,6 +20,7 @@ class Filemanager(QWidget):
         self.pickButton = self.findChild(QObject,'pushButton_2')
         self.clearButton = self.findChild(QObject,'pushButton_3')
         self.listWidget = self.findChild(QObject,'listWidget')
+        self.listWidget.setDragEnabled(True)
 
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
@@ -47,15 +48,20 @@ class Filemanager(QWidget):
             #picture.thumbnail(((100,100)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element), self.listWidget)
-            item.setStatusTip(last_element)
+            item.setToolTip(last_element)
             item.setIcon(icon)
         elif last_element.endswith('.mp4'):
-            filename = "/home/felix/Schreibtisch/softwareprojekt/mission-uncuttable/code/src/main/resources/base/images/files/mp4logo.jpg"
+            filename = r'/home/felix/Schreibtisch/softwareprojekt/mission-uncuttable/code/src/main/resources/base/images/files/mp4logo.jpg'
             #ToDo
+         #   home = os.path.expanduser('~')
+         #   if platform.system() == 'Linux':
+         #       filename = os.path.join(home, 'code/src/main/resources/base/images/files/mp4logo.jpg')
+         #   elif platform.system() == 'Windows':
+         #       filename = os.path.join(home, 'code/src/main/resources/base/images/files/mp4logo.jpg' )
             picture = Image.open(filename)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element), self.listWidget)
-            item.setStatusTip(last_element)
+            item.setToolTip(last_element)
             item.setIcon(icon)
         elif last_element.endswith('.mp3'):
             filename = "/home/felix/Schreibtisch/softwareprojekt/mission-uncuttable/code/src/main/resources/base/images/files/mp3logo.jpg"
@@ -63,18 +69,17 @@ class Filemanager(QWidget):
             picture = Image.open(filename)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element), self.listWidget)
-            item.setStatusTip(last_element)
+            item.setToolTip(last_element)
             item.setIcon(icon)
         else:
             print("The datatype is not supported")
             pass
 
-
-
     def clearFileNames(self):
 
         self.listWidget.clear()
 
+    def 
 
 def main():
     app = QApplication(sys.argv)
@@ -85,11 +90,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-#home = os.path.expanduser('~')
-#        location = ""
-#        if platform.system() == 'Linux':
-#            location = os.path.join(home, '.config', 'ubicut')
-#        elif platform.system() == 'Windows':
-#            location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
