@@ -5,7 +5,7 @@ from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QVBoxLayout, QLabel, QPushButton, QListWidgetItem, QGridLayout
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, QSize
 from PIL import Image, ImageQt
 
 from config import Resources
@@ -19,7 +19,6 @@ class Filemanager(QWidget):
         self.pickButton = self.findChild(QObject,'pushButton_2')
         self.clearButton = self.findChild(QObject,'pushButton_3')
         self.listWidget = self.findChild(QObject,'listWidget')
-        #self.listWidget.setSizeHint(QSize(0,200))
 
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
@@ -42,22 +41,32 @@ class Filemanager(QWidget):
     def addFileNames(self, fileNames):
         last_element = fileNames[-1]
 
-        if last_element.endswith(('.jpg','.JPEG','.JPG')):
+        if last_element.endswith(('.jpg','.JPEG','.JPG','.png', '.PNG')):
             picture = Image.open(last_element)
-            picture.thumbnail(((72,72)), Image.ANTIALIAS)
+            #picture.thumbnail(((100,100)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
-            item = QListWidgetItem(last_element[:20] + "...", self.listWidget)
+            item = QListWidgetItem(os.path.basename(last_element), self.listWidget)
             item.setStatusTip(last_element)
             item.setIcon(icon)
         elif last_element.endswith('.mp4'):
-            picture = Image.open(last_element)
-            picture.thumbnail(((400,400)), Image.ANTIALIAS)
+            filename = "/home/felix/Schreibtisch/softwareprojekt/mission-uncuttable/code/src/main/resources/base/images/files/mp4logo.jpg"
+            #ToDo
+            picture = Image.open(filename)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
-            item = QListWidgetItem(last_element[:20] + "...", self.listWidget)
+            item = QListWidgetItem(os.path.basename(last_element), self.listWidget)
             item.setStatusTip(last_element)
             item.setIcon(icon)
         elif last_element.endswith('.mp3'):
-            pass # TO DO
+            filename = "/home/felix/Schreibtisch/softwareprojekt/mission-uncuttable/code/src/main/resources/base/images/files/mp3logo.jpg"
+            #ToDo
+            picture = Image.open(filename)
+            icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
+            item = QListWidgetItem(os.path.basename(last_element), self.listWidget)
+            item.setStatusTip(last_element)
+            item.setIcon(icon)
+        else:
+            print("The datatype is not supported")
+            pass
 
 
 
