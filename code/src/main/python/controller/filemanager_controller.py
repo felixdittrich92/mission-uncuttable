@@ -1,5 +1,6 @@
 import sys
 import os
+import platform
 
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -84,3 +85,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+#home = os.path.expanduser('~')
+#        location = ""
+#        if platform.system() == 'Linux':
+#            location = os.path.join(home, '.config', 'ubicut')
+#        elif platform.system() == 'Windows':
+#            location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
