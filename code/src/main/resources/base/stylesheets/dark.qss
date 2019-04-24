@@ -31,3 +31,37 @@ QMenu::item::selected {
 QButton#track_button {
     background: black;
 }
+
+QScrollBar:horizontal {
+    border: 2px solid #364156;
+    background: #364156;
+    height: 20px;
+    margin: 0px 20px 0 20px;
+}
+QScrollBar::handle:horizontal {
+    background: #212D40;
+    min-width: 20px;
+}
+QScrollBar::add-line:horizontal {
+    background: #364156;
+    width: 20px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal {
+    background: #364156;
+    width: 20px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+
+QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+    width: 5px;
+    height: 5px;
+    background: #212D40;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
