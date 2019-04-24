@@ -1,6 +1,6 @@
 from controller import VideoEditorController
 from view import VideoEditorView
-
+from model import TimelineModel
 
 class MainController:
     """A class uses as the Controller, that manages the windows of the program."""
@@ -26,3 +26,7 @@ class MainController:
         video_editor_view = VideoEditorView()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
         self.__video_editor_controller.start()
+
+    def __start_timeline(self):
+        '''Calls...'''
+        timelineModel = TimelineModel()
