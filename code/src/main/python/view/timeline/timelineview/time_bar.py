@@ -1,5 +1,5 @@
 from .size_linkable_frame import SizeLinkableFrame
-
+from .time_needle import TimeNeedle
 
 class TimeBar(SizeLinkableFrame):
     """
@@ -29,3 +29,9 @@ class TimeBar(SizeLinkableFrame):
         for i in range(30):
             self.layout().addWidget(QPushButton(str(i)))
         self.setStyleSheet("background-color: orange")
+
+
+        height = self.height()
+
+        needle = TimeNeedle(height, True)
+        needle.setParent(self)

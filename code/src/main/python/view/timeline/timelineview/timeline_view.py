@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QObject
 import os
 
+from view.timeline.timelineview.layered_view import LayeredView
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
 from view.timeline.timeableview import TimeableView
@@ -74,3 +75,9 @@ class TimelineView(QFrame):
         makes it possible to say if something works properly or not.
         """
         self.setStyleSheet('background-color: yellow')
+
+        # lv = LayeredView()
+        # lv.setParent(self)
+
+        # lv.setFixedHeight(200)
+        # lv.setStyleSheet('background-color: red')

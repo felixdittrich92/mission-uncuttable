@@ -4,6 +4,7 @@ from PyQt5 import uic
 
 import os
 
+from .time_needle import TimeNeedle
 from .track_button_frame import TrackButtonFrame
 from .time_bar import TimeBar
 from .track_frame import TrackFrame
