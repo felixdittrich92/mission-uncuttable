@@ -107,7 +107,7 @@ class Filemanager(QWidget):
 
         elif file_path.endswith('.mp3'):
             mixer.init()
-            mixer.music.load(file_path) #pygame.error: Unrecognized music format
+            mixer.music.load(file_path) #pygame.error: Unrecognized music forma
             mixer.music.play()
         
         else:
