@@ -37,6 +37,27 @@ class TimelineView(QFrame):
         self.__show_tracks()
         self.__show_debug_info_on_gui()
 
+    def add_timeable(self, id, name, start, length, marked=False):
+        pass
+
+    def remove_timeable(self, id):
+        pass
+
+    def set_timeable_name(self, id, name):
+        pass
+
+    def set_timeable_start(self, id, frame):
+        pass
+
+    def set_timeable_length(self, id, frames):
+        pass
+
+    def set_timeable_marked(self, id, marked=True):
+        pass
+
+    def set_timeable_picture(self, id, picture):
+        pass
+
     def __show_tracks(self):
         """shows some tracks with timeables to see if everything works"""
         tr1 = TrackView(2000, 100)
