@@ -9,7 +9,7 @@ the type it's just an empty string.
 """
 
 default_settings = {
-  "Allgemein":{
+  "general":{
     "framerate":{
       "name":"Framerate",
       "type":"dropdown",
@@ -17,7 +17,7 @@ default_settings = {
       "current":"30 FPS"
     },
   },
-  "Platzhalter":{
+  "dummy1":{
     "color_theme":{
       "name":"Color Theme",
       "type":"dropdown",
@@ -37,7 +37,7 @@ default_settings = {
       "current":"true"
     },
   },
-  "Platzhalter 2":{
+  "dummy2":{
     "option1":{
       "name":"Option 1",
       "type":"checkbox",

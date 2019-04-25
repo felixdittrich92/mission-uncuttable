@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5 import uic
-from projectconfig import Resources
+from config import Resources
 import os
 from projectconfig import Projectsettings
 import json
