@@ -57,7 +57,7 @@ class Filemanager(QWidget):
             item.setToolTip(last_element)
             self.listWidget.setStatusTip(last_element)
             item.setIcon(icon)
-        elif last_element.endswith('.mp4'):
+        elif last_element.endswith(('.mp4', '.MP4')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp4logo.jpg"
             path_to_file = Path(path, filename)
@@ -67,7 +67,7 @@ class Filemanager(QWidget):
             item.setToolTip(last_element)
             self.listWidget.setStatusTip(last_element)
             item.setIcon(icon)
-        elif last_element.endswith('.mp3'):
+        elif last_element.endswith(('.mp3', '.MP3')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp3logo.jpg"
             path_to_file = Path(path, filename)
