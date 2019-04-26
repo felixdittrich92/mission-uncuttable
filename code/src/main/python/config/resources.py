@@ -15,7 +15,8 @@ images = {
     "first_frame_button": "images/buttons/006-back.svg",
     "last_frame_button": "images/buttons/007-next-1.svg",
     "back_button": "images/buttons/013-previous.svg",
-    "forward_button": "images/buttons/004-next.svg"
+    "forward_button": "images/buttons/004-next.svg",
+    "media_symbols": "images/filemanagerIcons"
 }
 strings = {
     "de": "strings/de/strings.xml",
