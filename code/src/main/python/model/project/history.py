@@ -4,9 +4,13 @@ class History:
     """
     Represents the history of a project and manages operations.
     """
-    def __init__(self, operations = []):
-        self.operations = operations
-        self.__last_operation = len(operations) - 1
+    def __init__(self, operations=None):
+        if (operations != None):
+            self.operations = operations
+        else:
+            self.operations = []
+        
+        self.__last_operation = len(self.operations) - 1
     
     def apply_history(self):
         pass
@@ -50,7 +54,6 @@ class History:
         self.__last_operation += 1
         # Execute operation
         operation.do()
-        print(self.__last_operation)
 
     def get_num_operations(self):
         """
@@ -64,4 +67,4 @@ class History:
         @rtype Number
         @return Number of operations that can be redone.
         """
-        return len(self.operations) - self.__last_operation
+        return len(self.operations) - self.__last_operation - 1
