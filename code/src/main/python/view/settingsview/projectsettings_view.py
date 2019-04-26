@@ -30,8 +30,8 @@ class ProjectSettingsView(QMainWindow):
         saveButton = self.findChild(QPushButton, "saveButton")
         saveButton.clicked.connect(lambda: self.saveProjectsettings())
 
-        saveButton = self.findChild(QPushButton, "cancelButton")
-        saveButton.clicked.connect(lambda: self.close())
+        cancelButton = self.findChild(QPushButton, "cancelButton")
+        cancelButton.clicked.connect(lambda: self.close())
 
     def addProjectsettings(self, projectsettings):
         """
@@ -44,7 +44,7 @@ class ProjectSettingsView(QMainWindow):
             tabWidget.addTab(QWidget(), x)
             tabWidget.widget(i).layout = QVBoxLayout()
             for y in projectsettings[x]:
-                testWidget = self.makeSetting(x, y)
+                testWidget = self.makeProjectsetting(x, y)
                 tabWidget.widget(i).layout.addWidget(testWidget)
             tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
             tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)

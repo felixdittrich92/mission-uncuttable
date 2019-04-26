@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>480</height>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,23 +27,34 @@
      <enum>QTabWidget::West</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>-1</number>
     </property>
-    <widget class="QWidget" name="general">
-     <attribute name="title">
-      <string>Allgemein</string>
-     </attribute>
-    </widget>
-    <widget class="QWidget" name="dummy1">
-     <attribute name="title">
-      <string>Platzhalter</string>
-     </attribute>
-    </widget>
-    <widget class="QWidget" name="dummy2">
-     <attribute name="title">
-      <string>Platzhalter 2</string>
-     </attribute>
-    </widget>
+   </widget>
+   <widget class="QPushButton" name="saveButton">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>450</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cancelButton">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>450</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

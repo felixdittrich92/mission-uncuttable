@@ -14,7 +14,7 @@ default_settings = {
       "name":"Framerate",
       "type":"dropdown",
       "values":["30 FPS","60 FPS"],
-      "current":"30 FPS"
+      "current":0
     },
   },
   "dummy1":{
@@ -22,19 +22,19 @@ default_settings = {
       "name":"Color Theme",
       "type":"dropdown",
       "values":["dark", "light"],
-      "current":"dark"
+      "current":0
     },
     "option2":{
       "name":"Option 2",
       "type":"checkbox",
       "values":"",
-      "current":"false"
+      "current":False
     },
     "option1":{
       "name":"Option 1",
       "type":"button",
       "values":"",
-      "current":"true"
+      "current":True
     },
   },
   "dummy2":{
@@ -42,7 +42,7 @@ default_settings = {
       "name":"Option 1",
       "type":"checkbox",
       "values":"",
-      "current":"true"
+      "current":True
     }
   }
 }
