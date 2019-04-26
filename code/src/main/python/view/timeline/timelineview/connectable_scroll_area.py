@@ -52,7 +52,7 @@ class ConnectableScrollArea(QScrollArea):
     """
 
     def __init__(self, parent=None):
-        """Create a ConnectableScrollArea without any connections."""
+        """Create a ConnectableScrollArea without any connection."""
         super(ConnectableScrollArea, self).__init__(parent)
 
         self.__connections_horizontal = 0
