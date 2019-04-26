@@ -1,4 +1,4 @@
-from operation import Operation
+from .operation import Operation
 
 """
 Represents the history of a project and manages operations.
