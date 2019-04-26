@@ -52,7 +52,7 @@ class TimelineView(QFrame):
     def set_timeable_length(self, id, frames):
         pass
 
-    def set_timeable_marked(self, id, marked=True):
+    def set_timeable_selected(self, id, selected=True):
         pass
 
     def set_timeable_picture(self, id, picture):
