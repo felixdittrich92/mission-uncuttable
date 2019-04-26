@@ -47,11 +47,11 @@ class Projectsettings:
         else:
             Projectsettings.__instance = self
             home = os.path.expanduser('~')
-            project_config = os.path.join(home, '.config', 'ubicut', 'projectconfig.json')
+            project_config = os.path.join(home, '.config', 'ubicut', 'projectconfig.uc')
             if os.path.exists(project_config):
                 with open(project_config, 'r') as read_file:
-                    self.user_config_data = json.load(read_file)
-                    projectconfig.default_settings.update(self.user_config_data)
+                    self.project_config_data = json.load(read_file)
+                    projectconfig.default_settings.update(self.project_config_data)
                     self.parsed_data = projectconfig.default_settings
 
             else:
@@ -103,7 +103,7 @@ class Projectsettings:
         if not os.path.exists(location):
             os.makedirs(location)
 
-        file = os.path.join(location, 'projectconfig.json')
+        file = os.path.join(location, 'projectconfig.uc')
 
         with open(file, 'w') as outfile:        # writes json to file
             json.dump(new_projectsettings, outfile, ensure_ascii=False)
