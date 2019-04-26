@@ -1,0 +1,23 @@
+Protokoll 26.04.2019
+Ersteller: Felix
+fehlt: Tim, Valentine
+Sprint 4
+Meeting: Retroperspektive/Review
+
+Themen:
+es gab Treffen auch ausserhalb der gesetzten Zeiten
+
+Erledigt: 
+Clemens - TimelineTasks wurden erledigt
+
+in Arbeit: 
+Max - Timelinenadel
+Felix - Filemanager Drag&Drop, Anzeige der Dateien 
+Markus/Julian - Timline-Controller
+Julian - Einstellungsfenster
+Alex/Valentine - Klasse Openshottimeline anlegen
+
+Diskussion wie Protokolle angelegt werden sollen
+Gut/Schlecht - Auswertung des letzten Sprints
+
+- siehe Bilder/Handy

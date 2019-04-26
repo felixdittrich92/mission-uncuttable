@@ -85,9 +85,9 @@ class Filemanager(QWidget):
 
         self.listWidget.clear()
 
-    #def enterEvent(self, event):
-    #    file_path = self.listWidget.statusTip()
-    #    
+    def enterEvent(self, event):
+        file_path = self.listWidget.statusTip()
+        print(file_path)   
     #    if file_path.endswith('.mp4'):
     #        cap = cv2.VideoCapture(str(file_path))
     #
@@ -103,16 +103,16 @@ class Filemanager(QWidget):
     #        cv2.destroyAllWindows()
 
 
-
+"""
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
-            print(event.mimeData().urls())
             event.accept()
         else:
             event.ignore()
 
     def dragMoveEvent(self, event):
         if event.mimeData().hasUrls():
+            print(event.mimeData().urls())
             event.setDropAction(Qt.CopyAction)
             event.accept()
         else:
@@ -142,7 +142,7 @@ class Filemanager(QWidget):
     #        addClip()
     #    else:
     #        pass
-
+"""
 
 def main():
     app = QApplication(sys.argv)
