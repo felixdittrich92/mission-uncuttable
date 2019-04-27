@@ -6,6 +6,7 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 import shutil
+import ffmpy
 
 def create_project_folder(new_project_path, new_project_name):
     """ 
