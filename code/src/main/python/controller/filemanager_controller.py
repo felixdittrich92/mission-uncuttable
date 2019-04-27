@@ -1,6 +1,5 @@
 import sys
 import os
-import platform
 
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -85,22 +84,9 @@ class Filemanager(QWidget):
 
         self.listWidget.clear()
 
-    def enterEvent(self, event):
-        file_path = self.listWidget.statusTip()
-        print(file_path)   
-    #    if file_path.endswith('.mp4'):
-    #        cap = cv2.VideoCapture(str(file_path))
-    #
-    #        while(cap.isOpened()):
-    #            ret,frame = cap.read()
-    #            #frame = cv2.resize(frame, (200,200))
-    #            cv2.imshow('frame', frame)
-
-    #            if cv2.waitKey(1) & 0xFF == ord('q'):
-    #                break
-            
-    #        cap.release()
-    #        cv2.destroyAllWindows()
+    #def enterEvent(self, event):
+    #    file_path = self.listWidget.statusTip()
+    #    print(file_path)   
 
 
 """
