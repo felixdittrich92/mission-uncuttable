@@ -2,6 +2,8 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
 from view.timeline.timeableview import TimeableView
+from model.project.timeable import TimeableModel
+from model.project.timeline import TimelineModel
 
 
 class TrackView(QtWidgets.QGraphicsView):
@@ -10,7 +12,7 @@ class TrackView(QtWidgets.QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, parent=None):
+    def __init__(self, width, height, num, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -22,6 +24,7 @@ class TrackView(QtWidgets.QGraphicsView):
 
         self.width = width
         self.height = height
+        self.num = num
         self.scene = QtWidgets.QGraphicsScene()
 
         self.setAcceptDrops(True)
@@ -40,7 +43,7 @@ class TrackView(QtWidgets.QGraphicsView):
         self.setStyleSheet('background-color: black')
 
     def add_timeable(self, timeable):
-        # TODO check for colliding items
+        timeable.model.clip.Layer(self.num)
         self.scene.addItem(timeable)
 
     def dragEnterEvent(self, event):
@@ -67,16 +70,30 @@ class TrackView(QtWidgets.QGraphicsView):
             width = QtCore.QDataStream.readInt(stream)
             res_left = QtCore.QDataStream.readInt(stream)
             res_right = QtCore.QDataStream.readInt(stream)
+            file_name = QtCore.QDataStream.readString(stream).decode()
+            clip_id = QtCore.QDataStream.readString(stream).decode()
 
             # check if theres already another timeable at the drop position
             rect = QtCore.QRectF(event.pos().x() - width / 2, 0, width, self.height)
             colliding = self.scene.items(rect)
             if not colliding:
                 # add new timeable
-                t = TimeableView(name, width, self.height, event.pos().x() - width / 2)
+                model = TimeableModel(file_name)
+                timeline = TimelineModel.get_instance()
+                old_clip = timeline.get_clip_by_id(clip_id)
+
+                model.set_start(old_clip.Start(), is_sec=True)
+                model.set_end(old_clip.End(), is_sec=True)
+                model.move(event.pos().x() - width / 2)
+
+                # delete old clip from the timeline
+                timeline.change("delete", ["clips", {"id": clip_id}], {})
+
+                t = TimeableView(name, width, self.height, event.pos().x() - width / 2, model)
                 t.resizable_left = res_left
                 t.resizable_rigth = res_right
-                self.scene.addItem(t)
+
+                self.add_timeable(t)
 
                 event.acceptProposedAction()
 

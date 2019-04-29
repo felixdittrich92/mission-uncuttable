@@ -42,6 +42,10 @@ default_settings = {
       "name":"Option 1",
       "type":"checkbox",
       "values":"",
-      "current":"true"    }
+      "current":"true"
+    }
+  },
+  "Timeline": {
+      "pixels_per_second": 16
   }
 }

@@ -1,1 +1,1 @@
-from data import *
+from model.data import *
