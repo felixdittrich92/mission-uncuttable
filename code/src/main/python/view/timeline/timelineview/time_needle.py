@@ -57,17 +57,22 @@ class TimeNeedle(QWidget):
         self.repaint()
 
     def mouseMoveEvent(self, evt):
-        delta = QPointF(evt.localPos().x() - 5, evt.localPos().y())
+        if self.mapToParent(QPoint(0, 0)).x() >= 5:
+            delta = QPointF(evt.localPos().x() - 5, evt.localPos().y())
+            self.pos_changed.emit(delta.x())
 
-        self.pos_changed.emit(delta.x())
-        print(self.parentWidget())
-
-
+        else:
+            pass
     def move_needle(self, x):
         self.move(self.x() + x, 0)
 
     def mousePressEvent(self, event):
         self.setCursor(Qt.ClosedHandCursor)
 
+
+
     def mouseReleaseEvent(self, event):
         self.setCursor(Qt.PointingHandCursor)
+
+        if self.mapToParent(QPoint(0, 0)).x() < 5:
+            self.pos_changed.emit(5 - self.mapToParent(QPoint(0, 0)).x())

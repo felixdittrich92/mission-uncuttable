@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QScrollBar
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, QPoint
 from PyQt5 import uic
 
 import os
@@ -76,10 +76,12 @@ class TimelineScrollArea(QFrame):
 
         self.__needle_top = TimeNeedle(self.__time_bar.height(), True)
         self.__needle_top.setParent(self.__time_bar)
+        self.__needle_top.move_needle(5)
 
         self.__needle_bottom = TimeNeedle(self.__track_frame.height())
         self.__needle_bottom.setParent(self.__track_frame)
         self.__needle_bottom.setObjectName("needle_bottom")
+        self.__needle_bottom.move_needle(5)
 
 
 
