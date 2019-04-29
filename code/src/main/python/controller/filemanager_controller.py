@@ -47,35 +47,41 @@ class Filemanager(QWidget):
 
     def addFileNames(self, fileNames):
         last_element = fileNames[-1]
+        self.pictureList = []
+        self.videoList = []
 
         if last_element.endswith(('.jpg','.JPEG', '.jpeg', '.JPG','.png', '.PNG')):
             picture = Image.open(last_element)
             #picture.thumbnail(((100,100)), Image.ANTIALIAS)
+            picture = picture.resize(((100,80)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element)[:20], self.listWidget)
-            item.setToolTip(last_element)
-            self.listWidget.setStatusTip(last_element)
             item.setIcon(icon)
+            item.setToolTip(last_element)
+            item.setStatusTip(last_element)
         elif last_element.endswith(('.mp4', '.MP4')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp4logo.jpg"
             path_to_file = Path(path, filename)
             picture = Image.open(path_to_file)
+            picture = picture.resize(((100, 80)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element)[:20], self.listWidget)
             item.setToolTip(last_element)
-            self.listWidget.setStatusTip(last_element)
+            item.setStatusTip(last_element)
             item.setIcon(icon)
         elif last_element.endswith(('.mp3', '.MP3')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp3logo.jpg"
             path_to_file = Path(path, filename)
             picture = Image.open(path_to_file)
+            picture = picture.resize(((100, 80)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element)[:20], self.listWidget)
-            item.setToolTip(last_element)
-            self.listWidget.setStatusTip(last_element)
             item.setIcon(icon)
+            item.setToolTip(last_element)
+            item.setStatusTip(last_element)
+
         else:
             print("The datatype is not supported")
             pass
@@ -85,8 +91,8 @@ class Filemanager(QWidget):
         self.listWidget.clear()
 
     #def enterEvent(self, event):
-    #    file_path = self.listWidget.statusTip()
-    #    print(file_path)   
+     #   file_path = self.picture.statusTip()
+     #   print(file_path)   
 
 
 """

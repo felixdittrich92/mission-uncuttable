@@ -5,8 +5,8 @@ import cv2
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
+from moviepy.editor import *
 import shutil
-import ffmpy
 
 def create_project_folder(new_project_path, new_project_name):
     """ 
@@ -226,3 +226,27 @@ def small_video(folder_path, folder_name, video_path, video_name):
     cv2.destroyAllWindows()
     new_small_video_path = Path(folder, small_video_name)
     return new_small_video_path
+
+#need tests
+def audio_from_video(folder_path, folder_name, video_path, video_name):
+    """
+    a function to get the audio from a video and save it in the project folder
+
+    @param folder_path: path to the project folder
+    @param folder_name: the name of the project folder
+    @param video_path: the path to the video
+    @param video_name: the name of the "main video"
+
+    @return: a String to the new generated audio
+    """
+
+    folder = Path(folder_path, folder_name)
+    video = Path(video_path, video_name)
+
+    audio_from_video = 'audio.mp3'
+    video = VideoFileClip(str(video))
+    audio = video.audio
+    audio.write_audiofile(os.path.join(folder,str(audio_from_video)))
+    extracted_audio = Path(folder, audio_from_video)
+    return extracted_audio
+
