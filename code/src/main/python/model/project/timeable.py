@@ -4,7 +4,7 @@ import locale
 import openshot
 
 from model.project.timeline import TimelineModel
-from util.timeline_utils import pos_to_seconds, get_px_per_second
+from util.timeline_utils import pos_to_seconds
 
 
 class TimeableModel:
@@ -26,7 +26,7 @@ class TimeableModel:
 
     def trim_start(self, pos):
         """ start = start + sec(pos) """
-        new_start = self.clip.Start() + pos_to_seconds(pos, get_px_per_second())
+        new_start = self.clip.Start() + pos_to_seconds(pos)
         self.clip.Start(new_start)
 
         data = {"start": new_start}
@@ -37,7 +37,7 @@ class TimeableModel:
         if is_sec:
             self.clip.Start(pos)
         else:
-            new_start = pos_to_seconds(pos, get_px_per_second())
+            new_start = pos_to_seconds(pos)
             self.clip.Start(new_start)
 
         data = {"start": new_start}
@@ -45,7 +45,7 @@ class TimeableModel:
 
     def trim_end(self, pos):
         """ end = end + sec(pos) """
-        new_end = self.clip.End() + pos_to_seconds(pos, get_px_per_second())
+        new_end = self.clip.End() + pos_to_seconds(pos)
         self.clip.End(new_end)
 
         data = {"end": new_end}
@@ -56,7 +56,7 @@ class TimeableModel:
         if is_sec:
             self.clip.End(pos)
         else:
-            new_end = pos_to_seconds(pos, get_px_per_second())
+            new_end = pos_to_seconds(pos)
             self.clip.End(new_end)
 
         data = {"end": new_end}
@@ -77,8 +77,11 @@ class TimeableModel:
         return new_model
 
     def move(self, pos):
-        new_position = pos_to_seconds(pos, get_px_per_second())
+        new_position = pos_to_seconds(pos)
         self.clip.Position(new_position)
 
         data = {"position": new_position}
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
+
+    def delete(self):
+        self.timeline_instance.change("delete", ["clips", {"id": self.clip.Id()}], {})

@@ -97,6 +97,7 @@ class TimeableView(QGraphicsRectItem):
 
     def delete(self):
         """removes the timeable from the track"""
+        self.model.delete()
         self.scene().removeItem(self)
 
     def cut(self, pos):
