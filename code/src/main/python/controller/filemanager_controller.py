@@ -39,10 +39,7 @@ class Filemanager(QWidget):
             'QFileDialog.getOpenFileNames()',
             '',
             (
-                'All Files (*);;'
-                'Image Files (*.png);;'
-                'Sound Files(*.mp3);;'
-                'Movie Files (*.mp4)'
+                'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
             )
         )
 
@@ -73,7 +70,7 @@ class Filemanager(QWidget):
                 cap = cv2.VideoCapture(str(video_input_path))
 
                 number = 0
-                while (number < 1):
+                if (number < 1):
                     ret, frame = cap.read()
                     if not ret or number == 1:
                         break
@@ -82,14 +79,12 @@ class Filemanager(QWidget):
                         filename = "video%d.jpg" % self.current_frame
                         self.current_frame += 1
                         preview_file = Path(path, filename)
-                        self.preview_list.append(preview_file)
                         number += 1
                 cap.release()
                 cv2.destroyAllWindows()
 
-                element = self.preview_list[-1]
 
-                picture = Image.open(element)
+                picture = Image.open(preview_file)
                 picture = picture.resize(((275,183)), Image.ANTIALIAS)
                 icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
                 item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
