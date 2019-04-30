@@ -6,13 +6,10 @@ import cv2
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QVBoxLayout, QLabel, QPushButton, QListWidgetItem, QGridLayout
+from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QLabel, QPushButton, QListWidgetItem
 from PyQt5.QtCore import QObject, QSize
 from PIL import Image, ImageQt
 from pathlib import Path
-import subprocess
-from ffmpy import FFmpeg
-
 from config import Resources
 
 
@@ -33,7 +30,7 @@ class Filemanager(QWidget):
         self.clearButton.clicked.connect(self.clearFileNames)
 
         self.current_frame = 0
-
+        self.preview_list = []
 
     def pickFileNames(self):
         fileNames, _ = QFileDialog.getOpenFileNames(
@@ -61,35 +58,39 @@ class Filemanager(QWidget):
             item.setIcon(icon)
             item.setToolTip(last_element)
             item.setStatusTip(last_element)
+
         elif last_element.endswith(('.mp4', '.MP4')):
             path = Resources.get_instance().images.media_symbols
             video_input_path = last_element
             cap = cv2.VideoCapture(str(video_input_path))
 
-            frame = 0
-            while (True):
+            number = 0
+            while (number < 1):
                 ret, frame = cap.read()
-                if not ret or frame == 1:
+                if not ret or number == 1:
                     break
                 else:
                     cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
                     filename = "video%d.jpg" % self.current_frame
                     self.current_frame += 1
-                    frame += 1
+                    preview_file = Path(path, filename)
+                    self.preview_list.append(preview_file)
+                    number += 1
             cap.release()
             cv2.destroyAllWindows()
 
-            path_to_file = Path(path, filename)
-            picture = Image.open(path_to_file)
+            element = self.preview_list[-1]
+
+            picture = Image.open(element)
             picture = picture.resize(((275,183)), Image.ANTIALIAS)
             icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
             item = QListWidgetItem(os.path.basename(last_element)[:20], self.listWidget)
             item.setToolTip(last_element)
             item.setStatusTip(last_element)
             item.setIcon(icon)
+
         elif last_element.endswith(('.mp3', '.MP3')):
             path = Resources.get_instance().images.media_symbols
-            print(path)
             filename = "mp3logo.jpg"
             path_to_file = Path(path, filename)
             picture = Image.open(path_to_file)
@@ -107,11 +108,6 @@ class Filemanager(QWidget):
     def clearFileNames(self):
 
         self.listWidget.clear()
-
-    #def enterEvent(self, event):
-     #   file_path = self.picture.statusTip()
-     #   print(file_path)   
-
 
 """
     def dragEnterEvent(self, event):
