@@ -36,13 +36,33 @@ class TimelineView(QFrame):
         self.track_frame = self.findChild(QFrame, "track_frame")
         self.track_button_frame = self.findChild(QFrame, "track_button_frame")
 
+        self.timeables = []
+        self.tracks = []
+
         self.__show_tracks()
         self.__show_debug_info_on_gui()
 
-        timeables = {}
-        tracks = {}
+    def add_track(self, track):
+        self.tracks.append(track)
+        self.track_frame.add_track(track)
 
-    def add_timeable(self, id, name, start, length, marked=False):
+        self.adjust_track_sizes()
+
+    def adjust_track_sizes(self):
+        """ Changes the width of all tracks to the size of the biggest track """
+        if not self.tracks or len(self.tracks) == 1:
+            return
+
+        max_width = self.tracks[0].width
+
+        for t in self.tracks:
+            if t.width > max_width:
+                max_width = t.width
+
+        for t in self.tracks:
+            t.set_width(max_width)
+
+    def add_timeable(self, id, name, start, length, track, marked=False):
         pass
 
     def remove_timeable(self, id):
@@ -72,14 +92,14 @@ class TimelineView(QFrame):
         w = seconds_to_pos(model.clip.Duration())
 
         tr1 = TrackView(4800, 100, 3)
-        tr1.add_timeable(TimeableView("video.mp4", w, 100, 0, model))
-        self.track_frame.add_track(tr1)
+        tr1.add_timeable(f, w, 0, model)
+        self.add_track(tr1)
         btn1 = QPushButton("Track 1")
         btn1.setFixedSize(100, 100)
         self.track_button_frame.add_button(btn1)
 
         tr2 = TrackView(2000, 100, 2)
-        self.track_frame.add_track(tr2)
+        self.add_track(tr2)
         btn2 = QPushButton("Track 2")
         btn2.setFixedSize(100, 100)
         self.track_button_frame.add_button(btn2)
