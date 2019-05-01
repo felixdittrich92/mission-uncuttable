@@ -76,7 +76,7 @@ class TimelineModel:
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
 
-    def export(self, filename, audio_options, video_options, last_frame):
+    def export(self, filename, audio_options, video_options, start_frame, last_frame):
         """
         @param filename: name of the file in which the video is saved
         @param audio_options: list of audio options
@@ -95,7 +95,7 @@ class TimelineModel:
         w.Open()
 
         # export video
-        for frame_number in range(1, last_frame):
+        for frame_number in range(start_frame, last_frame):
             w.WriteFrame(self.timeline.GetFrame(frame_number))
 
         w.Close()

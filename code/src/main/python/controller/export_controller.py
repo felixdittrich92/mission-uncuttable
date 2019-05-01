@@ -42,6 +42,6 @@ class ExportController:
 
         # try to start the export, show window with error message if theres an exception
         try:
-            tm.export(path, audio_options, video_options, last_frame)
+            tm.export(path, audio_options, video_options, 1, last_frame)
         except Exception as e:
             ExportErrorView(str(e))
