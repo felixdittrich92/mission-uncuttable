@@ -19,13 +19,13 @@ class TimeableView(QGraphicsRectItem):
     to another Track.
     """
 
-    def __init__(self, name, width, height, x_pos, model, parent=None):
+    def __init__(self, name, width, height, x_pos, res_left, res_right, model, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
         @param name: the name that is displayed in the top left corner of the timeable
         @param width: timeable width, can be changed while resizing
-        @param height: timeable heigth, should be the same as track heigth
+        @param height: timeable height, should be the same as track height
         @param x_pos: position on the track
         """
         super(TimeableView, self).__init__(parent)
@@ -39,8 +39,8 @@ class TimeableView(QGraphicsRectItem):
         self.height = height
         self.x_pos = x_pos
 
-        self.resizable_left = 0
-        self.resizable_rigth = 0
+        self.resizable_left = res_left
+        self.resizable_right = res_right
         self.name_visible = False
 
         self.setRect(self.boundingRect())
@@ -110,12 +110,12 @@ class TimeableView(QGraphicsRectItem):
             return
 
         new_model = self.model.cut(pos)
+        new_model.set_layer(self.model.clip.Layer())
 
         # create the second timeable
-        new_timeable = TimeableView(self.name + '(2)', self.width - pos,
-                                    self.height, pos + self.x_pos, new_model)
-        new_timeable.resizable_rigth = self.resizable_rigth
-        self.resizable_rigth = 0
+        new_timeable = TimeableView(self.name + '(2)', self.width - pos, self.height,
+                                    pos + self.x_pos, 0, self.resizable_right, new_model)
+        self.resizable_right = 0
 
         # the bounding rect is dependent on the width so we have to call prepareGeometryChange
         # otherwhise the program can randomly crash
@@ -203,7 +203,7 @@ class TimeableView(QGraphicsRectItem):
             w = self.width + diff
 
             if w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH \
-               or diff > self.resizable_rigth:
+               or diff > self.resizable_right:
                 return
 
             r = QtCore.QRectF(self.x_pos, 0, w, self.height)
@@ -214,7 +214,7 @@ class TimeableView(QGraphicsRectItem):
             self.prepareGeometryChange()
             self.width = w
             self.setRect(self.boundingRect())
-            self.resizable_rigth -= diff
+            self.resizable_right -= diff
 
             # update clip data
             self.model.trim_end(diff)
@@ -276,7 +276,7 @@ class TimeableView(QGraphicsRectItem):
         QtCore.QDataStream.writeString(data_stream, str.encode(self.name))
         QtCore.QDataStream.writeInt(data_stream, self.width)
         QtCore.QDataStream.writeInt(data_stream, self.resizable_left)
-        QtCore.QDataStream.writeInt(data_stream, self.resizable_rigth)
+        QtCore.QDataStream.writeInt(data_stream, self.resizable_right)
         QtCore.QDataStream.writeString(data_stream, str.encode(self.model.file_name))
         QtCore.QDataStream.writeString(data_stream, str.encode(self.model.clip.Id()))
 
