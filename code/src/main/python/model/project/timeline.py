@@ -20,24 +20,32 @@ class TimelineModel:
 
     @staticmethod
     def get_instance():
+        """ returns the timeline instance """
         if TimelineModel.__instance is None:
             TimelineModel()
 
         return TimelineModel.__instance
 
-    def __init__(self, project_data=TIMELINE_DEFAULT_SETTINGS):
+    def __init__(self, timeline_data=TIMELINE_DEFAULT_SETTINGS):
+        """
+        initalize the timeline model with given settings
+        this class is a singleton so it can only be initialized once
+
+        @param timeline_data: dict with timeline settings (fps, width, height, sample_rate ...)
+        """
         if TimelineModel.__instance is not None:
             raise Exception("singleton!")
 
         TimelineModel.__instance = self
 
-        fps = project_data["fps"]
-        width = project_data["width"]
-        height = project_data["height"]
-        sample_rate = project_data["sample_rate"]
-        channels = project_data["channels"]
-        channel_layout = project_data["channel_layout"]
+        fps = timeline_data["fps"]
+        width = timeline_data["width"]
+        height = timeline_data["height"]
+        sample_rate = timeline_data["sample_rate"]
+        channels = timeline_data["channels"]
+        channel_layout = timeline_data["channel_layout"]
 
+        # create openshot timeline object
         self.timeline = openshot.Timeline(width, height, openshot.Fraction(
             fps["num"], fps["den"]), sample_rate, channels, channel_layout)
 
