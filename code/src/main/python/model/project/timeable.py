@@ -3,7 +3,7 @@ import uuid
 import locale
 import openshot
 
-from model.project.timeline import TimelineModel
+from .timeline import TimelineModel
 from util.timeline_utils import pos_to_seconds
 
 
