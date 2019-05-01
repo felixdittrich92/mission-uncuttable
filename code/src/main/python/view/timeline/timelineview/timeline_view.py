@@ -7,8 +7,8 @@ from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
 from view.timeline.timeableview import TimeableView
 
-from util.timeline_utils import seconds_to_pos, get_px_per_second
-from model.project.timeable import TimeableModel
+from util.timeline_utils import seconds_to_pos
+from model.project import TimeableModel
 
 
 class TimelineView(QFrame):
@@ -69,7 +69,7 @@ class TimelineView(QFrame):
         # testing data
         f = "video.mp4"
         model = TimeableModel(f)
-        w = seconds_to_pos(model.clip.Duration(), get_px_per_second())
+        w = seconds_to_pos(model.clip.Duration())
 
         tr1 = TrackView(4800, 100, 3)
         tr1.add_timeable(TimeableView("video.mp4", w, 100, 0, model))
