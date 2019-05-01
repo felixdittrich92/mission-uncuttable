@@ -47,4 +47,4 @@ class VideoEditorController:
     def __start_export_controller(self):
         """shows the export view"""
         export_view = ExportView()
-        export_view.show_window()
+        export_view.start()
