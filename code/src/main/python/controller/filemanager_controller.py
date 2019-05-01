@@ -69,20 +69,16 @@ class Filemanager(QWidget):
                 video_input_path = file
                 cap = cv2.VideoCapture(str(video_input_path))
 
-                number = 0
-                if (number < 1):
-                    ret, frame = cap.read()
-                    if not ret or number == 1:
-                        break
-                    else:
-                        cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
-                        filename = "video%d.jpg" % self.current_frame
-                        self.current_frame += 1
-                        preview_file = Path(path, filename)
-                        number += 1
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                else:
+                    cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
+                    filename = "video%d.jpg" % self.current_frame
+                    self.current_frame += 1
+                    preview_file = Path(path, filename)
                 cap.release()
                 cv2.destroyAllWindows()
-
 
                 picture = Image.open(preview_file)
                 picture = picture.resize(((275,183)), Image.ANTIALIAS)
@@ -93,7 +89,7 @@ class Filemanager(QWidget):
                 item.setIcon(icon)
                 self.file_list.append(file)
 
-            elif file.upper().endswith(('.MP3')):
+            elif file.upper().endswith(('.MP3', '*.WAV')):
                 path = Resources.get_instance().images.media_symbols
                 filename = "mp3logo.jpg"
                 path_to_file = Path(path, filename)
