@@ -1,12 +1,14 @@
 import math
 
-from config.settings import Settings
+# should be changable later
+PIXELS_PER_SECOND = 16
 
 
 def get_px_per_second():
-    s = Settings.get_instance().get_dict_settings()
+    # s = Settings.get_instance().get_dict_settings()
+    # return int(s["Timeline"]["pixels_per_second"])
 
-    return s["Timeline"]["pixels_per_second"]
+    return PIXELS_PER_SECOND
 
 
 def pos_to_seconds(pos):
