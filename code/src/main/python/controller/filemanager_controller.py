@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import cv2
+import time
 
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -28,9 +29,9 @@ class Filemanager(QWidget):
 
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
+        self.listWidget.itemSelectionChanged.connect(self.itemClicked)
 
         self.current_frame = 0
-        self.preview_list = []
         self.file_list = []
 
     def pickFileNames(self):
@@ -60,6 +61,7 @@ class Filemanager(QWidget):
                 icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
                 item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
                 item.setIcon(icon)
+                time.sleep(1)
                 item.setToolTip(file)
                 item.setStatusTip(file)
                 self.file_list.append(file)
@@ -73,14 +75,16 @@ class Filemanager(QWidget):
                 if not ret:
                     break
                 else:
-                    cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
-                    filename = "video%d.jpg" % self.current_frame
+                    cv2.imwrite(os.path.join(path, "video%d.png" % self.current_frame), frame)
+                    filename = "video%d.png" % self.current_frame
                     self.current_frame += 1
                     preview_file = Path(path, filename)
                 cap.release()
                 cv2.destroyAllWindows()
+                time.sleep(0.5)
 
                 picture = Image.open(preview_file)
+                time.sleep(0.5)
                 picture = picture.resize(((275,183)), Image.ANTIALIAS)
                 icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
                 item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
@@ -106,9 +110,14 @@ class Filemanager(QWidget):
                 print("The datatype is not supported")
                 pass
 
-    def clearFileNames(self):
+    def clearFileNames(self, fileNames):
 
         self.listWidget.clear()
+        self.file_list.clear()
+
+    def itemClicked(self):
+        x = self.listWidget.selectedItems()
+        print(x)
 
 """
     def dragEnterEvent(self, event):
