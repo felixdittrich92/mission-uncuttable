@@ -3,3 +3,4 @@ from .start_controller import StartController
 from .main_controller import MainController
 from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
+from .export_controller import ExportController
