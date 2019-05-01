@@ -1,6 +1,17 @@
-from view.timeline.timelineview.timeline_view import TimelineView
+"""
+The controller module for communication between timelineview and
+timelinemodel.
+"""
+from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
+
+# Todo: Fill the interface methods which translate actions from the
+#       Ubicut frontend (view) to the backend (model) with some
+#       function.
 
 class TimelineController:
+    """
+    The controller between the TimelineView and the TimelineModel.
+    """
     def __init__(self, timeline_view):
         self.__timeline_view = timeline_view
 
@@ -10,7 +21,10 @@ class TimelineController:
         timeable.
 
         @param data: The data needed to now what the timeable has to
-                     contain.
+                     contain and what track it has to be added to.
+                     Important note: You may replace this parameter
+                     with multiple ones if required while implementing
+                     this method.
         @return:     Nothing.
         """
         pass
@@ -51,7 +65,7 @@ class TimelineController:
 
         The split will happen after the time-th frame of the timeable.
         This means that the time-th frame will belong to the first but
-        not the second of the resulting timeable's parts.
+        not the second one of the resulting timeables.
 
         @param id:   The timeable's unique ID.
         @param time: The time at which the timeable should be split.
@@ -68,19 +82,19 @@ class TimelineController:
         The removed part includes the frames specified by start and end.
 
         @param id:    The timeable's unique ID.
-        @param start:
-        @param end:
-        @return:
+        @param start: The number of the first frame removed.
+        @param end:   The number of the last frame removed.
+        @return:      Nothing.
         """
         pass
 
     def select_timeable(self, id, selected=True):
         """
-        Set the selected state of the model's representation of a
+        Set the selected-state of the model's representation of a
         timeable.
 
         @param id:       The timeable's unique ID.
-        @param selected:
-        @return:
+        @param selected: The selected-state.
+        @return:         Nothing.
         """
         pass
