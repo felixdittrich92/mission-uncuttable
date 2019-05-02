@@ -31,6 +31,7 @@ class Filemanager(QWidget):
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
         self.deleteButton.clicked.connect(self.remove)
+        self.listWidget.itemSelectionChanged.connect(self.selected)
 
         self.current_frame = 0
         self.file_list = []
@@ -100,11 +101,13 @@ class Filemanager(QWidget):
         self.file_list.clear()
 
     def remove(self):
+        path = self.listWidget.currentItem().statusTip()
+        self.file_list.remove(path)
+        self.listWidget.takeItem(self.listWidget.currentRow())
+
+    def selected(self):
         x = self.listWidget.currentItem().statusTip()
         print(x) #String for drag&drop ??
-        self.file_list.remove(x)
-        self.listWidget.takeItem(self.listWidget.currentRow())
-        
 
 """
     def dragEnterEvent(self, event):
