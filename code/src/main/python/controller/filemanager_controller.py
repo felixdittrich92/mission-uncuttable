@@ -45,70 +45,55 @@ class Filemanager(QWidget):
             )
         )
 
-        self.addFileNames(fileNames)
-
-
-    def addFileNames(self, fileNames):
-
         for file in fileNames:
+            self.addFileNames(file, fileNames)
 
-            if file in self.file_list:
-                print("The file exist")
-                break
 
-            if file.upper().endswith(('.JPG', '.PNG')):
-                picture = Image.open(file)
-                picture = picture.resize(((275,183)), Image.ANTIALIAS)
-                icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
-                item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
-                item.setIcon(icon)
-                item.setToolTip(file)
-                item.setStatusTip(file)
-                self.file_list.append(file)
+    def addFileNames(self, file, fileNames):
 
-            elif file.upper().endswith(('.MP4')):
-                path = Resources.get_instance().images.media_symbols
-                video_input_path = file
-                cap = cv2.VideoCapture(str(video_input_path))
+        if file in self.file_list:
+            print("The file exist")
+            return
 
-                ret, frame = cap.read()
-                if not ret:
-                    break
-                else:
-                    cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
-                    filename = "video%d.jpg" % self.current_frame
-                    self.current_frame += 1
-                    preview_file = Path(path, filename)
-                    time.sleep(0.5)
-                cap.release()
-                cv2.destroyAllWindows()
+        if file.upper().endswith(('.JPG', '.PNG')):
+            picture = Image.open(file)
+                
+        elif file.upper().endswith(('.MP4')):
+            path = Resources.get_instance().images.media_symbols
+            video_input_path = file
+            cap = cv2.VideoCapture(str(video_input_path))
 
-                picture = Image.open(preview_file)
-                time.sleep(0.5)
-                picture = picture.resize(((275,183)), Image.ANTIALIAS)
-                icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
-                item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
-                item.setToolTip(file)
-                item.setStatusTip(file)
-                item.setIcon(icon)
-                self.file_list.append(file)
-
-            elif file.upper().endswith(('.MP3', '*.WAV')):
-                path = Resources.get_instance().images.media_symbols
-                filename = "mp3logo.jpg"
-                path_to_file = Path(path, filename)
-                picture = Image.open(path_to_file)
-                picture = picture.resize(((275,183)), Image.ANTIALIAS)
-                icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
-                item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
-                item.setIcon(icon)
-                item.setToolTip(file)
-                item.setStatusTip(file)
-                self.file_list.append(file)
-
+            ret, frame = cap.read()
+            if not ret:
+                return
             else:
-                print("The datatype is not supported")
-                pass
+                cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
+                filename = "video%d.jpg" % self.current_frame
+                self.current_frame += 1
+                preview_file = Path(path, filename)
+            cap.release()
+            cv2.destroyAllWindows()
+
+            picture = Image.open(preview_file)
+                
+        elif file.upper().endswith(('.MP3', '*.WAV')):
+            path = Resources.get_instance().images.media_symbols
+            filename = "mp3logo.jpg"
+            path_to_file = Path(path, filename)
+            picture = Image.open(path_to_file)
+                
+        else:
+            print("The datatype is not supported")
+            pass
+
+        time.sleep(0.5)
+        picture = picture.resize(((275,200)), Image.ANTIALIAS)
+        icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
+        item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
+        item.setIcon(icon)
+        item.setToolTip(file)
+        item.setStatusTip(file)
+        self.file_list.append(file)
 
     def clearFileNames(self, fileNames):
         self.listWidget.clear()

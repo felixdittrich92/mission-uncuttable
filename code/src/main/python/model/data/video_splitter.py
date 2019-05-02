@@ -8,7 +8,7 @@ from pathlib import Path
 from moviepy.editor import *
 import shutil
 
-class Presentation:
+class VideoSplitter:
 
     def __init__(self, folder_path, folder_name, video_path, video_name):
         self.folder_path = folder_path
