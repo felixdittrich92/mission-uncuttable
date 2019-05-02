@@ -34,6 +34,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_1">
+        <property name="text">
+         <string>Delete</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton_3">
         <property name="text">
          <string>Clear</string>
@@ -65,7 +72,7 @@
       <number>0</number>
      </property>
      <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
+      <set>QAbstractItemView::SelectedClicked</set>
      </property>
      <property name="showDropIndicator" stdset="0">
       <bool>true</bool>
