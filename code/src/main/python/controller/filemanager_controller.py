@@ -19,6 +19,7 @@ class Filemanager(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         uic.loadUi(Resources.get_instance().files.filemanager, self)
+        self.deleteButton = self.findChild(QObject,'pushButton_1')
         self.pickButton = self.findChild(QObject,'pushButton_2')
         self.clearButton = self.findChild(QObject,'pushButton_3')
         self.listWidget = self.findChild(QObject,'listWidget')
@@ -29,7 +30,7 @@ class Filemanager(QWidget):
 
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
-        self.listWidget.itemSelectionChanged.connect(self.itemClicked)
+        self.deleteButton.clicked.connect(self.remove)
 
         self.current_frame = 0
         self.file_list = []
@@ -55,13 +56,12 @@ class Filemanager(QWidget):
                 print("The file exist")
                 break
 
-            if file.upper().endswith(('.JPEG', '.JPG', '.PNG')):
+            if file.upper().endswith(('.JPG', '.PNG')):
                 picture = Image.open(file)
                 picture = picture.resize(((275,183)), Image.ANTIALIAS)
                 icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
                 item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
                 item.setIcon(icon)
-                time.sleep(1)
                 item.setToolTip(file)
                 item.setStatusTip(file)
                 self.file_list.append(file)
@@ -75,13 +75,13 @@ class Filemanager(QWidget):
                 if not ret:
                     break
                 else:
-                    cv2.imwrite(os.path.join(path, "video%d.png" % self.current_frame), frame)
-                    filename = "video%d.png" % self.current_frame
+                    cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
+                    filename = "video%d.jpg" % self.current_frame
                     self.current_frame += 1
                     preview_file = Path(path, filename)
+                    time.sleep(0.5)
                 cap.release()
                 cv2.destroyAllWindows()
-                time.sleep(0.5)
 
                 picture = Image.open(preview_file)
                 time.sleep(0.5)
@@ -111,13 +111,15 @@ class Filemanager(QWidget):
                 pass
 
     def clearFileNames(self, fileNames):
-
         self.listWidget.clear()
         self.file_list.clear()
 
-    def itemClicked(self):
-        x = self.listWidget.selectedItems()
-        print(x)
+    def remove(self):
+        x = self.listWidget.currentItem().statusTip()
+        print(x) #String for drag&drop ??
+        self.file_list.remove(x)
+        self.listWidget.takeItem(self.listWidget.currentRow())
+        
 
 """
     def dragEnterEvent(self, event):
