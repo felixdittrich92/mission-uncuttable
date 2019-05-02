@@ -23,6 +23,7 @@ class Filemanager(QWidget):
         self.pickButton = self.findChild(QObject,'pushButton_2')
         self.clearButton = self.findChild(QObject,'pushButton_3')
         self.listWidget = self.findChild(QObject,'listWidget')
+        self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.listWidget.setDragEnabled(True)
         self.listWidget.setAcceptDrops(False)
         self.listWidget.setMouseTracking(True)
@@ -101,13 +102,19 @@ class Filemanager(QWidget):
         self.file_list.clear()
 
     def remove(self):
-        path = self.listWidget.currentItem().statusTip()
-        self.file_list.remove(path)
-        self.listWidget.takeItem(self.listWidget.currentRow())
+        try:
+            path = self.listWidget.currentItem().statusTip()
+            self.file_list.remove(path)
+            self.listWidget.takeItem(self.listWidget.currentRow())
+        except:
+            return
 
     def selected(self):
-        x = self.listWidget.currentItem().statusTip()
-        print(x) #String for drag&drop ??
+        try:
+            path = self.listWidget.currentItem().statusTip()
+            print(path) #String for drag&drop ??
+        except:
+            return
 
 """
     def dragEnterEvent(self, event):
