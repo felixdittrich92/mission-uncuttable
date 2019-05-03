@@ -12,6 +12,7 @@ from PyQt5.QtCore import QObject, QSize
 from PIL import Image, ImageQt
 from pathlib import Path
 from config import Resources
+from view.mainview import FileListView
 
 
 class Filemanager(QWidget):
@@ -19,15 +20,18 @@ class Filemanager(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         uic.loadUi(Resources.get_instance().files.filemanager, self)
-        self.deleteButton = self.findChild(QObject,'pushButton_1')
-        self.pickButton = self.findChild(QObject,'pushButton_2')
-        self.clearButton = self.findChild(QObject,'pushButton_3')
-        self.listWidget = self.findChild(QObject,'listWidget')
-        self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.listWidget.setDragEnabled(True)
-        self.listWidget.setAcceptDrops(False)
-        self.listWidget.setMouseTracking(True)
-        self.listWidget.setIconSize(QSize(100,100))
+        self.deleteButton = self.findChild(QObject, 'pushButton_1')
+        self.pickButton = self.findChild(QObject, 'pushButton_2')
+        self.clearButton = self.findChild(QObject, 'pushButton_3')
+        self.listWidget = FileListView()
+        old_list_widget = self.findChild(QObject, 'listWidget')
+        self.layout().replaceWidget(old_list_widget, self.listWidget)
+        old_list_widget.deleteLater()
+        # self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        # self.listWidget.setDragEnabled(True)
+        # self.listWidget.setAcceptDrops(False)
+        # self.listWidget.setMouseTracking(True)
+        self.listWidget.setIconSize(QSize(100, 100))
 
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
