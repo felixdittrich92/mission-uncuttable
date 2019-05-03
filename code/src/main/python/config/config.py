@@ -4,8 +4,10 @@ If you add Setting here, it's going to show up in the settings window
 automatically! 
 So if you do, be careful to specify all details about your setting.
 "Values" contains a list with all possible values for the setting. Depending on
-the type it's just an empty string.
+the type it sometimes is just an empty string.
 "Current" is the default setting. This will be the changed by the user.
+
+At the moment there are only the types dropdown and checkbox.
 """
 
 default_settings = {
@@ -14,7 +16,7 @@ default_settings = {
       "name":"Language",
       "type":"dropdown",
       "values":["English","German","Esperanto"],
-      "current":"english"
+      "current":0
     },
   },
   "Design":{
@@ -22,19 +24,19 @@ default_settings = {
       "name":"Color Theme",
       "type":"dropdown",
       "values":["dark", "light"],
-      "current":"dark"
+      "current":0
     },
     "option2":{
       "name":"Option 2",
       "type":"checkbox",
       "values":"",
-      "current":"false"
+      "current":False
     },
     "option1":{
       "name":"Option 1",
       "type":"button",
       "values":"",
-      "current":"true"
+      "current":True
     },
   },
   "ShortCuts":{
@@ -42,7 +44,6 @@ default_settings = {
       "name":"Option 1",
       "type":"checkbox",
       "values":"",
-      "current":"true"
-    }
-  },
+      "current":True    }
+  }
 }

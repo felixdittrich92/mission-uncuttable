@@ -28,10 +28,17 @@ class SettingsView(QMainWindow):
         self.move(rectangle.topLeft())
 
         """imports settings instance and applies it"""
-        settings = Settings.get_instance()
-        self.settings = settings.get_dict_settings()
-        settings = Settings.get_instance()
+        self.settingsInstance = Settings.get_instance()
+        self.settings = self.settingsInstance.get_dict_settings()
         self.addSettings(self.settings)
+
+        """savesettings button"""
+        saveButton = self.findChild(QPushButton,"saveButton")
+        saveButton.clicked.connect(lambda: self.saveSettings())
+
+        saveButton = self.findChild(QPushButton,"cancelButton")
+        saveButton.clicked.connect(lambda: self.close())
+
         
     def addSettings(self, settings):
         """
@@ -44,30 +51,80 @@ class SettingsView(QMainWindow):
             tabWidget.addTab(QWidget(), x)
             tabWidget.widget(i).layout = QVBoxLayout()
             for y in settings[x]:
-                testWidget = self.makeSetting(settings[x][y].get("name"),settings[x][y].get("type"),settings[x][y].get("values"))
+                testWidget = self.makeSetting(x,y)
                 tabWidget.widget(i).layout.addWidget(testWidget)
             tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
             tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
             i += 1      
-  
-    def makeSetting(self, name, type, values):
+
+
+    def makeSetting(self, x,y):
         """
         constructs a setting in form of a QWidget with a QHBoxLayout
         """
+        name = self.settings[x][y].get("name")
+        type = self.settings[x][y].get("type")
+        values = self.settings[x][y].get("values")
+        current = self.settings[x][y].get("current")
+
         widget = QWidget()
+        widget.setObjectName(name)
         layout = QHBoxLayout()
         layout.addWidget(QLabel(name))
 
         if type == "dropdown":
             box = QComboBox()
             box.addItems(values)
+            box.setCurrentIndex(current)
             layout.addWidget(box)
         elif type == "checkbox":
-            layout.addWidget(QCheckBox())
+            checkbox = QCheckBox()
+            checkbox.setChecked(current)
+            layout.addWidget(checkbox)
         else:
             layout.addWidget(QLabel("I'm not implemented yet :("))
         widget.setLayout(layout)
         return widget
+
+
+    def saveSettings(self):
+        """
+        goes throug all the settings and saves the values to the dictionary
+        and saves the new dictionary with the save_settings() method from Settings.
+
+        """
+        tabWidget = self.findChild(QTabWidget, 'tabWidget')
+
+        i = 0
+        for x in self.settings:
+            for y in self.settings[x]:
+                name = self.settings[x][y].get("name")
+                widget = self.findChild(QWidget, name)
+                self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
+                i += 1    
+        
+        self.settingsInstance.save_settings(self.settings)
+        self.close()
+
+    def saveSetting(self, type, widget, x, y):
+        """
+        takes the current UI settings element and the current position in the 
+        dictionary and saves the value that was maybe changed by the user
+        """
+        
+        if type == "dropdown":
+            combobox = widget.findChild(QComboBox)
+            values = self.settings[x][y].get("values")
+            self.settings[x][y]["current"]= combobox.currentIndex()
+        elif type == "checkbox":
+            checkbox = widget.findChild(QCheckBox)
+            if checkbox.isChecked():
+                self.settings[x][y]["current"] = True
+            else:
+                self.settings[x][y]["current"] = False
+        else:
+            return 0
+
 
     def show(self):
         """Starts the settings window maximized."""
