@@ -120,10 +120,6 @@ class Filemanager(QWidget):
         except:
             return
 
-<<<<<<< HEAD
-
-=======
->>>>>>> import_data
 def main():
     app = QApplication(sys.argv)
     window = Filemanager()

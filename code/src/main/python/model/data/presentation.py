@@ -32,16 +32,16 @@ class Presentation:
             folder = Path(folder_path, folder_name)
 
             pages = convert_from_path(str(input_file), 250)
-            files = []
+            self.files = []
 
             for page_number, page in enumerate(pages, start=1):
                 target = folder / f"{page_number:03d}.jpg"
                 page.save(str(target),  'JPEG')
 
             for file in os.listdir(folder):
-                files.append(file)
+                self.files.append(Slide(file)) #Slide erstellen + import
 
-            files.sort()
+            self.files.sort()
             return files
         else:
             print("the datatype must be .pdf")
@@ -101,7 +101,7 @@ class Presentation:
         x_offset = width - 250 #only for resolution 250 
         y_offset = height - 235 #only for resolution 250 
 
-        if check_color(self, y1, y2, x1, x2) == True: #?????
+        if self.check_color(self, y1, y2, x1, x2) == True: #?????
             large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
             return large_img
         else:
