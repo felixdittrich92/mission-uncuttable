@@ -21,7 +21,7 @@ class VideoEditorView(QMainWindow):
         self.previewlayout = self.findChild(QVBoxLayout, "preview")
 
         previewview = PreviewView()
-        self.previewlayout.addWidget(previewview)
+        self.previewlayout.addWidget(previewview)verticalSplitter
 
         self.shortcuts = ShortcutLoader(self)
         self.load_filemanager()

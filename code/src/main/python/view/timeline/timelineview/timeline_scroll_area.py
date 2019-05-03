@@ -52,6 +52,7 @@ class TimelineScrollArea(QFrame):
         """
         super(TimelineScrollArea, self).__init__(parent)
         uic.loadUi(Resources.get_instance().files.timeline_scrollarea_view, self)
+        self.setObjectName("scroll_area")
 
         self.__horizontal_scroll_bar = None
         self.__vertical_scroll_bar = None

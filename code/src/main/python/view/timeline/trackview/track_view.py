@@ -31,7 +31,8 @@ class TrackView(QtWidgets.QGraphicsView):
     def setup_ui(self):
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setMinimumSize(self.width, self.height)
+        self.setMinimumWidth(self.width)
+        self.setFixedHeight(self.height)
         self.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
 
         self.scene.setSceneRect(0, 0, self.width, self.height)

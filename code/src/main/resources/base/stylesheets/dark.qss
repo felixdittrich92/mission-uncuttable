@@ -2,7 +2,12 @@ QMainWindow, QMenuBar {
     background-color: #11151C;
 }
 
-QFrame{
+#topleftFrame{
+    background-color: #212D40;
+    border: 1px solid #364156;
+}
+
+#scroll_area {
     background-color: #212D40;
     border: 1px solid #364156;
 }
@@ -12,7 +17,7 @@ QMenuBar, QMenu {
 }
 
 QMenuBar {
-    border-bottom: 2px solid #364156;
+    border-bottom: 2px solid #212D40;
     padding: 2px;
 }
 
@@ -32,36 +37,81 @@ QButton#track_button {
     background: black;
 }
 
-QScrollBar:horizontal {
+/* SCROLLBARS */
+
+QScrollBar:horizontal, QScrollBar:vertical {
     border: 2px solid #364156;
     background: #364156;
+}
+QScrollBar:horizontal {
     height: 20px;
-    margin: 0px 20px 0 20px;
+    margin: 0 20px 0 20px;
+}
+
+QScrollBar:vertical {
+    width: 20px;
+    margin: 20px 0 20px 0;
+}
+
+QScrollBar::handle:horizontal, QScrollBar::handle:vertical {
+    background: #212D40;
 }
 QScrollBar::handle:horizontal {
-    background: #212D40;
     min-width: 20px;
 }
-QScrollBar::add-line:horizontal {
+QScrollBar::handle:vertical {
+    min-height: 20px;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:horizontal,
+QScrollBar::sub-line:vertical {
     background: #364156;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal {
     width: 20px;
     subcontrol-position: right;
-    subcontrol-origin: margin;
 }
-
+QScrollBar::add-line:vertical {
+    height: 20px;
+    subcontrol-position: bottom;
+}
 QScrollBar::sub-line:horizontal {
-    background: #364156;
     width: 20px;
     subcontrol-position: left;
-    subcontrol-origin: margin;
+}
+QScrollBar::sub-line:vertical {
+    height: 20px;
+    subcontrol-position: top;
 }
 
-QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+QScrollBar:left-arrow:horizontal,
+QScrollBar::right-arrow:horizontal,
+QScrollBar:up-arrow:vertical,
+QScrollBar::down-arrow:vertical {
     width: 5px;
     height: 5px;
     background: #212D40;
 }
 
-QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal,
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
     background: none;
 }
+
+#track_button, #track_button_light {
+    background: #7D4E57;
+    border: 1px solid #364156;
+    color: #F5F5F5;
+    margin: 0;
+}
+
+#track_button_light {
+    background: #955F69;
+}
+
+
