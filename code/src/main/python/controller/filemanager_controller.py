@@ -48,10 +48,11 @@ class Filemanager(QWidget):
         )
 
         for file in fileNames:
-            self.addFileNames(file, fileNames)
+            QApplication.processEvents()
+            self.addFileNames(file)
 
 
-    def addFileNames(self, file, fileNames):
+    def addFileNames(self, file):
 
         if file in self.file_list:
             print("The file exist")
@@ -59,6 +60,7 @@ class Filemanager(QWidget):
 
         if file.upper().endswith(('.JPG', '.PNG')):
             picture = Image.open(file)
+            QApplication.processEvents()
                 
         elif file.upper().endswith(('.MP4')):
             path = Resources.get_instance().images.media_symbols
@@ -77,12 +79,14 @@ class Filemanager(QWidget):
             cv2.destroyAllWindows()
 
             picture = Image.open(preview_file)
+            QApplication.processEvents()
                 
         elif file.upper().endswith(('.MP3', '*.WAV')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp3logo.jpg"
             path_to_file = Path(path, filename)
             picture = Image.open(path_to_file)
+            QApplication.processEvents()
                 
         else:
             print("The datatype is not supported")
@@ -90,6 +94,7 @@ class Filemanager(QWidget):
 
         time.sleep(0.5)
         picture = picture.resize(((275,200)), Image.ANTIALIAS)
+        QApplication.processEvents()
         icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
         item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
         item.setIcon(icon)
@@ -111,12 +116,14 @@ class Filemanager(QWidget):
 
     def selected(self):
         try:
-            path = self.listWidget.currentItem().statusTip()
-            print(path) #String for drag&drop ??
+            path = self.listWidget.currentItem().statusTip() #String
         except:
             return
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> import_data
 def main():
     app = QApplication(sys.argv)
     window = Filemanager()
