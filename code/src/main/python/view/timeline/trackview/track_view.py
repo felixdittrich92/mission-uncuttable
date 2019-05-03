@@ -2,8 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
 from view.timeline.timeableview import TimeableView
-from model.project.timeable import TimeableModel
-from model.project.timeline import TimelineModel
+from model.project import TimeableModel, TimelineModel
 
 
 class TrackView(QtWidgets.QGraphicsView):
@@ -25,30 +24,51 @@ class TrackView(QtWidgets.QGraphicsView):
         self.width = width
         self.height = height
         self.num = num
-        self.scene = QtWidgets.QGraphicsScene()
 
         self.setAcceptDrops(True)
 
         self.setup_ui()
 
     def setup_ui(self):
+        """ sets up the trackview """
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setMinimumSize(self.width, self.height)
         self.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
 
-        self.scene.setSceneRect(0, 0, self.width, self.height)
-        self.setScene(self.scene)
+        self.setScene(QtWidgets.QGraphicsScene())
 
         self.setStyleSheet('background-color: black')
 
-    def add_timeable(self, timeable):
-        timeable.model.clip.Layer(self.num)
-        self.scene.addItem(timeable)
+        self.resize()
+
+    def resize(self):
+        """ sets the size of the trackview to self.width and self.height """
+        self.setMinimumSize(self.width, self.height)
+        self.scene().setSceneRect(0, 0, self.width, self.height)
+
+    def set_width(self, new_width):
+        """
+        Changes the width of the trackview.
+
+        @param new_width: the new width of the track
+        """
+        self.width = new_width
+        self.resize()
+
+    def add_timeable(self, name, width, x_pos, model, res_left=0, res_right=0):
+        """
+        Adds a TimeableView to the Track.
+        """
+        timeable = TimeableView(name, width, self.height, x_pos, res_left, res_right, model)
+        timeable.model.set_layer(self.num)
+        self.scene().addItem(timeable)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat('ubicut/timeable'):
             event.accept()
+        elif event.mimeData().hasFormat('ubicut/file'):
+            event.accept()
+            # TODO create pixmap
         else:
             event.ignore()
 
@@ -56,7 +76,8 @@ class TrackView(QtWidgets.QGraphicsView):
         event.accept()
 
     def dragMoveEvent(self, event):
-        if event.mimeData().hasFormat('ubicut/timeable'):
+        if event.mimeData().hasFormat('ubicut/timeable') \
+           or event.mimeData().hasFormat('ubicut/file'):
             event.accept()
         else:
             event.ignore()
@@ -74,8 +95,12 @@ class TrackView(QtWidgets.QGraphicsView):
             clip_id = QtCore.QDataStream.readString(stream).decode()
 
             # check if theres already another timeable at the drop position
-            rect = QtCore.QRectF(event.pos().x() - width / 2, 0, width, self.height)
-            colliding = self.scene.items(rect)
+            start_pos = event.pos().x() - width / 2
+            if start_pos < 0:
+                return
+
+            rect = QtCore.QRectF(start_pos, 0, width, self.height)
+            colliding = self.scene().items(rect)
             if not colliding:
                 # add new timeable
                 model = TimeableModel(file_name)
@@ -84,18 +109,24 @@ class TrackView(QtWidgets.QGraphicsView):
 
                 model.set_start(old_clip.Start(), is_sec=True)
                 model.set_end(old_clip.End(), is_sec=True)
-                model.move(event.pos().x() - width / 2)
+                model.move(start_pos)
 
                 # delete old clip from the timeline
                 timeline.change("delete", ["clips", {"id": clip_id}], {})
 
-                t = TimeableView(name, width, self.height, event.pos().x() - width / 2, model)
-                t.resizable_left = res_left
-                t.resizable_rigth = res_right
-
-                self.add_timeable(t)
+                self.add_timeable(name, width, start_pos, model,
+                                  res_left=res_left, res_right=res_right)
 
                 event.acceptProposedAction()
+
+        # for files that het dragged from the filemanager
+        elif event.mimeData().hasFormat('ubicut/file'):
+            item_data = event.mimeData().data('ubicut/file')
+            stream = QtCore.QDataStream(item_data, QtCore.QIODevice.ReadOnly)
+            path = QtCore.QDataStream.readString(stream).decode()
+            print(path)
+
+            # TODO create timeable
 
         else:
             event.ignore()

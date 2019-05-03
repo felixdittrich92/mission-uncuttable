@@ -45,7 +45,4 @@ default_settings = {
       "current":"true"
     }
   },
-  "Timeline": {
-      "pixels_per_second": 16
-  }
 }

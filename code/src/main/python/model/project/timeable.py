@@ -3,8 +3,8 @@ import uuid
 import locale
 import openshot
 
-from model.project.timeline import TimelineModel
-from util.timeline_utils import pos_to_seconds, get_px_per_second
+from .timeline import TimelineModel
+from util.timeline_utils import pos_to_seconds
 
 
 class TimeableModel:
@@ -26,7 +26,7 @@ class TimeableModel:
 
     def trim_start(self, pos):
         """ start = start + sec(pos) """
-        new_start = self.clip.Start() + pos_to_seconds(pos, get_px_per_second())
+        new_start = self.clip.Start() + pos_to_seconds(pos)
         self.clip.Start(new_start)
 
         data = {"start": new_start}
@@ -37,7 +37,7 @@ class TimeableModel:
         if is_sec:
             self.clip.Start(pos)
         else:
-            new_start = pos_to_seconds(pos, get_px_per_second())
+            new_start = pos_to_seconds(pos)
             self.clip.Start(new_start)
 
         data = {"start": new_start}
@@ -45,7 +45,7 @@ class TimeableModel:
 
     def trim_end(self, pos):
         """ end = end + sec(pos) """
-        new_end = self.clip.End() + pos_to_seconds(pos, get_px_per_second())
+        new_end = self.clip.End() + pos_to_seconds(pos)
         self.clip.End(new_end)
 
         data = {"end": new_end}
@@ -56,7 +56,7 @@ class TimeableModel:
         if is_sec:
             self.clip.End(pos)
         else:
-            new_end = pos_to_seconds(pos, get_px_per_second())
+            new_end = pos_to_seconds(pos)
             self.clip.End(new_end)
 
         data = {"end": new_end}
@@ -64,21 +64,28 @@ class TimeableModel:
 
     def cut(self, pos):
         old_end = self.clip.End()
-        self.set_end(pos)
+        self.set_end(self.clip.Start() + pos_to_seconds(pos), is_sec=True)
 
         data = {"end": self.clip.End()}
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
 
         new_model = TimeableModel(self.file_name)
-        new_model.clip.Start(self.clip.End())
-        new_model.clip.End(old_end)
-        new_model.move(pos)
+        new_model.set_start(self.clip.End(), is_sec=True)
+        new_model.set_end(old_end, is_sec=True)
+        new_model.move(self.clip.Position() + pos_to_seconds(pos), is_sec=True)
 
         return new_model
 
-    def move(self, pos):
-        new_position = pos_to_seconds(pos, get_px_per_second())
-        self.clip.Position(new_position)
+    def move(self, pos, is_sec=False):
+        new_position = pos
+        if is_sec:
+            self.clip.Position(new_position)
+        else:
+            new_position = pos_to_seconds(pos)
+            self.clip.Position(new_position)
 
         data = {"position": new_position}
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
+
+    def delete(self):
+        self.timeline_instance.change("delete", ["clips", {"id": self.clip.Id()}], {})
