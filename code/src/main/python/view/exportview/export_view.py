@@ -101,7 +101,7 @@ class ExportView(QDialog):
                 has_audio = True
             elif export_type == "Nur Video":
                 has_video = True
-            elif export_type == "Nur Video":
+            elif export_type == "Nur Audio":
                 has_audio = True
 
             format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
