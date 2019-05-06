@@ -97,7 +97,7 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Größe</string>
+          <string>Auflösung</string>
          </property>
         </widget>
        </item>
@@ -133,6 +133,34 @@
           </property>
          </item>
         </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Startframe</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="start_sb"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Endframe</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="end_sb"/>
        </item>
       </layout>
      </item>
