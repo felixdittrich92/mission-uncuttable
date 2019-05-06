@@ -6,8 +6,8 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from moviepy.editor import *
-#from .video import Video
-#from .audio import Audio
+from video import Video
+from audio import Audio
 import shutil
 
 class VideoSplitter:
