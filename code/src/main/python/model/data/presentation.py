@@ -5,12 +5,14 @@ import cv2
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
+from .lide import Slide
 
 class Presentation:
 
     def __init__(self, file_path, filename):
         self.file_path = file_path
         self.filename = filename
+        self.pdf_files = []
 
     
     def convert_pdf(self, folder_path, folder_name):
@@ -39,10 +41,10 @@ class Presentation:
                 page.save(str(target),  'JPEG')
 
             for file in os.listdir(folder):
-                files.append(file)
+                files.append(file) # self.files.append(Slide(file))
 
             files.sort()
-            return files
+            self.pdf_files.append(Slide(files))
         else:
             print("the datatype must be .pdf")
 
@@ -96,12 +98,12 @@ class Presentation:
 
         small_img = Path(file_path_small_img, small_img)
         small_img = cv2.imread(str(small_img))
-        small_img = cv2.resize(small_img, (250, 200))
+        small_img = cv2.resize(small_img, (250, 200)) #automatisieren ?
 
         x_offset = width - 250 #only for resolution 250 
         y_offset = height - 235 #only for resolution 250 
 
-        if check_color(self, y1, y2, x1, x2) == True: #?????
+        if self.check_color(y1, y2, x1, x2) == True: #siehe Laptop
             large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
             return large_img
         else:
