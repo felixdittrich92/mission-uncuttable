@@ -16,10 +16,20 @@ from view.mainview import FileListView
 
 
 class Filemanager(QWidget):
+    """
+    a class used as the controller for the filemanager window.
+
+    Manages from the resource class loaded files
+    This class contains the functionality of the filemanager and loads for every supported
+    file a preview picture and the show this with the filename in the ListWidget.   
+    Furthermore, the class contains all applications like adding and deleting files from the filemanager window.
+    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        """Loads the UI file"""
         uic.loadUi(Resources.get_instance().files.filemanager, self)
+<<<<<<< HEAD
         self.deleteButton = self.findChild(QObject, 'pushButton_1')
         self.pickButton = self.findChild(QObject, 'pushButton_2')
         self.clearButton = self.findChild(QObject, 'pushButton_3')
@@ -32,7 +42,23 @@ class Filemanager(QWidget):
         # self.listWidget.setAcceptDrops(False)
         # self.listWidget.setMouseTracking(True)
         self.listWidget.setIconSize(QSize(100, 100))
+=======
 
+        """Loads the Widgets"""
+        self.deleteButton = self.findChild(QObject,'pushButton_1')
+        self.pickButton = self.findChild(QObject,'pushButton_2')
+        self.clearButton = self.findChild(QObject,'pushButton_3')
+        self.listWidget = self.findChild(QObject,'listWidget')
+
+        """Set the properties of the listWidget"""
+        self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.listWidget.setDragEnabled(True)
+        self.listWidget.setAcceptDrops(False)
+        self.listWidget.setMouseTracking(True)
+        self.listWidget.setIconSize(QSize(100,100))
+>>>>>>> import_data
+
+        """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
         self.clearButton.clicked.connect(self.clearFileNames)
         self.deleteButton.clicked.connect(self.remove)
@@ -42,6 +68,11 @@ class Filemanager(QWidget):
         self.file_list = []
 
     def pickFileNames(self):
+        """
+        This method saves the selected files in a list and add this to the filemanager window
+        This method ensures that only supported files are displayed and can be used.
+        """
+
         fileNames, _ = QFileDialog.getOpenFileNames(
             self,
             'QFileDialog.getOpenFileNames()',
@@ -57,6 +88,10 @@ class Filemanager(QWidget):
 
 
     def addFileNames(self, file):
+        """
+        This method create a QListWidgetItem with a preview picture and the filename as text dependent from the file type.
+        This method also looks to see if the item already exists.
+        """
 
         if file in self.file_list:
             print("The file exist")
@@ -107,10 +142,12 @@ class Filemanager(QWidget):
         self.file_list.append(file)
 
     def clearFileNames(self, fileNames):
+        """This method clear all files in the filemanager window and in the list"""
         self.listWidget.clear()
         self.file_list.clear()
 
     def remove(self):
+        """This method removes a single file in the filemanager window and in the list"""
         try:
             path = self.listWidget.currentItem().statusTip()
             self.file_list.remove(path)
@@ -119,8 +156,11 @@ class Filemanager(QWidget):
             return
 
     def selected(self):
+        """This method saves the selected files to a list"""
         try:
+            selected_files = []
             path = self.listWidget.currentItem().statusTip() #String
+            selected_files.append(path)
         except:
             return
 

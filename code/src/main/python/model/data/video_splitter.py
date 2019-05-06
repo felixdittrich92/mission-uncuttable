@@ -6,6 +6,7 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from moviepy.editor import *
+from .video import Video
 import shutil
 
 class VideoSplitter:
@@ -52,7 +53,8 @@ class VideoSplitter:
         out.release()
         cv2.destroyAllWindows()
         new_large_video_path = Path(folder, large_video_name)
-        return new_large_video_path
+        #return new_large_video_path anstaat return video in Klasse video
+        Video(new_large_video_path)
 
 
 def small_video(self):
@@ -90,7 +92,9 @@ def small_video(self):
     out.release()
     cv2.destroyAllWindows()
     new_small_video_path = Path(folder, small_video_name)
-    return new_small_video_path
+    #return new_small_video_path
+    Video(new_small_video_path) #mehrere Konstruktoren ???? 
+
 
 #need tests
 def audio_from_video(self):
@@ -113,4 +117,5 @@ def audio_from_video(self):
     audio = video.audio
     audio.write_audiofile(os.path.join(folder,str(audio_from_video)))
     extracted_audio = Path(folder, audio_from_video)
-    return extracted_audio
+    #return extracted_audio # in klasse video
+    Video(extracted_audio)
