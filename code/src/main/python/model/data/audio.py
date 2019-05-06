@@ -1,8 +1,8 @@
-from .presentation import Presentation
+from .video_splitter import VideoSplitter
 
-class Slide():
+class Audio():
     """
-    This class contains a list of the converted PDF file
+    This class contains the audiotrack of the video
     """
 
     def __init__(self, file_path): 
