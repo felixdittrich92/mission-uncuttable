@@ -3,6 +3,8 @@ from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
 
+# from util.timeline_utils import print_clip_info
+
 
 TIMEABLE_MIN_WIDTH = 9
 RESIZE_AREA_WIDTH = 4
@@ -17,16 +19,19 @@ class TimeableView(QGraphicsRectItem):
     to another Track.
     """
 
-    def __init__(self, name, width, height, x_pos, parent=None):
+    def __init__(self, name, width, height, x_pos, res_left, res_right, model, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
         @param name: the name that is displayed in the top left corner of the timeable
         @param width: timeable width, can be changed while resizing
-        @param height: timeable heigth, should be the same as track heigth
+        @param height: timeable height, should be the same as track height
         @param x_pos: position on the track
         """
         super(TimeableView, self).__init__(parent)
+
+        self.model = model
+        # print_clip_info(self.model.clip)
 
         self.name = name
         self.prepareGeometryChange()
@@ -34,8 +39,8 @@ class TimeableView(QGraphicsRectItem):
         self.height = height
         self.x_pos = x_pos
 
-        self.resizable_left = 0
-        self.resizable_rigth = 0
+        self.resizable_left = res_left
+        self.resizable_right = res_right
         self.name_visible = False
 
         self.setRect(self.boundingRect())
@@ -92,6 +97,7 @@ class TimeableView(QGraphicsRectItem):
 
     def delete(self):
         """removes the timeable from the track"""
+        self.model.delete()
         self.scene().removeItem(self)
 
     def cut(self, pos):
@@ -103,9 +109,13 @@ class TimeableView(QGraphicsRectItem):
         if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
             return
 
+        new_model = self.model.cut(pos)
+        new_model.set_layer(self.model.clip.Layer())
+
         # create the second timeable
-        new_timeable = TimeableView(self.name + '(2)', self.width - pos,
-                                    self.height, pos + self.x_pos)
+        new_timeable = TimeableView(self.name + '(2)', self.width - pos, self.height,
+                                    pos + self.x_pos, 0, self.resizable_right, new_model)
+        self.resizable_right = 0
 
         # the bounding rect is dependent on the width so we have to call prepareGeometryChange
         # otherwhise the program can randomly crash
@@ -183,6 +193,9 @@ class TimeableView(QGraphicsRectItem):
             self.setPos(self.x_pos, 0)
             self.resizable_left -= diff
 
+            # update clip data
+            self.model.trim_start(diff)
+
         elif self.handle_selected == self.handle_right:
             diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
                     - self.mouse_press_pos.x() - self.width)
@@ -190,7 +203,7 @@ class TimeableView(QGraphicsRectItem):
             w = self.width + diff
 
             if w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH \
-               or diff > self.resizable_rigth:
+               or diff > self.resizable_right:
                 return
 
             r = QtCore.QRectF(self.x_pos, 0, w, self.height)
@@ -201,7 +214,13 @@ class TimeableView(QGraphicsRectItem):
             self.prepareGeometryChange()
             self.width = w
             self.setRect(self.boundingRect())
-            self.resizable_rigth -= diff
+            self.resizable_right -= diff
+
+            # update clip data
+            self.model.trim_end(diff)
+
+        self.model.move(self.x_pos)
+        # print_clip_info(self.model.clip)
 
         self.update_handles_pos()
 
@@ -228,6 +247,11 @@ class TimeableView(QGraphicsRectItem):
             self.x_pos = new_pos_x
             self.setPos(self.x_pos, 0)
 
+            # set clip position on the timeline in seconds
+            self.model.move(self.x_pos)
+
+            # print_clip_info(self.model.clip)
+
     def start_drag(self, mouse_event):
         """
         starts a drag event and sends necessary data via mime types
@@ -252,7 +276,9 @@ class TimeableView(QGraphicsRectItem):
         QtCore.QDataStream.writeString(data_stream, str.encode(self.name))
         QtCore.QDataStream.writeInt(data_stream, self.width)
         QtCore.QDataStream.writeInt(data_stream, self.resizable_left)
-        QtCore.QDataStream.writeInt(data_stream, self.resizable_rigth)
+        QtCore.QDataStream.writeInt(data_stream, self.resizable_right)
+        QtCore.QDataStream.writeString(data_stream, str.encode(self.model.file_name))
+        QtCore.QDataStream.writeString(data_stream, str.encode(self.model.clip.Id()))
 
         mimeData = QtCore.QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
