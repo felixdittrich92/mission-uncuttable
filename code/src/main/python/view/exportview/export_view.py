@@ -137,7 +137,9 @@ class ExportView(QDialog):
                 "video_codec": video_codec,
                 "video_bitrate": video_bitrate,
                 "width": width,
-                "height": height
+                "height": height,
+                "start_frame": self.start_frame_sb.value(),
+                "end_frame": self.end_frame_sb.value()
             }
 
             ExportController.start_export(data)
