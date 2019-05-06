@@ -1,4 +1,4 @@
-from .video_splitter import VideoSplitter
+#from .video_splitter import VideoSplitter
 
 class Video():
     """

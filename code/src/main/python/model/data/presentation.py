@@ -5,7 +5,7 @@ import cv2
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
-from .lide import Slide
+#from .slide import Slide
 
 class Presentation:
 

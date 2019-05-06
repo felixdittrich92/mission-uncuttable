@@ -1,4 +1,4 @@
-from .presentation import Presentation
+#from .presentation import Presentation
 
 class Slide():
     """
