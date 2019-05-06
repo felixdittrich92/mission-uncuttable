@@ -36,6 +36,8 @@ class Filemanager(QWidget):
         old_list_widget = self.findChild(QObject, 'listWidget')
         self.layout().replaceWidget(old_list_widget, self.listWidget)
         old_list_widget.deleteLater()
+        
+        """Set properties of the Widget"""
         # self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         # self.listWidget.setDragEnabled(True)
         # self.listWidget.setAcceptDrops(False)
