@@ -4,6 +4,10 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
 
 
+TIMEABLE_MIN_WIDTH = 9
+RESIZE_AREA_WIDTH = 4
+
+
 class TimeableView(QGraphicsRectItem):
     """
     A View for a single Timeable representing a Video- or Audioclip. A Timeable
@@ -13,7 +17,7 @@ class TimeableView(QGraphicsRectItem):
     to another Track.
     """
 
-    def __init__(self, name, width, height, x_pos):
+    def __init__(self, name, width, height, x_pos, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -22,18 +26,23 @@ class TimeableView(QGraphicsRectItem):
         @param height: timeable heigth, should be the same as track heigth
         @param x_pos: position on the track
         """
-        super(TimeableView, self).__init__()
+        super(TimeableView, self).__init__(parent)
 
         self.name = name
+        self.prepareGeometryChange()
         self.width = width
-        self.max_width = width
         self.height = height
         self.x_pos = x_pos
+
+        self.resizable_left = 0
+        self.resizable_rigth = 0
+        self.name_visible = False
 
         self.setRect(self.boundingRect())
         self.setPos(self.x_pos, 0)
 
         self.setFlag(QGraphicsRectItem.ItemIsSelectable, True)  # necessary for moving
+        self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
 
         self.handle_selected = None
@@ -56,28 +65,61 @@ class TimeableView(QGraphicsRectItem):
         self.brush = QtGui.QBrush(QtGui.QColor(214, 104, 83))
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
+
         # only draw name if it fits on the timeable
+        # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
             painter.drawText(QtCore.QPointF(1, 15), self.name)
+            self.name_visible = True
+        else:
+            self.name_visible = False
 
     def contextMenuEvent(self, event):
-        """defines a rightclick event on the timeable"""
+        """shows a menu on rightclick"""
         event.accept()
-        self._show_context_menu(self, event.screenPos())
 
-    def _show_context_menu(self, button, pos):
-        """shows a context menu, called from contextMenuEvent"""
         menu = QtWidgets.QMenu()
 
         delete = QtWidgets.QAction('löschen')
         menu.addAction(delete)
         delete.triggered.connect(self.delete)
 
-        menu.exec_(pos)
+        cut = QtWidgets.QAction('schneiden')
+        menu.addAction(cut)
+        cut.triggered.connect(lambda: self.cut(event.pos().x()))
+
+        menu.exec_(event.screenPos() + QtCore.QPoint(0, 5))
 
     def delete(self):
         """removes the timeable from the track"""
         self.scene().removeItem(self)
+
+    def cut(self, pos):
+        """
+        cuts the timeable in two parts
+
+        @param pos: x position on the timeable where it's cut
+        """
+        if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
+            return
+
+        # create the second timeable
+        new_timeable = TimeableView(self.name + '(2)', self.width - pos,
+                                    self.height, pos + self.x_pos)
+
+        # the bounding rect is dependent on the width so we have to call prepareGeometryChange
+        # otherwhise the program can randomly crash
+        self.prepareGeometryChange()
+        # own width gets reduced to the point where the rightclick was made
+        self.width = pos
+        # adjust own timeable
+        self.setRect(self.boundingRect())
+        self.setPos(self.x_pos, 0)
+
+        # add the new timeable to the scene
+        self.scene().addItem(new_timeable)
+
+        self.update_handles_pos()
 
     def update_handles_pos(self):
         """
@@ -88,15 +130,16 @@ class TimeableView(QGraphicsRectItem):
         """
         # handle for resizing on the left side
         self.handles[self.handle_left] = QtCore.QRectF(
-            self.rect().left(), 0, 4, self.height)
+            self.rect().left(), 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for resizing on the right side
         self.handles[self.handle_right] = QtCore.QRectF(
-            self.rect().right() - 4, 0, 4, self.height)
+            self.rect().right() - RESIZE_AREA_WIDTH, 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for moving
         self.handles[self.handle_middle] = QtCore.QRectF(
-            self.rect().left() + 4, 0, self.width - 8, self.height)
+            self.rect().left() + RESIZE_AREA_WIDTH, 0, self.width - (2 * RESIZE_AREA_WIDTH),
+            self.height)
 
     def handle_at(self, point):
         """
@@ -119,51 +162,46 @@ class TimeableView(QGraphicsRectItem):
 
         @param mouse_event: the event parameter from the mouseMoveEvent function
         """
-        rect = self.rect()
-
         if self.handle_selected == self.handle_left:
-            diff = (self.mouse_press_rect.left() + mouse_event.pos().x()
-                    - self.mouse_press_pos.x())
+            diff = mouse_event.pos().x() - self.mouse_press_pos.x()
 
-            if diff + self.scenePos().x() >= 0:
-                rect.setLeft(diff)
-                w = rect.size().width()
-                if w <= 9 or w > self.max_width:
-                    return
-
-                new_x_pos = self.x_pos + diff
-                r = QtCore.QRectF(new_x_pos, 0, w, self.height)
-                colliding = self.scene().items(r)
-                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
-                    return
-
-                self.width = w
-                self.setRect(self.boundingRect())
-                self.x_pos = self.x_pos + diff
-                self.setPos(self.x_pos, 0)
-            else:
+            w = self.width - diff
+            if w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0 \
+               or diff < self.resizable_left:
                 return
+
+            new_x_pos = self.x_pos + diff
+            r = QtCore.QRectF(new_x_pos, 0, w, self.height)
+            colliding = self.scene().items(r)
+            if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                return
+
+            self.prepareGeometryChange()
+            self.width = w
+            self.setRect(self.boundingRect())
+            self.x_pos = self.x_pos + diff
+            self.setPos(self.x_pos, 0)
+            self.resizable_left -= diff
 
         elif self.handle_selected == self.handle_right:
             diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
-                    - self.mouse_press_pos.x())
+                    - self.mouse_press_pos.x() - self.width)
 
-            if diff <= self.scene().width():
-                rect.setRight(diff)
-                w = rect.size().width()
-                if w <= 9 or w > self.max_width:
-                    return
+            w = self.width + diff
 
-                r = QtCore.QRectF(self.x_pos, 0, w, self.height)
-                colliding = self.scene().items(r)
-                if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
-                    return
-
-                self.width = w
-                self.setRect(self.boundingRect())
-                self.setPos(self.x_pos, 0)
-            else:
+            if w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH \
+               or diff > self.resizable_rigth:
                 return
+
+            r = QtCore.QRectF(self.x_pos, 0, w, self.height)
+            colliding = self.scene().items(r)
+            if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+                return
+
+            self.prepareGeometryChange()
+            self.width = w
+            self.setRect(self.boundingRect())
+            self.resizable_rigth -= diff
 
         self.update_handles_pos()
 
@@ -213,6 +251,8 @@ class TimeableView(QGraphicsRectItem):
         data_stream = QtCore.QDataStream(item_data, QtCore.QIODevice.WriteOnly)
         QtCore.QDataStream.writeString(data_stream, str.encode(self.name))
         QtCore.QDataStream.writeInt(data_stream, self.width)
+        QtCore.QDataStream.writeInt(data_stream, self.resizable_left)
+        QtCore.QDataStream.writeInt(data_stream, self.resizable_rigth)
 
         mimeData = QtCore.QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
@@ -226,15 +266,18 @@ class TimeableView(QGraphicsRectItem):
 
         # delete the timeable if the the item was succesfully dropped
         if (drag.exec_(QtCore.Qt.MoveAction) == QtCore.Qt.MoveAction):
-            self.delete()
+            self.scene().removeItem(self)
         else:
             self.setVisible(True)
 
     def hoverMoveEvent(self, event):
         """
         called when mouse hovers over Timeable,
-        sets the cursor according to the position of the mouse
+        sets the cursor according to the position of the mouse and shows timeable name
         """
+        if not self.name_visible:
+            self.setToolTip("<font color=\"#ffffff\">" + self.name + "</font>")
+
         # get handle at current position
         handle = self.handle_at(event.pos())
 

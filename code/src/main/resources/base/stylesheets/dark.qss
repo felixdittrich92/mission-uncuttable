@@ -2,16 +2,13 @@ QMainWindow, QMenuBar {
     background-color: #11151C;
 }
 
-#topleftFrame{
-    background-color: #212D40;
-    border: 1px solid #364156;
-}
 
 #scroll_area {
     background-color: #212D40;
     border: 1px solid #364156;
 }
 
+/* MENU */
 QMenuBar, QMenu {
   color: #F5F5F5;
 }
@@ -31,10 +28,6 @@ QMenuBar::item::pressed, QMenu {
 
 QMenu::item::selected {
     background-color: #212D40;
-}
-
-QButton#track_button {
-    background: black;
 }
 
 /* SCROLLBARS */
@@ -114,4 +107,28 @@ QScrollBar::sub-page:vertical {
     background: #955F69;
 }
 
+/* FILEMANAGER */
+#filemanager_frame{
+    background-color: #212D40;
+    border: 1px solid #364156;
+}
+#filemanager_frame #listWidget {
+    background-color: #212D40;
+    border: none;
+    show-decoration-selected: 1;
+}
+#filemanager_frame #listWidget::item {
+    color: white;
+    padding: 5px;
+    border: 1px solid transparent;
+}
 
+#filemanager_frame #listWidget::item:selected {
+    background: #212D40;
+    border: 1px solid #364156;
+    color: #D66853;
+}
+
+#filemanager_frame #listWidget::item:hover {
+    color: #D66853;
+}

@@ -55,7 +55,6 @@ class TrackView(QtWidgets.QGraphicsView):
 
     def dragMoveEvent(self, event):
         if event.mimeData().hasFormat('ubicut/timeable'):
-            event.setDropAction(QtCore.Qt.MoveAction)
             event.accept()
         else:
             event.ignore()
@@ -67,16 +66,19 @@ class TrackView(QtWidgets.QGraphicsView):
             stream = QtCore.QDataStream(item_data, QtCore.QIODevice.ReadOnly)
             name = QtCore.QDataStream.readString(stream).decode()
             width = QtCore.QDataStream.readInt(stream)
+            res_left = QtCore.QDataStream.readInt(stream)
+            res_right = QtCore.QDataStream.readInt(stream)
 
             # check if theres already another timeable at the drop position
             rect = QtCore.QRectF(event.pos().x() - width / 2, 0, width, self.height)
             colliding = self.scene.items(rect)
             if not colliding:
                 # add new timeable
-                self.scene.addItem(TimeableView(name, width, self.height,
-                                                event.pos().x() - width / 2))
+                t = TimeableView(name, width, self.height, event.pos().x() - width / 2)
+                t.resizable_left = res_left
+                t.resizable_rigth = res_right
+                self.scene.addItem(t)
 
-                event.setDropAction(QtCore.Qt.MoveAction)
                 event.acceptProposedAction()
 
         else:
