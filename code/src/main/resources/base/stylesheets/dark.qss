@@ -1,9 +1,18 @@
 QMainWindow, QMenuBar {
     background-color: #11151C;
+
 }
 
+QSplitter::handle:horizontal {
+    background: #212D40;
+    width: 2px;
+}
+QSplitter::handle:vertical {
+    background: #212D40;
+    height: 2px;
+}
 
-#scroll_area {
+#scroll_area, #videoplayer_frame {
     background-color: #212D40;
     border: 1px solid #364156;
 }
@@ -131,4 +140,46 @@ QScrollBar::sub-page:vertical {
 
 #filemanager_frame #listWidget::item:hover {
     color: #D66853;
+}
+
+
+/* VIDEOPLAYER */
+
+#video_label {
+    border:none
+}
+
+#videoplayer_frame QPushButton {
+    border: none;
+
+}
+
+#first_frame_button {
+    margin-left: 10px;
+}
+#maximize_button {
+    margin-right: 10px;
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #D66853;
+    height: 5px;
+    background: none;
+    border-radius: 3px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+QSlider::handle:horizontal {
+    background: #D66853;
+    border: 0;
+    width: 15px;
+    margin: -5px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 7px;
+}
+QSlider::sub-page:horizontal {
+    background: #D66853;
+    border: 0;
+    border-radius: 3px;
+    margin-left: 10px;
 }

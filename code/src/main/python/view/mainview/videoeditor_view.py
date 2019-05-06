@@ -18,14 +18,11 @@ class VideoEditorView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
         uic.loadUi(Resources.get_instance().files.mainview, self)
-        self.previewlayout = self.findChild(QVBoxLayout, "preview")
-
-        previewview = PreviewView()
-        self.previewlayout.addWidget(previewview)
 
         self.shortcuts = ShortcutLoader(self)
-        self.load_filemanager()
 
+        self.load_preview()
+        self.load_filemanager()
         self.load_timeline_widget()
 
         self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
@@ -34,6 +31,12 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def load_preview(self):
+        previewview = PreviewView()
+        splitter = self.findChild(QSplitter, "verticalSplitter")
+        splitter.replaceWidget(1, previewview)
+        previewview.show()
 
     def load_timeline_widget(self):
         """
