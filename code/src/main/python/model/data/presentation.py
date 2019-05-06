@@ -41,17 +41,10 @@ class Presentation:
                 page.save(str(target),  'JPEG')
 
             for file in os.listdir(folder):
-<<<<<<< HEAD
-                self.files.append(Slide(file)) #Slide erstellen + import
-
-            self.files.sort()
-            return files
-=======
                 files.append(file) # self.files.append(Slide(file))
 
             files.sort()
             self.pdf_files.append(Slide(files))
->>>>>>> import_data
         else:
             print("the datatype must be .pdf")
 
@@ -110,11 +103,7 @@ class Presentation:
         x_offset = width - 250 #only for resolution 250 
         y_offset = height - 235 #only for resolution 250 
 
-<<<<<<< HEAD
-        if self.check_color(self, y1, y2, x1, x2) == True: #?????
-=======
         if self.check_color(y1, y2, x1, x2) == True: #siehe Laptop
->>>>>>> import_data
             large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
             return large_img
         else:

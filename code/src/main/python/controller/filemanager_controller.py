@@ -29,7 +29,6 @@ class Filemanager(QWidget):
         super().__init__(parent)
         """Loads the UI file"""
         uic.loadUi(Resources.get_instance().files.filemanager, self)
-<<<<<<< HEAD
         self.deleteButton = self.findChild(QObject, 'pushButton_1')
         self.pickButton = self.findChild(QObject, 'pushButton_2')
         self.clearButton = self.findChild(QObject, 'pushButton_3')
@@ -42,21 +41,6 @@ class Filemanager(QWidget):
         # self.listWidget.setAcceptDrops(False)
         # self.listWidget.setMouseTracking(True)
         self.listWidget.setIconSize(QSize(100, 100))
-=======
-
-        """Loads the Widgets"""
-        self.deleteButton = self.findChild(QObject,'pushButton_1')
-        self.pickButton = self.findChild(QObject,'pushButton_2')
-        self.clearButton = self.findChild(QObject,'pushButton_3')
-        self.listWidget = self.findChild(QObject,'listWidget')
-
-        """Set the properties of the listWidget"""
-        self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.listWidget.setDragEnabled(True)
-        self.listWidget.setAcceptDrops(False)
-        self.listWidget.setMouseTracking(True)
-        self.listWidget.setIconSize(QSize(100,100))
->>>>>>> import_data
 
         """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
