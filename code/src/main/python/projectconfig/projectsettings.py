@@ -34,9 +34,9 @@ class Projectsettings:
         """
         Virtually private constructor.
 
-        Loads the settings file (config.py) for default settings and the users
-        custom settings. If 'userconfig.json" contains values that are
-        different from the values in 'config.py', this values will be
+        Loads the settings file (projectconfig.py) for default settings and the users
+        custom settings. If 'projectconfig.uc" contains values that are
+        different from the values in 'projectconfig.py', this values will be
         overwritten.
         Then the JSON gets converted into an object, where the settings can
         be accessed via dot-notation.
@@ -107,3 +107,5 @@ class Projectsettings:
 
         with open(file, 'w') as outfile:        # writes json to file
             json.dump(new_projectsettings, outfile, ensure_ascii=False)
+
+

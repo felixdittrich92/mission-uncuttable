@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5 import uic
+from PyQt5 import QtGui
 from config import Resources
 import os
 from projectconfig import Projectsettings
@@ -46,7 +47,7 @@ class ProjectSettingsView(QMainWindow):
             for y in projectsettings[x]:
                 testWidget = self.makeProjectsetting(x, y)
                 tabWidget.widget(i).layout.addWidget(testWidget)
-            tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
+            tabWidget.widget(i).layout.setAlignment(Qt.AlignLeft)
             tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
             i += 1
 
@@ -73,6 +74,17 @@ class ProjectSettingsView(QMainWindow):
             checkbox = QCheckBox()
             checkbox.setChecked(current)
             layout.addWidget(checkbox)
+        elif type == "textwindow":
+            textwindow = QPlainTextEdit()
+            textwindow.setPlainText(current)
+
+            font = textwindow.document().defaultFont()
+            fontmetrics = QtGui.QFontMetrics(font)
+            textsize = fontmetrics.size(0, current)
+
+            textwindow.setMaximumSize(textsize.width() + 60, textsize.height() + 10)
+
+            layout.addWidget(textwindow)
         else:
             layout.addWidget(QLabel("I'm not implemented yet :("))
         widget.setLayout(layout)
@@ -87,14 +99,14 @@ class ProjectSettingsView(QMainWindow):
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
 
         i = 0
-        for x in self.settings:
-            for y in self.settings[x]:
-                name = self.settings[x][y].get("name")
+        for x in self.projectsettings:
+            for y in self.projectsettings[x]:
+                name = self.projectsettings[x][y].get("name")
                 widget = self.findChild(QWidget, name)
-                self.saveSetting(self.settings[x][y].get("type"), widget, x, y)
+                self.saveProjectsetting(self.projectsettings[x][y].get("type"), widget, x, y)
                 i += 1
 
-        self.settingsInstance.save_settings(self.settings)
+        self.projectsettingsInstance.save_settings(self.projectsettings)
         self.close()
 
     def saveProjectsetting(self, type, widget, x, y):
@@ -105,14 +117,17 @@ class ProjectSettingsView(QMainWindow):
 
         if type == "dropdown":
             combobox = widget.findChild(QComboBox)
-            values = self.settings[x][y].get("values")
-            self.settings[x][y]["current"] = combobox.currentIndex()
+            values = self.projectsettings[x][y].get("values")
+            self.projectsettings[x][y]["current"] = combobox.currentIndex()
         elif type == "checkbox":
             checkbox = widget.findChild(QCheckBox)
             if checkbox.isChecked():
-                self.settings[x][y]["current"] = True
+                self.projectsettings[x][y]["current"] = True
             else:
-                self.settings[x][y]["current"] = False
+                self.projectsettings[x][y]["current"] = False
+        elif type == "textwindow":
+            textwindow = widget.findChild(QPlainTextEdit)
+            self.projectsettings[x][y]["current"] = textwindow.toPlainText()
         else:
             return 0
 

@@ -16,6 +16,24 @@ default_settings = {
       "values":["30 FPS","60 FPS"],
       "current":0
     },
+    "resolution":{
+      "name":"Auflösung",
+      "type":"dropdown",
+      "values":["800 x 600","1366 x 768","1280 x 720","1920 x 1080"],
+      "current":2
+    },
+    "projectname":{
+      "name":"Projektname",
+      "type":"textwindow",
+      "values":"",
+      "current":"unbenanntes Projekt"
+    },
+    "projectlocation":{
+      "name":"Projektpfad",
+      "type":"textwindow",
+      "values":"",
+      "current":"Hier Projektpfad eingeben",
+    }
   },
   "dummy1":{
     "color_theme":{
@@ -29,12 +47,6 @@ default_settings = {
       "type":"checkbox",
       "values":"",
       "current":False
-    },
-    "option1":{
-      "name":"Option 1",
-      "type":"button",
-      "values":"",
-      "current":True
     },
   },
   "dummy2":{
