@@ -7,7 +7,7 @@ class Slide(MediaFile):
     """
 
     def __init__(self, file_path): 
-        super().__init__(path)
+        super().__init__(self.path)
         self.__file_path = file_path
 
     def get(self):
