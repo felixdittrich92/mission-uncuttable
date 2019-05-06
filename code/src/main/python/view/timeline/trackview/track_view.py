@@ -1,11 +1,11 @@
-from PyQt5 import QtWidgets
-from PyQt5 import QtCore
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
+from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
 from view.timeline.timeableview import TimeableView
 from model.project import TimeableModel, TimelineModel
 
 
-class TrackView(QtWidgets.QGraphicsView):
+class TrackView(QGraphicsView):
     """
     A View for a single Track, which can be added to the TrackFrame in the Timeline along
     with other TrackViews. The TrackView can hold Timeables.
@@ -31,11 +31,11 @@ class TrackView(QtWidgets.QGraphicsView):
 
     def setup_ui(self):
         """ sets up the trackview """
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
-        self.setScene(QtWidgets.QGraphicsScene())
+        self.setScene(QGraphicsScene())
 
         self.setStyleSheet('background-color: black')
 
@@ -73,7 +73,11 @@ class TrackView(QtWidgets.QGraphicsView):
             event.ignore()
 
     def dragLeaveEvent(self, event):
-        event.accept()
+        if event.mimeData().hasFormat('ubicut/timeable') \
+           or event.mimeData().hasFormat('ubicut/file'):
+            event.accept()
+        else:
+            event.ignore()
 
     def dragMoveEvent(self, event):
         if event.mimeData().hasFormat('ubicut/timeable') \
@@ -86,20 +90,20 @@ class TrackView(QtWidgets.QGraphicsView):
         if event.mimeData().hasFormat('ubicut/timeable'):
             # get the data from the dropped item
             item_data = event.mimeData().data('ubicut/timeable')
-            stream = QtCore.QDataStream(item_data, QtCore.QIODevice.ReadOnly)
-            name = QtCore.QDataStream.readString(stream).decode()
-            width = QtCore.QDataStream.readInt(stream)
-            res_left = QtCore.QDataStream.readInt(stream)
-            res_right = QtCore.QDataStream.readInt(stream)
-            file_name = QtCore.QDataStream.readString(stream).decode()
-            clip_id = QtCore.QDataStream.readString(stream).decode()
+            stream = QDataStream(item_data, QIODevice.ReadOnly)
+            name = QDataStream.readString(stream).decode()
+            width = QDataStream.readInt(stream)
+            res_left = QDataStream.readInt(stream)
+            res_right = QDataStream.readInt(stream)
+            file_name = QDataStream.readString(stream).decode()
+            clip_id = QDataStream.readString(stream).decode()
 
             # check if theres already another timeable at the drop position
             start_pos = event.pos().x() - width / 2
             if start_pos < 0:
                 return
 
-            rect = QtCore.QRectF(start_pos, 0, width, self.height)
+            rect = QRectF(start_pos, 0, width, self.height)
             colliding = self.scene().items(rect)
             if not colliding:
                 # add new timeable
@@ -122,8 +126,8 @@ class TrackView(QtWidgets.QGraphicsView):
         # for files that het dragged from the filemanager
         elif event.mimeData().hasFormat('ubicut/file'):
             item_data = event.mimeData().data('ubicut/file')
-            stream = QtCore.QDataStream(item_data, QtCore.QIODevice.ReadOnly)
-            path = QtCore.QDataStream.readString(stream).decode()
+            stream = QDataStream(item_data, QIODevice.ReadOnly)
+            path = QDataStream.readString(stream).decode()
             print(path)
 
             # TODO create timeable
