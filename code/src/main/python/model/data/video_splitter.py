@@ -6,6 +6,8 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from moviepy.editor import *
+from .video import Video
+from .audio import Audio
 import shutil
 
 class VideoSplitter:
@@ -15,17 +17,12 @@ class VideoSplitter:
         self.folder_name = folder_name
         self.video_path = video_path
         self.video_name = video_name
+        self.files = []
+        self.audio_files = []
 
     def large_video(self):
         """
         a function to get the part of the speaker from the "main video" and save it in the project folder
-
-        @param folder_path: path to the project folder
-        @param folder_name: the name of the project folder
-        @param video_path: the path to the video
-        @param video_name: the name of the "main video"
-
-        @return: a String to the new generated video
         """
 
         video_file = Path(self.video_path, self.video_name)
@@ -52,19 +49,12 @@ class VideoSplitter:
         out.release()
         cv2.destroyAllWindows()
         new_large_video_path = Path(folder, large_video_name)
-        return new_large_video_path
+        self.files.append(Video(new_large_video_path))
 
 
 def small_video(self):
     """
     a function to get the part of the foil/visualiser from the "main video" and save it in the project folder
-
-    @param folder_path: path to the project folder
-    @param folder_name: the name of the project folder
-    @param video_path: the path to the video
-    @param video_name: the name of the "main video"
-
-    @return: a String to the new generated video
     """
     video_file = Path(self.video_path, self.video_name)
     folder = Path(self.folder_path, self.folder_name)
@@ -90,19 +80,13 @@ def small_video(self):
     out.release()
     cv2.destroyAllWindows()
     new_small_video_path = Path(folder, small_video_name)
-    return new_small_video_path
+    self.files.append(Video(new_small_video_path)) 
+
 
 #need tests
 def audio_from_video(self):
     """
     a function to get the audio from a video and save it in the project folder
-
-    @param folder_path: path to the project folder
-    @param folder_name: the name of the project folder
-    @param video_path: the path to the video
-    @param video_name: the name of the "main video"
-
-    @return: a String to the new generated audio
     """
 
     folder = Path(self.folder_path, self.folder_name)
@@ -113,4 +97,4 @@ def audio_from_video(self):
     audio = video.audio
     audio.write_audiofile(os.path.join(folder,str(audio_from_video)))
     extracted_audio = Path(folder, audio_from_video)
-    return extracted_audio
+    self.audio_files.append(Audio(extracted_audio))
