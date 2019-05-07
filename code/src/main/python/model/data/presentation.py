@@ -99,7 +99,7 @@ class Presentation:
 
         x_offset = width - 250 # only for resolution 250 
         bottom = ((3.7 * height) / 100) # blue bottom ground
-        y_offset = int((height - 200) - bottom) # only for resolution 200 
+        y_offset = int((height - 200) - bottom) # only for resolution 250 
 
         if self.check_color() == True: 
             large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
