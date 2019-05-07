@@ -49,8 +49,8 @@ SIZE_OPTIONS = {
         "width": 1920,
         "height": 1080
     },
-    "1080x720": {
-        "width": 1080,
+    "1280x720": {
+        "width": 1280,
         "height": 720
     }
 }

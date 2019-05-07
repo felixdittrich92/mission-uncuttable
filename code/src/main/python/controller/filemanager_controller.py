@@ -45,7 +45,7 @@ class Filemanager(QWidget):
 
         """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
-        self.clearButton.clicked.connect(self.clearFileNames)
+        #self.clearButton.clicked.connect(self.clearFileNames)
         self.deleteButton.clicked.connect(self.remove)
         self.listWidget.itemSelectionChanged.connect(self.selected)
 
