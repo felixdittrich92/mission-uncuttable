@@ -11,6 +11,9 @@ from audio import Audio
 import shutil
 
 class VideoSplitter:
+    """
+    This class handles the video and audio splitting
+    """
 
     def __init__(self, folder_path, folder_name, video_path, video_name):
         """
@@ -31,6 +34,7 @@ class VideoSplitter:
     def large_video(self):
         """
         a method to get the part of the speaker from the "main video" and save it in the project folder
+        and create a object of this
         """
 
         video_file = Path(self.video_path, self.video_name)
@@ -64,6 +68,7 @@ class VideoSplitter:
 def small_video(self):
     """
     a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
+    and create a object of this
     """
     video_file = Path(self.video_path, self.video_name)
     folder = Path(self.folder_path, self.folder_name)
@@ -96,6 +101,7 @@ def small_video(self):
 def audio_from_video(self):
     """
     a method to get the audio from a video and save it in the project folder
+    and create a object of this
     """
 
     folder = Path(self.folder_path, self.folder_name)

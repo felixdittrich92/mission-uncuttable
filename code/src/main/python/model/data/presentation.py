@@ -6,7 +6,6 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from slide import Slide
-from media_file import MediaFile
 
 class Presentation:
 
@@ -25,7 +24,7 @@ class Presentation:
 
         """
         a method that takes a path and a PDF file, converts them to JPG, and then saves the individual images
-        in the project folder
+        in the project folder and creates a object with the list of single files
     
         @param folder_path: path to the project folder
         @param folder_name: name of the project folder
@@ -83,6 +82,7 @@ class Presentation:
     def picture_in_presentation(self, file_path_small_img, small_img):
         """
         a method which takes two images and overlay the second one above the first one if place is white
+        this method creates a object of the overlayed or non overlayed picture
 
         @param file_path_small_img: the path to the overlay image
         @param small_img: the name of the overlay image
