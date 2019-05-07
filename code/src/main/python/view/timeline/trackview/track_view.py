@@ -1,8 +1,14 @@
+import os
+
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
 from view.timeline.timeableview import TimeableView
 from model.project import TimeableModel, TimelineModel
+from util.timeline_utils import seconds_to_pos
+
+
+# TODO move some stuff to timeline controller
 
 
 class TrackView(QGraphicsView):
@@ -24,6 +30,9 @@ class TrackView(QGraphicsView):
         self.width = width
         self.height = height
         self.num = num
+
+        self.item_dropped = False
+        self.current_timeable = None
 
         self.setAcceptDrops(True)
 
@@ -56,81 +65,137 @@ class TrackView(QGraphicsView):
         self.resize()
 
     def add_timeable(self, name, width, x_pos, model, res_left=0, res_right=0):
-        """
-        Adds a TimeableView to the Track.
-        """
+        """ Adds a TimeableView to the Track. """
         timeable = TimeableView(name, width, self.height, x_pos, res_left, res_right, model)
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
+        self.current_timeable = timeable
 
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat('ubicut/timeable'):
-            event.accept()
-        elif event.mimeData().hasFormat('ubicut/file'):
-            event.accept()
-            # TODO create pixmap
-        else:
-            event.ignore()
+    def add_from_filemanager(self, drag_event):
+        """ Adds a timeable when item from filemanager is dragged into the track """
+        # get the path from the dropped item
+        item_data = drag_event.mimeData().data('ubicut/file')
+        stream = QDataStream(item_data, QIODevice.ReadOnly)
+        path = QDataStream.readString(stream).decode()
 
-    def dragLeaveEvent(self, event):
-        if event.mimeData().hasFormat('ubicut/timeable') \
-           or event.mimeData().hasFormat('ubicut/file'):
-            event.accept()
-        else:
-            event.ignore()
+        x_pos = drag_event.pos().x()
+        model = TimeableModel(path)
+        model.move(x_pos)
+        width = seconds_to_pos(model.clip.Duration())
 
-    def dragMoveEvent(self, event):
-        if event.mimeData().hasFormat('ubicut/timeable') \
-           or event.mimeData().hasFormat('ubicut/file'):
-            event.accept()
-        else:
-            event.ignore()
+        # check if theres already another timeable at the drop position
+        rect = QRectF(x_pos, 0, width, self.height)
+        colliding = self.scene().items(rect)
+        # add the timeable when there are no colliding items
+        if not colliding:
+            name = os.path.basename(path)
+            self.add_timeable(name, width, x_pos, model)
+            self.item_dropped = True
 
-    def dropEvent(self, event):
-        if event.mimeData().hasFormat('ubicut/timeable'):
-            # get the data from the dropped item
-            item_data = event.mimeData().data('ubicut/timeable')
-            stream = QDataStream(item_data, QIODevice.ReadOnly)
-            name = QDataStream.readString(stream).decode()
-            width = QDataStream.readInt(stream)
+    def add_from_track(self, drag_event):
+        """ Adds a timeable when a drag was started from a timeable on a track """
+        # get the data from the dropped item
+        item_data = drag_event.mimeData().data('ubicut/timeable')
+        stream = QDataStream(item_data, QIODevice.ReadOnly)
+        name = QDataStream.readString(stream).decode()
+        width = QDataStream.readInt(stream)
+
+        start_pos = drag_event.pos().x()
+
+        # check if theres already another timeable at the drop position
+        rect = QRectF(start_pos, 0, width, self.height)
+        colliding = [item for item in self.scene().items(rect) if item.isVisible]
+
+        # add the timeable when there are no colliding items
+        if not colliding:
             res_left = QDataStream.readInt(stream)
             res_right = QDataStream.readInt(stream)
             file_name = QDataStream.readString(stream).decode()
             clip_id = QDataStream.readString(stream).decode()
 
-            # check if theres already another timeable at the drop position
-            start_pos = event.pos().x() - width / 2
-            if start_pos < 0:
+            # create new timeable
+            model = TimeableModel(file_name)
+            timeline = TimelineModel.get_instance()
+            old_clip = timeline.get_clip_by_id(clip_id)
+
+            model.set_start(old_clip.Start(), is_sec=True)
+            model.set_end(old_clip.End(), is_sec=True)
+            model.move(start_pos)
+
+            self.add_timeable(name, width, start_pos, model,
+                              res_left=res_left, res_right=res_right)
+            self.item_dropped = True
+
+    def dragEnterEvent(self, event):
+        """ Gets called when something is dragged into the track """
+        if event.mimeData().hasFormat('ubicut/timeable'):
+            self.delete_timeable = False
+
+            self.add_from_track(event)
+            event.accept()
+
+        elif event.mimeData().hasFormat('ubicut/file'):
+            self.delete_timeable = True
+
+            self.add_from_filemanager(event)
+            event.accept()
+
+        else:
+            event.ignore()
+
+    def dragLeaveEvent(self, event):
+        """ Gets called when something is dragged out of the track """
+        if self.current_timeable is not None:
+            self.current_timeable.delete()
+            self.item_dropped = False
+            self.current_timeable = None
+            event.ignore()
+
+        event.accept()
+
+    def dragMoveEvent(self, event):
+        """ Gets called when there is an active drag and the mouse gets moved """
+        if event.mimeData().hasFormat('ubicut/timeable'):
+            self.delete_timeable = False
+
+            if self.item_dropped:
+                self.current_timeable.move_on_track(event.pos().x())
+                event.accept()
                 return
 
-            rect = QRectF(start_pos, 0, width, self.height)
-            colliding = self.scene().items(rect)
-            if not colliding:
-                # add new timeable
-                model = TimeableModel(file_name)
-                timeline = TimelineModel.get_instance()
-                old_clip = timeline.get_clip_by_id(clip_id)
+            event.accept()
+            self.add_from_track(event)
 
-                model.set_start(old_clip.Start(), is_sec=True)
-                model.set_end(old_clip.End(), is_sec=True)
-                model.move(start_pos)
+        elif event.mimeData().hasFormat('ubicut/file'):
+            self.delete_timeable = True
 
-                # delete old clip from the timeline
-                timeline.change("delete", ["clips", {"id": clip_id}], {})
+            if self.item_dropped:
+                self.current_timeable.move_on_track(event.pos().x())
+                event.accept()
+                return
 
-                self.add_timeable(name, width, start_pos, model,
-                                  res_left=res_left, res_right=res_right)
+            event.accept()
+            self.add_from_filemanager(event)
 
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        """ Gets called when there is an active drag and the mouse gets released """
+        if event.mimeData().hasFormat('ubicut/timeable'):
+            if self.current_timeable is not None:
                 event.acceptProposedAction()
+                self.current_timeable = None
+
+            self.item_dropped = False
 
         # for files that het dragged from the filemanager
         elif event.mimeData().hasFormat('ubicut/file'):
-            item_data = event.mimeData().data('ubicut/file')
-            stream = QDataStream(item_data, QIODevice.ReadOnly)
-            path = QDataStream.readString(stream).decode()
-            print(path)
+            self.item_dropped = False
+            self.current_timeable = None
 
-            # TODO create timeable
+            if self.item_dropped:
+                event.acceptProposedAction()
 
         else:
             event.ignore()

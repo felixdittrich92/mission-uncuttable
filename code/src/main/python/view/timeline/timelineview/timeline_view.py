@@ -5,10 +5,9 @@ from PyQt5.QtCore import QObject
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
-from view.timeline.timeableview import TimeableView
 
-from util.timeline_utils import seconds_to_pos
-from model.project import TimeableModel
+# from util.timeline_utils import seconds_to_pos
+# from model.project import TimeableModel
 
 
 class TimelineView(QFrame):
@@ -87,12 +86,12 @@ class TimelineView(QFrame):
         """shows some tracks with timeables to see if everything works"""
 
         # testing data
-        f = "video.mp4"
-        model = TimeableModel(f)
-        w = seconds_to_pos(model.clip.Duration())
+        # f = "video.mp4"
+        # model = TimeableModel(f)
+        # w = seconds_to_pos(model.clip.Duration())
 
         tr1 = TrackView(4800, 70, 3)
-        tr1.add_timeable(f, w, 0, model)
+        # tr1.add_timeable(f, w, 0, model)
         self.add_track(tr1)
         btn1 = QPushButton("Track 1")
         btn1.setFixedSize(70, 70)
