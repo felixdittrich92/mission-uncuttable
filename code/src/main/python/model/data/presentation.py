@@ -60,6 +60,7 @@ class Presentation:
         @return: True if region of interest is completly white or gray
         """
         input_file = Path(self.file_path, self.filename)
+        # hier berechnen prozentual
         white = 255
         gray = 32
         img = cv2.imread(str(input_file), cv2.IMREAD_GRAYSCALE)
