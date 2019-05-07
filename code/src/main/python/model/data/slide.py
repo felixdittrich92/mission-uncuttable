@@ -1,5 +1,4 @@
-from presentation import Presentation
-from media_file import MediaFile
+from .media_file import MediaFile
 
 class Slide(MediaFile):
     """
@@ -7,7 +6,6 @@ class Slide(MediaFile):
     """
 
     def __init__(self, file_path): 
-        super().__init__(self.path)
         self.__file_path = file_path
 
     def get(self):

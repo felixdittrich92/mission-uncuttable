@@ -6,6 +6,7 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from slide import Slide
+from media_file import MediaFile
 
 class Presentation:
 
@@ -23,7 +24,7 @@ class Presentation:
     def convert_pdf(self, folder_path, folder_name):
 
         """
-        a function that takes a path and a PDF file, converts them to JPG, and then saves the individual images
+        a method that takes a path and a PDF file, converts them to JPG, and then saves the individual images
         in the project folder
     
         @param folder_path: path to the project folder
@@ -50,7 +51,7 @@ class Presentation:
 
     def check_color(self, y1, y2, x1, x2):
         """
-        a function which checks if the place for a video is free to show it 
+        a method which checks if the place for a video is free to show it 
 
         @param y1: Point(x,min) in a coordinate system for the region of interest
         @param y2: Point(x,max)
@@ -76,7 +77,7 @@ class Presentation:
 
     def picture_in_presentation(self, file_path_small_img, small_img, y1, y2, x1, x2):
         """
-        a function which takes two images and overlay the second one above the first one if place is white
+        a method which takes two images and overlay the second one above the first one if place is white
 
         @param file_path_small_img: the path to the overlay image
         @param small_img: the name of the overlay image
