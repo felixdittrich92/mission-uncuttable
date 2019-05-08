@@ -1,7 +1,5 @@
 from pdf2image import convert_from_path
 import os
-import numpy as np
-import cv2
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
@@ -48,61 +46,3 @@ class Presentation:
         else:
             print("the datatype must be .pdf")
 
-
-    def check_color(self):
-        """
-        a method which checks if the place for a video is free to show it 
-
-        @return: True if region of interest is completly white or gray
-        """
-        input_file = Path(self.file_path, self.filename)
-        picture = cv2.imread(str(input_file))
-        height = picture.shape[0]
-        width = picture.shape[1]
-        # upper y point
-        y1 = int((73.8 * height) / 100)
-        # lower y point
-        y2 = int((94.7 * height) / 100)
-        # left x point
-        x1 = int((79.3 * width) / 100)
-        # right x point
-        x2 = int(width)
-        white = 255
-        gray = 32
-        img = cv2.imread(str(input_file), cv2.IMREAD_GRAYSCALE)
-        roi = img[y1:y2, x1:x2]
-
-        if np.all(roi == white) == True:
-            return True
-        elif np.all(roi == gray) == True:
-            return True
-        else:
-            return False
-
-    def picture_in_presentation(self, file_path_small_img, small_img):
-        """
-        a method which takes two images and overlay the second one above the first one if place is white
-        this method creates a object of the overlayed or non overlayed picture
-
-        @param file_path_small_img: the path to the overlay image
-        @param small_img: the name of the overlay image
-        """
-
-        large_img = Path(self.file_path, self.filename)
-        large_img = cv2.imread(str(large_img))
-        height = large_img.shape[0]
-        width = large_img.shape[1]
-
-        small_img = Path(file_path_small_img, small_img)
-        small_img = cv2.imread(str(small_img))
-        small_img = cv2.resize(small_img, (250, 200)) # little picture size (width,height)
-
-        x_offset = width - 250 # only for resolution 250 
-        bottom = ((3.7 * height) / 100) # blue bottom ground
-        y_offset = int((height - 200) - bottom) # only for resolution 250 
-
-        if self.check_color() == True: 
-            large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]] = small_img
-            self.files.append(Slide(large_img[y_offset:y_offset+small_img.shape[0], x_offset:x_offset+small_img.shape[1]]))
-        else:
-            self.files.append(Slide(large_img))
