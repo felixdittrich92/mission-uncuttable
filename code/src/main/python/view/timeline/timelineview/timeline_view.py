@@ -54,7 +54,7 @@ class TimelineView(QFrame):
 
         max_width = self.tracks[0].width
 
-        for t in self.tracks:
+        for t in self.tracks[1:]:
             if t.width > max_width:
                 max_width = t.width
 
@@ -90,7 +90,7 @@ class TimelineView(QFrame):
         # model = TimeableModel(f)
         # w = seconds_to_pos(model.clip.Duration())
 
-        tr1 = TrackView(4800, 70, 3)
+        tr1 = TrackView(5000, 70, 3)
         # tr1.add_timeable(f, w, 0, model)
         self.add_track(tr1)
         btn1 = QPushButton("Track 1")

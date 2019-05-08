@@ -60,6 +60,8 @@ class TrackView(QGraphicsView):
         self.setMinimumSize(self.width, self.height)
         self.scene().setSceneRect(0, 0, self.width, self.height)
 
+        # TODO adjust sizes of other tracks via timeline controller
+
     def set_width(self, new_width):
         """
         Changes the width of the trackview.
@@ -71,6 +73,9 @@ class TrackView(QGraphicsView):
 
     def add_timeable(self, name, width, x_pos, model, res_left=0, res_right=0):
         """ Adds a TimeableView to the Track. """
+        if width + x_pos > self.width:
+            self.set_width(width + x_pos)
+
         timeable = TimeableView(name, width, self.height, x_pos, res_left, res_right, model)
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
