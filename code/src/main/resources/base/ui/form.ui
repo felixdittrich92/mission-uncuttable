@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
+    <width>716</width>
     <height>516</height>
    </rect>
   </property>
@@ -14,25 +14,15 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="10">
+    <layout class="QVBoxLayout" name="videoLayout"/>
+   </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="backButton">
      <property name="text">
       <string/>
      </property>
     </widget>
-   </item>
-   <item row="2" column="0">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>105</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item row="2" column="1">
     <widget class="QPushButton" name="firstframeButton">
@@ -78,15 +68,39 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="7">
-    <widget class="QLabel" name="videoLabel">
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
+   <item row="2" column="9">
+    <widget class="QPushButton" name="fullScreen">
      <property name="text">
       <string/>
      </property>
     </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QSlider" name="horizontalSlider">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
