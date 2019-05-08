@@ -37,6 +37,7 @@ class TrackView(QGraphicsView):
         # for drag and drop handling
         self.item_dropped = False
         self.current_timeable = None
+        self.mouse_pos = 0
 
         self.setAcceptDrops(True)
 
@@ -103,6 +104,10 @@ class TrackView(QGraphicsView):
             self.add_timeable(name, width, x_pos, model)
             self.item_dropped = True
 
+            return True
+
+        return False
+
     def add_from_track(self, drag_event):
         """ Adds a timeable when a drag was started from a timeable on a track """
         # get the data thats needed to check for collisions
@@ -110,10 +115,14 @@ class TrackView(QGraphicsView):
         stream = QDataStream(item_data, QIODevice.ReadOnly)
         name = QDataStream.readString(stream).decode()
         width = QDataStream.readInt(stream)
+        pos = QDataStream.readInt(stream)
 
         # get a list of items at the position where the timeable would be added
         start_pos = drag_event.pos().x()
-        rect = QRectF(start_pos, 0, width, self.height)
+        if start_pos < pos:
+            return
+
+        rect = QRectF(start_pos - pos, 0, width, self.height)
         colliding = [item for item in self.scene().items(rect) if item.isVisible]
 
         # only add the timeable if colliding is empty
@@ -137,22 +146,34 @@ class TrackView(QGraphicsView):
             model.move(start_pos)
 
             # add the timeable to the track
-            self.add_timeable(name, width, start_pos, model,
+            self.add_timeable(name, width, start_pos - pos, model,
                               res_left=res_left, res_right=res_right)
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
 
+            return True
+
+        return False
+
+    def move_dropped_timeable(self, event):
+        pos = event.pos().x() - self.mouse_pos
+        self.current_timeable.move_on_track(pos)
+
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
             # try to add a timeable
-            self.add_from_track(event)
+            if self.add_from_track(event):
+                self.mouse_pos = event.pos().x() - self.current_timeable.x_pos
+
             event.accept()
 
         elif event.mimeData().hasFormat('ubicut/file'):
             # try to add a timeable
-            self.add_from_filemanager(event)
+            if self.add_from_filemanager(event):
+                self.mouse_pos = event.pos().x() - self.current_timeable.x_pos
+
             event.accept()
 
         else:
@@ -177,7 +198,7 @@ class TrackView(QGraphicsView):
         if event.mimeData().hasFormat('ubicut/timeable'):
             # move the timeable if it was created
             if self.item_dropped:
-                self.current_timeable.move_on_track(event.pos().x())
+                self.move_dropped_timeable(event)
                 event.accept()
                 return
 
@@ -188,7 +209,7 @@ class TrackView(QGraphicsView):
         elif event.mimeData().hasFormat('ubicut/file'):
             # move the timeable if it was created
             if self.item_dropped:
-                self.current_timeable.move_on_track(event.pos().x())
+                self.move_dropped_timeable(event)
                 event.accept()
                 return
 

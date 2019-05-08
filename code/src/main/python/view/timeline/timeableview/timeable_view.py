@@ -95,7 +95,7 @@ class TimeableView(QGraphicsRectItem):
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def delete(self):
-        """removes the timeable from the track"""
+        """ removes the timeable from the track and deletes the model from the timeline """
         self.model.delete()
 
         self.scene().removeItem(self)
@@ -262,6 +262,7 @@ class TimeableView(QGraphicsRectItem):
         data_stream = QDataStream(item_data, QIODevice.WriteOnly)
         QDataStream.writeString(data_stream, str.encode(self.name))
         QDataStream.writeInt(data_stream, self.width)
+        QDataStream.writeInt(data_stream, int(self.mouse_press_pos.x()))
         QDataStream.writeInt(data_stream, self.resizable_left)
         QDataStream.writeInt(data_stream, self.resizable_right)
         QDataStream.writeString(data_stream, str.encode(self.model.file_name))
