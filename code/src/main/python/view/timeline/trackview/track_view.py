@@ -25,6 +25,8 @@ class TrackView(QGraphicsView):
 
         @param width: track width
         @param height: track height
+        @param num: the layer of the track, clips in tracks with higher numbers get rendered
+                    above others
         """
         super(TrackView, self).__init__(parent)
 
@@ -32,6 +34,7 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
 
+        # for drag and drop handling
         self.item_dropped = False
         self.current_timeable = None
 
@@ -80,13 +83,14 @@ class TrackView(QGraphicsView):
         path = QDataStream.readString(stream).decode()
 
         x_pos = drag_event.pos().x()
-        # c = openshot.Clip(path)
-        # width = seconds_to_pos(c.Duration())
 
+        # get width of timeable that would be created
         v = cv2.VideoCapture(path)
         v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
         d = v.get(cv2.CAP_PROP_POS_MSEC)
         width = seconds_to_pos(d / 1000)
+
+        # TODO make it larger for images (dont forget to change it in the clip)
 
         # check if theres already another timeable at the drop position
         rect = QRectF(x_pos, 0, width, self.height)
@@ -101,20 +105,20 @@ class TrackView(QGraphicsView):
 
     def add_from_track(self, drag_event):
         """ Adds a timeable when a drag was started from a timeable on a track """
-        # get the data from the dropped item
+        # get the data thats needed to check for collisions
         item_data = drag_event.mimeData().data('ubicut/timeable')
         stream = QDataStream(item_data, QIODevice.ReadOnly)
         name = QDataStream.readString(stream).decode()
         width = QDataStream.readInt(stream)
 
+        # get a list of items at the position where the timeable would be added
         start_pos = drag_event.pos().x()
-
-        # check if theres already another timeable at the drop position
         rect = QRectF(start_pos, 0, width, self.height)
         colliding = [item for item in self.scene().items(rect) if item.isVisible]
 
-        # add the timeable when there are no colliding items
+        # only add the timeable if colliding is empty
         if not colliding:
+            # read the rest of the data from the dragevent
             res_left = QDataStream.readInt(stream)
             res_right = QDataStream.readInt(stream)
             file_name = QDataStream.readString(stream).decode()
@@ -122,24 +126,32 @@ class TrackView(QGraphicsView):
 
             # create new timeable
             model = TimeableModel(file_name)
+
+            # find the old clip to get start and end of the clip
             timeline = TimelineModel.get_instance()
             old_clip = timeline.get_clip_by_id(clip_id)
 
+            # adjust the new model
             model.set_start(old_clip.Start(), is_sec=True)
             model.set_end(old_clip.End(), is_sec=True)
             model.move(start_pos)
 
+            # add the timeable to the track
             self.add_timeable(name, width, start_pos, model,
                               res_left=res_left, res_right=res_right)
+
+            # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
 
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
+            # try to add a timeable
             self.add_from_track(event)
             event.accept()
 
         elif event.mimeData().hasFormat('ubicut/file'):
+            # try to add a timeable
             self.add_from_filemanager(event)
             event.accept()
 
@@ -149,9 +161,13 @@ class TrackView(QGraphicsView):
     def dragLeaveEvent(self, event):
         """ Gets called when something is dragged out of the track """
         if self.current_timeable is not None:
+            # delete dragged timeable if mouse leaves track
             self.current_timeable.delete()
+
+            # clear data
             self.item_dropped = False
             self.current_timeable = None
+
             event.ignore()
 
         event.accept()
@@ -159,22 +175,26 @@ class TrackView(QGraphicsView):
     def dragMoveEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets moved """
         if event.mimeData().hasFormat('ubicut/timeable'):
+            # move the timeable if it was created
             if self.item_dropped:
                 self.current_timeable.move_on_track(event.pos().x())
                 event.accept()
                 return
 
-            event.accept()
+            # try to add the timeable if it wasn't added before
             self.add_from_track(event)
+            event.accept()
 
         elif event.mimeData().hasFormat('ubicut/file'):
+            # move the timeable if it was created
             if self.item_dropped:
                 self.current_timeable.move_on_track(event.pos().x())
                 event.accept()
                 return
 
-            event.accept()
+            # try to add the timeable if it wasn't added before
             self.add_from_filemanager(event)
+            event.accept()
 
         else:
             event.ignore()
@@ -182,19 +202,18 @@ class TrackView(QGraphicsView):
     def dropEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets released """
         if event.mimeData().hasFormat('ubicut/timeable'):
+            # accept MoveAction if timeable was succesfully created
             if self.current_timeable is not None:
                 event.acceptProposedAction()
                 self.current_timeable = None
 
+            # set item_dropped to false for next drag
             self.item_dropped = False
 
-        # for files that het dragged from the filemanager
         elif event.mimeData().hasFormat('ubicut/file'):
+            # clear data for next drag
             self.item_dropped = False
             self.current_timeable = None
-
-            if self.item_dropped:
-                event.acceptProposedAction()
 
         else:
             event.ignore()
