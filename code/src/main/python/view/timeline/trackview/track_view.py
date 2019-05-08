@@ -1,5 +1,6 @@
 import os
 
+import cv2
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
@@ -79,15 +80,21 @@ class TrackView(QGraphicsView):
         path = QDataStream.readString(stream).decode()
 
         x_pos = drag_event.pos().x()
-        model = TimeableModel(path)
-        model.move(x_pos)
-        width = seconds_to_pos(model.clip.Duration())
+        # c = openshot.Clip(path)
+        # width = seconds_to_pos(c.Duration())
+
+        v = cv2.VideoCapture(path)
+        v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
+        d = v.get(cv2.CAP_PROP_POS_MSEC)
+        width = seconds_to_pos(d / 1000)
 
         # check if theres already another timeable at the drop position
         rect = QRectF(x_pos, 0, width, self.height)
         colliding = self.scene().items(rect)
         # add the timeable when there are no colliding items
         if not colliding:
+            model = TimeableModel(path)
+            model.move(x_pos)
             name = os.path.basename(path)
             self.add_timeable(name, width, x_pos, model)
             self.item_dropped = True
@@ -129,14 +136,10 @@ class TrackView(QGraphicsView):
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
-            self.delete_timeable = False
-
             self.add_from_track(event)
             event.accept()
 
         elif event.mimeData().hasFormat('ubicut/file'):
-            self.delete_timeable = True
-
             self.add_from_filemanager(event)
             event.accept()
 
@@ -156,8 +159,6 @@ class TrackView(QGraphicsView):
     def dragMoveEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets moved """
         if event.mimeData().hasFormat('ubicut/timeable'):
-            self.delete_timeable = False
-
             if self.item_dropped:
                 self.current_timeable.move_on_track(event.pos().x())
                 event.accept()
@@ -167,8 +168,6 @@ class TrackView(QGraphicsView):
             self.add_from_track(event)
 
         elif event.mimeData().hasFormat('ubicut/file'):
-            self.delete_timeable = True
-
             if self.item_dropped:
                 self.current_timeable.move_on_track(event.pos().x())
                 event.accept()
