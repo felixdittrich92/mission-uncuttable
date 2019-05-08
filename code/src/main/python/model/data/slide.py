@@ -40,10 +40,13 @@ class Slide(MediaFile):
 
         if np.all(roi == white) == True:
             self.list_is_free.append(True)
+            self.list_is_free = True
             return True
         elif np.all(roi == gray) == True:
             self.list_is_free.append(True)
+            self.list_is_free = True
             return True
         else:
             self.list_is_free.append(False)
+            self.list_is_free = False
             return False
