@@ -1,6 +1,6 @@
-#from .video_splitter import VideoSplitter
+from .media_file import MediaFile
 
-class Audio():
+class Audio(MediaFile):
     """
     This class contains the audiotrack of the video
     """
