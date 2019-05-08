@@ -1,7 +1,9 @@
-from PyQt5.QtCore import QPoint, QRectF, QPointF, QByteArray, QDataStream, QIODevice, QMimeData, Qt
+from PyQt5.QtCore import QPoint, QRectF, QPointF, QByteArray, QDataStream, QIODevice, QMimeData, Qt, QSize
 from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
+
+from controller import TimelineController
 
 
 TIMEABLE_MIN_WIDTH = 9
@@ -268,11 +270,13 @@ class TimeableView(QGraphicsRectItem):
         mimeData = QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
 
+        # set first frame as pixmap
+        pixmap = TimelineController.get_pixmap_from_file(self.model.file_name)
+
         # start drag
         drag = QDrag(self.scene())
         drag.setMimeData(mimeData)
-
-        # TODO set first frame as pixmap
+        drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
 
         # delete the timeable if the the item was succesfully dropped
         if (drag.exec_(Qt.MoveAction) == Qt.MoveAction):
