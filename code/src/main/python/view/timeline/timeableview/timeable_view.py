@@ -69,7 +69,8 @@ class TimeableView(QGraphicsRectItem):
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
-            painter.drawText(QtCore.QPointF(1, 15), self.name)
+            painter.setPen(QtGui.QColor(245, 245, 245))
+            painter.drawText(QtCore.QPointF(8, 20), self.name)
             self.name_visible = True
         else:
             self.name_visible = False

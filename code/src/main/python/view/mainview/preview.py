@@ -48,6 +48,7 @@ class PreviewView(QWidget):
 
         self.videoLabel = self.findChild(QLabel, "video_label")
 
+        # FÜR DEVELOPMENT
         img = QPixmap(RESOURCES.images.bunny)
         self.videoLabel.setPixmap(img)
 
