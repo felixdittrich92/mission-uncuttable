@@ -6,8 +6,8 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from moviepy.editor import *
-from video import Video
-from audio import Audio
+from .video import Video
+from .audio import Audio
 import shutil
 
 class VideoSplitter:
@@ -78,7 +78,7 @@ def small_video(self):
     small_video_name = 'small_video.mp4'
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(os.path.join(folder,str(small_video_name)), fourcc , 21, (700, 530))
-    
+
     if(cap.isOpened() == False):
         print("Error opening video stream or file")
 

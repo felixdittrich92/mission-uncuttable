@@ -3,7 +3,7 @@ import os
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
-from slide import Slide
+from .slide import Slide
 
 class Presentation:
 
@@ -17,13 +17,13 @@ class Presentation:
         self.filename = filename
         self.files = []
 
-    
+
     def convert_pdf(self, folder_path, folder_name, resolution):
 
         """
         a method that takes a path and a PDF file, converts them to JPG, and then saves the individual images
         in the project folder and creates a object with the list of single files
-    
+
         @param folder_path: path to the project folder
         @param folder_name: name of the project folder
         @param resolution: resolution for every converted pdf picture
@@ -42,7 +42,7 @@ class Presentation:
 
             for file in os.listdir(folder):
                 self.files.append(Slide(file))
-            
+
         else:
             print("the datatype must be .pdf")
 
