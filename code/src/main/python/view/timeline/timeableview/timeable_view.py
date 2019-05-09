@@ -32,8 +32,10 @@ class TimeableView(QGraphicsRectItem):
 
         self.model = model
 
-        self.pixmap = TimelineController.get_pixmap_from_file(self.model.file_name, 1).scaled(
-            QSize(100, height), Qt.IgnoreAspectRatio)
+        frame = self.model.get_first_frame()
+        self.pixmap = TimelineController.get_pixmap_from_file(
+            self.model.file_name, frame).scaled(
+                QSize(100, height), Qt.IgnoreAspectRatio)
 
         self.name = name
         self.prepareGeometryChange()
