@@ -12,7 +12,8 @@ class VideoWidget(QWidget):
     def __init__(self, *args):
         # Invoke parent init
         QWidget.__init__(self, *args)
-            
+
+        # Init aspect ratio, pixel ratio    
         self.aspect_ratio = openshot.Fraction()
         self.pixel_ratio = openshot.Fraction()
         self.aspect_ratio.num = 16
@@ -20,6 +21,7 @@ class VideoWidget(QWidget):
         self.pixel_ratio.num = 1
         self.pixel_ratio.den = 1
     
+        # set view properties
         super().setAttribute(Qt.WA_OpaquePaintEvent)
         super().setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
@@ -27,6 +29,7 @@ class VideoWidget(QWidget):
         self.current_image = None
    
     def present(self, image, *args):
+        """ Update current image """
 
         # Get frame's QImage from libopenshot
         self.current_image = image
@@ -35,14 +38,12 @@ class VideoWidget(QWidget):
         self.repaint()        
 
     def connectSignals(self, renderer):
-        """ Connect signals to renderer """
+        """ Connect signal present from renderer to method present """
         renderer.present.connect(self.present)
 
     def paintEvent(self, event, *args):
-        
-        """ Custom paint event """
+        """ Custom paint event (repaint)"""
 
-        # Paint custom frame image on QWidget
         painter = QPainter(self)
         painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform | QPainter.TextAntialiasing, True)
 
@@ -65,8 +66,6 @@ class VideoWidget(QWidget):
       
         # End painter
         painter.end()
-
-        # self.mutex.unlock()
  
     def centeredViewport(self, width, height):
         """ Calculate size of viewport to maintain apsect ratio """

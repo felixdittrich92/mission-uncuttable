@@ -15,15 +15,15 @@ class PreviewView(QWidget):
     """
     
     def __init__(self):
-        
-        self.video_running = False
-        
-        #involve qwidget, resources, ui file
+               
+        #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
         self.RESOURCES = Resources.get_instance()
         uic.loadUi(self.RESOURCES.files.preview_view, self)
 
-        #get timeline instance
+        self.video_running = False
+
+        #get timelinemlodel, timeline
         tm = TimelineModel.get_instance()
         self.timeline = tm.getTimeline()
         
@@ -33,16 +33,18 @@ class PreviewView(QWidget):
         #init videoWidget
         self.videoWidget = VideoWidget()
 
-        #get renderer adress form QtPlayer
+        #get renderer and renderer adress form QtPlayer
         self.renderer_address = self.player.GetRendererQObject()
         self.renderer = sip.wrapinstance(self.renderer_address, QObject)
 
-        #give adress from videoWidget to QtPlayer
-        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget))
-        self.player.Reader(self.timeline)
-
+        #get adress from videoWidget
+        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget)) 
+        
         #connect signals of videoWidget and renderer
         self.videoWidget.connectSignals(self.renderer)
+
+        #load timline into reader
+        self.player.Reader(self.timeline)
 
         #init GUI
         self.initGUI()
@@ -77,6 +79,7 @@ class PreviewView(QWidget):
         self.looprunning = False
         # self.volumeSlider.valueChanged.connect(self.volumeChange)
 
+        #set Widget into Layout
         self.videoLayout.layout().insertWidget(0, self.videoWidget)
     
     def play_pause(self):
