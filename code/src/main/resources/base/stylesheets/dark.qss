@@ -150,7 +150,6 @@ QScrollArea, #timeline_toolbar {
     margin-top: -1px;
 }
 
-
 QScrollArea #track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
@@ -198,36 +197,36 @@ QScrollArea #track_frame QFrame{
 }
 
 /* FILEMANAGER */
-#filemanager_frame{
+#filemanager_frame, #list_widget{
     background-color: #212D40;
     border: 1px solid #364156;
 }
-#filemanager_frame #listWidget {
-    background-color: #212D40;
-    border: none;
+#list_widget {
+    border-top: none;
     show-decoration-selected: 1;
 }
-#filemanager_frame #listWidget::item {
+#list_widget::item {
     color: white;
     padding: 5px;
     border: 1px solid transparent;
 }
 
-#filemanager_frame #listWidget::item:selected {
+#list_widget::item:selected {
     background: #212D40;
     border: 1px solid #364156;
     color: #D66853;
 }
 
-#filemanager_frame #listWidget::item:hover {
+#list_widget::item:hover {
     color: #D66853;
 }
 
 
 /* VIDEOPLAYER */
 
-#video_label {
-    border:none
+#video_widget {
+    background: black;
+    border:none;
 }
 
 #videoplayer_frame QPushButton {
@@ -240,6 +239,10 @@ QScrollArea #track_frame QFrame{
 }
 #maximize_button {
     margin-right: 10px;
+}
+
+QSlider {
+    margin-top: 5px;
 }
 
 QSlider::groove:horizontal {

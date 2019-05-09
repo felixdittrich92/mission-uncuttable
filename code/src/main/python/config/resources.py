@@ -1,4 +1,3 @@
-import os
 files = {
     "startview": "ui/start_view.ui",
     "filemanager": "ui/filemanager.ui",
@@ -6,6 +5,7 @@ files = {
     "mainview": "ui/main_window.ui",
     "settingsview": "ui/settings_window.ui",
     "projectsettings_view": "ui/projectsettings_window.ui",
+    "export_view": "ui/export.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
     "timeline_view": "ui/timeline_view.ui",
     "qss_dark": "stylesheets/dark.qss",
@@ -20,7 +20,6 @@ images = {
     "forward_button": "images/buttons/step_forward.png",
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
-    "bunny": "images/bunny.jpg"
 }
 strings = {
     "de": "strings/de/strings.xml",

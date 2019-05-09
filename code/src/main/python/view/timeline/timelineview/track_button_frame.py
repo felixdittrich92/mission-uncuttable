@@ -22,7 +22,7 @@ class TrackButtonFrame(SizeLinkableFrame):
         self.button_counter = 0
         box_layout = QVBoxLayout()
         box_layout.setSpacing(0)
-        box_layout.setContentsMargins(0,0,0,0)
+        box_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(box_layout)
 
         # self.setStyleSheet('background-color: orange')

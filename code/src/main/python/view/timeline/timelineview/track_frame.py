@@ -22,7 +22,6 @@ class TrackFrame(SizeLinkableFrame):
         vbox_layout.setSpacing(0)
         vbox_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(vbox_layout)
-        # self.setStyleSheet("background-color: orange")
 
     def add_track(self, track):
         """
