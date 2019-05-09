@@ -1,12 +1,10 @@
 import os
 
-import cv2
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
 from view.timeline.timeableview import TimeableView
 from model.project import TimeableModel, TimelineModel
-from util.timeline_utils import seconds_to_pos
 
 
 # TODO move some stuff to timeline controller
@@ -87,14 +85,9 @@ class TrackView(QGraphicsView):
         item_data = drag_event.mimeData().data('ubicut/file')
         stream = QDataStream(item_data, QIODevice.ReadOnly)
         path = QDataStream.readString(stream).decode()
+        width = QDataStream.readInt(stream)
 
         x_pos = drag_event.pos().x()
-
-        # get width of timeable that would be created
-        v = cv2.VideoCapture(path)
-        v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
-        d = v.get(cv2.CAP_PROP_POS_MSEC)
-        width = seconds_to_pos(d / 1000)
 
         # TODO make it larger for images (dont forget to change it in the clip)
 
