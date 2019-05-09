@@ -36,7 +36,7 @@ class FileListView(QListWidget):
         mime_data.setData('ubicut/file', item_data)
 
         # set first frame as pixmap
-        pixmap = TimelineController.get_pixmap_from_file(path)
+        pixmap = TimelineController.get_pixmap_from_file(path, 1)
 
         # create and execute drag
         drag = QDrag(self)
