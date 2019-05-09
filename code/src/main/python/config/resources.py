@@ -15,7 +15,7 @@ images = {
     "first_frame_button": "images/buttons/006-back.svg",
     "last_frame_button": "images/buttons/007-next-1.svg",
     "back_button": "images/buttons/013-previous.svg",
-    "media_symbols": "images/filemanagerIcons"
+    "media_symbols": "images/filemanagerIcons",
     "forward_button": "images/buttons/004-next.svg",
     "max_button": "images/buttons/maximize.svg"
 }

@@ -10,21 +10,55 @@ import time
 from .videoWidget import VideoWidget
 
 class PreviewView(QWidget):
-
-    def __init__(self):
-        self.video_running = False
-        super(PreviewView, self).__init__()
-        RESOURCES = Resources.get_instance()
-        uic.loadUi(RESOURCES.files.preview_view, self)
-
-        self.iconplay = QtGui.QPixmap(RESOURCES.images.play_button)
-        self.iconpause = QtGui.QPixmap(RESOURCES.images.pause_button)
-        iconfirstframe = QtGui.QPixmap(RESOURCES.images.first_frame_button)
-        iconlastframe = QtGui.QPixmap(RESOURCES.images.last_frame_button)
-        iconback = QtGui.QPixmap(RESOURCES.images.back_button)
-        iconforward = QtGui.QPixmap(RESOURCES.images.forward_button)
-        iconmax = QtGui.QPixmap(RESOURCES.images.max_button)
+    """
+    QWidget for Previewplayer
+    """
     
+    def __init__(self):
+        
+        self.video_running = False
+        
+        #involve qwidget, resources, ui file
+        super(PreviewView, self).__init__()
+        self.RESOURCES = Resources.get_instance()
+        uic.loadUi(self.RESOURCES.files.preview_view, self)
+
+        #get timeline instance
+        tm = TimelineModel.get_instance()
+        self.timeline = tm.getTimeline()
+        
+        #init Openshot Player
+        self.player = openshot.QtPlayer()
+
+        #init videoWidget
+        self.videoWidget = VideoWidget()
+
+        #get renderer adress form QtPlayer
+        self.renderer_address = self.player.GetRendererQObject()
+        self.renderer = sip.wrapinstance(self.renderer_address, QObject)
+
+        #give adress from videoWidget to QtPlayer
+        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget))
+        self.player.Reader(self.timeline)
+
+        #connect signals of videoWidget and renderer
+        self.videoWidget.connectSignals(self.renderer)
+
+        #init GUI
+        self.initGUI()
+        
+
+    def initGUI(self):    
+        #load icons
+        self.iconplay = QtGui.QPixmap(self.RESOURCES.images.play_button)
+        self.iconpause = QtGui.QPixmap(self.RESOURCES.images.pause_button)
+        iconfirstframe = QtGui.QPixmap(self.RESOURCES.images.first_frame_button)
+        iconlastframe = QtGui.QPixmap(self.RESOURCES.images.last_frame_button)
+        iconback = QtGui.QPixmap(self.RESOURCES.images.back_button)
+        iconforward = QtGui.QPixmap(self.RESOURCES.images.forward_button)
+        iconmax = QtGui.QPixmap(self.RESOURCES.images.max_button)
+    
+        #set icons to buttons
         self.playButton.setIcon(QIcon(self.iconplay))
         self.firstframeButton.setIcon(QIcon(iconfirstframe))
         self.lastframeButton.setIcon(QIcon(iconlastframe))
@@ -32,6 +66,7 @@ class PreviewView(QWidget):
         self.forwardButton.setIcon(QIcon(iconforward))
         self.maxButton.setIcon(QIcon(iconmax))
 
+        #connect events 
         self.playButton.clicked.connect(self.play_pause)
         self.firstframeButton.clicked.connect(self.firstFrame)
         self.lastframeButton.clicked.connect(self.lastFrame)        
@@ -42,22 +77,9 @@ class PreviewView(QWidget):
         self.looprunning = False
         # self.volumeSlider.valueChanged.connect(self.volumeChange)
 
-        tm = TimelineModel.get_instance()
-        self.timeline = tm.getTimeline()
-        self.player = openshot.QtPlayer()
-
-        self.videoWidget = VideoWidget()
-        self.renderer_address = self.player.GetRendererQObject()
-        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget))
-        self.renderer = sip.wrapinstance(self.renderer_address, QObject)
-        self.player.Reader(self.timeline)
-        self.videoWidget.connectSignals(self.renderer)
-
         self.videoLayout.layout().insertWidget(0, self.videoWidget)
-
-        
+    
     def play_pause(self):
-        from config import Resources
         if self.video_running:
             self.player.Pause()
             self.video_running = False
@@ -76,8 +98,16 @@ class PreviewView(QWidget):
         self.player.Pause()
         self.player.Seek(self.getlastFrame())
 
-    def stopLoop(self):
-        self.looprunning = False
+    def getlastFrame(self):
+        last_frame = 0
+        for c in self.timeline.Clips():
+            clip_last_frame = c.Position() + c.Duration()
+            if clip_last_frame > last_frame:
+                last_frame = clip_last_frame
+
+        last_frame = round(last_frame * self.timeline.info.fps.ToFloat()) + 1
+
+        return last_frame
 
     def prevFrame(self):
         position = self.player.Position()
@@ -89,7 +119,10 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position-5)
+            self.player.Seek(position-10)
+
+    def stopLoop(self):
+        self.looprunning = False
 
     def nextFrame(self):
         position = self.player.Position()
@@ -101,22 +134,7 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position+5)
-            
-
-
-
-    def getlastFrame(self):
-        
-        last_frame = 0
-        for c in self.timeline.Clips():
-            clip_last_frame = c.Position() + c.Duration()
-            if clip_last_frame > last_frame:
-                last_frame = clip_last_frame
-
-        last_frame = round(last_frame * self.timeline.info.fps.ToFloat()) + 1
-
-        return last_frame
+            self.player.Seek(position+10)           
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

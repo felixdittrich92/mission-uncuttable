@@ -54,13 +54,8 @@ class VideoEditorView(QMainWindow):
         splitter.replaceWidget(0,filemanager)
         filemanager.show()
 
-    def load_preview(self):
-        
+    def load_preview(self):    
         previewview = PreviewView()
-        splitter=self.findChild(QSplitter,'verticalSplitter')
-        # topright_frame = self.findChild(QObject, 'toprightFrame')
-        # i = splitter.indexOf(topright_frame)
-        # print(i)
-        
+        splitter=self.findChild(QSplitter,'verticalSplitter')       
         splitter.replaceWidget(1,previewview)
         previewview.show()

@@ -10,8 +10,9 @@ import time
 
 class VideoWidget(QWidget):
     def __init__(self, *args):
-    # Invoke parent init
+        # Invoke parent init
         QWidget.__init__(self, *args)
+            
         self.aspect_ratio = openshot.Fraction()
         self.pixel_ratio = openshot.Fraction()
         self.aspect_ratio.num = 16
@@ -19,10 +20,6 @@ class VideoWidget(QWidget):
         self.pixel_ratio.num = 1
         self.pixel_ratio.den = 1
     
-        # Init Qt style properties (black background, etc...)
-        # p = QPalette()
-        # p.setColor(QPalette.Window, QColor("#ff0000"))
-        # super().setPalette(p)
         super().setAttribute(Qt.WA_OpaquePaintEvent)
         super().setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
@@ -35,8 +32,7 @@ class VideoWidget(QWidget):
         self.current_image = image
 
         # Force repaint on this widget
-        self.repaint()
-        
+        self.repaint()        
 
     def connectSignals(self, renderer):
         """ Connect signals to renderer """
@@ -45,7 +41,6 @@ class VideoWidget(QWidget):
     def paintEvent(self, event, *args):
         
         """ Custom paint event """
-
 
         # Paint custom frame image on QWidget
         painter = QPainter(self)
@@ -67,14 +62,12 @@ class VideoWidget(QWidget):
             center = self.centeredViewport(self.width(), self.height())
             # painter.drawImage(center, scaledPix)
             painter.drawImage(center, self.current_image)
-
-       
+      
         # End painter
         painter.end()
 
         # self.mutex.unlock()
  
-
     def centeredViewport(self, width, height):
         """ Calculate size of viewport to maintain apsect ratio """
 
@@ -86,4 +79,3 @@ class VideoWidget(QWidget):
             return QRect(0, (height - heightFromWidth) / 2, width, heightFromWidth)
         else:
             return QRect((width - widthFromHeight) / 2.0, 0, widthFromHeight, height)
-
