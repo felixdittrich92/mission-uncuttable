@@ -32,6 +32,9 @@ class TimeableView(QGraphicsRectItem):
 
         self.model = model
 
+        self.pixmap = TimelineController.get_pixmap_from_file(self.model.file_name, 1).scaled(
+            QSize(100, height), Qt.IgnoreAspectRatio)
+
         self.name = name
         self.prepareGeometryChange()
         self.width = width
@@ -71,11 +74,7 @@ class TimeableView(QGraphicsRectItem):
         painter.drawRect(self.rect())
 
         if self.width > 101:
-            # frame = self.model.get_first_frame()
-            frame = 1
-            pixmap = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
-            painter.drawPixmap(QPoint(1, 0), pixmap.scaled(QSize(100, self.height),
-                                                           Qt.IgnoreAspectRatio))
+            painter.drawPixmap(QPoint(1, 0), self.pixmap)
 
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
@@ -355,6 +354,11 @@ class TimeableView(QGraphicsRectItem):
     def mouseReleaseEvent(self, event):
         """called when mouse button is released, resets selected handle and mouse press pos"""
         self.setCursor(Qt.OpenHandCursor)
+
+        frame = self.model.get_first_frame()
+        self.pixmap = TimelineController.get_pixmap_from_file(
+            self.model.file_name, frame).scaled(
+                QSize(100, self.height), Qt.IgnoreAspectRatio)
 
         self.handle_selected = None
         self.mouse_press_pos = None

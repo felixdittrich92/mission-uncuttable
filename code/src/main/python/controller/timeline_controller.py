@@ -106,10 +106,13 @@ class TimelineController:
     @staticmethod
     def get_pixmap_from_file(path, frame):
         v = cv2.VideoCapture(path)
-        for i in range(1, frame + 1):
-            success, image = v.read()
-            if not success:
-                return
+        v.set(cv2.CAP_PROP_POS_FRAMES, frame)
+
+        success, image = v.read()
+        if not success:
+            return
+
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         height, width, channel = image.shape
         q_img = QImage(image.data, width, height, 3 * width, QImage.Format_RGB888)
