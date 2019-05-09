@@ -20,8 +20,8 @@ class TimeableModel:
         self.timeline_instance.timeline.AddClip(self.clip)
 
     def get_first_frame(self):
-        f = self.clip.Start() \
-            * (self.clip.Reader().info.fps.num / self.clip.Reader().info.fps.num) + 1
+        f = (self.clip.Start()
+             * (self.clip.Reader().info.fps.num / self.clip.Reader().info.fps.den)) + 1
 
         return int(f)
 
