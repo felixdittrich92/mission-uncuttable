@@ -8,68 +8,6 @@ import sip
 from model.project import TimelineModel
 import time
 
-class PreviewView(QWidget):
-
-    def __init__(self):
-        self.video_running = False
-        super(PreviewView, self).__init__()
-        RESOURCES = Resources.get_instance()
-        uic.loadUi(RESOURCES.files.preview_view, self)
-
-        playButton = self.findChild(QPushButton, "playButton")
-        firstframeButton = self.findChild(QPushButton, "firstframeButton")
-        lastframeButton = self.findChild(QPushButton, "lastframeButton")
-        backButton = self.findChild(QPushButton, "backButton")
-        forwardButton = self.findChild(QPushButton, "forwardButton")
-        maxButton = self.findChild(QPushButton, "fullScreen")
-
-        iconplay = QtGui.QPixmap(RESOURCES.images.play_button)
-        iconpause = QtGui.QPixmap(RESOURCES.images.pause_button)
-        iconfirstframe = QtGui.QPixmap(RESOURCES.images.first_frame_button)
-        iconlastframe = QtGui.QPixmap(RESOURCES.images.last_frame_button)
-        iconback = QtGui.QPixmap(RESOURCES.images.back_button)
-        iconforward = QtGui.QPixmap(RESOURCES.images.forward_button)
-        iconmax = QtGui.QPixmap(RESOURCES.images.max_button)
-    
-        playButton.setIcon(QIcon(iconplay))
-        firstframeButton.setIcon(QIcon(iconfirstframe))
-        lastframeButton.setIcon(QIcon(iconlastframe))
-        backButton.setIcon(QIcon(iconback))
-        forwardButton.setIcon(QIcon(iconforward))
-        maxButton.setIcon(QIcon(iconmax))
-
-        playButton.clicked.connect(self.play_pause)
-        '''
-        firstframeButton.clicked.connect(self.firstFrame)
-        lastframeButton.clicked.connect(self.lastFrame)        
-        backButton.clicked.connect(self.back)
-        forwardButton.clicked.connect(self.forward)
-        '''
-
-        tm = TimelineModel.get_instance()
-        timeline = tm.getTimeline()
-        self.player = openshot.QtPlayer()
-        # test = self.player.GetRendererQObject()
-
-        self.videoWidget = VideoWidget()
-        self.renderer_address = self.player.GetRendererQObject()
-        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget))
-        self.renderer = sip.wrapinstance(self.renderer_address, QObject)
-        self.player.Reader(timeline)
-        self.videoWidget.connectSignals(self.renderer)
-
-        self.videoLayout.layout().insertWidget(0, self.videoWidget)
-
-        
-    def play_pause(self):
-        from config import Resources
-        if self.video_running:
-            self.player.Pause()
-            self.video_running = False
-        else:   
-            self.player.Play()
-            self.video_running = True
-
 class VideoWidget(QWidget):
     def __init__(self, *args):
     # Invoke parent init

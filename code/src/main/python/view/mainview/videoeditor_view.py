@@ -5,7 +5,7 @@ from PyQt5 import uic
 from shortcuts import ShortcutLoader
 from config import Resources
 import os
-from .preview import PreviewView
+from view.preview.preview import PreviewView
 
 from Filemanager.filemanager import Filemanager
 

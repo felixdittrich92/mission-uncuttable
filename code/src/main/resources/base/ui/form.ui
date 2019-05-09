@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="10">
+   <item row="0" column="0" colspan="9">
     <layout class="QVBoxLayout" name="videoLayout"/>
    </item>
    <item row="2" column="2">
@@ -68,8 +68,8 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="9">
-    <widget class="QPushButton" name="fullScreen">
+   <item row="2" column="8">
+    <widget class="QPushButton" name="maxButton">
      <property name="text">
       <string/>
      </property>
@@ -79,13 +79,6 @@
     <widget class="QLabel" name="label">
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="8">
-    <widget class="QSlider" name="horizontalSlider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
