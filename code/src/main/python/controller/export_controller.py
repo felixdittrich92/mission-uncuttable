@@ -25,14 +25,8 @@ class ExportController:
                          options["width"], options["height"], openshot.Fraction(4, 3), False,
                          False, options["video_bitrate"]]
 
-        # get the number of the last frame
-        last_frame = 0
-        for c in t.Clips():
-            clip_last_frame = c.Position() + c.Duration()
-            if clip_last_frame > last_frame:
-                last_frame = clip_last_frame
-
-        last_frame = round(last_frame * t.info.fps.ToFloat()) + 1
+        start_frame = options["start_frame"]
+        end_frame = options["end_frame"]
 
         # set the right file extension
         path = options["path"]
@@ -42,6 +36,6 @@ class ExportController:
 
         # try to start the export, show window with error message if theres an exception
         try:
-            tm.export(path, audio_options, video_options, 1, last_frame)
+            tm.export(path, audio_options, video_options, start_frame, end_frame)
         except Exception as e:
             ExportErrorView(str(e))

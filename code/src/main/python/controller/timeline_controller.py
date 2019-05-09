@@ -2,11 +2,15 @@
 The controller module for communication between timelineview and
 timelinemodel.
 """
-from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
+import cv2
+from PyQt5.QtGui import QImage, QPixmap
+
+# from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
 
 # Todo: Fill the interface methods which translate actions from the
 #       Ubicut frontend (view) to the backend (model) with some
 #       function.
+
 
 class TimelineController:
     """
@@ -98,3 +102,16 @@ class TimelineController:
         @return:         Nothing.
         """
         pass
+
+    @staticmethod
+    def get_pixmap_from_file(path):
+        v = cv2.VideoCapture(path)
+        success, image = v.read()
+        if not success:
+            return
+
+        height, width, channel = image.shape
+        q_img = QImage(image.data, width, height, 3 * width, QImage.Format_RGB888)
+        pixmap = QPixmap.fromImage(q_img)
+
+        return pixmap

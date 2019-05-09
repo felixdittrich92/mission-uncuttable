@@ -1,11 +1,11 @@
 import os
 
-from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QDialogButtonBox, QComboBox
+from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QDialogButtonBox, QComboBox, QSpinBox
 from PyQt5 import uic
 
 from config import Resources
 from controller.export_controller import ExportController
-# from model.project.timeline import TimelineModel
+from model.project.timeline import TimelineModel
 
 FORMAT_OPTIONS = {
     "mp4 (mpeg4)": {
@@ -49,8 +49,8 @@ SIZE_OPTIONS = {
         "width": 1920,
         "height": 1080
     },
-    "1080x720": {
-        "width": 1080,
+    "1280x720": {
+        "width": 1280,
         "height": 720
     }
 }
@@ -61,6 +61,8 @@ class ExportView(QDialog):
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.get_instance().files.export_view, self)
+
+        timeline_instance = TimelineModel.get_instance()
 
         self.filename_edit = self.findChild(QLineEdit, "filename_edit")
 
@@ -88,7 +90,15 @@ class ExportView(QDialog):
         for k in SIZE_OPTIONS.keys():
             self.size_cb.addItem(k)
 
-        # timeline_info = TimelineModel.get_instance().timeline.info
+        last_frame = timeline_instance.get_last_frame()
+
+        self.start_frame_sb = self.findChild(QSpinBox, "start_sb")
+        self.start_frame_sb.setRange(1, last_frame)
+        self.start_frame_sb.setValue(1)
+
+        self.end_frame_sb = self.findChild(QSpinBox, "end_sb")
+        self.end_frame_sb.setRange(1, last_frame)
+        self.end_frame_sb.setValue(last_frame)
 
     def start(self):
         if self.exec_():
@@ -101,7 +111,7 @@ class ExportView(QDialog):
                 has_audio = True
             elif export_type == "Nur Video":
                 has_video = True
-            elif export_type == "Nur Video":
+            elif export_type == "Nur Audio":
                 has_audio = True
 
             format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
@@ -127,7 +137,9 @@ class ExportView(QDialog):
                 "video_codec": video_codec,
                 "video_bitrate": video_bitrate,
                 "width": width,
-                "height": height
+                "height": height,
+                "start_frame": self.start_frame_sb.value(),
+                "end_frame": self.end_frame_sb.value()
             }
 
             ExportController.start_export(data)

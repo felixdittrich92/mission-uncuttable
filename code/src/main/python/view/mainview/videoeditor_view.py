@@ -7,7 +7,7 @@ from config import Resources
 import os
 from view.preview.preview import PreviewView
 
-from Filemanager.filemanager import Filemanager
+from controller.filemanager_controller import Filemanager
 
 from view.timeline.timelineview.timeline_view import TimelineView
 

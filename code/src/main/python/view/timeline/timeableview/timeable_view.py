@@ -1,9 +1,9 @@
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-from PyQt5 import QtWidgets
+from PyQt5.QtCore import QPoint, QRectF, QPointF, QByteArray, QDataStream, QIODevice, QMimeData, Qt, QSize
+from PyQt5.QtGui import QBrush, QColor, QDrag
+from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
 
-# from util.timeline_utils import print_clip_info
+from controller import TimelineController
 
 
 TIMEABLE_MIN_WIDTH = 9
@@ -31,7 +31,6 @@ class TimeableView(QGraphicsRectItem):
         super(TimeableView, self).__init__(parent)
 
         self.model = model
-        # print_clip_info(self.model.clip)
 
         self.name = name
         self.prepareGeometryChange()
@@ -63,18 +62,18 @@ class TimeableView(QGraphicsRectItem):
 
     def boundingRect(self):
         """overwritten Qt Function that defines the outer bounds of the item as a rectangle."""
-        return QtCore.QRectF(QtCore.QRectF(0, 0, self.width, self.height))
+        return QRectF(QRectF(0, 0, self.width, self.height))
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
-        self.brush = QtGui.QBrush(QtGui.QColor(214, 104, 83))
+        self.brush = QBrush(QColor(214, 104, 83))
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
 
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
-            painter.drawText(QtCore.QPointF(1, 15), self.name)
+            painter.drawText(QPointF(1, 15), self.name)
             self.name_visible = True
         else:
             self.name_visible = False
@@ -83,21 +82,22 @@ class TimeableView(QGraphicsRectItem):
         """shows a menu on rightclick"""
         event.accept()
 
-        menu = QtWidgets.QMenu()
+        menu = QMenu()
 
-        delete = QtWidgets.QAction('löschen')
+        delete = QAction('löschen')
         menu.addAction(delete)
         delete.triggered.connect(self.delete)
 
-        cut = QtWidgets.QAction('schneiden')
+        cut = QAction('schneiden')
         menu.addAction(cut)
         cut.triggered.connect(lambda: self.cut(event.pos().x()))
 
-        menu.exec_(event.screenPos() + QtCore.QPoint(0, 5))
+        menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def delete(self):
-        """removes the timeable from the track"""
+        """ removes the timeable from the track and deletes the model from the timeline """
         self.model.delete()
+
         self.scene().removeItem(self)
 
     def cut(self, pos):
@@ -113,7 +113,7 @@ class TimeableView(QGraphicsRectItem):
         new_model.set_layer(self.model.clip.Layer())
 
         # create the second timeable
-        new_timeable = TimeableView(self.name + '(2)', self.width - pos, self.height,
+        new_timeable = TimeableView(self.name, self.width - pos, self.height,
                                     pos + self.x_pos, 0, self.resizable_right, new_model)
         self.resizable_right = 0
 
@@ -139,15 +139,15 @@ class TimeableView(QGraphicsRectItem):
         is changed (when resizing)
         """
         # handle for resizing on the left side
-        self.handles[self.handle_left] = QtCore.QRectF(
+        self.handles[self.handle_left] = QRectF(
             self.rect().left(), 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for resizing on the right side
-        self.handles[self.handle_right] = QtCore.QRectF(
+        self.handles[self.handle_right] = QRectF(
             self.rect().right() - RESIZE_AREA_WIDTH, 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for moving
-        self.handles[self.handle_middle] = QtCore.QRectF(
+        self.handles[self.handle_middle] = QRectF(
             self.rect().left() + RESIZE_AREA_WIDTH, 0, self.width - (2 * RESIZE_AREA_WIDTH),
             self.height)
 
@@ -181,7 +181,7 @@ class TimeableView(QGraphicsRectItem):
                 return
 
             new_x_pos = self.x_pos + diff
-            r = QtCore.QRectF(new_x_pos, 0, w, self.height)
+            r = QRectF(new_x_pos, 0, w, self.height)
             colliding = self.scene().items(r)
             if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
                 return
@@ -206,7 +206,7 @@ class TimeableView(QGraphicsRectItem):
                or diff > self.resizable_right:
                 return
 
-            r = QtCore.QRectF(self.x_pos, 0, w, self.height)
+            r = QRectF(self.x_pos, 0, w, self.height)
             colliding = self.scene().items(r)
             if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
                 return
@@ -220,11 +220,10 @@ class TimeableView(QGraphicsRectItem):
             self.model.trim_end(diff)
 
         self.model.move(self.x_pos)
-        # print_clip_info(self.model.clip)
 
         self.update_handles_pos()
 
-    def move_on_track(self, mouse_event):
+    def move_on_track(self, pos):
         """
         called from mouseMoveEvent() when middle handle is selected
 
@@ -234,23 +233,19 @@ class TimeableView(QGraphicsRectItem):
 
         @param mouse_event: the event parameter from the mouseMoveEvent function
         """
-        new_pos_x = mouse_event.scenePos().x() - self.mouse_press_pos.x()
-
         # check if theres another Timeable at the given position
-        r = QtCore.QRectF(new_pos_x, 0, self.width, self.height)
+        r = QRectF(pos, 0, self.width, self.height)
         colliding = self.scene().items(r)
         if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
             return
 
         # move only if the new position is still inside the track
-        if new_pos_x >= 0 and new_pos_x + self.width <= self.scene().width():
-            self.x_pos = new_pos_x
+        if pos >= 0 and pos + self.width <= self.scene().width():
+            self.x_pos = pos
             self.setPos(self.x_pos, 0)
 
             # set clip position on the timeline in seconds
             self.model.move(self.x_pos)
-
-            # print_clip_info(self.model.clip)
 
     def start_drag(self, mouse_event):
         """
@@ -259,40 +254,34 @@ class TimeableView(QGraphicsRectItem):
         called from mouseMoveEvent() when mouse leaves current track,
         deletes the current timeable if drop was succesfull
         """
-        # get qpixmap from the timeable
-        r = self.boundingRect()
-        pixmap = QtGui.QPixmap(r.width(), r.height())
-        painter = QtGui.QPainter(pixmap)
-        painter.drawRect(r)
-        self.scene().render(painter, QtCore.QRectF(), self.sceneBoundingRect())
-        painter.end()
-
         # hide timeable while dragging
         self.setVisible(False)
 
         # write timeable data
-        item_data = QtCore.QByteArray()
-        data_stream = QtCore.QDataStream(item_data, QtCore.QIODevice.WriteOnly)
-        QtCore.QDataStream.writeString(data_stream, str.encode(self.name))
-        QtCore.QDataStream.writeInt(data_stream, self.width)
-        QtCore.QDataStream.writeInt(data_stream, self.resizable_left)
-        QtCore.QDataStream.writeInt(data_stream, self.resizable_right)
-        QtCore.QDataStream.writeString(data_stream, str.encode(self.model.file_name))
-        QtCore.QDataStream.writeString(data_stream, str.encode(self.model.clip.Id()))
+        item_data = QByteArray()
+        data_stream = QDataStream(item_data, QIODevice.WriteOnly)
+        QDataStream.writeString(data_stream, str.encode(self.name))
+        QDataStream.writeInt(data_stream, self.width)
+        QDataStream.writeInt(data_stream, int(self.mouse_press_pos.x()))
+        QDataStream.writeInt(data_stream, self.resizable_left)
+        QDataStream.writeInt(data_stream, self.resizable_right)
+        QDataStream.writeString(data_stream, str.encode(self.model.file_name))
+        QDataStream.writeString(data_stream, str.encode(self.model.clip.Id()))
 
-        mimeData = QtCore.QMimeData()
+        mimeData = QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
 
-        # start drag
-        drag = QtGui.QDrag(self.scene())
-        drag.setMimeData(mimeData)
-        drag.setHotSpot(QtCore.QPoint(self.width / 2, self.height / 2))
+        # set first frame as pixmap
+        pixmap = TimelineController.get_pixmap_from_file(self.model.file_name)
 
-        drag.setPixmap(pixmap)
+        # start drag
+        drag = QDrag(self.scene())
+        drag.setMimeData(mimeData)
+        drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
 
         # delete the timeable if the the item was succesfully dropped
-        if (drag.exec_(QtCore.Qt.MoveAction) == QtCore.Qt.MoveAction):
-            self.scene().removeItem(self)
+        if (drag.exec_(Qt.MoveAction) == Qt.MoveAction):
+            self.delete()
         else:
             self.setVisible(True)
 
@@ -309,9 +298,9 @@ class TimeableView(QGraphicsRectItem):
 
         # set the cursor according to the handle
         if handle == self.handle_middle:
-            cursor = QtCore.Qt.OpenHandCursor
+            cursor = Qt.OpenHandCursor
         else:
-            cursor = QtCore.Qt.SizeHorCursor
+            cursor = Qt.SizeHorCursor
 
         self.setCursor(cursor)
 
@@ -319,7 +308,7 @@ class TimeableView(QGraphicsRectItem):
 
     def hoverLeaveEvent(self, event):
         """called when mouse leaves the timeable, sets cursor back to normal arrow cursor"""
-        self.setCursor(QtCore.Qt.ArrowCursor)
+        self.setCursor(Qt.ArrowCursor)
 
         QGraphicsItem.hoverLeaveEvent(self, event)
 
@@ -340,13 +329,14 @@ class TimeableView(QGraphicsRectItem):
         according to selected handle
         """
         if self.handle_selected == self.handle_middle:
-            self.setCursor(QtCore.Qt.ClosedHandCursor)
+            self.setCursor(Qt.ClosedHandCursor)
 
             # start drag event only when cursor leaves current track
             if event.pos().y() < 0 or event.pos().y() > self.height:
                 self.start_drag(event)
             else:
-                self.move_on_track(event)
+                pos = event.scenePos().x() - self.mouse_press_pos.x()
+                self.move_on_track(pos)
 
         else:
             self.resize(event)
@@ -355,7 +345,7 @@ class TimeableView(QGraphicsRectItem):
 
     def mouseReleaseEvent(self, event):
         """called when mouse button is released, resets selected handle and mouse press pos"""
-        self.setCursor(QtCore.Qt.OpenHandCursor)
+        self.setCursor(Qt.OpenHandCursor)
 
         self.handle_selected = None
         self.mouse_press_pos = None
