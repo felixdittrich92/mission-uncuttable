@@ -9,10 +9,10 @@ from collections import namedtuple
 
 class Projectsettings:
     """
-    A Class, using the singleton pattern, that loads the settings file
+    A Class, using the singleton pattern, that loads the projectsettings file
 
-    By default the config.py is loaded. When a 'userconfig.json' exists, the
-    settings saved in 'userconfig.json' override those, the 'config.py'
+    By default the projectconfig.py is loaded. When a 'projectconfig.uc' exists, the
+    settings saved in 'projectconfig.uc' override those, the 'projectconfig.py'
     contains.
     """
     __instance = None
@@ -34,8 +34,8 @@ class Projectsettings:
         """
         Virtually private constructor.
 
-        Loads the settings file (projectconfig.py) for default settings and the users
-        custom settings. If 'projectconfig.uc" contains values that are
+        Loads the settings file (projectconfig.py) for default settings and saved projectsettings.
+        If 'projectconfig.uc" contains values that are
         different from the values in 'projectconfig.py', this values will be
         overwritten.
         Then the JSON gets converted into an object, where the settings can
@@ -74,7 +74,7 @@ class Projectsettings:
         """
         return self.projectsettings
 
-    def get_dict_settings(self):
+    def get_dict_projectsettings(self):
         """
         Getter that returns all settings as a dictionary.
 
@@ -83,7 +83,7 @@ class Projectsettings:
         return self.dict
 
     @staticmethod
-    def save_settings(new_projectsettings):
+    def save_projectsettings(new_projectsettings):
         """
         Method that saves the custom user settings to a file.
 

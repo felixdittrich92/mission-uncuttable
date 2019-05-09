@@ -1,6 +1,6 @@
 """
 In this file you can add settings by adding entrys to the dictionary.
-If you add Setting here, it's going to show up in the settings window
+If you add Settings here, it's going to show up in the PROJECTsettings window
 automatically!
 So if you do, be careful to specify all details about your setting.
 "Values" contains a list with all possible values for the setting. Depending on
@@ -9,7 +9,7 @@ the type it's just an empty string.
 """
 
 default_settings = {
-  "general":{
+  "Allgemein":{
     "framerate":{
       "name":"Framerate",
       "type":"dropdown",
@@ -35,23 +35,23 @@ default_settings = {
       "current":"Hier Projektpfad eingeben",
     }
   },
-  "dummy1":{
-    "color_theme":{
-      "name":"Color Theme",
+  "ToBeAdded":{
+    "random_setting":{
+      "name":"Aha",
       "type":"dropdown",
-      "values":["dark", "light"],
+      "values":["option1", "option2", "option3"],
       "current":0
     },
-    "option2":{
-      "name":"Option 2",
+    "random_setting2":{
+      "name":"Interessant",
       "type":"checkbox",
       "values":"",
       "current":False
     },
   },
-  "dummy2":{
-    "option1":{
-      "name":"Option 1",
+  "ToBeAdded2":{
+    "random_setting":{
+      "name":"Hallo",
       "type":"checkbox",
       "values":"",
       "current":True
