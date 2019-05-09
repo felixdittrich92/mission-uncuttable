@@ -22,3 +22,4 @@ sip==4.19.8
 six==1.11.0
 pdf2image==1.4.2
 pillow==5.4.1
+moviepy==1.0.0
