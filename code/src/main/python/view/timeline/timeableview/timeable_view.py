@@ -70,6 +70,13 @@ class TimeableView(QGraphicsRectItem):
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
 
+        if self.width > 101:
+            # frame = self.model.get_first_frame()
+            frame = 1
+            pixmap = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
+            painter.drawPixmap(QPoint(1, 0), pixmap.scaled(QSize(100, self.height),
+                                                           Qt.IgnoreAspectRatio))
+
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
@@ -272,7 +279,9 @@ class TimeableView(QGraphicsRectItem):
         mimeData.setData('ubicut/timeable', item_data)
 
         # set first frame as pixmap
-        pixmap = TimelineController.get_pixmap_from_file(self.model.file_name)
+        # frame = self.model.get_first_frame()
+        frame = 1
+        pixmap = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
 
         # start drag
         drag = QDrag(self.scene())
