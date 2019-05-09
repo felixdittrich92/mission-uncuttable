@@ -3,7 +3,7 @@ import os
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
-from .slide import Slide
+#from .slide import Slide
 
 class Presentation:
 
