@@ -90,13 +90,12 @@ class TimelineView(QFrame):
 
 
         # testing data
-        f = "video.mp4"
-        model = TimeableModel(f)
-        w = seconds_to_pos(model.clip.Duration())
+        # f = "video.mp4"
+        # model = TimeableModel(f)
+        # w = seconds_to_pos(model.clip.Duration())
 
         tr1 = TrackView(5000, 50, 3)
-
-        tr1.add_timeable(f, w, 0, model)
+        # tr1.add_timeable(f, w, 0, model)
         self.add_track(tr1)
         btn1 = QPushButton("Track 1")
         btn1.setFixedSize(80, 50)
