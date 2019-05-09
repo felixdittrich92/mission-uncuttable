@@ -17,13 +17,6 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <item row="2" column="0" colspan="2">
-    <widget class="QScrollBar" name="horizontal_scroll_bar">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1">
     <widget class="QWidget" name="time_bar_scroll_area_placeholder" native="true">
      <property name="sizePolicy">
@@ -113,6 +106,13 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QScrollBar" name="horizontal_scroll_bar">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>

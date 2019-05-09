@@ -44,25 +44,34 @@ QMenu::item::selected {
 QScrollBar:horizontal, QScrollBar:vertical {
     border: 2px solid #364156;
     background: #364156;
+
 }
 QScrollBar:horizontal {
     height: 20px;
     margin: 0 20px 0 20px;
+    border-top: 1px solid #212D40;
+    border-bottom: 1px solid #212D40;
+
 }
 
 QScrollBar:vertical {
     width: 20px;
     margin: 20px 0 20px 0;
+    border-left: 1px solid #212D40;
+    border-right: 1px solid #212D40;
 }
 
 QScrollBar::handle:horizontal, QScrollBar::handle:vertical {
+    border: 1px solid #364156;
     background: #212D40;
 }
 QScrollBar::handle:horizontal {
     min-width: 20px;
+    margin-right: 10px;
 }
 QScrollBar::handle:vertical {
     min-height: 20px;
+    margin-bottom: 10px;
 }
 
 QScrollBar::add-line:horizontal,
@@ -75,18 +84,34 @@ QScrollBar::sub-line:vertical {
 QScrollBar::add-line:horizontal {
     width: 20px;
     subcontrol-position: right;
+    border-top: 1px solid #212D40;
+    border-right: 1px solid #212D40;
+    border-bottom: 1px solid #212D40;
+    margin-right: 10px;
 }
 QScrollBar::add-line:vertical {
     height: 20px;
     subcontrol-position: bottom;
+
+    border-right: 1px solid #212D40;
+    border-left: 1px solid #212D40;
+    border-bottom: 1px solid #212D40;
+    margin-bottom: 10px;
 }
 QScrollBar::sub-line:horizontal {
     width: 20px;
     subcontrol-position: left;
+    border-top: 1px solid #212D40;
+    border-left: 1px solid #212D40;
+    border-bottom: 1px solid #212D40;
 }
+
 QScrollBar::sub-line:vertical {
     height: 20px;
     subcontrol-position: top;
+    border-top: 1px solid #212D40;
+    border-left: 1px solid #212D40;
+    border-right: 1px solid #212D40;
 }
 
 QScrollBar:left-arrow:horizontal,
@@ -112,10 +137,19 @@ QScrollArea, #timeline_toolbar {
     border: 1px solid #364156;
 }
 
-
-#scroll_area {
-    margin: 0;
+#track_scroll_area {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-left: none;
+    border-top: none;
 }
+
+#track_button_scroll_area {
+    margin-bottom: 10px;
+    margin-right: -1px;
+    margin-top: -1px;
+}
+
 
 QScrollArea #track_frame QFrame{
     background: #212D40;
@@ -136,10 +170,31 @@ QScrollArea #track_frame QFrame{
     background: #955F69;
 }
 
+#time_bar_scroll_area {
+    margin-right: 10px;
+    border-left: none;
+    margin-left: -1px;
+}
+
+#time_bar {
+    background: #212D40;
+    border: 1px solid #364156;
+    border-bottom: none;
+}
+
+#time_bar QPushButton {
+    background: #212D40;
+    border: none;
+    color: #F5F5F5;
+
+}
+
 #time_label {
     color: #F5F5F5;
     background: #212D40;
-    border: 1px solid #364156;
+    border: 2px solid #364156;
+    border-bottom: none;
+    border-right: none;
 }
 
 /* FILEMANAGER */
