@@ -5,7 +5,7 @@ from PyQt5 import uic
 from shortcuts import ShortcutLoader
 from config import Resources
 import os
-from .preview import PreviewView
+from view.preview.preview import PreviewView
 
 from controller.filemanager_controller import Filemanager
 
@@ -18,17 +18,18 @@ class VideoEditorView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
         uic.loadUi(Resources.get_instance().files.mainview, self)
-        self.previewlayout = self.findChild(QVBoxLayout, "preview")
+        # self.previewlayout = self.findChild(QVBoxLayout, "preview")
 
         self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())
     
-        previewview = PreviewView()
-        self.previewlayout.addWidget(previewview)
+        # previewview = PreviewView()
+        # self.previewlayout.addWidget(previewview)
 
         self.shortcuts = ShortcutLoader(self)
+        
         self.load_filemanager()
-
         self.load_timeline_widget()
+        self.load_preview()
 
     def load_timeline_widget(self):
         """
@@ -49,6 +50,12 @@ class VideoEditorView(QMainWindow):
 
     def load_filemanager(self):
         filemanager=Filemanager()
-        splitter=self.findChild(QSplitter,"verticalSplitter")
+        splitter=self.findChild(QSplitter,'verticalSplitter')
         splitter.replaceWidget(0,filemanager)
         filemanager.show()
+
+    def load_preview(self):    
+        previewview = PreviewView()
+        splitter=self.findChild(QSplitter,'verticalSplitter')       
+        splitter.replaceWidget(1,previewview)
+        previewview.show()
