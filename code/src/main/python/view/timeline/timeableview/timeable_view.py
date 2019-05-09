@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QPoint, QRectF, QPointF, QByteArray, QDataStream, QIODevice, QMimeData, Qt, QSize
+from PyQt5.QtCore import QPoint, QRectF, QByteArray, QDataStream, QIODevice, QMimeData, Qt, QSize
 from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
@@ -73,7 +73,7 @@ class TimeableView(QGraphicsRectItem):
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
-            painter.drawText(QPointF(1, 15), self.name)
+            painter.drawText(QPoint(1, 15), self.name)
             self.name_visible = True
         else:
             self.name_visible = False
