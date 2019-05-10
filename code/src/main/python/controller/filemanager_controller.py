@@ -7,7 +7,7 @@ import time
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QLabel, QPushButton, QListWidgetItem
+from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QLabel, QPushButton, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
 from PIL import Image, ImageQt
 from pathlib import Path
@@ -42,6 +42,7 @@ class Filemanager(QWidget):
         # self.listWidget.setDragEnabled(True)
         # self.listWidget.setAcceptDrops(False)
         # self.listWidget.setMouseTracking(True)
+        self.listWidget.setViewMode(QListView.IconMode)
         self.listWidget.setIconSize(QSize(100, 100))
 
         """Set the functionality to the Widgets"""
