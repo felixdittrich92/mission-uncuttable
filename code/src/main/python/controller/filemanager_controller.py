@@ -31,8 +31,8 @@ class Filemanager(QWidget):
         uic.loadUi(Resources.get_instance().files.filemanager, self)
         self.deleteButton = self.findChild(QObject, 'pushButton_1')
         self.pickButton = self.findChild(QObject, 'pushButton_2')
-        self.clearButton = self.findChild(QObject, 'pushButton_3')
         self.listWidget = FileListView()
+        self.listWidget.setObjectName("list_widget")
         old_list_widget = self.findChild(QObject, 'listWidget')
         self.layout().replaceWidget(old_list_widget, self.listWidget)
         old_list_widget.deleteLater()
@@ -46,7 +46,7 @@ class Filemanager(QWidget):
 
         """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
-        self.clearButton.clicked.connect(self.clearFileNames)
+        #self.clearButton.clicked.connect(self.clearFileNames)
         self.deleteButton.clicked.connect(self.remove)
         self.listWidget.itemSelectionChanged.connect(self.selected)
 
@@ -126,11 +126,6 @@ class Filemanager(QWidget):
         item.setToolTip(file)
         item.setStatusTip(file)
         self.file_list.append(file)
-
-    def clearFileNames(self, fileNames):
-        """This method clear all files in the filemanager window and in the list"""
-        self.listWidget.clear()
-        self.file_list.clear()
 
     def remove(self):
         """This method removes a single file in the filemanager window and in the list"""

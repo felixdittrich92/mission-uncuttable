@@ -1,7 +1,7 @@
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QMainWindow, QPushButton
 from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtCore import Qt
 from config import Resources
 import sys
@@ -18,32 +18,45 @@ class PreviewView(QWidget):
         RESOURCES = Resources.get_instance()
         uic.loadUi(RESOURCES.files.preview_view, self)
 
-        playButton = self.findChild(QPushButton, "playButton")
-        firstframeButton = self.findChild(QPushButton, "firstframeButton")
-        lastframeButton = self.findChild(QPushButton, "lastframeButton")
-        backButton = self.findChild(QPushButton, "backButton")
-        forwardButton = self.findChild(QPushButton, "forwardButton")
+        play_button = self.findChild(QPushButton, "play_button")
+        first_frame_button = self.findChild(QPushButton, "first_frame_button")
+        last_frame_button = self.findChild(QPushButton, "last_frame_button")
+        back_button = self.findChild(QPushButton, "back_button")
+        forward_button = self.findChild(QPushButton, "forward_button")
+        maximize_button = self.findChild(QPushButton, "maximize_button")
 
-        iconplay = QtGui.QPixmap(RESOURCES.images.play_button)
-        iconpause = QtGui.QPixmap(RESOURCES.images.pause_button)
-        iconfirstframe = QtGui.QPixmap(RESOURCES.images.first_frame_button)
-        iconlastframe = QtGui.QPixmap(RESOURCES.images.last_frame_button)
-        iconback = QtGui.QPixmap(RESOURCES.images.back_button)
-        iconforward = QtGui.QPixmap(RESOURCES.images.forward_button)
+        icon_play = QPixmap(RESOURCES.images.play_button)
+        icon_pause = QPixmap(RESOURCES.images.pause_button)
+        icon_firstframe = QPixmap(RESOURCES.images.first_frame_button)
+        icon_lastframe = QPixmap(RESOURCES.images.last_frame_button)
+        icon_back = QPixmap(RESOURCES.images.back_button)
+        icon_forward = QPixmap(RESOURCES.images.forward_button)
+        icon_max = QPixmap(RESOURCES.images.maximize_button)
     
-        playButton.setIcon(QIcon(iconplay))
-        firstframeButton.setIcon(QIcon(iconfirstframe))
-        lastframeButton.setIcon(QIcon(iconlastframe))
-        backButton.setIcon(QIcon(iconback))
-        forwardButton.setIcon(QIcon(iconforward))
+        play_button.setIcon(QIcon(icon_play))
+        play_button.setIconSize(QSize(32, 32))
+        first_frame_button.setIcon(QIcon(icon_firstframe))
+        first_frame_button.setIconSize(QSize(24, 24))
+        last_frame_button.setIcon(QIcon(icon_lastframe))
+        last_frame_button.setIconSize(QSize(24, 24))
+        back_button.setIcon(QIcon(icon_back))
+        back_button.setIconSize(QSize(20, 20))
+        forward_button.setIcon(QIcon(icon_forward))
+        forward_button.setIconSize(QSize(20, 20))
+        maximize_button.setIcon(QIcon(icon_max))
+        maximize_button.setIconSize(QSize(32, 32))
 
-        self.videoLabel = self.findChild(QLabel, "videoLabel")
+        self.videoLabel = self.findChild(QLabel, "video_label")
+
+        # FÜR DEVELOPMENT
+        img = QPixmap(RESOURCES.images.bunny)
+        self.videoLabel.setPixmap(img)
 
         self.videoLabel.move(280, 120)
         self.videoLabel.resize(960, 720)
-        th = Thread(self)
-        th.changePixmap.connect(self.setImage)
-        th.start()
+        # th = Thread(self)
+        # th.changePixmap.connect(self.setImage)
+        # th.start()
 
     @pyqtSlot(QImage)
     def setImage(self, image):

@@ -3,6 +3,7 @@ from controller import MainController
 from view import StartView
 
 from config import Resources
+from PyQt5 import QtCore
 import os
 
 import sys

@@ -61,6 +61,10 @@ class TimelineModel:
 
         return None
 
+    def getTimeline(self):
+        return self.timeline
+
+
     def change(self, change_type, key, data):
         """
         @param change_type: insert, delete or update
@@ -75,6 +79,18 @@ class TimelineModel:
 
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
+
+    def get_last_frame(self):
+        """ returns the number of the last frame in the timeline """
+        last_frame = 0
+        for c in self.timeline.Clips():
+            clip_last_frame = c.Position() + c.Duration()
+            if clip_last_frame > last_frame:
+                last_frame = clip_last_frame
+
+        last_frame = round(last_frame * self.timeline.info.fps.ToFloat()) + 1
+
+        return last_frame
 
     def export(self, filename, audio_options, video_options, start_frame, last_frame):
         """

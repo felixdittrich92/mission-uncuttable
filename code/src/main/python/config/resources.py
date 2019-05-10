@@ -7,16 +7,19 @@ files = {
     "projectsettings_view": "ui/projectsettings_window.ui",
     "export_view": "ui/export.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
-    "timeline_view": "ui/timeline_view.ui"
+    "timeline_view": "ui/timeline_view.ui",
+    "qss_dark": "stylesheets/dark.qss",
+    "qss_light": "stylesheets/light.qss"
 }
 images = {
-    "play_button": "images/buttons/002-play-button.svg",
-    "pause_button": "images/buttons/001-pause.svg",
-    "first_frame_button": "images/buttons/006-back.svg",
-    "last_frame_button": "images/buttons/007-next-1.svg",
-    "back_button": "images/buttons/013-previous.svg",
-    "forward_button": "images/buttons/004-next.svg",
-    "media_symbols": "images/filemanagerIcons"
+    "play_button": "images/buttons/play.png",
+    "pause_button": "images/buttons/pause.png",
+    "first_frame_button": "images/buttons/fast_backwards.png",
+    "last_frame_button": "images/buttons/fast_forward.png",
+    "back_button": "images/buttons/step_back.png",
+    "forward_button": "images/buttons/step_forward.png",
+    "maximize_button": "images/buttons/maximize.png",
+    "media_symbols": "images/filemanagerIcons",
 }
 strings = {
     "de": "strings/de/strings.xml",
@@ -53,7 +56,6 @@ class Resources:
         self.images = Category()
         for attribute, value in images.items():
             setattr(self.images, attribute, self.app.get_resource(value))
-
 class Category:
     pass
 

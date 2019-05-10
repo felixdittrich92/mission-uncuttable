@@ -17,8 +17,11 @@
    <number>-1</number>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="filemanager_frame">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -37,13 +40,6 @@
        <widget class="QPushButton" name="pushButton_1">
         <property name="text">
          <string>Delete</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="text">
-         <string>Clear</string>
         </property>
        </widget>
       </item>

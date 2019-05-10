@@ -19,13 +19,14 @@ class TimeBar(SizeLinkableFrame):
         super(TimeBar, self).__init__(parent)
 
         # setting the size
-        self.setFixedHeight(40)
+        self.setFixedHeight(25)
         self.setFixedWidth(2000)
 
         # debug look (everything works just as good ad before if you
         # remove this code):
         from PyQt5.QtWidgets import QHBoxLayout, QPushButton
         self.setLayout(QHBoxLayout())
+        self.layout().setContentsMargins(0, 0, 0, 0)
         for i in range(30):
             self.layout().addWidget(QPushButton(str(i)))
-        self.setStyleSheet("background-color: orange")
+        # self.setStyleSheet("background-color: orange")
