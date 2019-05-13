@@ -1,5 +1,5 @@
 import cv2
-from PyQt5.QtWidgets import QListWidget
+from PyQt5.QtWidgets import QListWidget, QListView
 from PyQt5.QtCore import QByteArray, QDataStream, QMimeData, QIODevice, Qt, QSize
 from PyQt5.QtGui import QDrag
 
@@ -11,6 +11,8 @@ class FileListView(QListWidget):
     def __init__(self, parent=None):
         super(FileListView, self).__init__(parent)
         self.setDragEnabled(True)
+        self.setWordWrap(True)
+        self.setResizeMode(QListView.Adjust)
 
     def mouseMoveEvent(self, event):
         """ Starts the drag to the timeline """
