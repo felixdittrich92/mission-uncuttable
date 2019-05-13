@@ -4,6 +4,7 @@ from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
+from model.data import FileType
 
 
 TIMEABLE_MIN_WIDTH = 8
@@ -192,12 +193,13 @@ class TimeableView(QGraphicsRectItem):
 
         @param mouse_event: the event parameter from the mouseMoveEvent function
         """
+        is_image = self.model.file_type == FileType.IMAGE_FILE
         if self.handle_selected == self.handle_left:
-            diff = mouse_event.pos().x() - self.mouse_press_pos.x()
+            diff = mouse_event.pos().x() - self.mouse_press_pos
 
             w = self.width - diff
-            if w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0 \
-               or diff < self.resizable_left:
+            if (w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0
+                    or diff < self.resizable_left) and not is_image:
                 return
 
             new_x_pos = self.x_pos + diff
@@ -222,8 +224,8 @@ class TimeableView(QGraphicsRectItem):
 
             w = self.width + diff
 
-            if w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH \
-               or diff > self.resizable_right:
+            if (w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH
+                    or diff > self.resizable_right) and not is_image:
                 return
 
             r = QRectF(self.x_pos, 0, w, self.height)
