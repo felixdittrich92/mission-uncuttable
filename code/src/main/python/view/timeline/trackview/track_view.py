@@ -35,7 +35,6 @@ class TrackView(QGraphicsView):
         # for drag and drop handling
         self.item_dropped = False
         self.current_timeable = None
-        self.mouse_pos = 0
 
         self.setAcceptDrops(True)
 
@@ -74,12 +73,14 @@ class TrackView(QGraphicsView):
         self.width = new_width
         self.resize()
 
-    def add_timeable(self, name, width, x_pos, model, res_left=0, res_right=0):
+    def add_timeable(self, name, width, drag_pos, mouse_pos, model, res_left=0, res_right=0):
         """ Adds a TimeableView to the Track. """
+        x_pos = drag_pos - mouse_pos
         if width + x_pos > self.width:
             self.set_width(width + x_pos)
 
         timeable = TimeableView(name, width, self.height, x_pos, res_left, res_right, model)
+        timeable.mouse_press_pos = mouse_pos
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
         self.current_timeable = timeable
@@ -104,7 +105,7 @@ class TrackView(QGraphicsView):
             model.set_end(width)
 
             name = os.path.basename(path)
-            self.add_timeable(name, width, x_pos, model)
+            self.add_timeable(name, width, x_pos, 0, model)
             self.item_dropped = True
 
             return True
@@ -149,7 +150,7 @@ class TrackView(QGraphicsView):
             model.move(start_pos)
 
             # add the timeable to the track
-            self.add_timeable(name, width, start_pos - pos, model,
+            self.add_timeable(name, width, start_pos, pos, model,
                               res_left=res_left, res_right=res_right)
 
             # set item_dropped to True because the timeable was succesfully created
@@ -160,22 +161,20 @@ class TrackView(QGraphicsView):
         return False
 
     def move_dropped_timeable(self, event):
-        pos = event.pos().x() - self.mouse_pos
+        pos = event.pos().x() - self.current_timeable.mouse_press_pos
         self.current_timeable.move_on_track(pos)
 
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
             # try to add a timeable
-            if self.add_from_track(event):
-                self.mouse_pos = event.pos().x() - self.current_timeable.x_pos
+            self.add_from_track(event)
 
             event.accept()
 
         elif event.mimeData().hasFormat('ubicut/file'):
             # try to add a timeable
-            if self.add_from_filemanager(event):
-                self.mouse_pos = event.pos().x() - self.current_timeable.x_pos
+            self.add_from_filemanager(event)
 
             event.accept()
 

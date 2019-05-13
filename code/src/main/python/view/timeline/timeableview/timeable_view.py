@@ -52,15 +52,15 @@ class TimeableView(QGraphicsRectItem):
         self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
 
+        self.mouse_press_pos = 0
         self.handle_selected = None
-        self.mouse_press_pos = None
         self.mouse_press_rect = None
 
         self.handle_left = 1
         self.handle_right = 2
         self.handle_middle = 3
 
-        self.handles = {}
+        self.handles = dict()
         self.update_handles_pos()
 
     def boundingRect(self):
@@ -216,7 +216,7 @@ class TimeableView(QGraphicsRectItem):
 
         elif self.handle_selected == self.handle_right:
             diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
-                    - self.mouse_press_pos.x() - self.width)
+                    - self.mouse_press_pos - self.width)
 
             w = self.width + diff
 
@@ -280,7 +280,7 @@ class TimeableView(QGraphicsRectItem):
         data_stream = QDataStream(item_data, QIODevice.WriteOnly)
         QDataStream.writeString(data_stream, str.encode(self.name))
         QDataStream.writeInt(data_stream, self.width)
-        QDataStream.writeInt(data_stream, int(self.mouse_press_pos.x()))
+        QDataStream.writeInt(data_stream, self.mouse_press_pos)
         QDataStream.writeInt(data_stream, self.resizable_left)
         QDataStream.writeInt(data_stream, self.resizable_right)
         QDataStream.writeString(data_stream, str.encode(self.model.file_name))
@@ -338,7 +338,7 @@ class TimeableView(QGraphicsRectItem):
         sets the position where the mouse was pressed (important for moving and resizing)
         """
         self.handle_selected = self.handle_at(event.pos())
-        self.mouse_press_pos = event.pos()
+        self.mouse_press_pos = int(event.pos().x())
         self.mouse_press_rect = self.rect()
 
         QGraphicsItem.mousePressEvent(self, event)
@@ -355,7 +355,7 @@ class TimeableView(QGraphicsRectItem):
             if event.pos().y() < 0 or event.pos().y() > self.height:
                 self.start_drag(event)
             else:
-                pos = event.scenePos().x() - self.mouse_press_pos.x()
+                pos = event.scenePos().x() - self.mouse_press_pos
                 self.move_on_track(pos)
 
         else:
@@ -370,8 +370,8 @@ class TimeableView(QGraphicsRectItem):
         QApplication.processEvents()
         self.set_pixmap()
 
+        self.mouse_press_pos = 0
         self.handle_selected = None
-        self.mouse_press_pos = None
         self.mouse_press_rect = None
 
         QGraphicsItem.mouseReleaseEvent(self, event)
