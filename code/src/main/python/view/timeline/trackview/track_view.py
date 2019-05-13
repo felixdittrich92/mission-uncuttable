@@ -54,6 +54,10 @@ class TrackView(QGraphicsView):
 
         self.resize()
 
+    def wheelEvent(self, event):
+        """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
+        pass
+
     def resize(self):
         """ sets the size of the trackview to self.width and self.height """
         self.setMinimumSize(self.width, self.height)
@@ -90,7 +94,9 @@ class TrackView(QGraphicsView):
 
         x_pos = drag_event.pos().x()
 
-        # TODO make it larger for images (dont forget to change it in the clip)
+        # for images
+        if width < 10:
+            width = 10
 
         # check if theres already another timeable at the drop position
         rect = QRectF(x_pos, 0, width, self.height)
@@ -99,6 +105,8 @@ class TrackView(QGraphicsView):
         if not colliding:
             model = TimeableModel(path)
             model.move(x_pos)
+            model.set_end(width)
+
             name = os.path.basename(path)
             self.add_timeable(name, width, x_pos, model)
             self.item_dropped = True
