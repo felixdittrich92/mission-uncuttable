@@ -94,10 +94,6 @@ class TrackView(QGraphicsView):
 
         x_pos = drag_event.pos().x()
 
-        # for images
-        if width < 10:
-            width = 10
-
         # check if theres already another timeable at the drop position
         rect = QRectF(x_pos, 0, width, self.height)
         colliding = self.scene().items(rect)

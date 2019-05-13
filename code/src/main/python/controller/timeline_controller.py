@@ -9,7 +9,7 @@ import cv2
 import openshot
 from PyQt5.QtGui import QImage, QPixmap
 
-from util.timeline_utils import seconds_to_pos
+from util.timeline_utils import seconds_to_pos, get_px_per_second
 from config import Resources
 
 # from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
@@ -128,8 +128,7 @@ class TimelineController:
             width = seconds_to_pos(d)
 
         elif t == "image":
-            # TODO set standard width for images
-            pass
+            width = get_px_per_second()
 
         return width
 
