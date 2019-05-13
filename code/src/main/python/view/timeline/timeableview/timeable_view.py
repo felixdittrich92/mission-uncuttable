@@ -34,9 +34,12 @@ class TimeableView(QGraphicsRectItem):
         self.model = model
 
         frame = self.model.get_first_frame()
-        self.pixmap = TimelineController.get_pixmap_from_file(
-            self.model.file_name, frame).scaled(
-                QSize(100, height), Qt.IgnoreAspectRatio)
+        try:
+            self.pixmap = TimelineController.get_pixmap_from_file(
+                self.model.file_name, frame).scaled(
+                    QSize(100, height), Qt.IgnoreAspectRatio)
+        except:
+            self.pixmap = None
 
         self.name = name
         self.prepareGeometryChange()
@@ -361,9 +364,12 @@ class TimeableView(QGraphicsRectItem):
         self.setCursor(Qt.OpenHandCursor)
 
         frame = self.model.get_first_frame()
-        self.pixmap = TimelineController.get_pixmap_from_file(
-            self.model.file_name, frame).scaled(
-                QSize(100, self.height), Qt.IgnoreAspectRatio)
+        try:
+            self.pixmap = TimelineController.get_pixmap_from_file(
+                self.model.file_name, frame).scaled(
+                    QSize(100, self.height), Qt.IgnoreAspectRatio)
+        except:
+            pass
 
         self.handle_selected = None
         self.mouse_press_pos = None

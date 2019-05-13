@@ -110,7 +110,7 @@ class TimelineController:
 
         success, image = v.read()
         if not success:
-            return
+            return None
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 

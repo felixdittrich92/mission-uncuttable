@@ -13,6 +13,7 @@ from PIL import Image, ImageQt
 from pathlib import Path
 from config import Resources
 from view.mainview import FileListView
+from config import Settings
 
 
 class Filemanager(QWidget):
@@ -59,12 +60,13 @@ class Filemanager(QWidget):
         This method ensures that only supported files are displayed and can be used.
         """
 
+        supported_filetypes = Settings.get_instance().get_dict_settings()["Filemanager"]["import_formats"]
         fileNames, _ = QFileDialog.getOpenFileNames(
             self,
             'QFileDialog.getOpenFileNames()',
             '',
             (
-                'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
+                supported_filetypes
             )
         )
 
@@ -108,7 +110,7 @@ class Filemanager(QWidget):
         elif file.upper().endswith(('.MP3', '*.WAV')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp3logo.jpg"
-            path_to_file = Path(path, filename)
+            path_to_file = os.path.join(path, filename)
             pixmap = QPixmap(path_to_file)
             QApplication.processEvents()
                 
