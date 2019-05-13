@@ -1,6 +1,5 @@
 import uuid
 import locale
-# import json
 
 import openshot
 
@@ -14,26 +13,48 @@ class TimeableModel:
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
+        self.clip.Id(str(uuid.uuid4()))  # generate random id for this clip
 
-        self.clip.Id(str(uuid.uuid4()))
         self.file_name = file_name
+        self.file_type = TimelineController.get_file_type(self.file_name)
 
         self.timeline_instance = TimelineModel.get_instance()
 
-        # if the timeline has no clips, set the fps to the fps of this clips
-        if not list(self.timeline_instance.timeline.Clips()):
-            data = {
-                "num": self.clip.Reader().info.fps.num,
-                "den": self.clip.Reader().info.fps.den
-            }
-            self.timeline_instance.change("update", ["fps", ""], data)
+        # if the timeline has no clips, set some timeline data to the data of this clip
+        if self.is_first_vid():
+            self.set_timeline_data()
 
+        # add the clip to the timeline
         self.timeline_instance.timeline.AddClip(self.clip)
 
+    def is_first_vid(self):
+        """ Returns True if this is the first video in the timeline, False otherwhise """
+        if not self.clip.Reader().info.has_video:
+            return False
+
+        for c in list(self.timeline_instance.timeline.Clips()):
+            if c.Reader().info.has_video:
+                return False
+
+        return True
+
+    def set_timeline_data(self):
+        """ Sets the data of the timeline to data of this clip """
+        fps_data = {
+            "num": self.clip.Reader().info.fps.num,
+            "den": self.clip.Reader().info.fps.den
+        }
+        self.timeline_instance.change("update", ["fps", ""], fps_data)
+
+        self.timeline_instance.change("update", ["width"], self.clip.Reader().info.width)
+        self.timeline_instance.change("update", ["height"], self.clip.Reader().info.height)
+
     def get_first_frame(self):
+        """ Returns the frame that would be seen first """
         return int((self.clip.Start() * self.clip.Reader().info.fps.ToFloat()) + 1)
 
     def set_layer(self, layer):
+        """ Sets the layer of the clip """
         self.clip.Layer(layer)
         data = {"layer": layer}
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
@@ -47,6 +68,7 @@ class TimeableModel:
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
 
     def set_start(self, pos, is_sec=False):
+        """ Sets the start of the clip """
         new_start = pos
         if is_sec:
             self.clip.Start(pos)
@@ -66,6 +88,7 @@ class TimeableModel:
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
 
     def set_end(self, pos, is_sec=False):
+        """ Sets the end of the clip """
         new_end = pos
         if is_sec:
             self.clip.End(pos)
@@ -77,6 +100,7 @@ class TimeableModel:
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
 
     def cut(self, pos):
+        """ Sets the end of the clip to pos and creates a new clip starting from there """
         old_end = self.clip.End()
         self.set_end(self.clip.Start() + TimelineController.pos_to_seconds(pos), is_sec=True)
 
@@ -92,6 +116,7 @@ class TimeableModel:
         return new_model
 
     def move(self, pos, is_sec=False):
+        """ Sets the position of the clip """
         new_position = pos
         if is_sec:
             self.clip.Position(new_position)
@@ -103,4 +128,5 @@ class TimeableModel:
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
 
     def delete(self):
+        """ Removes the clip from the timeline """
         self.timeline_instance.change("delete", ["clips", {"id": self.clip.Id()}], {})
