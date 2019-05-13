@@ -1,14 +1,14 @@
-from PyQt5.QtCore import QPoint, QRectF, QByteArray, QDataStream, QIODevice, \
-    QMimeData, Qt, QSize, QPointF
+from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
+                          QMimeData, Qt, QSize)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QAction
+from PyQt5.QtWidgets import QMenu, QAction, QApplication
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 
 
-TIMEABLE_MIN_WIDTH = 9
-RESIZE_AREA_WIDTH = 4
+TIMEABLE_MIN_WIDTH = 8
+RESIZE_AREA_WIDTH = 3
 
 
 class TimeableView(QGraphicsRectItem):
@@ -35,8 +35,7 @@ class TimeableView(QGraphicsRectItem):
 
         frame = self.model.get_first_frame()
         self.pixmap = TimelineController.get_pixmap_from_file(
-            self.model.file_name, frame).scaled(
-                QSize(100, height), Qt.IgnoreAspectRatio)
+            self.model.file_name, frame).scaled(QSize(100, height), Qt.IgnoreAspectRatio)
 
         self.name = name
         self.prepareGeometryChange()
@@ -76,7 +75,8 @@ class TimeableView(QGraphicsRectItem):
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
 
-        if self.width > 101:
+        # show thumbnail if there is enough space
+        if self.width > 101 and self.pixmap is not None:
             painter.drawPixmap(QPoint(1, 0), self.pixmap)
 
         # only draw name if it fits on the timeable
@@ -360,10 +360,11 @@ class TimeableView(QGraphicsRectItem):
         """called when mouse button is released, resets selected handle and mouse press pos"""
         self.setCursor(Qt.OpenHandCursor)
 
+        QApplication.processEvents()
+
         frame = self.model.get_first_frame()
         self.pixmap = TimelineController.get_pixmap_from_file(
-            self.model.file_name, frame).scaled(
-                QSize(100, self.height), Qt.IgnoreAspectRatio)
+            self.model.file_name, frame).scaled(QSize(100, self.height), Qt.IgnoreAspectRatio)
 
         self.handle_selected = None
         self.mouse_press_pos = None
