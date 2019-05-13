@@ -4,3 +4,4 @@
 #from .slide import Slide
 #from .video import Video
 #from .audio import Audio
+from .filetype import FileType
