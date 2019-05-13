@@ -3,13 +3,8 @@ from PyQt5 import uic
 from PyQt5.QtCore import QObject
 
 from config import Resources
-from model.project import TimeableModel
-from util.timeline_utils import seconds_to_pos
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
-
-# from util.timeline_utils import seconds_to_pos
-# from model.project import TimeableModel
 
 
 class TimelineView(QFrame):
@@ -87,7 +82,6 @@ class TimelineView(QFrame):
 
     def __show_tracks(self):
         """shows some tracks with timeables to see if everything works"""
-
 
         # testing data
         # f = "video.mp4"
