@@ -51,7 +51,6 @@ class Filemanager(QWidget):
         self.deleteButton.clicked.connect(self.remove)
         self.listWidget.itemSelectionChanged.connect(self.selected)
 
-        self.current_frame = 0
         self.file_list = []
 
     def pickFileNames(self):
