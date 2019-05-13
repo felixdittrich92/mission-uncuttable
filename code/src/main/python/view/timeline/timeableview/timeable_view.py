@@ -33,14 +33,14 @@ class TimeableView(QGraphicsRectItem):
 
         self.model = model
 
-        QApplication.processEvents()
-        self.set_pixmap()
-
         self.name = name
         self.prepareGeometryChange()
         self.width = width
         self.height = height
         self.x_pos = x_pos
+
+        QApplication.processEvents()
+        self.set_pixmap()
 
         self.resizable_left = res_left
         self.resizable_right = res_right
