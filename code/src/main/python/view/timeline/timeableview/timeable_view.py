@@ -33,13 +33,8 @@ class TimeableView(QGraphicsRectItem):
 
         self.model = model
 
-        frame = self.model.get_first_frame()
-        try:
-            self.pixmap = TimelineController.get_pixmap_from_file(
-                self.model.file_name, frame).scaled(
-                    QSize(100, height), Qt.IgnoreAspectRatio)
-        except:
-            self.pixmap = None
+        QApplication.processEvents()
+        self.set_pixmap()
 
         self.name = name
         self.prepareGeometryChange()
@@ -92,6 +87,15 @@ class TimeableView(QGraphicsRectItem):
             self.name_visible = True
         else:
             self.name_visible = False
+
+    def set_pixmap(self):
+        """ Sets the pixmap to the first frame """
+        frame = self.model.get_first_frame()
+        px = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
+        if px is not None:
+            self.pixmap = px.scaled(QSize(100, self.height), Qt.IgnoreAspectRatio)
+        else:
+            self.pixmap = None
 
     def contextMenuEvent(self, event):
         """shows a menu on rightclick"""
@@ -365,14 +369,7 @@ class TimeableView(QGraphicsRectItem):
         self.setCursor(Qt.OpenHandCursor)
 
         QApplication.processEvents()
-
-        frame = self.model.get_first_frame()
-        try:
-            self.pixmap = TimelineController.get_pixmap_from_file(
-                self.model.file_name, frame).scaled(
-                    QSize(100, self.height), Qt.IgnoreAspectRatio)
-        except:
-            pass
+        self.set_pixmap()
 
         self.handle_selected = None
         self.mouse_press_pos = None
