@@ -45,5 +45,8 @@ default_settings = {
       "type":"checkbox",
       "values":"",
       "current":True    }
+  },
+  "Filemanager":{
+    "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
   }
 }
