@@ -1,8 +1,7 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QAction, QApplication
-from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 
