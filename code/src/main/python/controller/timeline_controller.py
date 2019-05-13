@@ -11,6 +11,7 @@ import openshot
 from PyQt5.QtGui import QImage, QPixmap
 
 from config import Resources
+from model.data import FileType
 
 # from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
 
@@ -119,18 +120,18 @@ class TimelineController:
 
         width = 0
 
-        if t == "video":
+        if t == FileType.VIDEO_FILE:
             v = cv2.VideoCapture(path)
             v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
             d = v.get(cv2.CAP_PROP_POS_MSEC)
             width = TimelineController.seconds_to_pos(d / 1000)
 
-        elif t == "audio":
+        elif t == FileType.AUDIO_FILE:
             c = openshot.Clip(path)
             d = c.Duration()
             width = TimelineController.seconds_to_pos(d)
 
-        elif t == "image":
+        elif t == FileType.IMAGE_FILE:
             width = TimelineController.get_px_per_second()
 
         return width
@@ -139,12 +140,12 @@ class TimelineController:
     def get_pixmap_from_file(path, frame):
         t = TimelineController.get_file_type(path)
 
-        if t == "image":
+        if t == FileType.IMAGE_FILE:
             image = cv2.imread(path)
             if image is None:
                 return None
 
-        elif t == "video":
+        elif t == FileType.VIDEO_FILE:
             v = cv2.VideoCapture(path)
             v.set(cv2.CAP_PROP_POS_FRAMES, frame)
 
@@ -152,7 +153,7 @@ class TimelineController:
             if not success:
                 return None
 
-        elif t == "audio":
+        elif t == FileType.AUDIO_FILE:
             path = Resources.get_instance().images.media_symbols
             path_to_file = os.path.join(path, "mp3logo.jpg")
             pixmap = QPixmap(path_to_file)
@@ -175,13 +176,13 @@ class TimelineController:
         """ Gets the file type from the extension of the file """
         _, ext = os.path.splitext(path)
         if ext in ['.jpg', '.png', '.jpeg']:
-            return "image"
+            return FileType.IMAGE_FILE
         elif ext in ['.mp4', '.mov']:
-            return "video"
+            return FileType.VIDEO_FILE
         elif ext in ['.mp3', '.wav']:
-            return "audio"
+            return FileType.AUDIO_FILE
 
-        return None
+        return FileType.OTHER_FILE
 
     @staticmethod
     def get_px_per_second():
