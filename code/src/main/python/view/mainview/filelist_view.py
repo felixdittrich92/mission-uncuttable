@@ -1,10 +1,8 @@
-import cv2
 from PyQt5.QtWidgets import QListWidget, QListView
 from PyQt5.QtCore import QByteArray, QDataStream, QMimeData, QIODevice, Qt, QSize
 from PyQt5.QtGui import QDrag
 
 from controller import TimelineController
-from util.timeline_utils import seconds_to_pos
 
 
 class FileListView(QListWidget):
@@ -28,10 +26,12 @@ class FileListView(QListWidget):
         QDataStream.writeString(data_stream, str.encode(path))
 
         # get width of timeable that would be created
-        v = cv2.VideoCapture(path)
-        v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
-        d = v.get(cv2.CAP_PROP_POS_MSEC)
-        width = seconds_to_pos(d / 1000)
+        width = TimelineController.get_width_from_file(path)
+
+        # do nothing if width is 0 because something went wrong
+        if width == 0:
+            return
+
         QDataStream.writeInt(data_stream, width)
 
         mime_data = QMimeData()
