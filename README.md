@@ -43,6 +43,11 @@ pip3 install -r requirements.txt
 fbs run
 ```
 
+## Tests ausführen
+```
+fbs test
+```
+
 ## Projekt für eigene Plattform freezen
 ```
 fbs freeze

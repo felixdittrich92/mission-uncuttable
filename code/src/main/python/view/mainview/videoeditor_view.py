@@ -1,11 +1,11 @@
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, QFileSystemWatcher
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QVBoxLayout,QSplitter
 from PyQt5 import uic
 from shortcuts import ShortcutLoader
 from config import Resources
 import os
-from .preview import PreviewView
+from view.preview.preview import PreviewView
 
 from controller.filemanager_controller import Filemanager
 
@@ -18,17 +18,23 @@ class VideoEditorView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
         uic.loadUi(Resources.get_instance().files.mainview, self)
-        self.previewlayout = self.findChild(QVBoxLayout, "preview")
 
-        self.setStyleSheet(open('src/main/python/view/settingsview/style_dark.qss', "r").read())
-    
-        previewview = PreviewView()
-        self.previewlayout.addWidget(previewview)
-
-        self.shortcuts = ShortcutLoader(self)
         self.load_filemanager()
-
         self.load_timeline_widget()
+        self.load_preview()
+
+        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+
+        "QSS HOT RELOAD"
+        self.__qss_watcher = QFileSystemWatcher()
+        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def load_preview(self):
+        previewview = PreviewView()
+        splitter = self.findChild(QSplitter, "verticalSplitter")
+        splitter.replaceWidget(1, previewview)
+        previewview.show()
 
     def load_timeline_widget(self):
         """
@@ -49,6 +55,20 @@ class VideoEditorView(QMainWindow):
 
     def load_filemanager(self):
         filemanager=Filemanager()
-        splitter=self.findChild(QSplitter,"verticalSplitter")
+        splitter=self.findChild(QSplitter,'verticalSplitter')
         splitter.replaceWidget(0,filemanager)
         filemanager.show()
+
+    def update_qss(self):
+        """ Updates the View when stylesheet changed, can be removed in production"""
+        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.__qss_watcher = QFileSystemWatcher()
+        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def load_preview(self):    
+        previewview = PreviewView()
+        splitter=self.findChild(QSplitter,'verticalSplitter')       
+        splitter.replaceWidget(1,previewview)
+        previewview.show()
+
