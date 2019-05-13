@@ -1,6 +1,7 @@
-# import json
 import uuid
 import locale
+# import json
+
 import openshot
 
 from .timeline import TimelineModel
@@ -13,17 +14,24 @@ class TimeableModel:
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
+
         self.clip.Id(str(uuid.uuid4()))
         self.file_name = file_name
 
         self.timeline_instance = TimelineModel.get_instance()
+
+        # if the timeline has no clips, set the fps to the fps of this clips
+        if not list(self.timeline_instance.timeline.Clips()):
+            data = {
+                "num": self.clip.Reader().info.fps.num,
+                "den": self.clip.Reader().info.fps.den
+            }
+            self.timeline_instance.change("update", ["fps", ""], data)
+
         self.timeline_instance.timeline.AddClip(self.clip)
 
     def get_first_frame(self):
-        f = (self.clip.Start()
-             * (self.clip.Reader().info.fps.num / self.clip.Reader().info.fps.den)) + 1
-
-        return int(f)
+        return int((self.clip.Start() * self.clip.Reader().info.fps.ToFloat()) + 1)
 
     def set_layer(self, layer):
         self.clip.Layer(layer)
