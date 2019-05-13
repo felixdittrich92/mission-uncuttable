@@ -41,6 +41,7 @@ class FileListView(QListWidget):
         # create and execute drag
         drag = QDrag(self)
         drag.setMimeData(mime_data)
-        drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
+        if pixmap is not None:
+            drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
 
         drag.exec_(Qt.MoveAction)
