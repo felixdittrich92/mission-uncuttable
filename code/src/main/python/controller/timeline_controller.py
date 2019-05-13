@@ -4,12 +4,12 @@ timelinemodel.
 """
 
 import os
+import math
 
 import cv2
 import openshot
 from PyQt5.QtGui import QImage, QPixmap
 
-from util.timeline_utils import seconds_to_pos, get_px_per_second
 from config import Resources
 
 # from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
@@ -17,6 +17,9 @@ from config import Resources
 # Todo: Fill the interface methods which translate actions from the
 #       Ubicut frontend (view) to the backend (model) with some
 #       function.
+
+# should be changable later
+PIXELS_PER_SECOND = 16
 
 
 class TimelineController:
@@ -120,15 +123,15 @@ class TimelineController:
             v = cv2.VideoCapture(path)
             v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
             d = v.get(cv2.CAP_PROP_POS_MSEC)
-            width = seconds_to_pos(d / 1000)
+            width = TimelineController.seconds_to_pos(d / 1000)
 
         elif t == "audio":
             c = openshot.Clip(path)
             d = c.Duration()
-            width = seconds_to_pos(d)
+            width = TimelineController.seconds_to_pos(d)
 
         elif t == "image":
-            width = get_px_per_second()
+            width = TimelineController.get_px_per_second()
 
         return width
 
@@ -179,3 +182,24 @@ class TimelineController:
             return "audio"
 
         return None
+
+    @staticmethod
+    def get_px_per_second():
+        # s = Settings.get_instance().get_dict_settings()
+        # return int(s["Timeline"]["pixels_per_second"])
+
+        return PIXELS_PER_SECOND
+
+    @staticmethod
+    def pos_to_seconds(pos):
+        return pos / TimelineController.get_px_per_second()
+
+    @staticmethod
+    def seconds_to_pos(sec):
+        return int(math.ceil(sec * TimelineController.get_px_per_second()))
+
+    # for debugging
+    @staticmethod
+    def print_clip_info(clip):
+        print('position: {}\nstart: {}\nend: {}\nduration: {}'.format(
+            clip.Position(), clip.Start(), clip.End(), clip.Duration()))
