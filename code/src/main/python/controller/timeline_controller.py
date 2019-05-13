@@ -6,7 +6,11 @@ timelinemodel.
 import os
 
 import cv2
+import openshot
 from PyQt5.QtGui import QImage, QPixmap
+
+from util.timeline_utils import seconds_to_pos
+from config import Resources
 
 # from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
 
@@ -107,19 +111,54 @@ class TimelineController:
         pass
 
     @staticmethod
+    def get_width_from_file(path):
+        t = TimelineController.get_file_type(path)
+
+        width = 0
+
+        if t == "video":
+            v = cv2.VideoCapture(path)
+            v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
+            d = v.get(cv2.CAP_PROP_POS_MSEC)
+            width = seconds_to_pos(d / 1000)
+
+        elif t == "audio":
+            c = openshot.Clip(path)
+            d = c.Duration()
+            width = seconds_to_pos(d)
+
+        elif t == "image":
+            # TODO set standard width for images
+            pass
+
+        return width
+
+    @staticmethod
     def get_pixmap_from_file(path, frame):
-        _, ext = os.path.splitext(path)
-        if ext in ['.jpg', '.png']:
+        t = TimelineController.get_file_type(path)
+
+        if t == "image":
             image = cv2.imread(path)
             if image is None:
-                return image
-        else:
+                return None
+
+        elif t == "video":
             v = cv2.VideoCapture(path)
             v.set(cv2.CAP_PROP_POS_FRAMES, frame)
 
             success, image = v.read()
             if not success:
                 return None
+
+        elif t == "audio":
+            path = Resources.get_instance().images.media_symbols
+            path_to_file = os.path.join(path, "mp3logo.jpg")
+            pixmap = QPixmap(path_to_file)
+
+            return pixmap
+
+        else:
+            return None
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -128,3 +167,16 @@ class TimelineController:
         pixmap = QPixmap.fromImage(q_img)
 
         return pixmap
+
+    @staticmethod
+    def get_file_type(path):
+        """ Gets the file type from the extension of the file """
+        _, ext = os.path.splitext(path)
+        if ext in ['.jpg', '.png', '.jpeg']:
+            return "image"
+        elif ext in ['.mp4', '.mov']:
+            return "video"
+        elif ext in ['.mp3', '.wav']:
+            return "audio"
+
+        return None
