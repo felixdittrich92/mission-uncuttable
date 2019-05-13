@@ -2,6 +2,9 @@
 The controller module for communication between timelineview and
 timelinemodel.
 """
+
+import os
+
 import cv2
 from PyQt5.QtGui import QImage, QPixmap
 
@@ -105,12 +108,18 @@ class TimelineController:
 
     @staticmethod
     def get_pixmap_from_file(path, frame):
-        v = cv2.VideoCapture(path)
-        v.set(cv2.CAP_PROP_POS_FRAMES, frame)
+        _, ext = os.path.splitext(path)
+        if ext in ['.jpg', '.png']:
+            image = cv2.imread(path)
+            if image is None:
+                return image
+        else:
+            v = cv2.VideoCapture(path)
+            v.set(cv2.CAP_PROP_POS_FRAMES, frame)
 
-        success, image = v.read()
-        if not success:
-            return
+            success, image = v.read()
+            if not success:
+                return None
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
