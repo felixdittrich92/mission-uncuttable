@@ -38,7 +38,6 @@ class TimeableView(QGraphicsRectItem):
         self.height = height
         self.x_pos = x_pos
 
-        QApplication.processEvents()
         self.set_pixmap()
 
         self.resizable_left = res_left
@@ -90,6 +89,9 @@ class TimeableView(QGraphicsRectItem):
     def set_pixmap(self):
         """ Sets the pixmap to the first frame """
         frame = self.model.get_first_frame()
+
+        QApplication.processEvents()
+
         px = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
             self.pixmap = px.scaled(QSize(100, self.height), Qt.IgnoreAspectRatio)
@@ -367,7 +369,6 @@ class TimeableView(QGraphicsRectItem):
         """called when mouse button is released, resets selected handle and mouse press pos"""
         self.setCursor(Qt.OpenHandCursor)
 
-        QApplication.processEvents()
         self.set_pixmap()
 
         self.mouse_press_pos = 0
