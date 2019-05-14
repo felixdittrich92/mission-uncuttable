@@ -5,6 +5,29 @@ import openshot
 
 from .timeline import TimelineModel
 from controller import TimelineController
+from model.project import Operation
+
+
+class CutOperation(Operation):
+    def __init__(self):
+        self.timeline_instance = TimelineModel.get_instance()
+
+    def do(self):
+        pass
+
+    def undo(self):
+        pass
+
+
+class DeleteOperation(Operation):
+    def __init__(self):
+        self.timeline_instance = TimelineModel.get_instance()
+
+    def do(self):
+        pass
+
+    def undo(self):
+        pass
 
 
 class TimeableModel:
