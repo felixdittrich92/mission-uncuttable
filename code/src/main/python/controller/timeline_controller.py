@@ -4,6 +4,7 @@ timelinemodel.
 """
 
 import os
+import uuid
 import math
 
 import cv2
@@ -27,10 +28,19 @@ class TimelineController:
     """
     The controller between the TimelineView and the TimelineModel.
     """
+
+    __instance = None
+
+    @staticmethod
+    def get_instance():
+        return TimelineController.__instance
+
     def __init__(self, timeline_view):
+        TimelineController.__instance = self
+
         self.__timeline_view = timeline_view
 
-    def create_timeable(self, data=None):
+    def create_timeable(self, track_id, name, width, x_pos, res_left, res_right, model):
         """
         Create a new object in the timeline model to represent a new
         timeable.
@@ -42,7 +52,9 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
-        pass
+        track = self.__timeline_view.tracks[track_id]
+        track.create_timeable(name, width, x_pos, 0, model,
+                              res_left=res_left, res_right=res_right)
 
     def delete_timeable(self, id):
         """
@@ -198,6 +210,10 @@ class TimelineController:
     @staticmethod
     def seconds_to_pos(sec):
         return int(math.ceil(sec * TimelineController.get_px_per_second()))
+
+    @staticmethod
+    def generate_id():
+        return str(uuid.uuid4())
 
     # for debugging
     @staticmethod

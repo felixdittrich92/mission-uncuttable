@@ -20,7 +20,8 @@ class TimeableView(QGraphicsRectItem):
     to another Track.
     """
 
-    def __init__(self, name, width, height, x_pos, res_left, res_right, model, parent=None):
+    def __init__(self, name, width, height, x_pos, res_left, res_right,
+                 model, track_id, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -32,9 +33,11 @@ class TimeableView(QGraphicsRectItem):
         super(TimeableView, self).__init__(parent)
 
         self.model = model
+        # self.model.add_to_timeline()
 
         self.name = name
-        self.prepareGeometryChange()
+        self.track_id = track_id
+
         self.width = width
         self.height = height
         self.x_pos = x_pos
@@ -87,6 +90,17 @@ class TimeableView(QGraphicsRectItem):
         else:
             self.name_visible = False
 
+    def get_info_dict(self):
+        return {
+            "name": self.name,
+            "width": self.width,
+            "height": self.height,
+            "resizable_right": self.resizable_right,
+            "resizable_left": self.resizable_left,
+            "x_pos": self.x_pos,
+            "track_id": self.track_id
+        }
+
     def set_pixmap(self):
         """ Sets the pixmap to the first frame """
         frame = self.model.get_first_frame()
@@ -117,7 +131,7 @@ class TimeableView(QGraphicsRectItem):
 
     def delete(self):
         """ removes the timeable from the track and deletes the model from the timeline """
-        self.model.delete()
+        self.model.delete(self.get_info_dict())
 
         self.scene().removeItem(self)
 

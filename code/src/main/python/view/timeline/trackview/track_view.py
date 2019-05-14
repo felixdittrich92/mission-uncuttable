@@ -5,6 +5,7 @@ from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
 from view.timeline.timeableview import TimeableView
 from model.project import TimeableModel, TimelineModel
+from controller import TimelineController
 
 
 # TODO move some stuff to timeline controller
@@ -31,6 +32,8 @@ class TrackView(QGraphicsView):
         self.width = width
         self.height = height
         self.num = num
+
+        self.id = TimelineController.generate_id()
 
         # for drag and drop handling
         self.item_dropped = False
@@ -76,13 +79,20 @@ class TrackView(QGraphicsView):
         self.width = new_width
         self.resize()
 
-    def add_timeable(self, name, width, drag_pos, mouse_pos, model, res_left=0, res_right=0):
+    def add_timeable(self, timeable):
+        """ Adds a TimeableView to the GraphicsScene """
+        timeable.height = self.height
+        self.scene().addItem(timeable)
+
+    def create_timeable(self, name, width, drag_pos, mouse_pos, model,
+                        res_left=0, res_right=0):
         """ Adds a TimeableView to the Track. """
         x_pos = drag_pos - mouse_pos
         if width + x_pos > self.width:
             self.set_width(width + x_pos)
 
-        timeable = TimeableView(name, width, self.height, x_pos, res_left, res_right, model)
+        timeable = TimeableView(name, width, self.height, x_pos,
+                                res_left, res_right, model, self.id)
         timeable.mouse_press_pos = mouse_pos
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
@@ -108,12 +118,8 @@ class TrackView(QGraphicsView):
             model.set_end(width)
 
             name = os.path.basename(path)
-            self.add_timeable(name, width, x_pos, 0, model)
+            self.create_timeable(name, width, x_pos, 0, model)
             self.item_dropped = True
-
-            return True
-
-        return False
 
     def add_from_track(self, drag_event):
         """ Adds a timeable when a drag was started from a timeable on a track """
@@ -130,7 +136,8 @@ class TrackView(QGraphicsView):
             return
 
         rect = QRectF(start_pos - pos, 0, width, self.height)
-        colliding = [item for item in self.scene().items(rect) if item.isVisible]
+        colliding = [item for item in self.scene().items(rect)
+                     if item.isVisible]
 
         # only add the timeable if colliding is empty
         if not colliding:
@@ -153,15 +160,11 @@ class TrackView(QGraphicsView):
             model.move(start_pos)
 
             # add the timeable to the track
-            self.add_timeable(name, width, start_pos, pos, model,
-                              res_left=res_left, res_right=res_right)
+            self.create_timeable(name, width, start_pos, pos, model,
+                                 res_left=res_left, res_right=res_right)
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
-
-            return True
-
-        return False
 
     def move_dropped_timeable(self, event):
         pos = event.pos().x() - self.current_timeable.mouse_press_pos

@@ -1,33 +1,10 @@
-import uuid
 import locale
 
 import openshot
 
 from .timeline import TimelineModel
-from controller import TimelineController
-from model.project import Operation
-
-
-class CutOperation(Operation):
-    def __init__(self):
-        self.timeline_instance = TimelineModel.get_instance()
-
-    def do(self):
-        pass
-
-    def undo(self):
-        pass
-
-
-class DeleteOperation(Operation):
-    def __init__(self):
-        self.timeline_instance = TimelineModel.get_instance()
-
-    def do(self):
-        pass
-
-    def undo(self):
-        pass
+from controller.timeline_controller import TimelineController
+from model.project import Operation, Project
 
 
 class TimeableModel:
@@ -36,18 +13,30 @@ class TimeableModel:
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
-        self.clip.Id(str(uuid.uuid4()))  # generate random id for this clip
+        self.clip.Id(TimelineController.generate_id())
 
         self.file_name = file_name
         self.file_type = TimelineController.get_file_type(self.file_name)
 
         self.timeline_instance = TimelineModel.get_instance()
+        self.project_history = Project.get_instance().get_history()
 
         # if the timeline has no clips, set some timeline data to the data of this clip
         if self.is_first_vid():
             self.set_timeline_data()
 
-        # add the clip to the timeline
+        self.add_to_timeline()
+
+    def get_info_dict(self):
+        return {
+            "file_name": self.file_name,
+            "id": self.clip.Id(),
+            "position": self.clip.Position(),
+            "start": self.clip.Start(),
+            "end": self.clip.End()
+        }
+
+    def add_to_timeline(self):
         self.timeline_instance.timeline.AddClip(self.clip)
 
     def is_first_vid(self):
@@ -150,6 +139,49 @@ class TimeableModel:
         data = {"position": new_position}
         self.timeline_instance.change("update", ["clips", {"id": self.clip.Id()}], data)
 
-    def delete(self):
+    def delete(self, view_info):
         """ Removes the clip from the timeline """
-        self.timeline_instance.change("delete", ["clips", {"id": self.clip.Id()}], {})
+        # self.timeline_instance.change("delete", ["clips", {"id": self.clip.Id()}], {})
+
+        op = DeleteOperation(view_info, self.get_info_dict())
+        self.project_history.do_operation(op)
+
+
+class CutOperation(Operation):
+    def __init__(self):
+        pass
+
+    def do(self):
+        pass
+
+    def undo(self):
+        pass
+
+
+class DeleteOperation(Operation):
+    def __init__(self, view_info, model_info):
+        self.name = view_info["name"]
+        self.width = view_info["width"]
+        self.x_pos = view_info["x_pos"]
+        self.res_left = view_info["resizable_left"]
+        self.res_right = view_info["resizable_right"]
+        self.track_id = view_info["track_id"]
+
+        self.file_name = model_info["file_name"]
+        self.clip_id = model_info["id"]
+        self.position = model_info["position"]
+        self.start = model_info["start"]
+        self.end = model_info["end"]
+
+    def do(self):
+        TimelineModel.get_instance().change("delete", ["clips", {"id": self.clip_id}], {})
+
+    def undo(self):
+        model = TimeableModel(self.file_name)
+        model.set_start(self.start, is_sec=True)
+        model.set_end(self.end, is_sec=True)
+        model.move(self.position, is_sec=True)
+
+        TimelineController.get_instance().create_timeable(
+            self.track_id, self.name, self.width, self.x_pos, self.res_left,
+            self.res_right, model)
