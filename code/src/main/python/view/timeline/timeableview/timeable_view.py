@@ -149,7 +149,8 @@ class TimeableView(QGraphicsRectItem):
 
         # create the second timeable
         new_timeable = TimeableView(self.name, self.width - pos, self.height,
-                                    pos + self.x_pos, 0, self.resizable_right, new_model)
+                                    pos + self.x_pos, 0, self.resizable_right,
+                                    new_model, self.track_id)
         self.resizable_right = 0
 
         # the bounding rect is dependent on the width so we have to call prepareGeometryChange
