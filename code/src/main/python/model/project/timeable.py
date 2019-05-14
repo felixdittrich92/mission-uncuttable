@@ -148,8 +148,9 @@ class TimeableModel:
 
 
 class CutOperation(Operation):
-    def __init__(self):
-        pass
+    def __init__(self, view_info, model_info):
+        self.view_info = view_info
+        self.model_info = model_info
 
     def do(self):
         pass
@@ -160,28 +161,20 @@ class CutOperation(Operation):
 
 class DeleteOperation(Operation):
     def __init__(self, view_info, model_info):
-        self.name = view_info["name"]
-        self.width = view_info["width"]
-        self.x_pos = view_info["x_pos"]
-        self.res_left = view_info["resizable_left"]
-        self.res_right = view_info["resizable_right"]
-        self.track_id = view_info["track_id"]
-
-        self.file_name = model_info["file_name"]
-        self.clip_id = model_info["id"]
-        self.position = model_info["position"]
-        self.start = model_info["start"]
-        self.end = model_info["end"]
+        self.view_info = view_info
+        self.model_info = model_info
 
     def do(self):
-        TimelineModel.get_instance().change("delete", ["clips", {"id": self.clip_id}], {})
+        TimelineModel.get_instance().change(
+            "delete", ["clips", {"id": self.model_info["id"]}], {})
 
     def undo(self):
-        model = TimeableModel(self.file_name)
-        model.set_start(self.start, is_sec=True)
-        model.set_end(self.end, is_sec=True)
-        model.move(self.position, is_sec=True)
+        model = TimeableModel(self.model_info["file_name"])
+        model.set_start(self.model_info["start"], is_sec=True)
+        model.set_end(self.model_info["end"], is_sec=True)
+        model.move(self.model_info["position"], is_sec=True)
 
         TimelineController.get_instance().create_timeable(
-            self.track_id, self.name, self.width, self.x_pos, self.res_left,
-            self.res_right, model)
+            self.view_info["track_id"], self.view_info["name"],
+            self.view_info["width"], self.view_info["x_pos"],
+            self.view_info["resizable_left"], self.view_info["resizable_right"], model)
