@@ -263,7 +263,11 @@ class TimeableView(QGraphicsRectItem):
 
         # move only if the new position is still inside the track
         if pos >= 0 and pos + self.width <= self.scene().width():
-            self.x_pos = pos
+            if pos < 5:
+                self.x_pos = 0
+            else:
+                self.x_pos = pos
+
             self.setPos(self.x_pos, 0)
 
             # set clip position on the timeline in seconds
