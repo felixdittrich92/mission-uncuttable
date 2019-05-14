@@ -52,9 +52,6 @@ class TrackView(QGraphicsView):
         self.setCacheMode(QGraphicsView.CacheBackground)
         self.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
 
-        self.setMinimumWidth(self.width)
-        self.setFixedHeight(self.height)
-
         self.setScene(QGraphicsScene())
 
         self.resize()
@@ -65,10 +62,8 @@ class TrackView(QGraphicsView):
 
     def resize(self):
         """ sets the size of the trackview to self.width and self.height """
-        self.setMinimumSize(self.width, self.height)
         self.scene().setSceneRect(0, 0, self.width, self.height)
-
-        # TODO adjust sizes of other tracks via timeline controller
+        self.setFixedSize(self.width, self.height)
 
     def set_width(self, new_width):
         """
@@ -90,12 +85,13 @@ class TrackView(QGraphicsView):
         x_pos = drag_pos - mouse_pos
         if width + x_pos > self.width:
             self.set_width(width + x_pos)
+            TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, self.height, x_pos,
                                 res_left, res_right, model, self.id)
         timeable.mouse_press_pos = mouse_pos
         timeable.model.set_layer(self.num)
-        self.scene().addItem(timeable)
+        self.add_timeable(timeable)
         self.current_timeable = timeable
 
     def add_from_filemanager(self, drag_event):

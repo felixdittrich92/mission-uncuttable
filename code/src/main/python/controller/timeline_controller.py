@@ -126,6 +126,10 @@ class TimelineController:
         """
         pass
 
+    def adjust_tracks(self):
+        self.__timeline_view.adjust_track_sizes()
+        self.__timeline_view.track_frame.adjustSize()
+
     @staticmethod
     def get_width_from_file(path):
         t = TimelineController.get_file_type(path)
