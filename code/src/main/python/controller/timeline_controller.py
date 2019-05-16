@@ -3,25 +3,14 @@ The controller module for communication between timelineview and
 timelinemodel.
 """
 
-import os
-import uuid
-import math
+from model.project import Project, Operation
+from model.project import TimeableModel, TimelineModel
+# from util.timeline_utils import pos_to_seconds
 
-import cv2
-import openshot
-from PyQt5.QtGui import QImage, QPixmap
-
-from config import Resources
-from model.data import FileType
-
-# from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
 
 # Todo: Fill the interface methods which translate actions from the
 #       Ubicut frontend (view) to the backend (model) with some
 #       function.
-
-# should be changable later
-PIXELS_PER_SECOND = 16
 
 
 class TimelineController:
@@ -33,12 +22,16 @@ class TimelineController:
 
     @staticmethod
     def get_instance():
+        if TimelineController.__instance is None:
+            raise Exception("TimelineController not initialized")
+
         return TimelineController.__instance
 
     def __init__(self, timeline_view):
         TimelineController.__instance = self
 
         self.__timeline_view = timeline_view
+        self.__history = Project.get_instance().get_history()
 
     def create_timeable(self, track_id, name, width, x_pos, model, res_left=0, res_right=0,
                         is_drag=True, mouse_pos=0):
@@ -53,17 +46,23 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
+        # op = CreationOperation()
+        # self.__history.do_operation(op)
         return self.__timeline_view.create_timeable(track_id, name, width, x_pos, model,
                                                     res_left=res_left, res_right=res_right,
                                                     is_drag=is_drag, mouse_pos=mouse_pos)
 
-    def delete_timeable(self, id):
+    def delete_timeable(self, view_info, model_info):
         """
         Delete the model's representation of a timeable.
 
         @param id: The timeable's unique ID.
         @return:   Nothing.
         """
+        op = DeleteOperation(view_info, model_info)
+        self.__history.do_operation(op)
+
+    def remove_timeable_view(self, id):
         self.__timeline_view.remove_timeable(id)
 
     def rename_timeable(self, id, name):
@@ -86,7 +85,7 @@ class TimelineController:
         """
         pass
 
-    def split_timeable(self, id, time):
+    def split_timeable(self, id, pos):
         """
         Split the model's representation of a timeable at a specified
         time relative to the start of the timeable.
@@ -96,10 +95,24 @@ class TimelineController:
         not the second one of the resulting timeables.
 
         @param id:   The timeable's unique ID.
-        @param time: The time at which the timeable should be split.
+        @param pos:  The position at which the timeable should be split.
         @return:     Nothing.
         """
-        pass
+        timeable_left = self.__timeline_view.timeables[id]
+        timeable_left.resizable_right = 0
+
+        new_model = timeable_left.model.cut(pos)
+        new_model.set_layer(timeable_left.model.clip.Layer())
+
+        self.__timeline_view.create_timeable(timeable_left.track_id, timeable_left.name,
+                                             timeable_left.width - pos,
+                                             pos + timeable_left.x_pos, new_model,
+                                             res_right=timeable_left.resizable_right,
+                                             is_drag=False)
+
+        timeable_left.set_width(pos)
+        timeable_left.setPos(timeable_left.x_pos, 0)
+        timeable_left.update_handles_pos()
 
     def remove_timeable_part(self, id, start, end):
         """
@@ -131,97 +144,77 @@ class TimelineController:
         self.__timeline_view.adjust_track_sizes()
         self.__timeline_view.track_frame.adjustSize()
 
-    @staticmethod
-    def get_width_from_file(path):
-        t = TimelineController.get_file_type(path)
 
-        width = 0
+class DeleteOperation(Operation):
+    """ Removes a timeable with do and creates the timeable again with undo """
 
-        if t == FileType.VIDEO_FILE:
-            v = cv2.VideoCapture(path)
-            v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
-            d = v.get(cv2.CAP_PROP_POS_MSEC)
-            width = TimelineController.seconds_to_pos(d / 1000)
+    def __init__(self, view_info, model_info):
+        self.view_info = view_info
+        self.model_info = model_info
 
-        elif t == FileType.AUDIO_FILE:
-            c = openshot.Clip(path)
-            d = c.Duration()
-            width = TimelineController.seconds_to_pos(d)
+    def do(self):
+        TimelineModel.get_instance().change(
+            "delete", ["clips", {"id": self.model_info["id"]}], {})
+        TimelineController.get_instance().remove_timeable_view(
+            self.view_info["view_id"])
 
-        elif t == FileType.IMAGE_FILE:
-            width = TimelineController.get_px_per_second()
+    def undo(self):
+        model = TimeableModel(self.model_info["file_name"])
+        model.set_start(self.model_info["start"], is_sec=True)
+        model.set_end(self.model_info["end"], is_sec=True)
+        model.move(self.model_info["position"], is_sec=True)
 
-        return width
+        new_id = TimelineController.get_instance().create_timeable(
+            self.view_info["track_id"], self.view_info["name"],
+            self.view_info["width"], self.view_info["x_pos"], model,
+            res_left=self.view_info["resizable_left"],
+            res_right=self.view_info["resizable_right"])
 
-    @staticmethod
-    def get_pixmap_from_file(path, frame):
-        t = TimelineController.get_file_type(path)
+        self.view_info["view_id"] = new_id
+        self.model_info["id"] = model.clip.Id()
 
-        if t == FileType.IMAGE_FILE:
-            image = cv2.imread(path)
-            if image is None:
-                return None
 
-        elif t == FileType.VIDEO_FILE:
-            v = cv2.VideoCapture(path)
-            v.set(cv2.CAP_PROP_POS_FRAMES, frame)
+class CutOperation(Operation):
+    """ Cuts a timeable in two parts with do and makes it one timeable again with undo """
 
-            success, image = v.read()
-            if not success:
-                return None
+    def __init__(self, view_info, model_info, pos):
+        self.view_info = view_info
+        self.model_info = model_info
+        self.pos = pos
 
-        elif t == FileType.AUDIO_FILE:
-            path = Resources.get_instance().images.media_symbols
-            path_to_file = os.path.join(path, "mp3logo.jpg")
-            pixmap = QPixmap(path_to_file)
+        self.__controller = TimelineController.get_instance()
 
-            return pixmap
+    def do(self):
+        self.controller.split_timeable(self.view_info["view_id"])
 
-        else:
-            return None
+    def undo(self):
+        pass
 
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        height, width, channel = image.shape
-        q_img = QImage(image.data, width, height, 3 * width, QImage.Format_RGB888)
-        pixmap = QPixmap.fromImage(q_img)
+class MoveOperation(Operation):
+    """ Cuts a timeable in two parts with do and makes it one timeable again with undo """
 
-        return pixmap
+    def __init__(self, view_info, model_info, pos):
+        self.view_info = view_info
+        self.model_info = model_info
+        self.pos = pos
 
-    @staticmethod
-    def get_file_type(path):
-        """ Gets the file type from the extension of the file """
-        _, ext = os.path.splitext(path)
-        if ext in ['.jpg', '.png', '.jpeg']:
-            return FileType.IMAGE_FILE
-        elif ext in ['.mp4', '.mov']:
-            return FileType.VIDEO_FILE
-        elif ext in ['.mp3', '.wav']:
-            return FileType.AUDIO_FILE
+    def do(self):
+        pass
 
-        return FileType.OTHER_FILE
+    def undo(self):
+        pass
 
-    @staticmethod
-    def get_px_per_second():
-        # s = Settings.get_instance().get_dict_settings()
-        # return int(s["Timeline"]["pixels_per_second"])
 
-        return PIXELS_PER_SECOND
+class CreationOperation(Operation):
+    """ Cuts a timeable in two parts with do and makes it one timeable again with undo """
 
-    @staticmethod
-    def pos_to_seconds(pos):
-        return pos / TimelineController.get_px_per_second()
+    def __init__(self, view_info, model_info):
+        self.view_info = view_info
+        self.model_info = model_info
 
-    @staticmethod
-    def seconds_to_pos(sec):
-        return int(math.ceil(sec * TimelineController.get_px_per_second()))
+    def do(self):
+        pass
 
-    @staticmethod
-    def generate_id():
-        return str(uuid.uuid4())
-
-    # for debugging
-    @staticmethod
-    def print_clip_info(clip):
-        print('position: {}\nstart: {}\nend: {}\nduration: {}'.format(
-            clip.Position(), clip.Start(), clip.End(), clip.Duration()))
+    def undo(self):
+        pass
