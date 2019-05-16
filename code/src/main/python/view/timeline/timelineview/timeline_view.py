@@ -92,6 +92,7 @@ class TimelineView(QFrame):
         return timeable.view_id
 
     def remove_timeable(self, id):
+        """ Removes the timeable from the view and deletes it from the dict """
         try:
             timeable = self.timeables[id]
         except KeyError:

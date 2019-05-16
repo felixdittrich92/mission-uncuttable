@@ -5,6 +5,7 @@ from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
 from model.project import TimeableModel, TimelineModel
 from controller import TimelineController
+from util.timeline_utils import generate_id
 
 
 class TrackView(QGraphicsView):
@@ -29,7 +30,7 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
 
-        self.id = TimelineController.generate_id()
+        self.id = generate_id()
 
         # for drag and drop handling
         self.item_dropped = False
