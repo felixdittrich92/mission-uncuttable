@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphi
 
 from controller import TimelineController
 from model.data import FileType
+from util.timeline_utils import generate_id, get_pixmap_from_file
 
 
 TIMEABLE_MIN_WIDTH = 8
@@ -33,15 +34,16 @@ class TimeableView(QGraphicsRectItem):
         super(TimeableView, self).__init__(parent)
 
         self.model = model
-        # self.model.add_to_timeline()
 
         self.name = name
-        self.view_id = TimelineController.generate_id()
+        self.view_id = generate_id()
         self.track_id = track_id
 
         self.width = width
         self.height = height
         self.x_pos = x_pos
+
+        self.__controller = TimelineController.get_instance()
 
         self.set_pixmap()
 
@@ -109,11 +111,20 @@ class TimeableView(QGraphicsRectItem):
 
         QApplication.processEvents()
 
-        px = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
+        px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
             self.pixmap = px.scaled(QSize(100, self.height), Qt.IgnoreAspectRatio)
         else:
             self.pixmap = None
+
+    def set_width(self, new_width):
+        """ Sets the width of the timeable """
+        # the bounding rect is dependent on the width so we have to call prepareGeometryChange
+        # otherwhise the program can randomly crash
+        self.prepareGeometryChange()
+
+        self.width = new_width
+        self.setRect(self.boundingRect())
 
     def contextMenuEvent(self, event):
         """shows a menu on rightclick"""
@@ -133,7 +144,8 @@ class TimeableView(QGraphicsRectItem):
 
     def delete(self):
         """ deletes the model from the timeline """
-        self.model.delete(self.get_info_dict())
+        self.__controller.delete_timeable(self.get_info_dict(),
+                                          self.model.get_info_dict())
 
     def remove_from_scene(self):
         """ Removes the timeableview from the track """
@@ -148,28 +160,7 @@ class TimeableView(QGraphicsRectItem):
         if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
             return
 
-        new_model = self.model.cut(pos)
-        new_model.set_layer(self.model.clip.Layer())
-
-        # create the second timeable
-        new_timeable = TimeableView(self.name, self.width - pos, self.height,
-                                    pos + self.x_pos, 0, self.resizable_right,
-                                    new_model, self.track_id)
-        self.resizable_right = 0
-
-        # the bounding rect is dependent on the width so we have to call prepareGeometryChange
-        # otherwhise the program can randomly crash
-        self.prepareGeometryChange()
-        # own width gets reduced to the point where the rightclick was made
-        self.width = pos
-        # adjust own timeable
-        self.setRect(self.boundingRect())
-        self.setPos(self.x_pos, 0)
-
-        # add the new timeable to the scene
-        self.scene().addItem(new_timeable)
-
-        self.update_handles_pos()
+        self.__controller.split_timeable(self.view_id, pos)
 
     def update_handles_pos(self):
         """
@@ -319,7 +310,7 @@ class TimeableView(QGraphicsRectItem):
         # set first frame as pixmap
         # frame = self.model.get_first_frame()
         frame = 1
-        pixmap = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
+        pixmap = get_pixmap_from_file(self.model.file_name, frame)
 
         # start drag
         drag = QDrag(self.scene())
