@@ -3,7 +3,7 @@ import os
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
-from model.project import TimeableModel, TimelineModel
+from model.data import TimeableModel, TimelineModel
 from controller import TimelineController
 from util.timeline_utils import generate_id
 

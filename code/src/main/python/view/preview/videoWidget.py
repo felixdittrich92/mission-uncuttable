@@ -5,7 +5,7 @@ from config import Resources
 from PyQt5.QtCore import QObject, QMutex, Qt, QRect
 import openshot
 import sip
-from model.project import TimelineModel
+from model.data import TimelineModel
 import time
 
 class VideoWidget(QWidget):
@@ -13,21 +13,21 @@ class VideoWidget(QWidget):
         # Invoke parent init
         QWidget.__init__(self, *args)
 
-        # Init aspect ratio, pixel ratio    
+        # Init aspect ratio, pixel ratio
         self.aspect_ratio = openshot.Fraction()
         self.pixel_ratio = openshot.Fraction()
         self.aspect_ratio.num = 16
         self.aspect_ratio.den = 9
         self.pixel_ratio.num = 1
         self.pixel_ratio.den = 1
-    
+
         # set view properties
         super().setAttribute(Qt.WA_OpaquePaintEvent)
         super().setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
         # Init current frame's QImage
         self.current_image = None
-   
+
     def present(self, image, *args):
         """ Update current image """
 
@@ -35,7 +35,7 @@ class VideoWidget(QWidget):
         self.current_image = image
 
         # Force repaint on this widget
-        self.repaint()        
+        self.repaint()
 
     def connectSignals(self, renderer):
         """ Connect signal present from renderer to method present """
@@ -63,10 +63,10 @@ class VideoWidget(QWidget):
             center = self.centeredViewport(self.width(), self.height())
             # painter.drawImage(center, scaledPix)
             painter.drawImage(center, self.current_image)
-      
+
         # End painter
         painter.end()
- 
+
     def centeredViewport(self, width, height):
         """ Calculate size of viewport to maintain apsect ratio """
 

@@ -4,8 +4,7 @@ timelinemodel.
 """
 
 from model.project import Project, Operation
-from model.project import TimeableModel, TimelineModel
-# from util.timeline_utils import pos_to_seconds
+from model.data import TimeableModel, TimelineModel
 
 
 # Todo: Fill the interface methods which translate actions from the
