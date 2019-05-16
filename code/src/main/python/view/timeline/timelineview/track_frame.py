@@ -19,9 +19,10 @@ class TrackFrame(SizeLinkableFrame):
         :param parent: the parent component
         """
         super(TrackFrame, self).__init__(parent)
-
-        self.setLayout(QVBoxLayout())
-        self.setStyleSheet("background-color: orange")
+        vbox_layout = QVBoxLayout()
+        vbox_layout.setSpacing(0)
+        vbox_layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(vbox_layout)
 
 
 
