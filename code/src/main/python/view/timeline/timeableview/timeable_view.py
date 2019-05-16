@@ -36,6 +36,7 @@ class TimeableView(QGraphicsRectItem):
         # self.model.add_to_timeline()
 
         self.name = name
+        self.view_id = TimelineController.generate_id()
         self.track_id = track_id
 
         self.width = width
@@ -98,6 +99,7 @@ class TimeableView(QGraphicsRectItem):
             "resizable_right": self.resizable_right,
             "resizable_left": self.resizable_left,
             "x_pos": self.x_pos,
+            "view_id": self.view_id,
             "track_id": self.track_id
         }
 
@@ -130,9 +132,11 @@ class TimeableView(QGraphicsRectItem):
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def delete(self):
-        """ removes the timeable from the track and deletes the model from the timeline """
+        """ deletes the model from the timeline """
         self.model.delete(self.get_info_dict())
 
+    def remove_from_scene(self):
+        """ Removes the timeableview from the track """
         self.scene().removeItem(self)
 
     def cut(self, pos):

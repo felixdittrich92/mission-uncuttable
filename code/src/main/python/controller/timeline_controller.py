@@ -40,7 +40,8 @@ class TimelineController:
 
         self.__timeline_view = timeline_view
 
-    def create_timeable(self, track_id, name, width, x_pos, res_left, res_right, model):
+    def create_timeable(self, track_id, name, width, x_pos, model, res_left=0, res_right=0,
+                        is_drag=True, mouse_pos=0):
         """
         Create a new object in the timeline model to represent a new
         timeable.
@@ -52,9 +53,9 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
-        track = self.__timeline_view.tracks[track_id]
-        track.create_timeable(name, width, x_pos, 0, model,
-                              res_left=res_left, res_right=res_right)
+        return self.__timeline_view.create_timeable(track_id, name, width, x_pos, model,
+                                                    res_left=res_left, res_right=res_right,
+                                                    is_drag=is_drag, mouse_pos=mouse_pos)
 
     def delete_timeable(self, id):
         """
@@ -63,7 +64,7 @@ class TimelineController:
         @param id: The timeable's unique ID.
         @return:   Nothing.
         """
-        pass
+        self.__timeline_view.remove_timeable(id)
 
     def rename_timeable(self, id, name):
         """

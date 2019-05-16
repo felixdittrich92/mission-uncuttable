@@ -5,6 +5,7 @@ from PyQt5.QtCore import QObject
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
+from view.timeline.timeableview import TimeableView
 from controller import TimelineController
 
 
@@ -34,7 +35,7 @@ class TimelineView(QFrame):
         self.track_frame = self.findChild(QFrame, "track_frame")
         self.track_button_frame = self.findChild(QFrame, "track_button_frame")
 
-        self.timeables = []
+        self.timeables = dict()
         self.tracks = dict()
 
         self.controller = TimelineController(self)
@@ -64,8 +65,40 @@ class TimelineView(QFrame):
         for t in track_views:
             t.set_width(max_width)
 
+    def create_timeable(self, track_id, name, width, x_pos, model, res_left=0, res_right=0,
+                        is_drag=True, mouse_pos=0):
+        """ Creates and adds a timeable to the specified track """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            return
+
+        x_pos = x_pos - mouse_pos
+        if width + x_pos > track.width:
+            track.set_width(width + x_pos)
+            TimelineController.get_instance().adjust_tracks()
+
+        timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
+                                model, track_id)
+        timeable.mouse_press_pos = mouse_pos
+        track.add_timeable(timeable)
+
+        if is_drag:
+            track.current_timeable = timeable
+
+        # add timeable to dict
+        self.timeables[timeable.view_id] = timeable
+
+        return timeable.view_id
+
     def remove_timeable(self, id):
-        pass
+        try:
+            timeable = self.timeables[id]
+        except KeyError:
+            return
+
+        timeable.remove_from_scene()
+        self.timeables.pop(id, None)
 
     def set_timeable_name(self, id, name):
         pass

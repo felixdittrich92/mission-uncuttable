@@ -3,12 +3,8 @@ import os
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
-from view.timeline.timeableview import TimeableView
 from model.project import TimeableModel, TimelineModel
 from controller import TimelineController
-
-
-# TODO move some stuff to timeline controller
 
 
 class TrackView(QGraphicsView):
@@ -76,23 +72,8 @@ class TrackView(QGraphicsView):
 
     def add_timeable(self, timeable):
         """ Adds a TimeableView to the GraphicsScene """
-        timeable.height = self.height
-        self.scene().addItem(timeable)
-
-    def create_timeable(self, name, width, drag_pos, mouse_pos, model,
-                        res_left=0, res_right=0):
-        """ Adds a TimeableView to the Track. """
-        x_pos = drag_pos - mouse_pos
-        if width + x_pos > self.width:
-            self.set_width(width + x_pos)
-            TimelineController.get_instance().adjust_tracks()
-
-        timeable = TimeableView(name, width, self.height, x_pos,
-                                res_left, res_right, model, self.id)
-        timeable.mouse_press_pos = mouse_pos
         timeable.model.set_layer(self.num)
-        self.add_timeable(timeable)
-        self.current_timeable = timeable
+        self.scene().addItem(timeable)
 
     def add_from_filemanager(self, drag_event):
         """ Adds a timeable when item from filemanager is dragged into the track """
@@ -114,7 +95,8 @@ class TrackView(QGraphicsView):
             model.set_end(width)
 
             name = os.path.basename(path)
-            self.create_timeable(name, width, x_pos, 0, model)
+            TimelineController.get_instance().create_timeable(self.id, name, width,
+                                                              x_pos, model)
             self.item_dropped = True
 
     def add_from_track(self, drag_event):
@@ -156,8 +138,10 @@ class TrackView(QGraphicsView):
             model.move(start_pos)
 
             # add the timeable to the track
-            self.create_timeable(name, width, start_pos, pos, model,
-                                 res_left=res_left, res_right=res_right)
+            controller = TimelineController.get_instance()
+            controller.create_timeable(self.id, name, width, start_pos, model,
+                                       res_left=res_left, res_right=res_right,
+                                       mouse_pos=pos)
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
