@@ -167,6 +167,7 @@ class DeleteOperation(Operation):
     def do(self):
         TimelineModel.get_instance().change(
             "delete", ["clips", {"id": self.model_info["id"]}], {})
+        TimelineController.get_instance().delete_timeable(self.view_info["view_id"])
 
     def undo(self):
         model = TimeableModel(self.model_info["file_name"])
@@ -174,7 +175,11 @@ class DeleteOperation(Operation):
         model.set_end(self.model_info["end"], is_sec=True)
         model.move(self.model_info["position"], is_sec=True)
 
-        TimelineController.get_instance().create_timeable(
+        new_id = TimelineController.get_instance().create_timeable(
             self.view_info["track_id"], self.view_info["name"],
-            self.view_info["width"], self.view_info["x_pos"],
-            self.view_info["resizable_left"], self.view_info["resizable_right"], model)
+            self.view_info["width"], self.view_info["x_pos"], model,
+            res_left=self.view_info["resizable_left"],
+            res_right=self.view_info["resizable_right"])
+
+        self.view_info["view_id"] = new_id
+        self.model_info["id"] = model.clip.Id()
