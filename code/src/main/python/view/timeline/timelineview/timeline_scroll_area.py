@@ -88,8 +88,6 @@ class TimelineScrollArea(QFrame):
         self.__needle_bottom.setObjectName("needle_bottom")
         self.__needle_bottom.move_needle(5)
 
-
-
         self.__needle_top.pos_changed.connect(self.__needle_bottom.move_needle)
         self.__needle_bottom.pos_changed.connect(self.__needle_top.move_needle)
         self.__track_frame.height_changed.connect(self.__needle_bottom.set_drawing_height)

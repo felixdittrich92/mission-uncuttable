@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QSlider
 from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPolygonF, QDrag
 from PyQt5.QtCore import Qt, QPoint, QPointF, QObject, pyqtSignal, QMimeData
-import sys, math
+import sys, math, time
 
 NEEDLE_COLOR = "#D66853"
 NEEDLE_WIDTH = 10
@@ -103,15 +103,36 @@ class TimeNeedle(QWidget):
         :param evt: EventHandler
         """
         delta = QPointF(evt.localPos().x() - self.width()/2, evt.localPos().y())
+        # if (self.mapToParent(QPoint(0, 0)).x() < (self.width)):
+        # print(self.mapToParent(QPoint(0, 0)).x())
+        # print(self.mapTo(self.parent().parent().parent()), QPoint(0, 0))
+        # timeline_scroll_area = self.parent().parent().parent().parent()
+        # track_scroll_area = timeline_scroll_area.findChild(QWidget, "track_scroll_area")
+        # horizontal_scroll_bar = timeline_scroll_area.findChild(QWidget, "horizontal_scroll_bar")
+        # print(horizontal_scroll_bar)
+        
+        # if self.mapTo(track_scroll_area, QPoint(0, 0)).x() < 20:
+        #     print("TRUE")
+        #     old_value = horizontal_scroll_bar.value()
+        #     horizontal_scroll_bar.setValue(old_value - 1)
+
         self.pos_changed.emit(delta.x())
 
-    def move_needle(self, x):
+    def move_needle(self, delta_x):
         """
         Moves the needle part to another location.
 
+        Also detects collisions on boundaries.
+
         :param x: Integer: new x value
         """
-        self.move(self.x() + x, 0)
+        half_width = self.width()/2
+        parent_width = self.parent().parent().parent().parent().findChild(QWidget, "track_frame").width()
+        new_x = self.x() + delta_x
+
+        if new_x >= half_width and new_x < parent_width - half_width:
+            self.move(new_x, 0)
+        
 
     def mousePressEvent(self, event):
         """
