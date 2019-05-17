@@ -69,7 +69,7 @@ class TimeableView(QGraphicsRectItem):
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
-        self.brush = QBrush(QColor(214, 104, 83))
+        self.brush = QBrush(QColor("#AE6759"))
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
 
