@@ -3,6 +3,10 @@ QMainWindow, QMenuBar {
 
 }
 
+* {
+    font-size: 14px;
+}
+
 QSplitter::handle:horizontal {
     background: #212D40;
     width: 2px;
@@ -16,6 +20,26 @@ QSplitter::handle:vertical {
     background-color: #212D40;
     border: 1px solid #364156;
 }
+
+/* BUTTONS */
+
+QPushButton {
+    background: #955F69;
+    border: 2px solid #7D4E57;
+    padding: 8px;
+    color: #F5F5F5;
+}
+
+QPushButton:hover {
+    border-color: #AD7882;
+}
+
+QPushButton:pressed {
+    background: #6F454D;
+    border-color: #7D4E57;
+    color: rgb(214, 214, 214);
+}
+
 
 /* MENU */
 QMenuBar, QMenu {
@@ -231,7 +255,8 @@ QScrollArea #track_frame QFrame{
 
 #videoplayer_frame QPushButton {
     border: none;
-
+    background: none;
+    padding: 0px;
 }
 
 #first_frame_button {
@@ -267,3 +292,61 @@ QSlider::sub-page:horizontal {
     border-radius: 3px;
     margin-left: 10px;
 }
+
+/* TAB WIDGET */
+QTabWidget::tab-bar {
+}
+QTabWidget::pane {
+    background-color: #212D40;
+    border: 2px solid #364156;
+}
+QTabWidget::pane QFrame {
+    background: #212D40;
+    color: #F5F5F5;
+}
+
+QTabBar::tab {
+    background: #364156;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 0;
+    color: #F5F5F5;
+    border: 2px solid #364156;
+    border-bottom: none;
+}
+
+QTabBar::tab:selected {
+    background: #212D40;
+    border-bottom: 2px solid #212D40;
+    margin-bottom: -2px;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
+/* ComboBox */
+
+QComboBox {
+    border: 2px solid #364156;
+    background: #2A3649;
+    color: #F5F5F5;
+    padding: 3px;
+}
+
+QComboBox QAbstractItemView {
+    border: 2px solid #364156;
+}
+
+QComboBox::drop-down {
+    border: none;
+}
+
+QComboBox::down-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    border-color: #007bff transparent transparent transparent;
+}
+

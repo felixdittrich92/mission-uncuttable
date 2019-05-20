@@ -20,6 +20,12 @@ class SettingsView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(SettingsView, self).__init__()
         uic.loadUi(Resources.get_instance().files.settingsview, self)
+        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        "QSS HOT RELOAD"
+        self.__qss_watcher = QFileSystemWatcher()
+        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.fileChanged.connect(self.update_qss)
+
 
         """ centering the window """
         rectangle = self.frameGeometry()
@@ -125,7 +131,13 @@ class SettingsView(QMainWindow):
         else:
             return 0
 
-
     def show(self):
         """Starts the settings window maximized."""
         self.showNormal()
+
+    def update_qss(self):
+        """ Updates the View when stylesheet changed, can be removed in production"""
+        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.__qss_watcher = QFileSystemWatcher()
+        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.fileChanged.connect(self.update_qss)
