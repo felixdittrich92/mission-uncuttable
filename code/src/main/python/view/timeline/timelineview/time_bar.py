@@ -29,4 +29,4 @@ class TimeBar(SizeLinkableFrame):
         self.layout().setContentsMargins(0, 0, 0, 0)
         for i in range(30):
             self.layout().addWidget(QPushButton(str(i)))
-        # self.setStyleSheet("background-color: orange")
+

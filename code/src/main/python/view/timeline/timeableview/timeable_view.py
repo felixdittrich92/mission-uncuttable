@@ -1,14 +1,14 @@
-from PyQt5.QtCore import QPoint, QRectF, QByteArray, QDataStream, QIODevice, \
-    QMimeData, Qt, QSize, QPointF
+from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
+                          QMimeData, Qt, QSize)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QAction
-from PyQt5.QtWidgets import QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
+from model.data import FileType
 
 
-TIMEABLE_MIN_WIDTH = 9
-RESIZE_AREA_WIDTH = 4
+TIMEABLE_MIN_WIDTH = 8
+RESIZE_AREA_WIDTH = 3
 
 
 class TimeableView(QGraphicsRectItem):
@@ -33,16 +33,13 @@ class TimeableView(QGraphicsRectItem):
 
         self.model = model
 
-        frame = self.model.get_first_frame()
-        self.pixmap = TimelineController.get_pixmap_from_file(
-            self.model.file_name, frame).scaled(
-                QSize(100, height), Qt.IgnoreAspectRatio)
-
         self.name = name
         self.prepareGeometryChange()
         self.width = width
         self.height = height
         self.x_pos = x_pos
+
+        self.set_pixmap()
 
         self.resizable_left = res_left
         self.resizable_right = res_right
@@ -55,15 +52,15 @@ class TimeableView(QGraphicsRectItem):
         self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
 
+        self.mouse_press_pos = 0
         self.handle_selected = None
-        self.mouse_press_pos = None
         self.mouse_press_rect = None
 
         self.handle_left = 1
         self.handle_right = 2
         self.handle_middle = 3
 
-        self.handles = {}
+        self.handles = dict()
         self.update_handles_pos()
 
     def boundingRect(self):
@@ -72,11 +69,12 @@ class TimeableView(QGraphicsRectItem):
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
-        self.brush = QBrush(QColor(214, 104, 83))
+        self.brush = QBrush(QColor("#AE6759"))
         painter.setBrush(self.brush)
         painter.drawRect(self.rect())
 
-        if self.width > 101:
+        # show thumbnail if there is enough space
+        if self.width > 101 and self.pixmap is not None:
             painter.drawPixmap(QPoint(1, 0), self.pixmap)
 
         # only draw name if it fits on the timeable
@@ -88,6 +86,18 @@ class TimeableView(QGraphicsRectItem):
             self.name_visible = True
         else:
             self.name_visible = False
+
+    def set_pixmap(self):
+        """ Sets the pixmap to the first frame """
+        frame = self.model.get_first_frame()
+
+        QApplication.processEvents()
+
+        px = TimelineController.get_pixmap_from_file(self.model.file_name, frame)
+        if px is not None:
+            self.pixmap = px.scaled(QSize(100, self.height), Qt.IgnoreAspectRatio)
+        else:
+            self.pixmap = None
 
     def contextMenuEvent(self, event):
         """shows a menu on rightclick"""
@@ -183,12 +193,13 @@ class TimeableView(QGraphicsRectItem):
 
         @param mouse_event: the event parameter from the mouseMoveEvent function
         """
+        is_image = self.model.file_type == FileType.IMAGE_FILE
         if self.handle_selected == self.handle_left:
-            diff = mouse_event.pos().x() - self.mouse_press_pos.x()
+            diff = mouse_event.pos().x() - self.mouse_press_pos
 
             w = self.width - diff
-            if w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0 \
-               or diff < self.resizable_left:
+            if (w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0
+                    or diff < self.resizable_left) and not is_image:
                 return
 
             new_x_pos = self.x_pos + diff
@@ -209,12 +220,12 @@ class TimeableView(QGraphicsRectItem):
 
         elif self.handle_selected == self.handle_right:
             diff = (self.mouse_press_rect.right() + mouse_event.pos().x()
-                    - self.mouse_press_pos.x() - self.width)
+                    - self.mouse_press_pos - self.width)
 
             w = self.width + diff
 
-            if w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH \
-               or diff > self.resizable_right:
+            if (w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH
+                    or diff > self.resizable_right) and not is_image:
                 return
 
             r = QRectF(self.x_pos, 0, w, self.height)
@@ -252,7 +263,11 @@ class TimeableView(QGraphicsRectItem):
 
         # move only if the new position is still inside the track
         if pos >= 0 and pos + self.width <= self.scene().width():
-            self.x_pos = pos
+            if pos < 5:
+                self.x_pos = 0
+            else:
+                self.x_pos = pos
+
             self.setPos(self.x_pos, 0)
 
             # set clip position on the timeline in seconds
@@ -273,7 +288,7 @@ class TimeableView(QGraphicsRectItem):
         data_stream = QDataStream(item_data, QIODevice.WriteOnly)
         QDataStream.writeString(data_stream, str.encode(self.name))
         QDataStream.writeInt(data_stream, self.width)
-        QDataStream.writeInt(data_stream, int(self.mouse_press_pos.x()))
+        QDataStream.writeInt(data_stream, self.mouse_press_pos)
         QDataStream.writeInt(data_stream, self.resizable_left)
         QDataStream.writeInt(data_stream, self.resizable_right)
         QDataStream.writeString(data_stream, str.encode(self.model.file_name))
@@ -331,7 +346,7 @@ class TimeableView(QGraphicsRectItem):
         sets the position where the mouse was pressed (important for moving and resizing)
         """
         self.handle_selected = self.handle_at(event.pos())
-        self.mouse_press_pos = event.pos()
+        self.mouse_press_pos = int(event.pos().x())
         self.mouse_press_rect = self.rect()
 
         QGraphicsItem.mousePressEvent(self, event)
@@ -348,7 +363,7 @@ class TimeableView(QGraphicsRectItem):
             if event.pos().y() < 0 or event.pos().y() > self.height:
                 self.start_drag(event)
             else:
-                pos = event.scenePos().x() - self.mouse_press_pos.x()
+                pos = event.scenePos().x() - self.mouse_press_pos
                 self.move_on_track(pos)
 
         else:
@@ -360,13 +375,10 @@ class TimeableView(QGraphicsRectItem):
         """called when mouse button is released, resets selected handle and mouse press pos"""
         self.setCursor(Qt.OpenHandCursor)
 
-        frame = self.model.get_first_frame()
-        self.pixmap = TimelineController.get_pixmap_from_file(
-            self.model.file_name, frame).scaled(
-                QSize(100, self.height), Qt.IgnoreAspectRatio)
+        self.set_pixmap()
 
+        self.mouse_press_pos = 0
         self.handle_selected = None
-        self.mouse_press_pos = None
         self.mouse_press_rect = None
 
         QGraphicsItem.mouseReleaseEvent(self, event)

@@ -64,7 +64,6 @@ class TimelineModel:
     def getTimeline(self):
         return self.timeline
 
-
     def change(self, change_type, key, data):
         """
         @param change_type: insert, delete or update

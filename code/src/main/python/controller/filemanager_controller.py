@@ -13,6 +13,7 @@ from PIL import Image, ImageQt
 from pathlib import Path
 from config import Resources
 from view.mainview import FileListView
+from config import Settings
 
 
 class Filemanager(QWidget):
@@ -47,11 +48,9 @@ class Filemanager(QWidget):
 
         """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
-        #self.clearButton.clicked.connect(self.clearFileNames)
         self.deleteButton.clicked.connect(self.remove)
         self.listWidget.itemSelectionChanged.connect(self.selected)
 
-        self.current_frame = 0
         self.file_list = []
 
     def pickFileNames(self):
@@ -60,12 +59,13 @@ class Filemanager(QWidget):
         This method ensures that only supported files are displayed and can be used.
         """
 
+        supported_filetypes = Settings.get_instance().get_dict_settings()["Filemanager"]["import_formats"]
         fileNames, _ = QFileDialog.getOpenFileNames(
             self,
             'QFileDialog.getOpenFileNames()',
             '',
             (
-                'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
+                supported_filetypes
             )
         )
 
@@ -85,11 +85,10 @@ class Filemanager(QWidget):
             return
 
         if file.upper().endswith(('.JPG', '.PNG')):
-            picture = Image.open(file)
+            pixmap = QPixmap(file)
             QApplication.processEvents()
                 
         elif file.upper().endswith(('.MP4')):
-            path = Resources.get_instance().images.media_symbols
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
 
@@ -97,31 +96,30 @@ class Filemanager(QWidget):
             if not ret:
                 return
             else:
-                cv2.imwrite(os.path.join(path, "video%d.jpg" % self.current_frame), frame)
-                filename = "video%d.jpg" % self.current_frame
-                self.current_frame += 1
-                preview_file = Path(path, filename)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                height, width, channel = frame.shape
+                q_img = QImage(frame.data, width, height, 3 * width, QImage.Format_RGB888)
+                pixmap = QPixmap.fromImage(q_img)
+
             cap.release()
             cv2.destroyAllWindows()
-
-            picture = Image.open(preview_file)
             QApplication.processEvents()
                 
         elif file.upper().endswith(('.MP3', '*.WAV')):
             path = Resources.get_instance().images.media_symbols
             filename = "mp3logo.jpg"
-            path_to_file = Path(path, filename)
-            picture = Image.open(path_to_file)
+            path_to_file = os.path.join(path, filename)
+            pixmap = QPixmap(path_to_file)
             QApplication.processEvents()
                 
         else:
             print("The datatype is not supported")
             pass
 
-        time.sleep(0.5)
-        picture = picture.resize(((275,200)), Image.ANTIALIAS)
+        #time.sleep(0.5)
         QApplication.processEvents()
-        icon = QIcon(QPixmap.fromImage(ImageQt.ImageQt(picture)))
+        icon = QIcon(pixmap.scaled(QSize(275,200)))
         item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
         item.setIcon(icon)
         item.setToolTip(file)

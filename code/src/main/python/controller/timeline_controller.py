@@ -2,14 +2,25 @@
 The controller module for communication between timelineview and
 timelinemodel.
 """
+
+import os
+import math
+
 import cv2
+import openshot
 from PyQt5.QtGui import QImage, QPixmap
+
+from config import Resources
+from model.data import FileType
 
 # from view.timeline.timelineview.timeline_view import TimelineView  # may not be needed
 
 # Todo: Fill the interface methods which translate actions from the
 #       Ubicut frontend (view) to the backend (model) with some
 #       function.
+
+# should be changable later
+PIXELS_PER_SECOND = 16
 
 
 class TimelineController:
@@ -104,13 +115,53 @@ class TimelineController:
         pass
 
     @staticmethod
-    def get_pixmap_from_file(path, frame):
-        v = cv2.VideoCapture(path)
-        v.set(cv2.CAP_PROP_POS_FRAMES, frame)
+    def get_width_from_file(path):
+        t = TimelineController.get_file_type(path)
 
-        success, image = v.read()
-        if not success:
-            return
+        width = 0
+
+        if t == FileType.VIDEO_FILE:
+            v = cv2.VideoCapture(path)
+            v.set(cv2.CAP_PROP_POS_AVI_RATIO, 1)
+            d = v.get(cv2.CAP_PROP_POS_MSEC)
+            width = TimelineController.seconds_to_pos(d / 1000)
+
+        elif t == FileType.AUDIO_FILE:
+            c = openshot.Clip(path)
+            d = c.Duration()
+            width = TimelineController.seconds_to_pos(d)
+
+        elif t == FileType.IMAGE_FILE:
+            width = TimelineController.get_px_per_second()
+
+        return width
+
+    @staticmethod
+    def get_pixmap_from_file(path, frame):
+        t = TimelineController.get_file_type(path)
+
+        if t == FileType.IMAGE_FILE:
+            image = cv2.imread(path)
+            if image is None:
+                return None
+
+        elif t == FileType.VIDEO_FILE:
+            v = cv2.VideoCapture(path)
+            v.set(cv2.CAP_PROP_POS_FRAMES, frame)
+
+            success, image = v.read()
+            if not success:
+                return None
+
+        elif t == FileType.AUDIO_FILE:
+            path = Resources.get_instance().images.media_symbols
+            path_to_file = os.path.join(path, "mp3logo.jpg")
+            pixmap = QPixmap(path_to_file)
+
+            return pixmap
+
+        else:
+            return None
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -119,3 +170,37 @@ class TimelineController:
         pixmap = QPixmap.fromImage(q_img)
 
         return pixmap
+
+    @staticmethod
+    def get_file_type(path):
+        """ Gets the file type from the extension of the file """
+        _, ext = os.path.splitext(path)
+        if ext in ['.jpg', '.png', '.jpeg']:
+            return FileType.IMAGE_FILE
+        elif ext in ['.mp4', '.mov']:
+            return FileType.VIDEO_FILE
+        elif ext in ['.mp3', '.wav']:
+            return FileType.AUDIO_FILE
+
+        return FileType.OTHER_FILE
+
+    @staticmethod
+    def get_px_per_second():
+        # s = Settings.get_instance().get_dict_settings()
+        # return int(s["Timeline"]["pixels_per_second"])
+
+        return PIXELS_PER_SECOND
+
+    @staticmethod
+    def pos_to_seconds(pos):
+        return pos / TimelineController.get_px_per_second()
+
+    @staticmethod
+    def seconds_to_pos(sec):
+        return int(math.ceil(sec * TimelineController.get_px_per_second()))
+
+    # for debugging
+    @staticmethod
+    def print_clip_info(clip):
+        print('position: {}\nstart: {}\nend: {}\nduration: {}'.format(
+            clip.Position(), clip.Start(), clip.End(), clip.Duration()))

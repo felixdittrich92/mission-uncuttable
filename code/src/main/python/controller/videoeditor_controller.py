@@ -1,6 +1,7 @@
 from .settings_controller import SettingsController
-from view.settingsview import SettingsView
 from .projectsettings_controller import ProjectSettingsController
+from model.project import Project
+from view.settingsview import SettingsView
 from view.settingsview import ProjectSettingsView
 from view.exportview import ExportView
 
@@ -19,6 +20,10 @@ class VideoEditorController:
             self.__start_projectsettings_controller)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
+        self.__video_editor_view.actionUndo.triggered.connect(
+            self.__start_undo)
+
+        self.__history = Project.get_instance().get_history()
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
@@ -48,3 +53,8 @@ class VideoEditorController:
         """shows the export view"""
         export_view = ExportView()
         export_view.start()
+
+    def __start_undo(self):
+        """ Undo last action """
+        if self.__history.get_num_operations() > 0:
+            self.__history.undo_last_operation()

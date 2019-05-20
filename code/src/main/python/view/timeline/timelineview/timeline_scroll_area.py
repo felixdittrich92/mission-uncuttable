@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import QFrame, QScrollBar
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, QPoint
 from PyQt5 import uic
 
 import os
 
+from .time_needle import TimeNeedle
 from config import Resources
 from .track_button_frame import TrackButtonFrame
 from .time_bar import TimeBar
@@ -78,6 +79,22 @@ class TimelineScrollArea(QFrame):
 
         self.__show_debug_info_on_gui()
 
+        self.__needle_top = TimeNeedle(self.__time_bar.height(), True)
+        self.__needle_top.setParent(self.__time_bar)
+        self.__needle_top.move_needle(5)
+
+        self.__needle_bottom = TimeNeedle(self.__track_frame.height())
+        self.__needle_bottom.setParent(self.__track_frame)
+        self.__needle_bottom.setObjectName("needle_bottom")
+        self.__needle_bottom.move_needle(5)
+
+        self.__needle_top.pos_changed.connect(self.__needle_bottom.move_needle)
+        self.__needle_bottom.pos_changed.connect(self.__needle_top.move_needle)
+        self.__track_frame.height_changed.connect(self.__needle_bottom.set_drawing_height)
+
+        self.__needle_bottom.set_drawing_height(300)
+        self.__needle_bottom.repaint()
+
     def __setup_dependencies(self):
         self.__track_button_frame.link_to_height(self.__track_frame)
         self.__time_bar.link_to_width(self.__track_frame)
@@ -134,5 +151,3 @@ class TimelineScrollArea(QFrame):
         Setup the component somehow so that something can be seen which
         makes it possible to say if something works properly or not.
         """
-
-        # self.setStyleSheet('background-color: blue')
