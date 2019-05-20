@@ -1,6 +1,6 @@
-#from .media_file import MediaFile
+from media_file import MediaFile
 
-class Video(MediaFile):
+class VisualiserVideo(MediaFile):
     """
     This class contains the video
     """

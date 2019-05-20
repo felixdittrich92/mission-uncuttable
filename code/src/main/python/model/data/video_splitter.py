@@ -5,9 +5,10 @@ import cv2
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
-#from moviepy.editor import *
-#from .video import Video
-#from .audio import Audio
+from moviepy.editor import *
+from visualiser_video import VisualiserVideo
+from board_video import BoardVideo
+from audio import Audio
 import shutil
 
 class VideoSplitter:
@@ -62,7 +63,7 @@ class VideoSplitter:
         cv2.destroyAllWindows()
         new_large_video_path = Path(folder, large_video_name)
         self.files.append(new_large_video_path)
-        Video(new_large_video_path)
+        BoardVideo(new_large_video_path)
 
 
 def small_video(self):
@@ -95,7 +96,7 @@ def small_video(self):
     cv2.destroyAllWindows()
     new_small_video_path = Path(folder, small_video_name)
     self.files.append(new_small_video_path)
-    Video(new_small_video_path)
+    VisualiserVideo(new_small_video_path)
 
 
 def audio_from_video(self):
