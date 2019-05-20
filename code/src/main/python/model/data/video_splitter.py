@@ -6,9 +6,9 @@ from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from moviepy.editor import *
-from visualiser_video import VisualiserVideo
-from board_video import BoardVideo
-from audio import Audio
+import VisualiserVideo
+import BoardVideo
+import Audio
 import shutil
 
 class VideoSplitter:
