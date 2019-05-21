@@ -3,16 +3,16 @@ import locale
 import openshot
 
 from .timeline import TimelineModel
-from util.timeline_utils import get_file_type, generate_id, pos_to_seconds
+from util.timeline_utils import get_file_type, pos_to_seconds
 
 
 class TimeableModel:
-    def __init__(self, file_name):
+    def __init__(self, file_name, clip_id):
         # otherwhise there is a json parse error
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
-        self.clip.Id(generate_id())
+        self.clip.Id(clip_id)
 
         self.file_name = file_name
         self.file_type = get_file_type(self.file_name)
@@ -23,7 +23,7 @@ class TimeableModel:
         if self.is_first_vid():
             self.set_timeline_data()
 
-        self.add_to_timeline()
+        # self.add_to_timeline()
 
     def get_info_dict(self):
         return {
@@ -31,10 +31,12 @@ class TimeableModel:
             "id": self.clip.Id(),
             "position": self.clip.Position(),
             "start": self.clip.Start(),
-            "end": self.clip.End()
+            "end": self.clip.End(),
+            "layer:": self.clip.Layer()
         }
 
     def add_to_timeline(self):
+        """ Adds the clip to the openshot timeline """
         self.timeline_instance.timeline.AddClip(self.clip)
 
     def is_first_vid(self):
@@ -115,24 +117,6 @@ class TimeableModel:
         data = {"end": new_end}
         self.timeline_instance.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
-
-    def cut(self, pos):
-        """ Sets the end of the clip to pos and creates a new clip starting from there """
-        old_end = self.clip.End()
-        self.set_end(self.clip.Start()
-                     + pos_to_seconds(pos), is_sec=True)
-
-        data = {"end": self.clip.End()}
-        self.timeline_instance.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
-
-        new_model = TimeableModel(self.file_name)
-        new_model.set_start(self.clip.End(), is_sec=True)
-        new_model.set_end(old_end, is_sec=True)
-        new_model.move(self.clip.Position() + pos_to_seconds(pos),
-                       is_sec=True)
-
-        return new_model
 
     def move(self, pos, is_sec=False):
         """ Sets the position of the clip """
