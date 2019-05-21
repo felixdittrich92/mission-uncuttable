@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QPushButton
 from PyQt5 import uic
 from PyQt5.QtCore import QObject
-
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
