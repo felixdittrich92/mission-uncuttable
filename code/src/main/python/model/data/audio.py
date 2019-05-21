@@ -1,4 +1,4 @@
-import MediaFile
+from .media_file import MediaFile
 
 class Audio(MediaFile):
     """
