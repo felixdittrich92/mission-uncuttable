@@ -56,7 +56,7 @@ class BoardVideo(MediaFile):
             return (thresholded, move_segment)
 
     def visualiser_area(self): 
-        video = cv2.VideoCapture("/home/felix/Schreibtisch/OpenCVPython/large_video.mp4")
+        video = cv2.VideoCapture("/home/felix/Schreibtisch/OpenCVPython/large_video.mp4") #get aus ressources
         length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         num_frames = 0
 
@@ -103,7 +103,7 @@ class BoardVideo(MediaFile):
         cv2.destroyAllWindows()
 
     def board_area(self):
-        video = cv2.VideoCapture("/home/felix/Schreibtisch/OpenCVPython/large_video.mp4")
+        video = cv2.VideoCapture("/home/felix/Schreibtisch/OpenCVPython/large_video.mp4") #get aus ressources
         length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         #print(length)
         num_frames = 0
