@@ -224,6 +224,7 @@ class CutOperation(Operation):
         self.model_end = model_end
         self.pos = pos
         self.new_view_id = generate_id()
+        self.new_model_id = generate_id()
 
     def do(self):
         controller = TimelineController.get_instance()
@@ -234,7 +235,7 @@ class CutOperation(Operation):
         model_left.set_end(model_left.clip.Start()
                            + pos_to_seconds(self.pos), is_sec=True)
 
-        new_model = TimeableModel(model_left.file_name, generate_id())
+        new_model = TimeableModel(model_left.file_name, self.new_model_id)
         new_model.set_start(model_left.clip.End(), is_sec=True)
         new_model.set_end(self.model_end, is_sec=True)
         new_model.move(model_left.clip.Position() + pos_to_seconds(self.pos),
