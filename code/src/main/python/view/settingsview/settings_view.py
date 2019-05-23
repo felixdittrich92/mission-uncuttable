@@ -62,29 +62,34 @@ class SettingsView(QMainWindow):
         """
         constructs a setting in form of a QWidget with a QHBoxLayout
         """
-        name = self.settings[x][y].get("name")
         type = self.settings[x][y].get("type")
-        values = self.settings[x][y].get("values")
-        current = self.settings[x][y].get("current")
 
-        widget = QWidget()
-        widget.setObjectName(name)
-        layout = QHBoxLayout()
-        layout.addWidget(QLabel(name))
+        if(type != "invisible"):
+            name = self.settings[x][y].get("name")
+            
+            values = self.settings[x][y].get("values")
+            current = self.settings[x][y].get("current")
 
-        if type == "dropdown":
-            box = QComboBox()
-            box.addItems(values)
-            box.setCurrentIndex(current)
-            layout.addWidget(box)
-        elif type == "checkbox":
-            checkbox = QCheckBox()
-            checkbox.setChecked(current)
-            layout.addWidget(checkbox)
+            widget = QWidget()
+            widget.setObjectName(name)
+            layout = QHBoxLayout()
+            layout.addWidget(QLabel(name))
+
+            if type == "dropdown":
+                box = QComboBox()
+                box.addItems(values)
+                box.setCurrentIndex(current)
+                layout.addWidget(box)
+            elif type == "checkbox":
+                checkbox = QCheckBox()
+                checkbox.setChecked(current)
+                layout.addWidget(checkbox)
+            else:
+                layout.addWidget(QLabel("I'm not implemented yet :("))
+            widget.setLayout(layout)
+            return widget
         else:
-            layout.addWidget(QLabel("I'm not implemented yet :("))
-        widget.setLayout(layout)
-        return widget
+            return None
 
 
     def saveSettings(self):

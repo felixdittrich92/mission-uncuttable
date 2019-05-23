@@ -8,6 +8,8 @@ the type it sometimes is just an empty string.
 "Current" is the default setting. This will be the changed by the user.
 
 At the moment there are only the types dropdown and checkbox.
+
+If you want to add settings that shouldn't be accessible for the user just use the type "invisible" 
 """
 
 default_settings = {
@@ -47,6 +49,16 @@ default_settings = {
             "current": True}
     },
     "Filemanager": {
-        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
+        "import_formats":{
+            "name":"importformats",
+            "type": "invisible",
+            "values": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+            "current":"",
+        },
+        "option1": {
+            "name": "Option 1",
+            "type": "checkbox",
+            "values": "",
+            "current": True}
     }
 }
