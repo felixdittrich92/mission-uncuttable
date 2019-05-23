@@ -9,7 +9,7 @@ the type it sometimes is just an empty string.
 
 At the moment there are only the types dropdown and checkbox.
 
-If you want to add settings that shouldn't be accessible for the user just use the type "invisible" 
+If you want to add settings that shouldn't be accessible for the user just put them into the "Invisible" Tab
 """
 
 default_settings = {
@@ -48,17 +48,7 @@ default_settings = {
             "values": "",
             "current": True}
     },
-    "Filemanager": {
-        "import_formats":{
-            "name":"importformats",
-            "type": "invisible",
-            "values": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
-            "current":"",
-        },
-        "option1": {
-            "name": "Option 1",
-            "type": "checkbox",
-            "values": "",
-            "current": True}
-    }
+    "Invisible": {
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',   
+        }
 }

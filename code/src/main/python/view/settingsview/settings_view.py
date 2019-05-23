@@ -48,14 +48,15 @@ class SettingsView(QMainWindow):
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
         i = 0
         for x in settings:
-            tabWidget.addTab(QWidget(), x)
-            tabWidget.widget(i).layout = QVBoxLayout()
-            for y in settings[x]:
-                testWidget = self.makeSetting(x,y)
-                tabWidget.widget(i).layout.addWidget(testWidget)
-            tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
-            tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
-            i += 1      
+            if x != "Invisible":
+                tabWidget.addTab(QWidget(), x)
+                tabWidget.widget(i).layout = QVBoxLayout()
+                for y in settings[x]:
+                    testWidget = self.makeSetting(x,y)
+                    tabWidget.widget(i).layout.addWidget(testWidget)
+                tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
+                tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
+                i += 1      
 
 
     def makeSetting(self, x,y):
