@@ -48,11 +48,11 @@ default_settings = {
     },
     "Filemanager": {
         "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
-    }
+    },
     "AutoCutVideo": {
         "import_formats": 'Files ( *.mp4);;'
-    }
+    },
     "AutoCutPDF": {
-        "import_formats": 'Files ( *.mp4);;'
+        "import_formats": 'Files ( *.pdf);;'
     }
 }

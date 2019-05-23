@@ -24,21 +24,42 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="2" column="2">
-        <widget class="QPushButton" name="pushButton_2">
+       <item row="4" column="4">
+        <widget class="QPushButton" name="ok_button">
+         <property name="text">
+          <string>OK</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="3">
+        <widget class="QPushButton" name="cancel_button">
+         <property name="text">
+          <string>Abbrechen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="pdf_image_label">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="QPushButton" name="pdf_button">
          <property name="text">
           <string>PDF</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="pushButton">
+       <item row="1" column="1" colspan="2">
+        <widget class="QPushButton" name="video_button">
          <property name="text">
           <string>Video</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="3">
+       <item row="4" column="0" colspan="3">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -51,29 +72,34 @@
          </property>
         </spacer>
        </item>
-       <item row="5" column="4">
-        <widget class="QPushButton" name="pushButton_3">
-         <property name="text">
-          <string>OK</string>
+       <item row="0" column="0" colspan="5">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-        </widget>
-       </item>
-       <item row="5" column="3">
-        <widget class="QPushButton" name="pushButton_4">
-         <property name="text">
-          <string>Abbrechen</string>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
          </property>
-        </widget>
+        </spacer>
        </item>
-       <item row="2" column="3">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>TextLabel</string>
+       <item row="3" column="0" colspan="5">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-        </widget>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
-       <item row="0" column="3">
-        <widget class="QLabel" name="label">
+       <item row="1" column="3">
+        <widget class="QLabel" name="video_image_label">
          <property name="text">
           <string>TextLabel</string>
          </property>

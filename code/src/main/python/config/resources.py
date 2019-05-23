@@ -21,6 +21,8 @@ images = {
     "forward_button": "images/buttons/step_forward.png",
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
+    "cross": "images/cross.svg",
+    "tick": "images/tick.svg"
 }
 strings = {
     "de": "strings/de/strings.xml",
