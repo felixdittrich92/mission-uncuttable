@@ -97,17 +97,18 @@ class SettingsView(QMainWindow):
         """
         goes throug all the settings and saves the values to the dictionary
         and saves the new dictionary with the save_settings() method from Settings.
-
         """
+
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
 
         i = 0
         for x in self.settings:
-            for y in self.settings[x]:
-                name = self.settings[x][y].get("name")
-                widget = self.findChild(QWidget, name)
-                self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
-                i += 1    
+            if x != "Invisible":
+                for y in self.settings[x]:
+                    name = self.settings[x][y].get("name")
+                    widget = self.findChild(QWidget, name)
+                    self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
+                    i += 1    
         
         self.settingsInstance.save_settings(self.settings)
         self.close()
