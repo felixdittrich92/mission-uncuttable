@@ -24,7 +24,6 @@ class StartView(QMainWindow):
         super(StartView, self).__init__()
         uic.loadUi(Resources.get_instance().files.startview, self)
 
-
         # centering the window
         rectangle = self.frameGeometry()
         center_point = QDesktopWidget().availableGeometry().center()

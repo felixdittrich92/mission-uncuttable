@@ -8,6 +8,7 @@ files = {
     "export_view": "ui/export.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
     "timeline_view": "ui/timeline_view.ui",
+    "autocut_view": "ui/autocut.ui",
     "qss_dark": "stylesheets/dark.qss",
     "qss_light": "stylesheets/light.qss"
 }
