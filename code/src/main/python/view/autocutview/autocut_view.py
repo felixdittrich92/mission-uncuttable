@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QDesktopWidget
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow
 from PyQt5 import uic
 from config import Resources
 
 
-class AutocutView:
+class AutocutView(QMainWindow):
     """
 
     """
