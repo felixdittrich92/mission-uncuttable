@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QSlider
-from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPolygonF, QDrag
-from PyQt5.QtCore import Qt, QPoint, QPointF, QObject, pyqtSignal, QMimeData
-import sys, math, time
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPolygonF
+from PyQt5.QtCore import Qt, QPoint, QPointF, pyqtSignal
+import math
+
+from view.preview.preview import PreviewView
 
 NEEDLE_COLOR = "#D66853"
 NEEDLE_WIDTH = 10
@@ -43,6 +45,8 @@ class TimeNeedle(QWidget):
         self.setCursor(Qt.PointingHandCursor)
         self.pos_changed.connect(self.move_needle)
 
+        preview = PreviewView.get_instance()
+        preview.frame_changed.connect(self.move)
     def paintEvent(self, e):
         self.__qp.begin(self)
         self.draw_needle(self.__qp)
@@ -132,7 +136,9 @@ class TimeNeedle(QWidget):
 
         if new_x >= half_width and new_x < parent_width - half_width:
             self.move(new_x, 0)
-        
+
+    def move_needle_absolute(self, x):
+        self.move()
 
     def mousePressEvent(self, event):
         """

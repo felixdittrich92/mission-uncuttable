@@ -2,19 +2,34 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import *
 from config import Resources
-from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication
+from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication, \
+    pyqtSignal, QPoint
 import openshot
 import sip
 from model.data import TimelineModel
 import time
 from .videoWidget import VideoWidget
 
+
 class PreviewView(QWidget):
     """
     QWidget for Previewplayer
     """
+    frame_changed = pyqtSignal(QPoint)
+
+    __instance = None
+    @staticmethod
+    def get_instance():
+        if PreviewView.__instance is None:
+            PreviewView()
+        return PreviewView.__instance
 
     def __init__(self):
+
+        if PreviewView.__instance is not None:
+            raise Exception("singleton")
+        else:
+            PreviewView.__instance = self
 
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
@@ -103,7 +118,7 @@ class PreviewView(QWidget):
         self.player.Seek(self.getlastFrame())
 
     def getlastFrame(self):
-        last_frame = 0
+        last_positionframe = 0
         for c in self.timeline.Clips():
             clip_last_frame = c.Position() + c.Duration()
             if clip_last_frame > last_frame:
@@ -130,7 +145,10 @@ class PreviewView(QWidget):
 
     def nextFrame(self):
         position = self.player.Position()
-        self.player.Seek(position+1)
+        print(position)
+        new_position = position + 1
+        self.player.Seek(new_position)
+        self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -138,7 +156,9 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position+10)
+            new_position = position + 10
+            self.player.Seek(new_position)
+            self.frame_changed.emit(QPoint(new_position, 0))
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

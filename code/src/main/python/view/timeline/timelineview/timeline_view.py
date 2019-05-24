@@ -42,6 +42,7 @@ class TimelineView(QFrame):
         self.__show_tracks()
         self.__show_debug_info_on_gui()
 
+
     def add_track(self, track):
         self.tracks[track.id] = track
         self.track_frame.add_track(track)
