@@ -1,4 +1,4 @@
-from controller import VideoEditorController
+from controller import VideoEditorController, StartController
 from controller import AutocutController
 from view import VideoEditorView
 from view import AutocutView
@@ -33,5 +33,5 @@ class MainController:
     def __start_autocut_controller(self):
         self.__start_view.close()
         autocut_view = AutocutView()
-        self.__autocut_controller = AutocutController(autocut_view)
+        self.__autocut_controller = AutocutController(autocut_view, self)
         self.__autocut_controller.start()

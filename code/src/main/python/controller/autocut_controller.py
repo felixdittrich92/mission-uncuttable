@@ -9,11 +9,14 @@ from config import Settings
 
 class AutocutController:
     """A class used as the Controller for the autocut window."""
-    def __init__(self, view):
+    def __init__(self, view, main_controller):
         self.__autocut_view = view
         self.__autocut_view.video_button.clicked.connect(self.pick_video)
         self.__autocut_view.pdf_button.clicked.connect(self.pick_pdf)
         self.__autocut_view.ok_button.clicked.connect(self.ready)
+        self.__autocut_view.cancel_button.clicked.connect(self.stop)
+
+        self.__main_controller = main_controller
 
     def start(self):
         """Calls '__show_view()' of AutocutController"""
@@ -22,7 +25,7 @@ class AutocutController:
     def stop(self):
         """Closes the window."""
         self.__autocut_view.close()
-
+        self.__main_controller.start()
     def pick_video(self):
         """Opens a file picker to select a video file."""
         supported_filetypes = Settings.get_instance().get_dict_settings()["AutoCutVideo"]["import_formats"]
