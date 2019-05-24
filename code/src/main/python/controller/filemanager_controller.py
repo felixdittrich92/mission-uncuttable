@@ -59,7 +59,7 @@ class Filemanager(QWidget):
         This method ensures that only supported files are displayed and can be used.
         """
 
-        supported_filetypes = Settings.get_instance().get_dict_settings()["Filemanager"]["import_formats"]
+        supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["import_formats"]
         fileNames, _ = QFileDialog.getOpenFileNames(
             self,
             'QFileDialog.getOpenFileNames()',

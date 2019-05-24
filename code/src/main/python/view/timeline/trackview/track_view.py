@@ -3,11 +3,10 @@ import os
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
-from view.timeline.timeableview import TimeableView
-from model.project import TimeableModel, TimelineModel
-
-
-# TODO move some stuff to timeline controller
+from model.data import TimeableModel
+from model.project import Project
+from controller import TimelineController
+from util.timeline_utils import generate_id
 
 
 class TrackView(QGraphicsView):
@@ -23,8 +22,8 @@ class TrackView(QGraphicsView):
 
         @param width: track width
         @param height: track height
-        @param num: the layer of the track, clips in tracks with higher numbers get rendered
-                    above others
+        @param num: the layer of the track, clips in tracks with
+                    higher numbers get rendered above others
         """
         super(TrackView, self).__init__(parent)
 
@@ -32,9 +31,13 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
 
+        self.id = generate_id()
+
         # for drag and drop handling
         self.item_dropped = False
         self.current_timeable = None
+        self.drag_from_track = False
+        self.dragged_timeable_id = None
 
         self.setAcceptDrops(True)
 
@@ -48,10 +51,6 @@ class TrackView(QGraphicsView):
 
         self.setCacheMode(QGraphicsView.CacheBackground)
         self.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
-
-        self.setMinimumWidth(self.width)
-        self.setFixedHeight(self.height)
-
         self.setScene(QGraphicsScene())
 
         self.resize()
@@ -62,10 +61,8 @@ class TrackView(QGraphicsView):
 
     def resize(self):
         """ sets the size of the trackview to self.width and self.height """
-        self.setMinimumSize(self.width, self.height)
         self.scene().setSceneRect(0, 0, self.width, self.height)
-
-        # TODO adjust sizes of other tracks via timeline controller
+        self.setFixedSize(self.width, self.height)
 
     def set_width(self, new_width):
         """
@@ -76,17 +73,10 @@ class TrackView(QGraphicsView):
         self.width = new_width
         self.resize()
 
-    def add_timeable(self, name, width, drag_pos, mouse_pos, model, res_left=0, res_right=0):
-        """ Adds a TimeableView to the Track. """
-        x_pos = drag_pos - mouse_pos
-        if width + x_pos > self.width:
-            self.set_width(width + x_pos)
-
-        timeable = TimeableView(name, width, self.height, x_pos, res_left, res_right, model)
-        timeable.mouse_press_pos = mouse_pos
+    def add_timeable(self, timeable):
+        """ Adds a TimeableView to the GraphicsScene """
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
-        self.current_timeable = timeable
 
     def add_from_filemanager(self, drag_event):
         """ Adds a timeable when item from filemanager is dragged into the track """
@@ -103,26 +93,29 @@ class TrackView(QGraphicsView):
         colliding = self.scene().items(rect)
         # add the timeable when there are no colliding items
         if not colliding:
-            model = TimeableModel(path)
+            model = TimeableModel(path, generate_id())
             model.move(x_pos)
             model.set_end(width)
 
             name = os.path.basename(path)
-            self.add_timeable(name, width, x_pos, 0, model)
+            TimelineController.get_instance().create_timeable(self.id, name, width,
+                                                              x_pos, model, generate_id())
             self.item_dropped = True
-
-            return True
-
-        return False
 
     def add_from_track(self, drag_event):
         """ Adds a timeable when a drag was started from a timeable on a track """
         # get the data thats needed to check for collisions
         item_data = drag_event.mimeData().data('ubicut/timeable')
         stream = QDataStream(item_data, QIODevice.ReadOnly)
-        name = QDataStream.readString(stream).decode()
-        width = QDataStream.readInt(stream)
-        pos = QDataStream.readInt(stream)
+
+        view_id = QDataStream.readString(stream).decode()
+        timeable = TimelineController.get_instance().get_timeable_by_id(view_id)
+
+        self.dragged_timeable_id = view_id
+
+        name = timeable.name
+        width = timeable.width
+        pos = timeable.mouse_press_pos
 
         # get a list of items at the position where the timeable would be added
         start_pos = drag_event.pos().x()
@@ -130,38 +123,34 @@ class TrackView(QGraphicsView):
             return
 
         rect = QRectF(start_pos - pos, 0, width, self.height)
-        colliding = [item for item in self.scene().items(rect) if item.isVisible]
+        colliding = [item for item in self.scene().items(rect)
+                     if item.isVisible]
 
         # only add the timeable if colliding is empty
         if not colliding:
-            # read the rest of the data from the dragevent
-            res_left = QDataStream.readInt(stream)
-            res_right = QDataStream.readInt(stream)
-            file_name = QDataStream.readString(stream).decode()
-            clip_id = QDataStream.readString(stream).decode()
+            res_left = timeable.resizable_left
+            res_right = timeable.resizable_right
+            file_name = timeable.model.file_name
 
             # create new timeable
-            model = TimeableModel(file_name)
+            model = TimeableModel(file_name, generate_id())
 
-            # find the old clip to get start and end of the clip
-            timeline = TimelineModel.get_instance()
-            old_clip = timeline.get_clip_by_id(clip_id)
+            old_clip = timeable.model.clip
 
             # adjust the new model
             model.set_start(old_clip.Start(), is_sec=True)
             model.set_end(old_clip.End(), is_sec=True)
-            model.move(start_pos)
+            model.move(start_pos - pos)
 
             # add the timeable to the track
-            self.add_timeable(name, width, start_pos, pos, model,
-                              res_left=res_left, res_right=res_right)
+            controller = TimelineController.get_instance()
+            controller.create_timeable(self.id, name, width, start_pos, model,
+                                       generate_id(), res_left=res_left,
+                                       res_right=res_right, mouse_pos=pos, hist=False)
+            self.drag_from_track = True
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
-
-            return True
-
-        return False
 
     def move_dropped_timeable(self, event):
         pos = event.pos().x() - self.current_timeable.mouse_press_pos
@@ -174,13 +163,11 @@ class TrackView(QGraphicsView):
             self.add_from_track(event)
 
             event.accept()
-
         elif event.mimeData().hasFormat('ubicut/file'):
             # try to add a timeable
             self.add_from_filemanager(event)
 
             event.accept()
-
         else:
             event.ignore()
 
@@ -188,7 +175,9 @@ class TrackView(QGraphicsView):
         """ Gets called when something is dragged out of the track """
         if self.current_timeable is not None:
             # delete dragged timeable if mouse leaves track
-            self.current_timeable.delete()
+            self.current_timeable.delete(hist=False)
+            if not self.drag_from_track:
+                Project.get_instance().get_history().remove_last_operation()
 
             # clear data
             self.item_dropped = False
@@ -210,7 +199,6 @@ class TrackView(QGraphicsView):
             # try to add the timeable if it wasn't added before
             self.add_from_track(event)
             event.accept()
-
         elif event.mimeData().hasFormat('ubicut/file'):
             # move the timeable if it was created
             if self.item_dropped:
@@ -221,7 +209,6 @@ class TrackView(QGraphicsView):
             # try to add the timeable if it wasn't added before
             self.add_from_filemanager(event)
             event.accept()
-
         else:
             event.ignore()
 
@@ -230,8 +217,18 @@ class TrackView(QGraphicsView):
         if event.mimeData().hasFormat('ubicut/timeable'):
             # accept MoveAction if timeable was succesfully created
             if self.current_timeable is not None:
+                if self.drag_from_track:
+                    controller = TimelineController.get_instance()
+                    t = controller.get_timeable_by_id(self.dragged_timeable_id)
+                    self.current_timeable.model.move(self.current_timeable.x_pos)
+                    controller.drag_timeable(t.get_info_dict(),
+                                             self.current_timeable.get_info_dict(),
+                                             t.model, self.current_timeable.model)
+
                 event.acceptProposedAction()
+
                 self.current_timeable = None
+                self.dragged_timeable_id = None
 
             # set item_dropped to false for next drag
             self.item_dropped = False

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QListWidget, QListView
 from PyQt5.QtCore import QByteArray, QDataStream, QMimeData, QIODevice, Qt, QSize
 from PyQt5.QtGui import QDrag
 
-from controller import TimelineController
+from util.timeline_utils import get_pixmap_from_file, get_width_from_file
 
 
 class FileListView(QListWidget):
@@ -26,7 +26,7 @@ class FileListView(QListWidget):
         QDataStream.writeString(data_stream, str.encode(path))
 
         # get width of timeable that would be created
-        width = TimelineController.get_width_from_file(path)
+        width = get_width_from_file(path)
 
         # do nothing if width is 0 because something went wrong
         if width == 0:
@@ -38,7 +38,7 @@ class FileListView(QListWidget):
         mime_data.setData('ubicut/file', item_data)
 
         # set first frame as pixmap
-        pixmap = TimelineController.get_pixmap_from_file(path, 1)
+        pixmap = get_pixmap_from_file(path, 1)
 
         # create and execute drag
         drag = QDrag(self)
