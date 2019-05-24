@@ -6,11 +6,8 @@ import cv2
 import openshot
 from PyQt5.QtGui import QImage, QPixmap
 
-from config import Resources
+from config import Resources, Settings
 from model.data import FileType
-
-# should be changable later
-PIXELS_PER_SECOND = 16
 
 
 def get_width_from_file(path):
@@ -84,10 +81,8 @@ def get_file_type(path):
 
 
 def get_px_per_second():
-    # s = Settings.get_instance().get_dict_settings()
-    # return int(s["Timeline"]["pixels_per_second"])
-
-    return PIXELS_PER_SECOND
+    s = Settings.get_instance().get_dict_settings()
+    return int(s["Invisible"]["pixels_per_second"])
 
 
 def pos_to_seconds(pos):
