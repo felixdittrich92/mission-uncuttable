@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFileDialog
-from model.data import VideoSplitter
-from model.data import Presentation
+from model.splitter import VideoSplitter
+from model.splitter import Presentation
 from model.data import BoardVideo
 from model.data import VisualiserVideo
 
@@ -62,9 +62,11 @@ class AutocutController:
             video_splitter = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video)
             video_splitter.audio_from_video()
             video_splitter.small_video()
-            board_video = video_splitter.large_video()
-            board_video.visualiser_area()
-            boardvideo.board_area()
+            visualiser_video = video_splitter.large_video()
+            visualiser_video.visualiser_area()
+            video_splitter2 = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video)
+            board_video = video_splitter2.large_video()
+            board_video.board_area()
    
         else:
             #QDialog einfügen 

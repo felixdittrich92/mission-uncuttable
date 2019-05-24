@@ -10,7 +10,6 @@ from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QLabel, QPushButton, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
 from PIL import Image, ImageQt
-from pathlib import Path
 from config import Resources
 from view.mainview import FileListView
 from config import Settings
@@ -70,6 +69,7 @@ class Filemanager(QWidget):
         )
 
         for file in fileNames:
+
             QApplication.processEvents()
             self.addFileNames(file)
 
@@ -87,7 +87,7 @@ class Filemanager(QWidget):
         if file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
-                
+                        
         elif file.upper().endswith(('.MP4')):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
@@ -117,7 +117,6 @@ class Filemanager(QWidget):
             print("The datatype is not supported")
             pass
 
-        #time.sleep(0.5)
         QApplication.processEvents()
         icon = QIcon(pixmap.scaled(QSize(275,200)))
         item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)

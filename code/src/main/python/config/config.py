@@ -47,7 +47,7 @@ default_settings = {
             "current": True}
     },
     "Filemanager": {
-        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;'
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;'
     },
     "AutoCutVideo": {
         "import_formats": 'Files ( *.mp4);;'
