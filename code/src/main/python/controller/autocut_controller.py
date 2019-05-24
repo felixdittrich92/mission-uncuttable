@@ -3,6 +3,10 @@ from model.splitter import VideoSplitter
 from model.splitter import Presentation
 from model.data import BoardVideo
 from model.data import VisualiserVideo
+from controller import VideoEditorController
+from view import VideoEditorView
+
+from view import StartView
 
 from config import Settings
 
@@ -14,6 +18,7 @@ class AutocutController:
         self.__autocut_view.video_button.clicked.connect(self.pick_video)
         self.__autocut_view.pdf_button.clicked.connect(self.pick_pdf)
         self.__autocut_view.ok_button.clicked.connect(self.ready)
+        #self.__autocut_view.cancel_button.clicked.connect(self.cancel)
 
     def start(self):
         """Calls '__show_view()' of AutocutController"""
@@ -71,4 +76,20 @@ class AutocutController:
         else:
             #QDialog einfügen 
             return
+
+        self.__autocut_view.close()
+        video_editor_view = VideoEditorView()
+        self.__video_editor_controller = VideoEditorController(video_editor_view)
+        self.__video_editor_controller.start()
+    """
+    def cancel(self):
+        self.__autocut_view.close()
+        try:
+            self.__video_editor_controller.stop()
+        except NameError:
+            pass
+        """
+
+
+
 
