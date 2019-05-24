@@ -93,7 +93,9 @@ class BoardVideo(MediaFile):
                         number = 0
                         start = self.visualiser_time[0]
                         end = self.visualiser_time[-1]
-                        clip = openshot.Clip(number)
+                        full_video = VideoSplitter("/home/felix/Schreibtisch/", "Projekt", "large_video.mp4")
+                        small_video = full_video.small_video()
+                        clip = openshot.Clip(small_video)
                         clip.Start(start)
                         clip.End(end)
                         self.subvideos.append(clip)
@@ -107,8 +109,8 @@ class BoardVideo(MediaFile):
         cv2.destroyAllWindows()
 
     def board_area(self):
-        video = self.__file_path
-        video = cv2.VideoCapture(str(video))
+        full_video = self.__file_path
+        video = cv2.VideoCapture(str(full_video))
         length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         num_frames = 0
 
@@ -142,7 +144,7 @@ class BoardVideo(MediaFile):
                         number = 0
                         start = self.board_time[0]
                         end = self.board_time[-1]
-                        clip = openshot.Clip("a" + number)
+                        clip = openshot.Clip(full_video)
                         clip.Start(start)
                         clip.End(end)
                         self.subvideos.append(clip)

@@ -3,6 +3,10 @@ from model.splitter import VideoSplitter
 from model.splitter import Presentation
 from model.data import BoardVideo
 from model.data import VisualiserVideo
+from controller import VideoEditorController
+from view import VideoEditorView
+
+from view import StartView
 
 from config import Settings
 
@@ -15,7 +19,6 @@ class AutocutController:
         self.__autocut_view.pdf_button.clicked.connect(self.pick_pdf)
         self.__autocut_view.ok_button.clicked.connect(self.ready)
         self.__autocut_view.cancel_button.clicked.connect(self.stop)
-
         self.__main_controller = main_controller
 
     def start(self):
@@ -26,6 +29,7 @@ class AutocutController:
         """Closes the window."""
         self.__autocut_view.close()
         self.__main_controller.start()
+
     def pick_video(self):
         """Opens a file picker to select a video file."""
         supported_filetypes = Settings.get_instance().get_dict_settings()["AutoCutVideo"]["import_formats"]
@@ -75,3 +79,7 @@ class AutocutController:
             #QDialog einfügen 
             return
 
+        self.__autocut_view.close()
+        video_editor_view = VideoEditorView()
+        self.__video_editor_controller = VideoEditorController(video_editor_view)
+        self.__video_editor_controller.start()
