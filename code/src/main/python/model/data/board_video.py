@@ -1,5 +1,7 @@
 from .media_file import MediaFile
 import openshot
+import numpy as np
+import cv2
 
 class BoardVideo(MediaFile):
     """
@@ -29,19 +31,19 @@ class BoardVideo(MediaFile):
     
     def calc_accum_avg(self, frame, accumulated_weight):
 
-        global background
+        self.background
 
-        if background is None:
-            background = frame.copy().astype("float")
+        if self.background is None:
+            self.background = frame.copy().astype("float")
             return None
         
         cv2.accumulateWeighted(frame, background, self.accumulated_weight)
 
     def segment(self, frame, threshold=50):
 
-        global background
+        self.background
 
-        diff = cv2.absdiff(background.astype("uint8"),frame)
+        diff = cv2.absdiff(self.background.astype("uint8"),frame)
 
         _, thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)
 
@@ -56,8 +58,9 @@ class BoardVideo(MediaFile):
             return (thresholded, move_segment)
 
     def visualiser_area(self): 
-        video = cv2.VideoCapture("/home/felix/Schreibtisch/OpenCVPython/large_video.mp4") #get aus ressources
-        length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+        video = self.__file_path
+        video = cv2.VideoCapture(str(video))
+        #length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         num_frames = 0
 
         fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -84,7 +87,7 @@ class BoardVideo(MediaFile):
                     time = milli/1000
                     self.visualiser_time.append(time)
                 elif visualiser is None:
-                    if not visualiser_time:
+                    if not self.visualiser_time:
                         pass
                     else:
                         number = 0
@@ -98,14 +101,15 @@ class BoardVideo(MediaFile):
                         number += 1
 
             num_frames += 1
+            #print(self.subvideos)
 
         video.release()
         cv2.destroyAllWindows()
 
     def board_area(self):
-        video = cv2.VideoCapture("/home/felix/Schreibtisch/OpenCVPython/large_video.mp4") #get aus ressources
+        video = self.__file_path
+        video = cv2.VideoCapture(str(video))
         length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-        #print(length)
         num_frames = 0
 
         fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -132,7 +136,7 @@ class BoardVideo(MediaFile):
                     time = milli/1000
                     self.board_time.append(time)
                 elif board is None:
-                    if not board_time:
+                    if not self.board_time:
                         pass
                     else:
                         number = 0

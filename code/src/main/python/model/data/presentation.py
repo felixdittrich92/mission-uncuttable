@@ -7,14 +7,13 @@ from .slide import Slide
 
 class Presentation:
 
-    def __init__(self, file_path, filename):
+    def __init__(self, file_data):
         """
         Constructor of the class
         @param file_path: the path to the pdf
         @param filename: the name of the pdf
         """
-        self.file_path = file_path
-        self.filename = filename
+        self.file_data = file_data
         self.files = []
 
 
@@ -29,7 +28,7 @@ class Presentation:
         @param resolution: resolution for every converted pdf picture
         """
 
-        input_file = Path(self.file_path, self.filename)
+        input_file = self.file_data
         check_pdf = fnmatch(input_file, '*.pdf')
         if check_pdf == True:
             folder = Path(folder_path, folder_name)
