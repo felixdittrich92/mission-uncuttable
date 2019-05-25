@@ -4,3 +4,6 @@
 #from .slide import Slide
 #from .video import Video
 #from .audio import Audio
+from .filetype import FileType
+from .timeable import TimeableModel
+from .timeline import TimelineModel

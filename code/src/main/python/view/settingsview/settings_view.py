@@ -48,60 +48,67 @@ class SettingsView(QMainWindow):
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
         i = 0
         for x in settings:
-            tabWidget.addTab(QWidget(), x)
-            tabWidget.widget(i).layout = QVBoxLayout()
-            for y in settings[x]:
-                testWidget = self.makeSetting(x,y)
-                tabWidget.widget(i).layout.addWidget(testWidget)
-            tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
-            tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
-            i += 1      
+            if x != "Invisible":
+                tabWidget.addTab(QWidget(), x)
+                tabWidget.widget(i).layout = QVBoxLayout()
+                for y in settings[x]:
+                    testWidget = self.makeSetting(x,y)
+                    tabWidget.widget(i).layout.addWidget(testWidget)
+                tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
+                tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
+                i += 1      
 
 
     def makeSetting(self, x,y):
         """
         constructs a setting in form of a QWidget with a QHBoxLayout
         """
-        name = self.settings[x][y].get("name")
         type = self.settings[x][y].get("type")
-        values = self.settings[x][y].get("values")
-        current = self.settings[x][y].get("current")
 
-        widget = QWidget()
-        widget.setObjectName(name)
-        layout = QHBoxLayout()
-        layout.addWidget(QLabel(name))
+        if(type != "invisible"):
+            name = self.settings[x][y].get("name")
+            
+            values = self.settings[x][y].get("values")
+            current = self.settings[x][y].get("current")
 
-        if type == "dropdown":
-            box = QComboBox()
-            box.addItems(values)
-            box.setCurrentIndex(current)
-            layout.addWidget(box)
-        elif type == "checkbox":
-            checkbox = QCheckBox()
-            checkbox.setChecked(current)
-            layout.addWidget(checkbox)
+            widget = QWidget()
+            widget.setObjectName(name)
+            layout = QHBoxLayout()
+            layout.addWidget(QLabel(name))
+
+            if type == "dropdown":
+                box = QComboBox()
+                box.addItems(values)
+                box.setCurrentIndex(current)
+                layout.addWidget(box)
+            elif type == "checkbox":
+                checkbox = QCheckBox()
+                checkbox.setChecked(current)
+                layout.addWidget(checkbox)
+            else:
+                layout.addWidget(QLabel("I'm not implemented yet :("))
+            widget.setLayout(layout)
+            return widget
         else:
-            layout.addWidget(QLabel("I'm not implemented yet :("))
-        widget.setLayout(layout)
-        return widget
+            return None
 
 
     def saveSettings(self):
         """
         goes throug all the settings and saves the values to the dictionary
         and saves the new dictionary with the save_settings() method from Settings.
-
         """
+
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
 
         i = 0
         for x in self.settings:
-            for y in self.settings[x]:
-                name = self.settings[x][y].get("name")
-                widget = self.findChild(QWidget, name)
-                self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
-                i += 1    
+            if x != "Invisible":
+                for y in self.settings[x]:
+                    name = self.settings[x][y].get("name")
+                    widget = self.findChild(QWidget, name)
+                    self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
+                    i += 1    
         
         self.settingsInstance.save_settings(self.settings)
         self.close()

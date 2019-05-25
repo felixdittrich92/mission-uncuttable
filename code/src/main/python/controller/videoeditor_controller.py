@@ -1,6 +1,7 @@
 from .settings_controller import SettingsController
-from view.settingsview import SettingsView
 from .projectsettings_controller import ProjectSettingsController
+from model.project import Project
+from view.settingsview import SettingsView
 from view.settingsview import ProjectSettingsView
 from view.exportview import ExportView
 
@@ -15,10 +16,17 @@ class VideoEditorController:
         self.__video_editor_view = view
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
+        self.__settings_controller = SettingsController(None)
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
+        self.__video_editor_view.actionUndo.triggered.connect(
+            self.__start_undo)
+        self.__video_editor_view.actionRedo.triggered.connect(
+            self.__start_redo)
+
+        self.__history = Project.get_instance().get_history()
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
@@ -34,9 +42,13 @@ class VideoEditorController:
 
     def __start_settings_controller(self):
         """Opens the settings window"""
-        settings_view = SettingsView()
-        self.__settings_controller = SettingsController(settings_view)
-        self.__settings_controller.start()
+        if self.__settings_controller.checkIfClosed():
+            self.settings_view = SettingsView()
+            self.__settings_controller = SettingsController(self.settings_view)
+            self.__settings_controller.start()
+        else:
+            self.__settings_controller.focus()
+
 
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
@@ -48,3 +60,17 @@ class VideoEditorController:
         """shows the export view"""
         export_view = ExportView()
         export_view.start()
+
+    def __start_undo(self):
+        """ Undo last action """
+        try:
+            self.__history.undo_last_operation()
+        except:
+            pass
+
+    def __start_redo(self):
+        """ Redo last action """
+        try:
+            self.__history.redo_last_operation()
+        except:
+            pass

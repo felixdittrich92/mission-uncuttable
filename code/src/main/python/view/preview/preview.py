@@ -5,7 +5,7 @@ from config import Resources
 from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication
 import openshot
 import sip
-from model.project import TimelineModel
+from model.data import TimelineModel
 import time
 from .videoWidget import VideoWidget
 
@@ -13,9 +13,9 @@ class PreviewView(QWidget):
     """
     QWidget for Previewplayer
     """
-    
+
     def __init__(self):
-               
+
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
         self.RESOURCES = Resources.get_instance()
@@ -26,7 +26,7 @@ class PreviewView(QWidget):
         #get timelinemlodel, timeline
         tm = TimelineModel.get_instance()
         self.timeline = tm.getTimeline()
-        
+
         #init Openshot Player
         self.player = openshot.QtPlayer()
 
@@ -39,8 +39,8 @@ class PreviewView(QWidget):
         self.renderer = sip.wrapinstance(self.renderer_address, QObject)
 
         #get adress from videoWidget
-        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget)) 
-        
+        self.player.SetQWidget(sip.unwrapinstance(self.videoWidget))
+
         #connect signals of videoWidget and renderer
         self.videoWidget.connectSignals(self.renderer)
 
@@ -49,9 +49,9 @@ class PreviewView(QWidget):
 
         #init GUI
         self.initGUI()
-        
 
-    def initGUI(self):    
+
+    def initGUI(self):
         #load icons
         self.iconplay = QtGui.QPixmap(self.RESOURCES.images.play_button)
         self.iconpause = QtGui.QPixmap(self.RESOURCES.images.pause_button)
@@ -60,7 +60,7 @@ class PreviewView(QWidget):
         iconback = QtGui.QPixmap(self.RESOURCES.images.back_button)
         iconforward = QtGui.QPixmap(self.RESOURCES.images.forward_button)
         iconmax = QtGui.QPixmap(self.RESOURCES.images.maximize_button)
-    
+
         #set icons to buttons
         self.play_button.setIcon(QIcon(self.iconplay))
         self.first_frame_button.setIcon(QIcon(iconfirstframe))
@@ -69,7 +69,7 @@ class PreviewView(QWidget):
         self.forward_button.setIcon(QIcon(iconforward))
         self.maximize_button.setIcon(QIcon(iconmax))
 
-        #connect events 
+        #connect events
         self.play_button.clicked.connect(self.play_pause)
         self.first_frame_button.clicked.connect(self.firstFrame)
         self.last_frame_button.clicked.connect(self.lastFrame)
@@ -82,14 +82,14 @@ class PreviewView(QWidget):
 
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
-    
+
     def play_pause(self):
         if self.video_running:
             self.player.Pause()
             self.video_running = False
             self.play_button.setIcon(QIcon(self.iconplay))
 
-        else:   
+        else:
             self.player.Play()
             self.video_running = True
             self.play_button.setIcon(QIcon(self.iconpause))
@@ -138,7 +138,7 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position+10)           
+            self.player.Seek(position+10)
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

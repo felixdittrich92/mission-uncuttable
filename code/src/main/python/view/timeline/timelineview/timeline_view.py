@@ -1,15 +1,11 @@
 from PyQt5.QtWidgets import QFrame, QPushButton
 from PyQt5 import uic
 from PyQt5.QtCore import QObject
-
 from config import Resources
-from model.project import TimeableModel
-from util.timeline_utils import seconds_to_pos
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
-
-# from util.timeline_utils import seconds_to_pos
-# from model.project import TimeableModel
+from view.timeline.timeableview import TimeableView
+from controller import TimelineController
 
 
 class TimelineView(QFrame):
@@ -38,14 +34,16 @@ class TimelineView(QFrame):
         self.track_frame = self.findChild(QFrame, "track_frame")
         self.track_button_frame = self.findChild(QFrame, "track_button_frame")
 
-        self.timeables = []
-        self.tracks = []
+        self.timeables = dict()
+        self.tracks = dict()
+
+        self.controller = TimelineController(self)
 
         self.__show_tracks()
         self.__show_debug_info_on_gui()
 
     def add_track(self, track):
-        self.tracks.append(track)
+        self.tracks[track.id] = track
         self.track_frame.add_track(track)
 
         self.adjust_track_sizes()
@@ -55,20 +53,49 @@ class TimelineView(QFrame):
         if not self.tracks or len(self.tracks) == 1:
             return
 
-        max_width = self.tracks[0].width
+        track_views = list(self.tracks.values())
 
-        for t in self.tracks[1:]:
+        max_width = track_views[0].width
+
+        for t in track_views[1:]:
             if t.width > max_width:
                 max_width = t.width
 
-        for t in self.tracks:
+        for t in track_views:
             t.set_width(max_width)
 
-    def add_timeable(self, id, name, start, length, track, marked=False):
-        pass
+    def create_timeable(self, track_id, name, width, x_pos, model, id,
+                        res_left=0, res_right=0, mouse_pos=0):
+        """ Creates and adds a timeable to the specified track """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            return
+
+        x_pos = x_pos - mouse_pos
+        if width + x_pos > track.width:
+            track.set_width(width + x_pos)
+            TimelineController.get_instance().adjust_tracks()
+
+        timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
+                                model, id, track_id)
+        timeable.mouse_press_pos = mouse_pos
+        track.add_timeable(timeable)
+
+        track.current_timeable = timeable
+
+        # add timeable to dict
+        self.timeables[id] = timeable
 
     def remove_timeable(self, id):
-        pass
+        """ Removes the timeable from the view and deletes it from the dict """
+        try:
+            timeable = self.timeables[id]
+        except KeyError:
+            return
+
+        timeable.remove_from_scene()
+        self.timeables.pop(id, None)
 
     def set_timeable_name(self, id, name):
         pass
@@ -88,14 +115,7 @@ class TimelineView(QFrame):
     def __show_tracks(self):
         """shows some tracks with timeables to see if everything works"""
 
-
-        # testing data
-        # f = "video.mp4"
-        # model = TimeableModel(f)
-        # w = seconds_to_pos(model.clip.Duration())
-
         tr1 = TrackView(5000, 50, 3)
-        # tr1.add_timeable(f, w, 0, model)
         self.add_track(tr1)
         btn1 = QPushButton("Track 1")
         btn1.setFixedSize(80, 50)
