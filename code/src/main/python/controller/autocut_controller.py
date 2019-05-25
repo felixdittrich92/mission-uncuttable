@@ -1,11 +1,10 @@
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from model.splitter import VideoSplitter
 from model.splitter import Presentation
 from model.data import BoardVideo
 from model.data import VisualiserVideo
 from controller import VideoEditorController
 from view import VideoEditorView
-
 from view import StartView
 
 from config import Settings
@@ -16,6 +15,7 @@ BOARD_ROI_SLICES = (slice(140, 260), slice(150, 750))
 
 class AutocutController:
     """A class used as the Controller for the autocut window."""
+
     def __init__(self, view, main_controller):
         self.__autocut_view = view
         self.__autocut_view.video_button.clicked.connect(self.pick_video)
@@ -60,16 +60,19 @@ class AutocutController:
         )
         if self.filename_pdf:
             self.__autocut_view.change_icon(self.__autocut_view.pdf_image_label)
+        else:
+            pass
 
     def ready(self):
+        """autocut the input files and start the video editor view"""
         if self.filename_pdf is not None:
             presentation = Presentation(self.filename_pdf)
-            presentation.convert_pdf("/home/felix/Schreibtisch/", "Projekt", 250)
+            presentation.convert_pdf("/home/felix/Schreibtisch/", "Projekt", 250) #Pfad ändern bis Projektordner vorhanden ist
         else:
             pass
         
         if self.filename_video is not None:
-            video_splitter = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video)
+            video_splitter = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video) #Pfad ändern bis Projektordner vorhanden ist
             video_splitter.audio_from_video()
             video_splitter.small_video()
             visualiser_video = video_splitter.large_video()
@@ -80,6 +83,8 @@ class AutocutController:
         else:
             #QDialog einfügen 
             return
+
+        # View einfügen bis Bearbeitung abgeschlossen ist Ladebalken oder ähnliches
 
         self.__autocut_view.close()
         video_editor_view = VideoEditorView()

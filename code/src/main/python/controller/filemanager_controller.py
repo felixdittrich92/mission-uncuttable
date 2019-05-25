@@ -138,7 +138,7 @@ class Filemanager(QWidget):
         """This method saves the selected files to a list"""
         try:
             selected_files = []
-            path = self.listWidget.currentItem().statusTip() #String
+            path = self.listWidget.currentItem().statusTip() 
             selected_files.append(path)
         except:
             return

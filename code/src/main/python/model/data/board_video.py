@@ -6,7 +6,7 @@ import openshot
 
 class BoardVideo(MediaFile):
     """
-    This class contains the video
+    This class contains the video and analyse the areas for autocut
     """
 
     def __init__(self, file_path):
@@ -16,6 +16,9 @@ class BoardVideo(MediaFile):
         self.subvideos = list()
 
     def calculate_accumulated_average(self, frame):
+        """
+        a method that manage the background for the frame difference
+        """
         if self.background is None:
             self.background = frame.copy().astype('float')
         else:
@@ -24,6 +27,12 @@ class BoardVideo(MediaFile):
             )
 
     def segment(self, frame, threshold=50):
+        """
+        a method that found a movement
+
+        @return: if no movement None else the thresholded frame and the contours
+        """
+
         diff = cv2.absdiff(self.background.astype('uint8'), frame)
         _, thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)
         contours, _hierarchy = cv2.findContours(
@@ -35,6 +44,9 @@ class BoardVideo(MediaFile):
             return (thresholded, max(contours, key=cv2.contourArea))
 
     def area(self, roi_slices, clip_prefix):
+        """
+        a method that analyse the video and save the Clips in a list
+        """
         video = cv2.VideoCapture(str(self.file_path))
         try:
             background_subtractor = cv2.createBackgroundSubtractorMOG2()
@@ -64,7 +76,7 @@ class BoardVideo(MediaFile):
                             clip.End(times[-1])
                             self.subvideos.append(clip)
                             times.clear()
-                            print(self.subvideos)
+                            #print(self.subvideos)
         finally:
             video.release()
             cv2.destroyAllWindows()

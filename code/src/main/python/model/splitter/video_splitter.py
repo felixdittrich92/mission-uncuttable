@@ -1,15 +1,12 @@
-from pdf2image import convert_from_path
 import os
 import numpy as np
 import cv2
-from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
 from moviepy.editor import *
 from model.data import VisualiserVideo
 from model.data import BoardVideo
 from model.data import Audio
-import shutil
 
 class VideoSplitter:
     """
