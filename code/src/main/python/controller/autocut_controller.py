@@ -10,6 +10,9 @@ from view import StartView
 
 from config import Settings
 
+VISUALISER_ROI_SLICES = (slice(250, 600), slice(800, 1000))
+BOARD_ROI_SLICES = (slice(140, 260), slice(150, 750))
+
 
 class AutocutController:
     """A class used as the Controller for the autocut window."""
@@ -70,10 +73,9 @@ class AutocutController:
             video_splitter.audio_from_video()
             video_splitter.small_video()
             visualiser_video = video_splitter.large_video()
-            visualiser_video.visualiser_area()
-            video_splitter2 = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video)
-            board_video = video_splitter2.large_video()
-            board_video.board_area()
+            visualiser_video.area(VISUALISER_ROI_SLICES, "v_video")
+            board_video = video_splitter.large_video()
+            board_video.area(BOARD_ROI_SLICES, "b_video")
    
         else:
             #QDialog einfügen 
