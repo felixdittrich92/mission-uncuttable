@@ -49,6 +49,7 @@ default_settings = {
             "current": True}
     },
     "Invisible": {
-        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',   
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "pixels_per_second": 16
         }
 }

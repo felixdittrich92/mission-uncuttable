@@ -185,6 +185,7 @@ class TrackView(QGraphicsView):
 
             event.ignore()
 
+        self.update()
         event.accept()
 
     def dragMoveEvent(self, event):
@@ -232,11 +233,13 @@ class TrackView(QGraphicsView):
 
             # set item_dropped to false for next drag
             self.item_dropped = False
+            self.update()
 
         elif event.mimeData().hasFormat('ubicut/file'):
             # clear data for next drag
             self.item_dropped = False
             self.current_timeable = None
+            self.update()
 
         else:
             event.ignore()
