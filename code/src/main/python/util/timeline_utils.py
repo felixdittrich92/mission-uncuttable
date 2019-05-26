@@ -50,7 +50,7 @@ def get_pixmap_from_file(path, frame):
 
     elif t == FileType.AUDIO_FILE:
         path = Resources.get_instance().images.media_symbols
-        path_to_file = os.path.join(path, "mp3logo.jpg")
+        path_to_file = os.path.join(path, "mp3.png")
         pixmap = QPixmap(path_to_file)
 
         return pixmap

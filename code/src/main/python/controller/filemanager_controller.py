@@ -108,7 +108,7 @@ class Filemanager(QWidget):
                 
         elif file.upper().endswith(('.MP3', '*.WAV')):
             path = Resources.get_instance().images.media_symbols
-            filename = "mp3logo.jpg"
+            filename = "mp3.png"
             path_to_file = os.path.join(path, filename)
             pixmap = QPixmap(path_to_file)
             QApplication.processEvents()
