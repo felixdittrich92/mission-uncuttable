@@ -1,3 +1,5 @@
+from PyQt5.QtWidgets import QWidget
+
 from controller import VideoEditorController
 from view import VideoEditorView
 
@@ -6,7 +8,8 @@ class MainController:
     """A class uses as the Controller, that manages the windows of the program."""
     def __init__(self, view):
         self.__start_view = view
-        self.__start_view.manual_cut_button.clicked.connect(self.__start_main_controller)
+        manual_cut_button = self.__start_view.findChild(QWidget, "manual_cut_button")
+        manual_cut_button.clicked.connect(self.__start_main_controller)
 
     def start(self):
         """Calls show() of StartView"""
