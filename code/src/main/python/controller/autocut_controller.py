@@ -72,24 +72,22 @@ class AutocutController:
             presentation = Presentation(self.filename_pdf)
             presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION) 
         else:
-            pass
-        
-        if self.filename_video is not None:
-            video_splitter = VideoSplitter(projekt_path, projekt_name,self.filename_video) 
-            video_splitter.audio_from_video_cut()
-            video_splitter.small_video_cut()
-            visualiser_video = video_splitter.large_video_cut()
-            visualiser_video.area(VISUALISER_ROI_SLICES, "small_video")
-            board_video = video_splitter.large_video_cut()
-            board_video.area(BOARD_ROI_SLICES, "large_video")
+            if self.filename_video is not None:
+                video_splitter = VideoSplitter(projekt_path, projekt_name,self.filename_video) 
+                video_splitter.audio_from_video_cut()
+                video_splitter.small_video_cut()
+                visualiser_video = video_splitter.large_video_cut()
+                visualiser_video.area(VISUALISER_ROI_SLICES, "small_video")
+                board_video = video_splitter.large_video_cut()
+                board_video.area(BOARD_ROI_SLICES, "large_video")
    
-        else:
-            #QDialog einfügen 
-            return
+            else:
+                #QDialog einfügen 
+                return
+            
+            # View einfügen bis Bearbeitung abgeschlossen ist Ladebalken oder ähnliches
 
-        # View einfügen bis Bearbeitung abgeschlossen ist Ladebalken oder ähnliches
-
-        self.__autocut_view.close()
-        video_editor_view = VideoEditorView()
-        self.__video_editor_controller = VideoEditorController(video_editor_view)
-        self.__video_editor_controller.start()
+            self.__autocut_view.close()
+            video_editor_view = VideoEditorView()
+            self.__video_editor_controller = VideoEditorController(video_editor_view)
+            self.__video_editor_controller.start()
