@@ -27,7 +27,7 @@ class VideoSplitter:
         self.files = []
         self.audio_files = []
 
-    def large_video(self):
+    def large_video_cut(self):
         """
         a method to get the part of the speaker from the "main video" and save it in the project folder
         and create a object of this
@@ -61,7 +61,7 @@ class VideoSplitter:
         return BoardVideo(new_large_video_path)
 
 
-    def small_video(self):
+    def small_video_cut(self):
         """
         a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
         and create a object of this
@@ -94,7 +94,7 @@ class VideoSplitter:
         return VisualiserVideo(new_small_video_path)
 
 
-    def audio_from_video(self):
+    def audio_from_video_cut(self):
         """
         a method to get the audio from a video and save it in the project folder
         and create a object of this

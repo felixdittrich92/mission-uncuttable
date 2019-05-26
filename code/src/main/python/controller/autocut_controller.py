@@ -11,6 +11,9 @@ from config import Settings
 
 VISUALISER_ROI_SLICES = (slice(250, 600), slice(800, 1000))
 BOARD_ROI_SLICES = (slice(140, 260), slice(150, 750))
+RESOLUTION = 250
+projekt_path = "/home/felix/Schreibtisch/"  #Pfad ändern wenn Projekt anlegen vorhanden
+projekt_name = "Projekt"
 
 
 class AutocutController:
@@ -67,18 +70,18 @@ class AutocutController:
         """autocut the input files and start the video editor view"""
         if self.filename_pdf is not None:
             presentation = Presentation(self.filename_pdf)
-            presentation.convert_pdf("/home/felix/Schreibtisch/", "Projekt", 250) #Pfad ändern bis Projektordner vorhanden ist
+            presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION) 
         else:
             pass
         
         if self.filename_video is not None:
-            video_splitter = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video) #Pfad ändern bis Projektordner vorhanden ist
-            video_splitter.audio_from_video()
-            video_splitter.small_video()
-            visualiser_video = video_splitter.large_video()
-            visualiser_video.area(VISUALISER_ROI_SLICES, "v_video")
-            board_video = video_splitter.large_video()
-            board_video.area(BOARD_ROI_SLICES, "b_video")
+            video_splitter = VideoSplitter(projekt_path, projekt_name,self.filename_video) 
+            video_splitter.audio_from_video_cut()
+            video_splitter.small_video_cut()
+            visualiser_video = video_splitter.large_video_cut()
+            visualiser_video.area(VISUALISER_ROI_SLICES, "small_video")
+            board_video = video_splitter.large_video_cut()
+            board_video.area(BOARD_ROI_SLICES, "large_video")
    
         else:
             #QDialog einfügen 
