@@ -15,7 +15,7 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, parent=None):
+    def __init__(self, width, height, num, name, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -30,8 +30,7 @@ class TrackView(QGraphicsView):
         self.width = width
         self.height = height
         self.num = num
-
-        self.id = generate_id()
+        self.name = name
 
         # for drag and drop handling
         self.item_dropped = False
@@ -57,10 +56,10 @@ class TrackView(QGraphicsView):
 
     def get_info_dict(self):
         return {
-            "id": self.id,
             "width": self.width,
             "height": self.height,
-            "num": self.num
+            "num": self.num,
+            "name": self.name
         }
 
     def wheelEvent(self, event):
@@ -106,7 +105,7 @@ class TrackView(QGraphicsView):
             model.set_end(width)
 
             name = os.path.basename(path)
-            TimelineController.get_instance().create_timeable(self.id, name, width,
+            TimelineController.get_instance().create_timeable(self.num, name, width,
                                                               x_pos, model, generate_id())
             self.item_dropped = True
 
@@ -152,7 +151,7 @@ class TrackView(QGraphicsView):
 
             # add the timeable to the track
             controller = TimelineController.get_instance()
-            controller.create_timeable(self.id, name, width, start_pos, model,
+            controller.create_timeable(self.num, name, width, start_pos, model,
                                        generate_id(), res_left=res_left,
                                        res_right=res_right, mouse_pos=pos, hist=False)
             self.drag_from_track = True
