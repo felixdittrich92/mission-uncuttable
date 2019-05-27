@@ -82,4 +82,8 @@ class VideoEditorController:
         timeline_controller = TimelineController.get_instance()
         timeline_data = timeline_controller.get_project_timeline()
 
+        filemanager = self.__video_editor_view.filemanager
+        filemanager_data = filemanager.get_project_filemanager()
+
         print(timeline_data)
+        print(filemanager_data)
