@@ -1,11 +1,9 @@
 from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5 import uic
+
 from config import Resources
-import os
 from config import Settings
-import json
 
 
 class SettingsView(QMainWindow):
@@ -91,6 +89,11 @@ class SettingsView(QMainWindow):
                 checkbox = QCheckBox()
                 checkbox.setChecked(current)
                 layout.addWidget(checkbox)
+            elif type == "text" or type == "shortcut":
+                text_edit = QLineEdit()
+                text_edit.setText(current)
+
+                layout.addWidget(text_edit)
             else:
                 layout.addWidget(QLabel("I'm not implemented yet :("))
             widget.setLayout(layout)
@@ -135,6 +138,12 @@ class SettingsView(QMainWindow):
                 self.settings[x][y]["current"] = True
             else:
                 self.settings[x][y]["current"] = False
+        elif type == "text":
+            text_edit = widget.findChild(QLineEdit)
+            self.settings[x][y]["current"] = text_edit.text()
+        elif type == "shortcut":  # TODO VALIDIERUNG
+            text_edit = widget.findChild(QLineEdit)
+            self.settings[x][y]["current"] = text_edit.text()
         else:
             return 0
 

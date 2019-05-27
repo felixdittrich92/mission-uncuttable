@@ -2,6 +2,7 @@ import json
 
 from PyQt5.QtWidgets import QFileDialog
 
+from shortcuts import ShortcutLoader
 from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
 from .timeline_controller import TimelineController
@@ -36,6 +37,8 @@ class VideoEditorController:
             self.__start_save_as)
 
         self.__history = Project.get_instance().get_history()
+        ShortcutLoader(self.__video_editor_view)
+
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
