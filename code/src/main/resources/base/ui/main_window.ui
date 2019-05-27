@@ -152,6 +152,7 @@
      <string>Edit</string>
     </property>
     <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
    </widget>
    <addaction name="menuProgramm"/>
    <addaction name="menuProjekt"/>
@@ -196,6 +197,11 @@
   <action name="actionUndo">
    <property name="text">
     <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
    </property>
   </action>
  </widget>

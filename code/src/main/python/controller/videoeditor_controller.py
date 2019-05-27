@@ -22,6 +22,8 @@ class VideoEditorController:
             self.__start_export_controller)
         self.__video_editor_view.actionUndo.triggered.connect(
             self.__start_undo)
+        self.__video_editor_view.actionRedo.triggered.connect(
+            self.__start_redo)
 
         self.__history = Project.get_instance().get_history()
 
@@ -56,5 +58,14 @@ class VideoEditorController:
 
     def __start_undo(self):
         """ Undo last action """
-        if self.__history.get_num_operations() > 0:
+        try:
             self.__history.undo_last_operation()
+        except:
+            pass
+
+    def __start_redo(self):
+        """ Redo last action """
+        try:
+            self.__history.redo_last_operation()
+        except:
+            pass
