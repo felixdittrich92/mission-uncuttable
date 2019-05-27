@@ -10,7 +10,7 @@ class BoardVideo(MediaFile):
     """
 
     def __init__(self, file_path):
-        self.file_path = file_path
+        self.file_path = str(file_path)
         self.background = None
         self.accumulate_weight = 0.5
         self.subvideos = list()
@@ -49,34 +49,41 @@ class BoardVideo(MediaFile):
         """
         video = cv2.VideoCapture(str(self.file_path))
         try:
-            background_subtractor = cv2.createBackgroundSubtractorMOG2()
+            # background_subtractor = cv2.createBackgroundSubtractorMOG2()
             times = list()
-            clip_numbers = count()
             for frame_number in count():
                 is_ok, frame = video.read()
                 if not is_ok:
+                    if times:
+                        clip = openshot.Clip(self.file_path)
+                        clip.Start(times[0])
+                        clip.End(times[-1])
+                        self.subvideos.append(clip)
                     break
 
                 roi = frame[roi_slices]
                 gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
                 gray = cv2.GaussianBlur(gray, (9, 9), 0)
-                foreground_mask = background_subtractor.apply(roi)
+                # foreground_mask = background_subtractor.apply(roi)
 
                 if frame_number == 0:
                     self.calculate_accumulated_average(gray)
-                else:
-                    if not self.segment(gray):
-                        times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
-                    else:
-                        if times:
-                            clip = openshot.Clip(
-                                '{}{}'.format(clip_prefix, next(clip_numbers))
-                            )
-                            clip.Start(times[0])
-                            clip.End(times[-1])
-                            self.subvideos.append(clip)
-                            times.clear()
-                            #print(self.subvideos)
+                elif not self.segment(gray):
+                    times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
+                elif times:
+                    # clip = openshot.Clip(
+                    #     '{}{}'.format(clip_prefix, next(clip_numbers))
+                    # )
+                    clip = openshot.Clip(self.file_path)
+                    clip.Start(times[0])
+                    clip.End(times[-1])
+                    self.subvideos.append(clip)
+                    times.clear()
+                    #print(self.subvideos)
         finally:
             video.release()
             cv2.destroyAllWindows()
+
+#         for c in self.subvideos:
+#             print(c.Start())
+#             print(c.End())

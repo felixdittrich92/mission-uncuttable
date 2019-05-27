@@ -3,10 +3,11 @@ import numpy as np
 import cv2
 from PIL import Image
 from pathlib import Path
-from moviepy.editor import *
+from moviepy.editor import VideoFileClip
 from model.data import VisualiserVideo
 from model.data import BoardVideo
 from model.data import Audio
+
 
 class VideoSplitter:
     """
@@ -32,15 +33,14 @@ class VideoSplitter:
         a method to get the part of the speaker from the "main video" and save it in the project folder
         and create a object of this
         """
-
-        video_file = self.video_data
         folder = Path(self.folder_path, self.folder_name)
 
-        cap = cv2.VideoCapture(str(video_file))
+        cap = cv2.VideoCapture(self.video_data)
 
         large_video_name = 'large_video.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(os.path.join(folder,str(large_video_name)), fourcc , 21, (938, 530))
+        out = cv2.VideoWriter(os.path.join(
+            folder, large_video_name), fourcc, 25, (938, 530))
 
         if(cap.isOpened() == False):
             print("Error opening video stream or file")
@@ -60,20 +60,18 @@ class VideoSplitter:
         self.files.append(new_large_video_path)
         return BoardVideo(new_large_video_path)
 
-
     def small_video(self):
         """
         a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
         and create a object of this
         """
-        video_file = self.video_data
         folder = Path(self.folder_path, self.folder_name)
 
-        cap = cv2.VideoCapture(str(video_file))
+        cap = cv2.VideoCapture(self.video_data)
 
         small_video_name = 'small_video.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(os.path.join(folder,str(small_video_name)), fourcc , 21, (700, 530))
+        out = cv2.VideoWriter(os.path.join(folder, small_video_name), fourcc, 25, (700, 530))
 
         if(cap.isOpened() == False):
             print("Error opening video stream or file")
@@ -93,7 +91,6 @@ class VideoSplitter:
         self.files.append(new_small_video_path)
         return VisualiserVideo(new_small_video_path)
 
-
     def audio_from_video(self):
         """
         a method to get the audio from a video and save it in the project folder
@@ -101,13 +98,11 @@ class VideoSplitter:
         """
 
         folder = Path(self.folder_path, self.folder_name)
-        video = self.video_data
 
         audio_from_video = 'audio.mp3'
-        video = VideoFileClip(str(video))
+        video = VideoFileClip(self.video_data)
         audio = video.audio
-        audio.write_audiofile(os.path.join(folder,str(audio_from_video)))
+        audio.write_audiofile(os.path.join(folder, audio_from_video))
         extracted_audio = Path(folder, audio_from_video)
         self.audio_files.append(extracted_audio)
         return Audio(extracted_audio)
-

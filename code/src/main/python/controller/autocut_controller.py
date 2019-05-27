@@ -1,11 +1,10 @@
+import os
+
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from model.splitter import VideoSplitter
 from model.splitter import Presentation
-from model.data import BoardVideo
-from model.data import VisualiserVideo
 from controller import VideoEditorController
 from view import VideoEditorView
-from view import StartView
 
 from config import Settings
 
@@ -23,6 +22,9 @@ class AutocutController:
         self.__autocut_view.ok_button.clicked.connect(self.ready)
         self.__autocut_view.cancel_button.clicked.connect(self.stop)
         self.__main_controller = main_controller
+
+        self.filename_video = None
+        self.filename_pdf = None
 
     def start(self):
         """Calls '__show_view()' of AutocutController"""
@@ -67,21 +69,22 @@ class AutocutController:
         """autocut the input files and start the video editor view"""
         if self.filename_pdf is not None:
             presentation = Presentation(self.filename_pdf)
-            presentation.convert_pdf("/home/felix/Schreibtisch/", "Projekt", 250) #Pfad ändern bis Projektordner vorhanden ist
-        else:
-            pass
-        
+            presentation.convert_pdf(os.path.join(os.path.expanduser("~"),
+                                                  "Schreibtisch"), "Projekt", 250)
+
         if self.filename_video is not None:
-            video_splitter = VideoSplitter("/home/felix/Schreibtisch/", "Projekt",self.filename_video) #Pfad ändern bis Projektordner vorhanden ist
+            video_splitter = VideoSplitter(
+                os.path.join(os.path.expanduser("~"), "Schreibtisch"),
+                "Projekt", self.filename_video)
             video_splitter.audio_from_video()
             video_splitter.small_video()
             visualiser_video = video_splitter.large_video()
             visualiser_video.area(VISUALISER_ROI_SLICES, "v_video")
             board_video = video_splitter.large_video()
             board_video.area(BOARD_ROI_SLICES, "b_video")
-   
+
         else:
-            #QDialog einfügen 
+            #QDialog einfügen
             return
 
         # View einfügen bis Bearbeitung abgeschlossen ist Ladebalken oder ähnliches
