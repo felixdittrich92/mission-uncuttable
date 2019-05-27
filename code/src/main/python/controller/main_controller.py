@@ -15,7 +15,8 @@ class MainController:
         manual_cut_button.clicked.connect(self.__start_main_controller)
 
         auto_cut_button = self.__start_view.findChild(QWidget, "auto_cut_button")
-        auto_cut_button.clicked.connect(self.__start_autocut_controllers)
+        auto_cut_button.clicked.connect(self.__start_autocut_controller)
+
     def start(self):
         """Calls show() of StartView"""
         self.__start_view.show()
