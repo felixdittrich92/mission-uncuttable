@@ -1,3 +1,7 @@
+import json
+
+from PyQt5.QtWidgets import QFileDialog
+
 from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
 from .timeline_controller import TimelineController
@@ -28,6 +32,8 @@ class VideoEditorController:
             self.__start_redo)
         self.__video_editor_view.actionSpeichern.triggered.connect(
             self.__start_save)
+        self.__video_editor_view.actionSpeichern_als.triggered.connect(
+            self.__start_save_as)
 
         self.__history = Project.get_instance().get_history()
 
@@ -87,3 +93,26 @@ class VideoEditorController:
 
         print(timeline_data)
         print(filemanager_data)
+
+    def __start_save_as(self):
+        """ Lets the user select a file and saves the project in that file """
+        # get timeline data
+        timeline_controller = TimelineController.get_instance()
+        timeline_data = timeline_controller.get_project_timeline()
+
+        # get filemanager data
+        filemanager = self.__video_editor_view.filemanager
+        filemanager_data = filemanager.get_project_filemanager()
+
+        # selectc file
+        filename, _ = QFileDialog.getSaveFileName(
+            self.__video_editor_view, 'Save File')
+
+        project_data = {
+            "timeline": timeline_data,
+            "filemanager": filemanager_data
+        }
+
+        # write data
+        with open(filename, 'w') as f:
+            json.dump(project_data, f, ensure_ascii=False)
