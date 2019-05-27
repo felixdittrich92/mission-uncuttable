@@ -1,3 +1,4 @@
+from shortcuts import ShortcutLoader
 from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
 from model.project import Project
@@ -27,6 +28,8 @@ class VideoEditorController:
             self.__start_redo)
 
         self.__history = Project.get_instance().get_history()
+        ShortcutLoader(self.__video_editor_view)
+
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""

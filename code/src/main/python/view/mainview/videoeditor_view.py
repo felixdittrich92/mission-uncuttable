@@ -22,6 +22,7 @@ class VideoEditorView(QMainWindow):
         self.load_timeline_widget()
         self.load_preview()
 
+
         self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
 
         "QSS HOT RELOAD"

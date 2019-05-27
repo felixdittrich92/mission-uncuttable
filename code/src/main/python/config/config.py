@@ -42,11 +42,12 @@ default_settings = {
         },
     },
     "ShortCuts": {
-        "option1": {
-            "name": "Option 1",
-            "type": "checkbox",
+        "undo": {
+            "name": "Rückgängig",
+            "type": "textwindow",
             "values": "",
-            "current": True}
+            "current": "z"
+        }
     },
     "Invisible": {
         "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',

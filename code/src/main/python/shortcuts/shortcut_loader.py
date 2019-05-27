@@ -5,8 +5,9 @@ class ShortcutLoader:
     """A class that creates shortcuts."""
     starter = "Ctrl+"
     key_combinations = {
-        "O": "Operation 'O'",
-        "E": "Operation 'E'"
+        "Z": "undo",
+        "Y": "redo",
+        "E": "export"
     }
 
     def __init__(self, window):
