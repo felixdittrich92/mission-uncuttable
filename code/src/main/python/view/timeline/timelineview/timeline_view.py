@@ -39,11 +39,16 @@ class TimelineView(QFrame):
 
         self.controller = TimelineController(self)
 
-        self.__show_tracks()
         self.__show_debug_info_on_gui()
 
-    def add_track(self, track):
-        self.tracks[track.id] = track
+    def create_track(self, name, width, height, num):
+        track = TrackView(width, height, num, name)
+        self.tracks[num] = track
+
+        btn1 = QPushButton(name)
+        btn1.setFixedSize(80, 50)
+        self.track_button_frame.add_button(btn1)
+
         self.track_frame.add_track(track)
 
         self.adjust_track_sizes()
@@ -111,21 +116,6 @@ class TimelineView(QFrame):
 
     def set_timeable_picture(self, id, picture):
         pass
-
-    def __show_tracks(self):
-        """shows some tracks with timeables to see if everything works"""
-
-        tr1 = TrackView(1000, 50, 3)
-        self.add_track(tr1)
-        btn1 = QPushButton("Track 1")
-        btn1.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn1)
-
-        tr2 = TrackView(2000, 50, 2)
-        self.add_track(tr2)
-        btn2 = QPushButton("Track 2")
-        btn2.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn2)
 
     def __show_debug_info_on_gui(self):
         """
