@@ -16,7 +16,8 @@ class Shortcut:
         @type  key_sequence: string
         @param key_sequence: The key sequence to activate the shortcut
         @type  operation: string
-        @param operation: String for sample output
+        @param operation: Operation that should be executed when the shortcut
+                            keys are pressed
         """
         shortcut = QShortcut(QKeySequence(key_sequence), window)
         shortcut.activated.connect(lambda: self.__execute(operation))
@@ -25,10 +26,9 @@ class Shortcut:
 
     def __execute(self, operation):
         """
-        This function is going to be replaced when real operations are
-        implemented and ready to be executed by a shortcut.
+        This function executes the operations.
 
-        @param operation: String for sample output
+        @param operation: Name of the operation as String
         """
         if operation == "undo":
             try:

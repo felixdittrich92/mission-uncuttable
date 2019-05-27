@@ -41,12 +41,30 @@ default_settings = {
             "current": True
         },
     },
-    "ShortCuts": {
+    "Shortcuts": {
+        "starter": {
+            "name": "Starter",
+            "type": "text",
+            "values": "",
+            "current": "Ctrl"
+        },
         "undo": {
             "name": "Rückgängig",
-            "type": "textwindow",
+            "type": "text",
             "values": "",
             "current": "z"
+        },
+        "redo": {
+            "name": "Wiederholen",
+            "type": "text",
+            "values": "",
+            "current": "y"
+        },
+        "export": {
+            "name": "Exportieren",
+            "type": "text",
+            "values": "",
+            "current": "e"
         }
     },
     "Invisible": {
