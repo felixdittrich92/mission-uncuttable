@@ -50,7 +50,7 @@ default_settings = {
     },
     "Invisible": {
         "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
-        "pixels_per_second": 16,
+        "frames_per_second": 21,
         "autocutvideo_import_formats": 'Files ( *.mp4);;',
         "autocutpdf_import_formats": 'Files ( *.pdf);;'
         }
