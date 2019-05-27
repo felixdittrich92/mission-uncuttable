@@ -71,7 +71,9 @@ class AutocutController:
         try:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
-                presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION) 
+                presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
+            else:
+                pass 
         except:
             pass
 

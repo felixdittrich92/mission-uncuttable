@@ -33,7 +33,7 @@ class Presentation:
         if check_pdf == True:
             folder = Path(folder_path, folder_name)
 
-            pages = convert_from_path(str(input_file), resolution) #Standardwert sollte 250 sein
+            pages = convert_from_path(str(input_file), resolution) #resolution standard must be 250
 
             for page_number, page in enumerate(pages, start=1):
                 target = folder / f"{page_number:03d}.jpg"
