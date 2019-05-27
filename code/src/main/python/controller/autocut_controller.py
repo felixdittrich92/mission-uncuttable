@@ -38,7 +38,7 @@ class AutocutController:
 
     def pick_video(self):
         """Opens a file picker to select a video file."""
-        supported_filetypes = Settings.get_instance().get_dict_settings()["AutoCutVideo"]["import_formats"]
+        supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["autocutvideo_import_formats"]
         self.filename_video, _ = QFileDialog.getOpenFileName(
             self.__autocut_view,
             'QFileDialog.getOpenFileNames()',
@@ -52,7 +52,7 @@ class AutocutController:
 
     def pick_pdf(self):
         """Opens a file picker to select a pdf."""
-        supported_filetypes = Settings.get_instance().get_dict_settings()["AutoCutPDF"]["import_formats"]
+        supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["autocutpdf_import_formats"]
         self.filename_pdf, _ = QFileDialog.getOpenFileName(
             self.__autocut_view,
             'QFileDialog.getOpenFileNames()',

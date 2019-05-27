@@ -48,17 +48,10 @@ default_settings = {
             "values": "",
             "current": True}
     },
-    "Filemanager": {
-        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;'
-    },
-    "AutoCutVideo": {
-        "import_formats": 'Files ( *.mp4);;'
-    },
-    "AutoCutPDF": {
-        "import_formats": 'Files ( *.pdf);;'
-    },
     "Invisible": {
-        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
         "pixels_per_second": 16
+        "autocutvideo_import_formats": 'Files ( *.mp4);;',
+        "autocutpdf_import_formats": 'Files ( *.pdf);;'
         }
 }
