@@ -1,4 +1,7 @@
+import time
+
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtCore import QThread, pyqtSignal
 from model.splitter import VideoSplitter
 from model.splitter import Presentation
 from model.data import BoardVideo
@@ -6,6 +9,7 @@ from model.data import VisualiserVideo
 from controller import VideoEditorController
 from view import VideoEditorView
 from view import StartView
+from random import *
 
 from config import Settings
 
@@ -25,6 +29,9 @@ class AutocutController:
         self.__autocut_view.pdf_button.clicked.connect(self.pick_pdf)
         self.__autocut_view.ok_button.clicked.connect(self.ready)
         self.__autocut_view.cancel_button.clicked.connect(self.stop)
+        self.progressbar = self.__autocut_view.progress_bar
+        self.progressbar.setMinimum(0)
+        self.progressbar.setMaximum(100)
         self.__main_controller = main_controller
 
     def start(self):
@@ -68,10 +75,12 @@ class AutocutController:
 
     def ready(self):
         """autocut the input files and start the video editor view"""
+        self.progressbar.setValue(0)
         try:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
                 presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
+                self.progressbar.setValue(randint(9, 18))
             else:
                 pass 
         except:
@@ -81,17 +90,20 @@ class AutocutController:
             if self.filename_video is not None:
                 video_splitter = VideoSplitter(projekt_path, projekt_name,self.filename_video) 
                 video_splitter.audio_from_video_cut()
+                self.progressbar.setValue(randint(22, 32))
                 video_splitter.small_video_cut()
+                self.progressbar.setValue(randint(42, 60))
                 visualiser_video = video_splitter.large_video_cut()
                 visualiser_video.area(VISUALISER_ROI_SLICES, "small_video")
+                self.progressbar.setValue(randint(70, 90))
                 board_video = video_splitter.large_video_cut()
                 board_video.area(BOARD_ROI_SLICES, "large_video")
         except:  
             #QDialog einfügen 
+            print("Hier fehlt ein Fenster :)")
             return
             
-        # View einfügen bis Bearbeitung abgeschlossen ist Ladebalken oder ähnliches
-
+        self.progressbar.setValue(100)
         self.__autocut_view.close()
         video_editor_view = VideoEditorView()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
