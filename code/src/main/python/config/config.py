@@ -8,6 +8,8 @@ the type it sometimes is just an empty string.
 "Current" is the default setting. This will be the changed by the user.
 
 At the moment there are only the types dropdown and checkbox.
+
+If you want to add settings that shouldn't be accessible for the user just put them into the "Invisible" Tab
 """
 
 default_settings = {
@@ -54,5 +56,9 @@ default_settings = {
     },
     "AutoCutPDF": {
         "import_formats": 'Files ( *.pdf);;'
-    }
+    },
+    "Invisible": {
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "pixels_per_second": 16
+        }
 }

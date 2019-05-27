@@ -9,6 +9,8 @@ files = {
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
     "timeline_view": "ui/timeline_view.ui",
     "autocut_view": "ui/autocut.ui",
+    "decision_widget": "ui/new_project_decision.ui",
+    "select_project_widget": "ui/select_project.ui",
     "qss_dark": "stylesheets/dark.qss",
     "qss_light": "stylesheets/light.qss"
 }

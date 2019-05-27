@@ -176,6 +176,7 @@ class CreationOperation(Operation):
         self.mouse_pos = mouse_pos
 
     def do(self):
+        self.model.move(self.x_pos)
         timeline_view = TimelineController.get_instance().get_timelineview()
         timeline_view.create_timeable(self.track_id, self.name, self.width,
                                       self.x_pos, self.model, self.id,
