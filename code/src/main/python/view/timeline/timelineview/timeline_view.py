@@ -115,7 +115,7 @@ class TimelineView(QFrame):
     def __show_tracks(self):
         """shows some tracks with timeables to see if everything works"""
 
-        tr1 = TrackView(5000, 50, 3)
+        tr1 = TrackView(1000, 50, 3)
         self.add_track(tr1)
         btn1 = QPushButton("Track 1")
         btn1.setFixedSize(80, 50)

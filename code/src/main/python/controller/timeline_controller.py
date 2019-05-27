@@ -138,6 +138,29 @@ class TimelineController:
         """
         pass
 
+    def create_project_timeline(self, data):
+        """
+        Recreates the timeline when a project is loaded
+
+        @param data: dictionary with info of timeables
+        """
+        pass
+
+    def get_project_timeline(self):
+        """ Returns a dict with the data needed to recreate the timeline """
+        data = {
+            "tracks": [],
+            "timeables": []
+        }
+
+        for tr in self.__timeline_view.tracks.values():
+            data["tracks"].append(tr.get_info_dict())
+
+        for ti in self.__timeline_view.timeables.values():
+            data["timeables"].append(ti.get_info_dict())
+
+        return data
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()

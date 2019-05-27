@@ -1,5 +1,6 @@
 from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
+from .timeline_controller import TimelineController
 from model.project import Project
 from view.settingsview import SettingsView
 from view.settingsview import ProjectSettingsView
@@ -25,6 +26,8 @@ class VideoEditorController:
             self.__start_undo)
         self.__video_editor_view.actionRedo.triggered.connect(
             self.__start_redo)
+        self.__video_editor_view.actionSpeichern.triggered.connect(
+            self.__start_save)
 
         self.__history = Project.get_instance().get_history()
 
@@ -48,7 +51,6 @@ class VideoEditorController:
             self.__settings_controller.start()
         else:
             self.__settings_controller.focus()
-
 
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
@@ -74,3 +76,10 @@ class VideoEditorController:
             self.__history.redo_last_operation()
         except:
             pass
+
+    def __start_save(self):
+        """ Save the Project """
+        timeline_controller = TimelineController.get_instance()
+        timeline_data = timeline_controller.get_project_timeline()
+
+        print(timeline_data)

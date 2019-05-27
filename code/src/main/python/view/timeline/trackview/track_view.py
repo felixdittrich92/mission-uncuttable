@@ -55,6 +55,14 @@ class TrackView(QGraphicsView):
 
         self.resize()
 
+    def get_info_dict(self):
+        return {
+            "id": self.id,
+            "width": self.width,
+            "height": self.height,
+            "num": self.num
+        }
+
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
         pass

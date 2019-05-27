@@ -107,7 +107,8 @@ class TimeableView(QGraphicsRectItem):
             "resizable_left": self.resizable_left,
             "x_pos": self.x_pos,
             "view_id": self.view_id,
-            "track_id": self.track_id
+            "track_id": self.track_id,
+            "model": self.model.get_info_dict()
         }
 
     def set_pixmap(self):
