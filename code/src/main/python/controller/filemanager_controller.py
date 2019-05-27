@@ -1,16 +1,10 @@
-import sys
 import os
-import numpy as np
 import cv2
-import time
 
 from PyQt5 import uic
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QLabel, QPushButton, QListWidgetItem, QListView
+from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
-from PIL import Image, ImageQt
-from pathlib import Path
 from config import Resources
 from view.mainview import FileListView
 from config import Settings
@@ -39,10 +33,6 @@ class Filemanager(QWidget):
         old_list_widget.deleteLater()
 
         """Set properties of the Widget"""
-        # self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        # self.listWidget.setDragEnabled(True)
-        # self.listWidget.setAcceptDrops(False)
-        # self.listWidget.setMouseTracking(True)
         self.listWidget.setViewMode(QListView.IconMode)
         self.listWidget.setIconSize(QSize(100, 100))
 
