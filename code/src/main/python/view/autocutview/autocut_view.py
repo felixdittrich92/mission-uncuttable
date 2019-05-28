@@ -9,7 +9,7 @@ class AutocutView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and sets up the GUI."""
         super(AutocutView, self).__init__()
-        uic.loadUi(Resources.get_instance().files.autocut_view, self)
+        uic.loadUi(Resources.files.autocut_view, self)
 
         # centering the window
         rectangle = self.frameGeometry()
@@ -17,8 +17,8 @@ class AutocutView(QMainWindow):
         rectangle.moveCenter(center_point)
         self.move(rectangle.topLeft())
 
-        cross_path = Resources.get_instance().images.cross
-        tick_path = Resources.get_instance().images.tick
+        cross_path = Resources.images.cross
+        tick_path = Resources.images.tick
         self.cross = QPixmap(cross_path).scaledToHeight(64, mode=1)
         self.tick = QPixmap(tick_path).scaledToHeight(64, mode=1)
 
