@@ -26,10 +26,14 @@ class AutocutController:
 
     def __init__(self, view, main_controller):
         self.__autocut_view = view
-        self.__autocut_view.video_button.clicked.connect(self.pick_video)
-        self.__autocut_view.pdf_button.clicked.connect(self.pick_pdf)
-        self.__autocut_view.ok_button.clicked.connect(self.ready)
-        self.__autocut_view.cancel_button.clicked.connect(self.stop)
+        self.video_button = self.__autocut_view.video_button
+        self.video_button.clicked.connect(self.pick_video)
+        self.pdf_button = self.__autocut_view.pdf_button
+        self.pdf_button.clicked.connect(self.pick_pdf)
+        self.ok_button = self.__autocut_view.ok_button
+        self.ok_button.clicked.connect(self.ready)
+        self.cancel_button = self.__autocut_view.cancel_button
+        self.cancel_button.clicked.connect(self.stop)
         self.__main_controller = main_controller
         self.textlabel = self.__autocut_view.text_label
         self.textlabel.setText("Please add a video and a pdf to continue or choice only a video")
@@ -84,9 +88,10 @@ class AutocutController:
         """autocut the input files and start the video editor view"""
         self.progressbar.setValue(0)
         self.textlabel.setText("Working...")
-        self.__autocut_view.video_button.setEnabled(False)
-        self.__autocut_view.pdf_button.clicked.setEnabled(False)
-        self.__autocut_view.ok_button.clicked.setEnabled(False)
+        self.video_button.setEnabled(False)
+        self.pdf_button.setEnabled(False)
+        self.ok_button.setEnabled(False)
+        self.cancel_button.setEnabled(False)
         try:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
@@ -109,7 +114,6 @@ class AutocutController:
                 video2 = video_splitter.large_video_cut(fps)
                 self.progressbar.setValue(randint(80, 90))
                 video2.area(BOARD_ROI_SLICES, "large_video")
-                time.sleep(2)
         except:  
             return
             
