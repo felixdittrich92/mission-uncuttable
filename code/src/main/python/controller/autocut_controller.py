@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
 from model.splitter import VideoSplitter
 from model.splitter import Presentation
-from controller import VideoEditorController
+from controller import VideoEditorController, TimelineController
 from view import VideoEditorView
 from random import randint
 from config import Settings
@@ -121,7 +121,11 @@ class AutocutController:
             return
 
         self.progressbar.setValue(100)
-        self.__autocut_view.close()
+
         video_editor_view = VideoEditorView()
+        timeline_controller = TimelineController.get_instance()
+        timeline_controller.create_autocut_tracks()
+
+        self.__autocut_view.close()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
         self.__video_editor_controller.start()
