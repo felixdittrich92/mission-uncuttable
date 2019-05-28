@@ -38,29 +38,29 @@ class Resources:
     This is necessary because the project has different paths after freezing and installing.
     """
     __instance = None
+    __app = None
 
     def __init__(self, app):
-        self.app = app
+        Resources.__app = app
         if Resources.__instance is not None:
-            raise Exception("This class is a singleton!")
+            raise Exception("Resources already initialized!")
         else:
             Resources.__instance = self
-            self.load_file_paths()
+            Resources.__load_file_paths()
 
-    @staticmethod
-    def get_instance():
-        if Resources.__instance is None:
-            raise Exception("Resources not initialized!")
-        else:
-            return Resources.__instance
-
-    def load_file_paths(self):
-        self.files = Category()
+    def __load_file_paths():
+        Resources.files = Category()
         for attribute, value in files.items():
-            setattr(self.files, attribute, self.app.get_resource(value))
-        self.images = Category()
+            setattr(Resources.files, attribute, Resources.__app.get_resource(value))
+        Resources.images = Category()
         for attribute, value in images.items():
-            setattr(self.images, attribute, self.app.get_resource(value))
+            setattr(Resources.images, attribute, Resources.__app.get_resource(value))
+        Resources.strings = Category()
+        for attribute, value in strings.items():
+            setattr(Resources.strings, attribute, Resources.__app.get_resource(value))
+
 class Category:
-    pass
+    def __iter__(self):
+        for attr, value in self.__dict__.items():
+            yield attr, value
 

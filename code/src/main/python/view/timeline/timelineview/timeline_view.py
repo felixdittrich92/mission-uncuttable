@@ -25,7 +25,7 @@ class TimelineView(QFrame):
         """
         super(TimelineView, self).__init__(parent)
 
-        uic.loadUi(Resources.get_instance().files.timeline_view, self)
+        uic.loadUi(Resources.files.timeline_view, self)
 
         timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())
@@ -39,11 +39,16 @@ class TimelineView(QFrame):
 
         self.controller = TimelineController(self)
 
-        self.__show_tracks()
         self.__show_debug_info_on_gui()
 
-    def add_track(self, track):
-        self.tracks[track.id] = track
+    def create_track(self, name, width, height, num):
+        track = TrackView(width, height, num, name)
+        self.tracks[num] = track
+
+        btn1 = QPushButton(name)
+        btn1.setFixedSize(80, 50)
+        self.track_button_frame.add_button(btn1)
+
         self.track_frame.add_track(track)
 
         self.adjust_track_sizes()
@@ -65,7 +70,7 @@ class TimelineView(QFrame):
             t.set_width(max_width)
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0):
+                        res_left=0, res_right=0, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
         try:
             track = self.tracks[track_id]
@@ -82,7 +87,8 @@ class TimelineView(QFrame):
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 
-        track.current_timeable = timeable
+        if is_drag:
+            track.current_timeable = timeable
 
         # add timeable to dict
         self.timeables[id] = timeable
@@ -111,21 +117,6 @@ class TimelineView(QFrame):
 
     def set_timeable_picture(self, id, picture):
         pass
-
-    def __show_tracks(self):
-        """shows some tracks with timeables to see if everything works"""
-
-        tr1 = TrackView(5000, 50, 3)
-        self.add_track(tr1)
-        btn1 = QPushButton("Track 1")
-        btn1.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn1)
-
-        tr2 = TrackView(2000, 50, 2)
-        self.add_track(tr2)
-        btn2 = QPushButton("Track 2")
-        btn2.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn2)
 
     def __show_debug_info_on_gui(self):
         """

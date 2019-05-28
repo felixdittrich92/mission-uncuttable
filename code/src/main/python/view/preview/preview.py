@@ -18,8 +18,7 @@ class PreviewView(QWidget):
 
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
-        self.RESOURCES = Resources.get_instance()
-        uic.loadUi(self.RESOURCES.files.preview_view, self)
+        uic.loadUi(Resources.files.preview_view, self)
 
         self.video_running = False
 
@@ -53,13 +52,13 @@ class PreviewView(QWidget):
 
     def initGUI(self):
         #load icons
-        self.iconplay = QtGui.QPixmap(self.RESOURCES.images.play_button)
-        self.iconpause = QtGui.QPixmap(self.RESOURCES.images.pause_button)
-        iconfirstframe = QtGui.QPixmap(self.RESOURCES.images.first_frame_button)
-        iconlastframe = QtGui.QPixmap(self.RESOURCES.images.last_frame_button)
-        iconback = QtGui.QPixmap(self.RESOURCES.images.back_button)
-        iconforward = QtGui.QPixmap(self.RESOURCES.images.forward_button)
-        iconmax = QtGui.QPixmap(self.RESOURCES.images.maximize_button)
+        self.iconplay = QtGui.QPixmap(Resources.images.play_button)
+        self.iconpause = QtGui.QPixmap(Resources.images.pause_button)
+        iconfirstframe = QtGui.QPixmap(Resources.images.first_frame_button)
+        iconlastframe = QtGui.QPixmap(Resources.images.last_frame_button)
+        iconback = QtGui.QPixmap(Resources.images.back_button)
+        iconforward = QtGui.QPixmap(Resources.images.forward_button)
+        iconmax = QtGui.QPixmap(Resources.images.maximize_button)
 
         #set icons to buttons
         self.play_button.setIcon(QIcon(self.iconplay))

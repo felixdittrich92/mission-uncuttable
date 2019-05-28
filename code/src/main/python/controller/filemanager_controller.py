@@ -1,15 +1,11 @@
-import sys
 import os
-import numpy as np
 import cv2
-import time
 
 from PyQt5 import uic
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidget, QLabel, QPushButton, QListWidgetItem, QListView
+from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
-from PIL import Image, ImageQt
+
 from config import Resources
 from view.mainview import FileListView
 from config import Settings
@@ -21,14 +17,14 @@ class Filemanager(QWidget):
 
     Manages from the resource class loaded files
     This class contains the functionality of the filemanager and loads for every supported
-    file a preview picture and the show this with the filename in the ListWidget.   
+    file a preview picture and the show this with the filename in the ListWidget.
     Furthermore, the class contains all applications like adding and deleting files from the filemanager window.
     """
 
     def __init__(self, parent=None):
         super().__init__(parent)
         """Loads the UI file"""
-        uic.loadUi(Resources.get_instance().files.filemanager, self)
+        uic.loadUi(Resources.files.filemanager, self)
         self.deleteButton = self.findChild(QObject, 'pushButton_1')
         self.pickButton = self.findChild(QObject, 'pushButton_2')
         self.listWidget = FileListView()
@@ -36,12 +32,8 @@ class Filemanager(QWidget):
         old_list_widget = self.findChild(QObject, 'listWidget')
         self.layout().replaceWidget(old_list_widget, self.listWidget)
         old_list_widget.deleteLater()
-        
+
         """Set properties of the Widget"""
-        # self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        # self.listWidget.setDragEnabled(True)
-        # self.listWidget.setAcceptDrops(False)
-        # self.listWidget.setMouseTracking(True)
         self.listWidget.setViewMode(QListView.IconMode)
         self.listWidget.setIconSize(QSize(100, 100))
 
@@ -73,7 +65,6 @@ class Filemanager(QWidget):
             QApplication.processEvents()
             self.addFileNames(file)
 
-
     def addFileNames(self, file):
         """
         This method create a QListWidgetItem with a preview picture and the filename as text dependent from the file type.
@@ -87,7 +78,6 @@ class Filemanager(QWidget):
         if file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
-                        
         elif file.upper().endswith(('.MP4')):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
@@ -105,14 +95,14 @@ class Filemanager(QWidget):
             cap.release()
             cv2.destroyAllWindows()
             QApplication.processEvents()
-                
+
         elif file.upper().endswith(('.MP3', '*.WAV')):
-            path = Resources.get_instance().images.media_symbols
+            path = Resources.images.media_symbols
             filename = "mp3.png"
             path_to_file = os.path.join(path, filename)
             pixmap = QPixmap(path_to_file)
             QApplication.processEvents()
-                
+
         else:
             print("The datatype is not supported")
             pass
@@ -138,17 +128,20 @@ class Filemanager(QWidget):
         """This method saves the selected files to a list"""
         try:
             selected_files = []
-            path = self.listWidget.currentItem().statusTip() 
+            path = self.listWidget.currentItem().statusTip()
             selected_files.append(path)
         except:
             return
 
-def main():
-    app = QApplication(sys.argv)
-    window = Filemanager()
-    window.show()
-    sys.exit(app.exec_())
+    def get_project_filemanager(self):
+        """ Returns a list with all the files in the filemanager. """
+        return self.file_list
 
+    def create_project_filemanager(self, files):
+        """
+        Recreates the filemanager from a config file.
 
-if __name__ == '__main__':
-    main()
+        @param data: list of filenames
+        """
+        for f in files:
+            self.addFileNames(f)
