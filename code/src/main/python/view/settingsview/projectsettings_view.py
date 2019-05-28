@@ -75,7 +75,7 @@ class ProjectSettingsView(QMainWindow):
             checkbox = QCheckBox()
             checkbox.setChecked(current)
             layout.addWidget(checkbox)
-        elif type == "textwindow":
+        elif type == "text":
             textwindow = QPlainTextEdit()
             textwindow.setPlainText(current)
 

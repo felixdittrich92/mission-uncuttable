@@ -54,10 +54,10 @@ class VideoEditorView(QMainWindow):
         self.showMaximized()
 
     def load_filemanager(self):
-        filemanager = Filemanager()
+        self.filemanager = Filemanager()
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, filemanager)
-        filemanager.show()
+        splitter.replaceWidget(0, self.filemanager)
+        self.filemanager.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
