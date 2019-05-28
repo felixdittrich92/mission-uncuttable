@@ -25,7 +25,7 @@ class TimelineView(QFrame):
         """
         super(TimelineView, self).__init__(parent)
 
-        uic.loadUi(Resources.get_instance().files.timeline_view, self)
+        uic.loadUi(Resources.files.timeline_view, self)
 
         timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())

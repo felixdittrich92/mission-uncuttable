@@ -29,7 +29,7 @@ class Filemanager(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         """Loads the UI file"""
-        uic.loadUi(Resources.get_instance().files.filemanager, self)
+        uic.loadUi(Resources.files.filemanager, self)
         self.deleteButton = self.findChild(QObject, 'pushButton_1')
         self.pickButton = self.findChild(QObject, 'pushButton_2')
         self.listWidget = FileListView()
@@ -107,7 +107,7 @@ class Filemanager(QWidget):
             QApplication.processEvents()
                 
         elif file.upper().endswith(('.MP3', '*.WAV')):
-            path = Resources.get_instance().images.media_symbols
+            path = Resources.images.media_symbols
             filename = "mp3.png"
             path_to_file = os.path.join(path, filename)
             pixmap = QPixmap(path_to_file)

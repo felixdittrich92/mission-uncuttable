@@ -60,7 +60,7 @@ class ExportView(QDialog):
     """A Class used as the View for export window"""
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
-        uic.loadUi(Resources.get_instance().files.export_view, self)
+        uic.loadUi(Resources.files.export_view, self)
 
         timeline_instance = TimelineModel.get_instance()
 

@@ -19,11 +19,11 @@ class SettingsView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(SettingsView, self).__init__()
-        uic.loadUi(Resources.get_instance().files.settingsview, self)
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        uic.loadUi(Resources.files.settingsview, self)
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
 
@@ -144,7 +144,7 @@ class SettingsView(QMainWindow):
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)

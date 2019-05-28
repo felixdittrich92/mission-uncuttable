@@ -7,7 +7,7 @@ class Language:
     __de = None
     languages = []
     def __init__(self, language=None):
-        for name, path in dict(Resources.get_instance().strings).items():
+        for name, path in dict(Resources.strings).items():
             Language.languages.append(name)
             setattr(Language, name, objectify.fromstring(etree.tostring(etree.parse(path))))
             setattr(Language, "__" + name, etree.parse(path).getroot())
