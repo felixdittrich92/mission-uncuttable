@@ -29,7 +29,7 @@ class TimelineController:
         self.__history = Project.get_instance().get_history()
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0, hist=True):
+                        res_left=0, res_right=0, mouse_pos=0, hist=True, is_drag=False):
         """
         Create a new object in the timeline model to represent a new timeable.
 
@@ -41,8 +41,7 @@ class TimelineController:
         @return:     Nothing.
         """
         op = CreationOperation(track_id, name, width, x_pos, model, id,
-                               res_left=res_left, res_right=res_right,
-                               mouse_pos=mouse_pos)
+                               res_left, res_right, mouse_pos, is_drag)
 
         if hist:
             self.__history.do_operation(op)
@@ -208,7 +207,7 @@ class CreationOperation(Operation):
     """ Creates a new timeable """
 
     def __init__(self, track_id, name, width, x_pos, model, id,
-                 res_left, res_right, mouse_pos):
+                 res_left, res_right, mouse_pos, is_drag):
         self.track_id = track_id
         self.name = name
         self.width = width
@@ -218,6 +217,7 @@ class CreationOperation(Operation):
         self.res_left = res_left
         self.res_right = res_right
         self.mouse_pos = mouse_pos
+        self.is_drag = is_drag
 
     def do(self):
         self.model.move(self.x_pos)
@@ -225,7 +225,7 @@ class CreationOperation(Operation):
         timeline_view.create_timeable(self.track_id, self.name, self.width,
                                       self.x_pos, self.model, self.id,
                                       res_left=self.res_left, res_right=self.res_right,
-                                      mouse_pos=self.mouse_pos)
+                                      mouse_pos=self.mouse_pos, is_drag=self.is_drag)
 
     def undo(self):
         TimelineController.get_instance().get_timeable_by_id(self.id).delete(hist=False)
