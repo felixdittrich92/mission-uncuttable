@@ -58,6 +58,11 @@ class Resources:
         self.images = Category()
         for attribute, value in images.items():
             setattr(self.images, attribute, self.app.get_resource(value))
+        self.strings = Category()
+        for attribute, value in strings.items():
+            setattr(self.strings, attribute, self.app.get_resource(value))
 class Category:
-    pass
+    def __iter__(self):
+        for attr, value in self.__dict__.items():
+            yield attr, value
 
