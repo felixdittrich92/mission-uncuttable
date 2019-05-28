@@ -1,3 +1,5 @@
+import cv2
+
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
 from model.splitter import VideoSplitter
@@ -5,7 +7,6 @@ from model.splitter import Presentation
 from controller import VideoEditorController
 from view import VideoEditorView
 from random import randint
-
 from config import Settings
 
 VISUALISER_ROI_SLICES = (slice(250, 600), slice(800, 1000))
@@ -13,7 +14,6 @@ BOARD_ROI_SLICES = (slice(140, 260), slice(150, 750))
 RESOLUTION = 250
 projekt_path = "/home/clemens/Schreibtisch/"  # Pfad ändern wenn Projekt anlegen vorhanden
 projekt_name = "Projekt"
-fps = Settings.get_instance().get_dict_settings()["Invisible"]["frames_per_second"]
 
 
 class AutocutController:
@@ -102,6 +102,10 @@ class AutocutController:
 
         try:
             if self.filename_video is not None:
+                # get fps
+                video = cv2.VideoCapture(self.filename_video)
+                fps = video.get(cv2.CAP_PROP_FPS)
+
                 video_splitter = VideoSplitter(projekt_path,
                                                projekt_name, self.filename_video)
                 self.progressbar.setValue(randint(15, 32))
