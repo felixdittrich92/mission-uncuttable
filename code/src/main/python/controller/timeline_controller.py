@@ -178,8 +178,18 @@ class TimelineController:
 
     def create_default_tracks(self):
         """ Creates 2 default tracks when the user chooses manual cut """
-        self.create_track("Track 1", 1000, 50, 2)
+        self.create_track("Track 1", 2000, 50, 2)
         self.create_track("Track 2", 2000, 50, 1)
+
+    def create_autocut_tracks(self):
+        """
+        Creates tracks for overlay, board, visualizer, audio when user chooses autocut
+        """
+        self.create_track("Overlay", 2000, 50, 3)
+        self.create_track("Tafel", 2000, 50, 2)
+        self.create_track("Visualizer", 2000, 50, 1)
+        self.create_track("Folien", 2000, 50, 0)
+        self.create_track("Audio", 2000, 50, -1)
 
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
