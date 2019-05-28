@@ -4,6 +4,7 @@ from itertools import count
 import cv2
 import openshot
 
+
 class BoardVideo(MediaFile):
     """
     This class contains the video and analyse the areas for autocut
@@ -45,9 +46,10 @@ class BoardVideo(MediaFile):
 
     def area(self, roi_slices, clip_prefix):
         """
-        a method that analyse the video frame per frame and save the Clips(visualiser/board) in a list
+        a method that analyse the video frame per frame and save the
+        Clips(visualiser/board) in a list
         """
-        video = cv2.VideoCapture(str(self.file_path))
+        video = cv2.VideoCapture(self.file_path)
         try:
             # background_subtractor = cv2.createBackgroundSubtractorMOG2()
             times = list()
@@ -69,19 +71,19 @@ class BoardVideo(MediaFile):
                 if frame_number == 0:
                     self.calculate_accumulated_average(gray)
                 else:
-                    if self.segment(gray): #if not self.segment(gray):
+                    if self.segment(gray):  # if not self.segment(gray):
                         times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
-                    else:
-                        if times:
-                            clip = openshot.Clip(self.file_path)
-                            clip.Start(times[0])
-                            clip.End(times[-1])
-                            self.subvideos.append(clip)
-                            times.clear()
-                            #print(self.subvideos)
+                    elif times:
+                        clip = openshot.Clip(self.file_path)
+                        clip.Start(times[0])
+                        clip.End(times[-1])
+                        self.subvideos.append(clip)
+                        times.clear()
         finally:
             video.release()
             cv2.destroyAllWindows()
+
+        print(self.subvideos)
 
 #         for c in self.subvideos:
 #             print(c.Start())
