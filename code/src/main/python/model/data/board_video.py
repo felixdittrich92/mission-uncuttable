@@ -45,7 +45,7 @@ class BoardVideo(MediaFile):
 
     def area(self, roi_slices, clip_prefix):
         """
-        a method that analyse the video and save the Clips in a list
+        a method that analyse the video frame per frame and save the Clips(visualiser/board) in a list
         """
         video = cv2.VideoCapture(str(self.file_path))
         try:
@@ -68,18 +68,17 @@ class BoardVideo(MediaFile):
 
                 if frame_number == 0:
                     self.calculate_accumulated_average(gray)
-                elif not self.segment(gray):
-                    times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
-                elif times:
-                    # clip = openshot.Clip(
-                    #     '{}{}'.format(clip_prefix, next(clip_numbers))
-                    # )
-                    clip = openshot.Clip(self.file_path)
-                    clip.Start(times[0])
-                    clip.End(times[-1])
-                    self.subvideos.append(clip)
-                    times.clear()
-                    #print(self.subvideos)
+                else:
+                    if self.segment(gray): #if not self.segment(gray):
+                        times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
+                    else:
+                        if times:
+                            clip = openshot.Clip(self.file_path)
+                            clip.Start(times[0])
+                            clip.End(times[-1])
+                            self.subvideos.append(clip)
+                            times.clear()
+                            #print(self.subvideos)
         finally:
             video.release()
             cv2.destroyAllWindows()

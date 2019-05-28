@@ -10,6 +10,17 @@ class SettingsController:
     def start(self):
         """Calls '__show_view()' of SettingsController"""
         self.__settings_view.show()
+    def focus(self):
+        self.__settings_view.activateWindow()
+
+    def checkIfClosed(self):
+        if self.__settings_view is not None:
+            if self.__settings_view.isVisible():
+                return False
+            else:
+                return True
+        else:
+            return True
 
     def stop(self):
         """Closes the settings window."""

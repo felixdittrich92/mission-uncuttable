@@ -2,7 +2,7 @@ import os
 
 import openshot
 
-from model.project import TimelineModel
+from model.data import TimelineModel
 from view.exportview.export_error_view import ExportErrorView
 
 

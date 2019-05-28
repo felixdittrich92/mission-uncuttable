@@ -1,5 +1,8 @@
 from controller import VideoEditorController, StartController
 from controller import AutocutController
+from PyQt5.QtWidgets import QWidget
+
+from controller import VideoEditorController
 from view import VideoEditorView
 from view import AutocutView
 
@@ -8,8 +11,11 @@ class MainController:
     """A class used as the Controller, that manages the windows of the program."""
     def __init__(self, view):
         self.__start_view = view
-        self.__start_view.manual_cut_button.clicked.connect(self.__start_main_controller)
-        self.__start_view.auto_cut_button.clicked.connect(self.__start_autocut_controller)
+        manual_cut_button = self.__start_view.findChild(QWidget, "manual_cut_button")
+        manual_cut_button.clicked.connect(self.__start_main_controller)
+
+        auto_cut_button = self.__start_view.findChild(QWidget, "auto_cut_button")
+        auto_cut_button.clicked.connect(self.__start_autocut_controller)
 
     def start(self):
         """Calls show() of StartView"""

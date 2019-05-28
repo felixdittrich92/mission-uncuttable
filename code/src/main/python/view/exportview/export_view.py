@@ -5,7 +5,7 @@ from PyQt5 import uic
 
 from config import Resources
 from controller.export_controller import ExportController
-from model.project.timeline import TimelineModel
+from model.data import TimelineModel
 
 FORMAT_OPTIONS = {
     "mp4 (mpeg4)": {
