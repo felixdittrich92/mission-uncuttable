@@ -84,6 +84,9 @@ class AutocutController:
         """autocut the input files and start the video editor view"""
         self.progressbar.setValue(0)
         self.textlabel.setText("Working...")
+        self.__autocut_view.video_button.setEnabled(False)
+        self.__autocut_view.pdf_button.clicked.setEnabled(False)
+        self.__autocut_view.ok_button.clicked.setEnabled(False)
         try:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
