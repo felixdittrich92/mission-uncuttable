@@ -1,0 +1,55 @@
+Datum
+27.05.2019
+
+Name Protokollant
+Alexander Bonin
+
+Art des Treffens 
+Planning
+
+Sprint Nummer
+Sprint 6
+
+Fehlende Personen
+Alle anwesend
+
+
+Zusammenfassung
+Schätzung User Stories
+
+Sprintplanning
+    
+    MU-44 Speichern und Laden           Schätzung: 13
+    MU-36 Verschiedene Modi für Video   SChätzung: 3
+    MU-39 Einblendung Sprecher          Schätzung: 8
+    MU-61 Shortcuts                     Schätzung: 2
+    MU-224 Spur deaktivieren            Schätzung: 8
+    MU-201 Audiopegel                   Schätzung: 8
+    MU-38 Zoom auf Sprecher             Schätzung: 8
+    MU-60 Automatischer Schnitt         Schätzung: 8
+    MU-221 Projektordner                Schätzung: 3
+    MU-242 Spur entfernen/hinzufüchen   Schätzung: 5
+
+
+	Sprintziel
+	Autocut
+
+	Zeitraum
+	27.05.19-07.06.19
+
+	Valentin will Audiopegel und Maximize-Button machen
+    Clemens macht Speichern/Laden und Automatisch Spuren füllen
+    Felix macht Einblendung Sprecher
+    Max macht Preview Nadel
+    Markus macht Spur entfernen/hinzufügen
+
+
+
+
+
+    
+
+
+
+
+
