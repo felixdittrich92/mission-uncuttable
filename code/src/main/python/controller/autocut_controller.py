@@ -31,8 +31,7 @@ class AutocutController:
         self.cancel_button.clicked.connect(self.stop)
         self.__main_controller = main_controller
         self.textlabel = self.__autocut_view.text_label
-        self.textlabel.setText(
-            "Please add a video and a pdf to continue or choose only a video")
+        self.textlabel.setText("Please choose a video optionally a pdf")
         self.textlabel.setAlignment(Qt.AlignCenter)
         self.textlabel.setWordWrap(True)
         self.progressbar = self.__autocut_view.progress_bar
