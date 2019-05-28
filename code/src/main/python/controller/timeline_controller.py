@@ -138,6 +138,50 @@ class TimelineController:
         """
         pass
 
+    def create_track(self, name, width, height, num):
+        """ Creates a new track in the timeline """
+        self.__timeline_view.create_track(name, width, height, num)
+
+    def get_project_timeline(self):
+        """ Returns a dict with the data needed to recreate the timeline """
+        data = {
+            "tracks": [],
+            "timeables": []
+        }
+
+        for tr in self.__timeline_view.tracks.values():
+            data["tracks"].append(tr.get_info_dict())
+
+        for ti in self.__timeline_view.timeables.values():
+            data["timeables"].append(ti.get_info_dict())
+
+        return data
+
+    def create_project_timeline(self, data):
+        """
+        Recreates the timeline when a project is loaded
+
+        @param data: dictionary with info of timeables
+        """
+        for t in data["tracks"]:
+            self.create_track(t["name"], t["width"], t["height"], t["num"])
+
+        for t in data["timeables"]:
+            m = t["model"]
+            model = TimeableModel(m["file_name"], m["id"])
+            model.set_start(m["start"], is_sec=True)
+            model.set_end(m["end"], is_sec=True)
+            model.move(m["position"], is_sec=True)
+
+            self.create_timeable(t["track_id"], t["name"], t["width"], t["x_pos"],
+                                 model, t["view_id"], res_left=t["resizable_left"],
+                                 res_right=t["resizable_right"], hist=False)
+
+    def create_default_tracks(self):
+        """ Creates 2 default tracks when the user chooses manual cut """
+        self.create_track("Track 1", 1000, 50, 2)
+        self.create_track("Track 2", 2000, 50, 1)
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()

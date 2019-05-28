@@ -41,12 +41,31 @@ default_settings = {
             "current": True
         },
     },
-    "ShortCuts": {
-        "option1": {
-            "name": "Option 1",
-            "type": "checkbox",
+    "Shortcuts": {
+        "starter": {
+            "name": "Starter",
+            "type": "text",
             "values": "",
-            "current": True}
+            "current": "Ctrl"
+        },
+        "undo": {
+            "name": "Rückgängig",
+            "type": "text",
+            "values": "",
+            "current": "z"
+        },
+        "redo": {
+            "name": "Wiederholen",
+            "type": "text",
+            "values": "",
+            "current": "y"
+        },
+        "export": {
+            "name": "Exportieren",
+            "type": "text",
+            "values": "",
+            "current": "e"
+        }
     },
     "Invisible": {
         "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
