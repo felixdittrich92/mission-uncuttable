@@ -125,6 +125,14 @@ class AutocutController:
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
         timeline_controller.create_autocut_tracks()
+        filemanager = video_editor_view.filemanager
+        filemanager.addFileNames(self.filename_video)
+
+        for c in video.subvideos:
+            timeline_controller.create_timeable_from_clip(c)
+
+        for c in video2.subvideos:
+            timeline_controller.create_timeable_from_clip(c)
 
         self.__autocut_view.close()
         self.__video_editor_controller = VideoEditorController(video_editor_view)

@@ -3,6 +3,8 @@ The controller module for communication between timelineview and
 timelinemodel.
 """
 
+import json
+
 from model.project import Project, Operation
 from model.data import TimeableModel, TimelineModel
 from util.timeline_utils import generate_id, pos_to_seconds
@@ -177,9 +179,10 @@ class TimelineController:
                                  res_right=t["resizable_right"], hist=False)
 
     def create_default_tracks(self):
-        """ Creates 2 default tracks when the user chooses manual cut """
+        """ Creates 3 default tracks when the user chooses manual cut """
         self.create_track("Track 1", 2000, 50, 2)
         self.create_track("Track 2", 2000, 50, 1)
+        self.create_track("Track 3", 2000, 50, 0)
 
     def create_autocut_tracks(self):
         """
@@ -190,6 +193,19 @@ class TimelineController:
         self.create_track("Visualizer", 2000, 50, 1)
         self.create_track("Folien", 2000, 50, 0)
         self.create_track("Audio", 2000, 50, -1)
+
+    def create_timeable_from_clip(self, clip, track):
+        """ Gets an openshot clip as input and creates a timeable from it """
+        parsed_json = json.loads(clip.Json())
+        path = parsed_json["reader"]["path"]
+        model = TimeableModel(path, generate_id())
+        model.set_start(clip.Start(), is_sec=True)
+        model.set_end(clip.End(), is_sec=True)
+        model.move(clip.Position(), is_sec=True)
+
+        width = pos_to_seconds(clip.Duration())
+        x_pos = pos_to_seconds(clip.Start())
+        self.create_timeable(track, path, width, x_pos, hist=False)
 
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
