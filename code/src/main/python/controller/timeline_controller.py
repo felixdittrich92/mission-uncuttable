@@ -3,11 +3,11 @@ The controller module for communication between timelineview and
 timelinemodel.
 """
 
-import json
+import os
 
 from model.project import Project, Operation
 from model.data import TimeableModel, TimelineModel
-from util.timeline_utils import generate_id, pos_to_seconds
+from util.timeline_utils import generate_id, pos_to_seconds, seconds_to_pos
 
 
 class TimelineController:
@@ -194,18 +194,24 @@ class TimelineController:
         self.create_track("Folien", 2000, 50, 0)
         self.create_track("Audio", 2000, 50, -1)
 
-    def create_timeable_from_clip(self, clip, track):
-        """ Gets an openshot clip as input and creates a timeable from it """
-        parsed_json = json.loads(clip.Json())
-        path = parsed_json["reader"]["path"]
-        model = TimeableModel(path, generate_id())
-        model.set_start(clip.Start(), is_sec=True)
-        model.set_end(clip.End(), is_sec=True)
-        model.move(clip.Position(), is_sec=True)
+    def create_autocut_timeables(self, file_path, track, data):
+        """
+        Creates timeables for autocut.
 
-        width = pos_to_seconds(clip.Duration())
-        x_pos = pos_to_seconds(clip.Start())
-        self.create_timeable(track, path, width, x_pos, hist=False)
+        @param file_path: the path to the input video
+        @param track:     the track where the timeables will be added
+        @param data:      a list of tuples with start and end time of the video
+        """
+        for start, end in data:
+            model = TimeableModel(file_path, generate_id())
+            model.set_start(start, is_sec=True)
+            model.set_end(end, is_sec=True)
+            model.move(start, is_sec=True)
+
+            width = seconds_to_pos(model.clip.Duration())
+            x_pos = seconds_to_pos(start)
+            self.create_timeable(track, os.path.basename(file_path),
+                                 width, x_pos, model, generate_id(), hist=False)
 
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
