@@ -58,7 +58,7 @@ class VideoSplitter:
         cv2.destroyAllWindows()
         new_large_video_path = Path(folder, large_video_name)
         self.files.append(new_large_video_path)
-        return BoardVideo(new_large_video_path)
+        return BoardVideo(out)
 
 
     def foil_video_cut(self, fps):
@@ -91,7 +91,7 @@ class VideoSplitter:
         cv2.destroyAllWindows()
         new_small_video_path = Path(folder, small_video_name)
         self.files.append(new_small_video_path)
-        return FoilVideo(new_small_video_path)
+        return FoilVideo(out)
 
 
     def visualiser_video_cut(self, fps):
@@ -124,7 +124,7 @@ class VideoSplitter:
         cv2.destroyAllWindows()
         new_small_video_path = Path(folder, small_video_name)
         self.files.append(new_small_video_path)
-        return VisualiserVideo(new_small_video_path)
+        return VisualiserVideo(out)
 
 
     def audio_from_video_cut(self):
