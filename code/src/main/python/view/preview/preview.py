@@ -59,6 +59,7 @@ class PreviewView(QWidget):
         #connect signals of videoWidget and renderer
         self.videoWidget.connectSignals(self.renderer)
 
+
         #load timline into reader
         self.player.Reader(self.timeline)
 
@@ -98,6 +99,9 @@ class PreviewView(QWidget):
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
 
+        self.current_frame_label = self.findChild(QWidget, "current_frame_label")
+
+
     def play_pause(self):
         if self.video_running:
             self.player.Pause()
@@ -111,14 +115,22 @@ class PreviewView(QWidget):
 
     def firstFrame(self):
         self.player.Seek(1)
+        self.frame_changed.emit(QPoint(0, 0))
+
+        self.current_frame_label.setText(str(self.player.Position()))
 
     def lastFrame(self):
         self.player.Play()
         self.player.Pause()
         self.player.Seek(self.getlastFrame())
+        position = self.player.Position()
+        self.frame_changed.emit(QPoint((position*16)/25, 0))
+
+        self.current_frame_label.setText(str(self.player.Position()))
+
 
     def getlastFrame(self):
-        last_positionframe = 0
+        last_frame = 0
         for c in self.timeline.Clips():
             clip_last_frame = c.Position() + c.Duration()
             if clip_last_frame > last_frame:
@@ -140,6 +152,9 @@ class PreviewView(QWidget):
             position = self.player.Position()
             self.player.Seek(position-10)
 
+            self.current_frame_label.setText(str(self.player.Position()))
+        self.current_frame_label.setText(str(self.player.Position()))
+
     def stopLoop(self):
         self.looprunning = False
 
@@ -148,7 +163,7 @@ class PreviewView(QWidget):
         print(position)
         new_position = position + 1
         self.player.Seek(new_position)
-        self.frame_changed.emit(QPoint(new_position, 0))
+        self.frame_changed.emit(QPoint((new_position*16)/25, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -158,7 +173,9 @@ class PreviewView(QWidget):
             position = self.player.Position()
             new_position = position + 10
             self.player.Seek(new_position)
-            self.frame_changed.emit(QPoint(new_position, 0))
+            self.frame_changed.emit(QPoint((new_position*16)/25, 0))
+            self.current_frame_label.setText(str(self.player.Position()))
+        self.current_frame_label.setText(str(self.player.Position()))
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

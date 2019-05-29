@@ -22,6 +22,7 @@ class TimeNeedle(QWidget):
     """
 
     pos_changed = pyqtSignal(int)
+    needle_moved = pyqtSignal(int)
 
     def __init__(self, drawing_height, top=False):
         """
@@ -155,3 +156,4 @@ class TimeNeedle(QWidget):
         :param event: EventHandler
         """
         self.setCursor(Qt.PointingHandCursor)
+        self.needle_moved.emit(self.pos().x())
