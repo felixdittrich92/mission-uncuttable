@@ -34,15 +34,11 @@ class Slide(MediaFile):
         # right x point
         x2 = int(width)
         white = 255
-        gray = 32
         img = cv2.imread(str(input_file), cv2.IMREAD_GRAYSCALE)
         roi = img[y1:y2, x1:x2]
+        average = cv2.mean(roi)
 
-        if np.all(roi == white) == True:
-            self.list_is_free.append(True)
-            self.list_is_free = True
-            return True
-        elif np.all(roi == gray) == True:
+        if average[0] > 250:
             self.list_is_free.append(True)
             self.list_is_free = True
             return True

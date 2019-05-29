@@ -6,3 +6,4 @@ from .board_video import BoardVideo
 from .timeable import TimeableModel
 from .timeline import TimelineModel
 from .visualiser_video import VisualiserVideo
+from .foil_video import FoilVideo

@@ -38,7 +38,7 @@ class VideoSplitter:
 
         cap = cv2.VideoCapture(str(video_file))
 
-        large_video_name = 'large_video.mp4'
+        large_video_name = 'board_video.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(os.path.join(folder,str(large_video_name)), fourcc , fps, (938, 530))
 
@@ -61,7 +61,7 @@ class VideoSplitter:
         return BoardVideo(new_large_video_path)
 
 
-    def small_video_cut(self, fps):
+    def foil_video_cut(self, fps):
         """
         a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
         and create a object of this
@@ -71,7 +71,7 @@ class VideoSplitter:
 
         cap = cv2.VideoCapture(str(video_file))
 
-        small_video_name = 'small_video.mp4'
+        small_video_name = 'foil_video.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(os.path.join(folder,str(small_video_name)), fourcc , fps, (700, 530))
 
@@ -82,6 +82,39 @@ class VideoSplitter:
             ret, frame = cap.read()
             if ret == True:
                 frame = frame[275:805, 1080:1780]
+                out.write(frame)
+
+            else:
+                break
+        cap.release()
+        out.release()
+        cv2.destroyAllWindows()
+        new_small_video_path = Path(folder, small_video_name)
+        self.files.append(new_small_video_path)
+        return FoilVideo(new_small_video_path)
+
+
+    def visualiser_video_cut(self, fps):
+        """
+        a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
+        and create a object of this
+        """
+        video_file = self.video_data
+        folder = Path(self.folder_path, self.folder_name)
+
+        cap = cv2.VideoCapture(str(video_file))
+
+        small_video_name = 'visualiser_video.mp4'
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(os.path.join(folder,str(small_video_name)), fourcc , fps, (960, 530))
+
+        if(cap.isOpened() == False):
+            print("Error opening video stream or file")
+
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            if ret == True:
+                frame = frame[275:805, 960:1920]
                 out.write(frame)
 
             else:

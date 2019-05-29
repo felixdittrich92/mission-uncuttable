@@ -1,6 +1,6 @@
 import time
 
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt
 from model.splitter import VideoSplitter
 from model.splitter import Presentation
@@ -13,8 +13,6 @@ from random import *
 
 from config import Settings
 
-VISUALISER_ROI_SLICES = (slice(250, 600), slice(800, 1000))
-BOARD_ROI_SLICES = (slice(140, 260), slice(150, 750))
 RESOLUTION = 250
 projekt_path = "/home/felix/Schreibtisch/"  #Pfad ändern wenn Projekt anlegen vorhanden
 projekt_name = "Projekt"
@@ -87,11 +85,13 @@ class AutocutController:
     def ready(self):
         """autocut the input files and start the video editor view"""
         self.progressbar.setValue(0)
+        QApplication.processEvents()
         self.textlabel.setText("Working...")
         self.video_button.setEnabled(False)
         self.pdf_button.setEnabled(False)
         self.ok_button.setEnabled(False)
         self.cancel_button.setEnabled(False)
+        QApplication.processEvents()
         try:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
@@ -104,20 +104,29 @@ class AutocutController:
         try:
             if self.filename_video is not None:
                 video_splitter = VideoSplitter(projekt_path, projekt_name,self.filename_video) 
-                self.progressbar.setValue(randint(15, 32))
+                self.progressbar.setValue(randint(15, 26))
+                QApplication.processEvents()
                 video_splitter.audio_from_video_cut()
-                video_splitter.small_video_cut(fps)
+                self.progressbar.setValue(randint(29, 34))
+                QApplication.processEvents()
+                video_splitter.foil_video_cut(fps)
                 self.progressbar.setValue(randint(37, 53))
-                video = video_splitter.large_video_cut(fps)
+                QApplication.processEvents()
+                board_video = video_splitter.large_video_cut(fps)
+                board_video.board_area("board_video")
                 self.progressbar.setValue(randint(60, 70))
-                video.area(VISUALISER_ROI_SLICES, "small_video")
-                video2 = video_splitter.large_video_cut(fps)
+                QApplication.processEvents()
+                visualiser_video = video_splitter.visualiser_video_cut(fps)
+                visualiser_video.visualiser_area("visualiser_video")
+                
                 self.progressbar.setValue(randint(80, 90))
-                video2.area(BOARD_ROI_SLICES, "large_video")
+                QApplication.processEvents()
+                
         except:  
             return
             
         self.progressbar.setValue(100)
+        QApplication.processEvents()
         self.__autocut_view.close()
         video_editor_view = VideoEditorView()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
