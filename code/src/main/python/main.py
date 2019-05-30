@@ -3,6 +3,7 @@ from controller import MainController
 from view import StartView
 
 from config import Resources
+from config import Language
 from PyQt5 import QtCore
 import os
 
@@ -13,7 +14,11 @@ class AppContext(ApplicationContext):
 
     def run(self):
         """Starts the application using 'MainController' with the 'StartView'."""
+        # init resources
         Resources(self)
+        # init language
+        Language("de")
+        # start view and controller
         start_view = StartView()
         __main_controller = MainController(start_view)
         __main_controller.start()

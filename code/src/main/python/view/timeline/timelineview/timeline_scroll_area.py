@@ -52,7 +52,7 @@ class TimelineScrollArea(QFrame):
         :param parent: the parent component
         """
         super(TimelineScrollArea, self).__init__(parent)
-        uic.loadUi(Resources.get_instance().files.timeline_scrollarea_view, self)
+        uic.loadUi(Resources.files.timeline_scrollarea_view, self)
         self.setObjectName("scroll_area")
         self.layout().setContentsMargins(0, 0, 0, 0)
 

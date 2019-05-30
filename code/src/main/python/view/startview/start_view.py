@@ -25,14 +25,14 @@ class StartView(QMainWindow):
         'new_project_button' and 'back_button'.
         """
         super(StartView, self).__init__()
-        uic.loadUi(Resources.get_instance().files.startview, self)
+        uic.loadUi(Resources.files.startview, self)
 
         self.setStyleSheet(
-            open(Resources.get_instance().files.qss_dark, "r").read())
+            open(Resources.files.qss_dark, "r").read())
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
         self.select_project_widget = SelectProjectWidget()
@@ -94,16 +94,16 @@ class StartView(QMainWindow):
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
 
 class SelectProjectWidget(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
-        uic.loadUi(Resources.get_instance().files.select_project_widget, self)
+        uic.loadUi(Resources.files.select_project_widget, self)
 
         self.projects_list_view = self.findChild(QWidget, "projects_list_view")
         self.projects_list_view.addItem(
@@ -114,4 +114,4 @@ class SelectProjectWidget(QWidget):
 class DecisionWidget(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
-        uic.loadUi(Resources.get_instance().files.decision_widget, self)
+        uic.loadUi(Resources.files.decision_widget, self)

@@ -14,8 +14,8 @@ class ProjectSettingsView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(ProjectSettingsView, self).__init__()
-        uic.loadUi(Resources.get_instance().files.projectsettings_view, self)
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        uic.loadUi(Resources.files.projectsettings_view, self)
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         """ centering the window """
         rectangle = self.frameGeometry()
