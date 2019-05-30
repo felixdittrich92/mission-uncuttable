@@ -35,6 +35,7 @@ class ProjectSettingsView(QMainWindow):
         cancelButton = self.findChild(QPushButton, "cancelButton")
         cancelButton.clicked.connect(lambda: self.close())
 
+
     def addProjectsettings(self, projectsettings):
         """
         this method goes through the projectsettings dictionary and
@@ -90,7 +91,10 @@ class ProjectSettingsView(QMainWindow):
             fontmetrics = QtGui.QFontMetrics(font)
             textsize = fontmetrics.size(0, current)
 
-            textwindow.setMaximumSize(300, textsize.height() + 15)
+            windowwidth = 300
+            windowextraheight = 15
+
+            textwindow.setMaximumSize(windowwidth, textsize.height() + windowextraheight)
 
             layout.addWidget(textwindow)
         else:

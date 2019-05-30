@@ -11,6 +11,18 @@ class ProjectSettingsController:
         """Calls '__show_view()' of the projectsettings_view"""
         self.__projectsettings_view.show()
 
+    def focus(self):
+        self.__projectsettings_view.activateWindow()
+
+    def checkIfClosed(self):
+        if self.__projectsettings_view is not None:
+            if self.__projectsettings_view.isVisible():
+                return False
+            else:
+                return True
+        else:
+            return True
+
     def stop(self):
         """Closes the projectsettings window."""
         self.__projectsettings_view.close()

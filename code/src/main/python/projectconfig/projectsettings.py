@@ -3,6 +3,7 @@ import os
 import platform
 
 import projectconfig
+import config
 
 from collections import namedtuple
 
