@@ -1,5 +1,6 @@
 from .history import History
 
+
 class Project:
     __instance = None
 
@@ -16,12 +17,14 @@ class Project:
             Project()
         return Project.__instance
 
-    def __init__(self, name, path):
+    def __init__(self):
         if Project.__instance is not None:
             raise Exception("This class is a singleton!")
-        else:
-            self.___path = path
-            self.___history = History()
+
+        Project.__instance = self
+
+        # self.___path = path
+        self.___history = History()
 
     def get_history(self):
         return self.___history

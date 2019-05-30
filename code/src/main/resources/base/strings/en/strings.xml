@@ -1,0 +1,15 @@
+<strings>
+    <application>
+        <name>UbiCut</name>
+    </application>
+    <filemanager>
+        <pushButtonName>pick files</pushButtonName>
+        <deleteButtonName>remove</deleteButtonName>
+    </filemanager>
+    <errors>
+        <export>
+            <windowtitle>Exporterror</windowtitle>
+            <errormessage>There was an Error while exporting.\nPlease try different export settings.</errormessage>
+        </export>
+    </errors>
+</strings>

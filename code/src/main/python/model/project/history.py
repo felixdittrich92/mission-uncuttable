@@ -1,17 +1,15 @@
-from .operation import Operation
-
 class History:
     """
     Represents the history of a project and manages operations.
     """
     def __init__(self, operations=None):
-        if (operations != None):
+        if (operations is not None):
             self.operations = operations
         else:
             self.operations = []
-        
+
         self.__last_operation = len(self.operations) - 1
-    
+
     def apply_history(self):
         pass
 
@@ -24,7 +22,6 @@ class History:
             self.__last_operation -= 1
         else:
             raise Exception("No operation to undo in history. History is empty.")
-        
 
     def redo_last_operation(self):
         """
@@ -68,3 +65,15 @@ class History:
         @return Number of operations that can be redone.
         """
         return len(self.operations) - self.__last_operation - 1
+
+    def remove_last_operation(self):
+        """
+        Function that deletes the last operation from the list.
+        """
+        if not self.operations:
+            return
+
+        if self.__last_operation == len(self.operations) - 1:
+            self.__last_operation -= 1
+
+        del self.operations[-1]

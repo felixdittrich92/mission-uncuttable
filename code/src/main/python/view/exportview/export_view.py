@@ -5,7 +5,7 @@ from PyQt5 import uic
 
 from config import Resources
 from controller.export_controller import ExportController
-from model.project.timeline import TimelineModel
+from model.data import TimelineModel
 
 FORMAT_OPTIONS = {
     "mp4 (mpeg4)": {
@@ -60,7 +60,7 @@ class ExportView(QDialog):
     """A Class used as the View for export window"""
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
-        uic.loadUi(Resources.get_instance().files.export_view, self)
+        uic.loadUi(Resources.files.export_view, self)
 
         timeline_instance = TimelineModel.get_instance()
 

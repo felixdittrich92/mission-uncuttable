@@ -31,7 +31,8 @@ class TimelineModel:
         initalize the timeline model with given settings
         this class is a singleton so it can only be initialized once
 
-        @param timeline_data: dict with timeline settings (fps, width, height, sample_rate ...)
+        @param timeline_data: dict with timeline settings
+                              (fps, width, height, sample_rate ...)
         """
         if TimelineModel.__instance is not None:
             raise Exception("singleton!")
@@ -63,7 +64,6 @@ class TimelineModel:
 
     def getTimeline(self):
         return self.timeline
-
 
     def change(self, change_type, key, data):
         """

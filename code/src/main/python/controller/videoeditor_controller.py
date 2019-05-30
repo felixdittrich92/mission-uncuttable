@@ -1,6 +1,13 @@
+import json
+
+from PyQt5.QtWidgets import QFileDialog
+
+from shortcuts import ShortcutLoader
 from .settings_controller import SettingsController
-from view.settingsview import SettingsView
 from .projectsettings_controller import ProjectSettingsController
+from .timeline_controller import TimelineController
+from model.project import Project
+from view.settingsview import SettingsView
 from view.settingsview import ProjectSettingsView
 from view.exportview import ExportView
 
@@ -15,10 +22,23 @@ class VideoEditorController:
         self.__video_editor_view = view
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
+        self.__settings_controller = SettingsController(None)
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
+        self.__video_editor_view.actionUndo.triggered.connect(
+            self.__start_undo)
+        self.__video_editor_view.actionRedo.triggered.connect(
+            self.__start_redo)
+        self.__video_editor_view.actionSpeichern.triggered.connect(
+            self.__start_save)
+        self.__video_editor_view.actionSpeichern_als.triggered.connect(
+            self.__start_save_as)
+
+        self.__history = Project.get_instance().get_history()
+        ShortcutLoader(self.__video_editor_view)
+
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
@@ -34,9 +54,12 @@ class VideoEditorController:
 
     def __start_settings_controller(self):
         """Opens the settings window"""
-        settings_view = SettingsView()
-        self.__settings_controller = SettingsController(settings_view)
-        self.__settings_controller.start()
+        if self.__settings_controller.checkIfClosed():
+            self.settings_view = SettingsView()
+            self.__settings_controller = SettingsController(self.settings_view)
+            self.__settings_controller.start()
+        else:
+            self.__settings_controller.focus()
 
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
@@ -48,3 +71,51 @@ class VideoEditorController:
         """shows the export view"""
         export_view = ExportView()
         export_view.start()
+
+    def __start_undo(self):
+        """ Undo last action """
+        try:
+            self.__history.undo_last_operation()
+        except:
+            pass
+
+    def __start_redo(self):
+        """ Redo last action """
+        try:
+            self.__history.redo_last_operation()
+        except:
+            pass
+
+    def __start_save(self):
+        """ Save the Project """
+        timeline_controller = TimelineController.get_instance()
+        timeline_data = timeline_controller.get_project_timeline()
+
+        filemanager = self.__video_editor_view.filemanager
+        filemanager_data = filemanager.get_project_filemanager()
+
+        print(timeline_data)
+        print(filemanager_data)
+
+    def __start_save_as(self):
+        """ Lets the user select a file and saves the project in that file """
+        # get timeline data
+        timeline_controller = TimelineController.get_instance()
+        timeline_data = timeline_controller.get_project_timeline()
+
+        # get filemanager data
+        filemanager = self.__video_editor_view.filemanager
+        filemanager_data = filemanager.get_project_filemanager()
+
+        # selectc file
+        filename, _ = QFileDialog.getSaveFileName(
+            self.__video_editor_view, 'Save File')
+
+        project_data = {
+            "timeline": timeline_data,
+            "filemanager": filemanager_data
+        }
+
+        # write data
+        with open(filename, 'w') as f:
+            json.dump(project_data, f, ensure_ascii=False)
