@@ -23,11 +23,11 @@ class Project:
 
         Project.__instance = self
 
-        # self.___path = path
-        self.___history = History()
+        self.path = None
+        self.__history = History()
 
     def get_history(self):
-        return self.___history
+        return self.__history
 
     def save(self, filename, path):
         pass
