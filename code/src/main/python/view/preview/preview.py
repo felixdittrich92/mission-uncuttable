@@ -10,6 +10,7 @@ from model.data import TimelineModel
 import time
 from .videoWidget import VideoWidget
 
+from threading import Thread
 
 class PreviewView(QWidget):
     """
@@ -67,6 +68,8 @@ class PreviewView(QWidget):
         self.initGUI()
 
 
+
+
     def initGUI(self):
         #load icons
         self.iconplay = QtGui.QPixmap(self.RESOURCES.images.play_button)
@@ -101,8 +104,19 @@ class PreviewView(QWidget):
 
         self.current_frame_label = self.findChild(QWidget, "current_frame_label")
 
+        print(self.parent())
+    def playing(self):
+        while self.video_running:
+            current_frame = self.player.Position()
+            self.current_frame_label.setText(str(current_frame))
+            self.frame_changed.emit(
+                QPoint((current_frame * 16) / 25, 0))
+
+            time.sleep(0.1)
 
     def play_pause(self):
+        playing_thread = Thread(target=self.playing)
+
         if self.video_running:
             self.player.Pause()
             self.video_running = False
@@ -112,6 +126,7 @@ class PreviewView(QWidget):
             self.player.Play()
             self.video_running = True
             self.play_button.setIcon(QIcon(self.iconpause))
+            playing_thread.start()
 
     def firstFrame(self):
         self.player.Seek(1)
@@ -142,7 +157,9 @@ class PreviewView(QWidget):
 
     def prevFrame(self):
         position = self.player.Position()
-        self.player.Seek(position-1)
+        new_position = position - 1
+        self.player.Seek(new_position)
+        self.frame_changed.emit(QPoint((new_position*16)/25, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -150,7 +167,9 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position-10)
+            new_position = position - 10
+            self.player.Seek(new_position)
+            self.frame_changed.emit(QPoint((new_position*16)/25, 0))
 
             self.current_frame_label.setText(str(self.player.Position()))
         self.current_frame_label.setText(str(self.player.Position()))
@@ -160,10 +179,8 @@ class PreviewView(QWidget):
 
     def nextFrame(self):
         position = self.player.Position()
-        print(position)
         new_position = position + 1
         self.player.Seek(new_position)
-        self.frame_changed.emit(QPoint((new_position*16)/25, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -174,6 +191,7 @@ class PreviewView(QWidget):
             new_position = position + 10
             self.player.Seek(new_position)
             self.frame_changed.emit(QPoint((new_position*16)/25, 0))
+
             self.current_frame_label.setText(str(self.player.Position()))
         self.current_frame_label.setText(str(self.player.Position()))
 
