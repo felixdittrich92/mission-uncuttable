@@ -1,3 +1,5 @@
+import os
+
 import cv2
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
@@ -10,7 +12,8 @@ from random import randint
 from config import Settings
 
 RESOLUTION = 250
-projekt_path = "/home/clemens/Schreibtisch/"  # Pfad ändern wenn Projekt anlegen vorhanden
+# Pfad ändern wenn Projekt anlegen vorhanden
+projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
 projekt_name = "Projekt"
 
 
