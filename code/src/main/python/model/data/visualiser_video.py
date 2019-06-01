@@ -14,7 +14,7 @@ class VisualiserVideo(MediaFile):
         self.file_path = str(file_path)
         self.subvideos = list()
 
-    def visualiser_area(self, clip_prefix):
+    def visualiser_area(self):
         """
         a method that analyse the video frame per frame and save the Clips (Visualiser) in a list
         """

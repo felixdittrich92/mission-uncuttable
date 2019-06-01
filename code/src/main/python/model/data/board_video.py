@@ -16,7 +16,7 @@ class BoardVideo(MediaFile):
         self.accumulate_weight = 0.5
         self.subvideos = list()
 
-    def board_area(self, clip_prefix):
+    def board_area(self):
         """
         a method that analyse the video frame per frame and save the Clips (Board) in a list
         """

@@ -112,7 +112,7 @@ class AutocutController:
                                                projekt_name, self.filename_video)
                 self.progressbar.setValue(randint(15, 26))
                 QApplication.processEvents()
-                video_splitter.audio_from_video_cut()
+                audio = video_splitter.audio_from_video_cut()
                 self.progressbar.setValue(randint(29, 34))
                 QApplication.processEvents()
                 # video_splitter.foil_video_cut(fps)
@@ -120,11 +120,11 @@ class AutocutController:
                 # QApplication.processEvents()
 
                 board_video = video_splitter.large_video_cut(fps)
-                board_video.board_area("board_video")
+                board_video.board_area()
                 self.progressbar.setValue(randint(60, 70))
                 QApplication.processEvents()
                 visualiser_video = video_splitter.visualiser_video_cut(fps)
-                visualiser_video.visualiser_area("visualiser_video")
+                visualiser_video.visualiser_area()
 
                 self.progressbar.setValue(randint(80, 90))
                 QApplication.processEvents()
@@ -143,6 +143,7 @@ class AutocutController:
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.file_path)
         filemanager.addFileNames(visualiser_video.file_path)
+        filemanager.addFileNames(audio.get())
 
         timeline_controller.create_autocut_timeables(board_video.file_path, 2,
                                                      board_video.subvideos)
