@@ -7,9 +7,9 @@ from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
 from .timeline_controller import TimelineController
 from model.project import Project
-from view.settingsview import SettingsView
-from view.settingsview import ProjectSettingsView
+from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
+from projectconfig import Projectsettings
 
 
 class VideoEditorController:
@@ -107,6 +107,8 @@ class VideoEditorController:
 
         project = Project.get_instance()
         project.path = filename
+
+        Projectsettings.add_project(filename)
 
     def __write_project_data(self, filename):
         """ Saves project data into a file """

@@ -1,10 +1,8 @@
-import os
-
 from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout
 from PyQt5 import uic
-from config import Settings
-from config import Resources
+from config import Settings, Resources
+from projectconfig import Projectsettings
 
 
 class StartView(QMainWindow):
@@ -106,9 +104,9 @@ class SelectProjectWidget(QWidget):
         uic.loadUi(Resources.files.select_project_widget, self)
 
         self.projects_list_view = self.findChild(QWidget, "projects_list_view")
-        self.projects_list_view.addItem(
-            os.path.join(os.path.expanduser("~"), "test.uc"))
-        self.projects_list_view.addItem("Algorithmen und Datenstrukturen")
+
+        for p in Projectsettings.get_projects():
+            self.projects_list_view.addItem(p)
 
 
 class DecisionWidget(QWidget):
