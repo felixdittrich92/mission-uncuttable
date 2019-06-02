@@ -68,15 +68,15 @@ class VideoSplitter:
 
         small_video_name = 'foil_video.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        filename = os.path.join(folder,str(small_video_name))
-        out = cv2.VideoWriter(filename, fourcc ,fps, (700, 530))
+        filename = os.path.join(folder, small_video_name)
+        out = cv2.VideoWriter(filename, fourcc, fps, (700, 530))
 
-        if(cap.isOpened() == False):
+        if not cap.isOpened():
             print("Error opening video stream or file")
 
         while(cap.isOpened()):
             ret, frame = cap.read()
-            if ret == True:
+            if ret:
                 frame = frame[275:805, 1080:1780]
                 out.write(frame)
 
@@ -87,7 +87,8 @@ class VideoSplitter:
         cv2.destroyAllWindows()
         new_small_video_path = Path(folder, small_video_name)
         self.files.append(new_small_video_path)
-        return FoilVideo(out)
+
+        return FoilVideo(filename)
 
 
     def visualiser_video_cut(self, fps):

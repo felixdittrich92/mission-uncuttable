@@ -140,14 +140,14 @@ class AutocutController:
         filemanager = video_editor_view.filemanager
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.file_path)
-        filemanager.addFileNames(visualiser_video.file_path)
-        filemanager.addFileNames(foil_video.file_path)
+        filemanager.addFileNames(foil_video.get())
         filemanager.addFileNames(audio.get())
 
         timeline_controller.create_autocut_timeables(board_video.file_path, 2,
                                                      board_video.subvideos)
         timeline_controller.create_autocut_timeables(visualiser_video.file_path, 1,
                                                      visualiser_video.subvideos)
+        timeline_controller.add_clip(foil_video.get(), 0)
 
         self.__autocut_view.close()
         self.__video_editor_controller = VideoEditorController(video_editor_view)

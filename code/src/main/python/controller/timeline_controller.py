@@ -213,6 +213,13 @@ class TimelineController:
             self.create_timeable(track, os.path.basename(file_path),
                                  width, x_pos, model, generate_id(), hist=False)
 
+    def add_clip(self, file_path, track):
+        """ Gets a path to file and a track and creates a timeable """
+        model = TimeableModel(file_path, generate_id())
+        width = seconds_to_pos(model.clip.Duration())
+        self.create_timeable(track, os.path.basename(file_path),
+                             width, 0, model, generate_id(), hist=False)
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()

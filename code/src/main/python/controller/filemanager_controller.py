@@ -105,7 +105,7 @@ class Filemanager(QWidget):
 
         else:
             print("The datatype is not supported")
-            pass
+            return
 
         QApplication.processEvents()
         icon = QIcon(pixmap.scaled(QSize(275,200)))
