@@ -12,7 +12,6 @@ from random import randint
 from config import Settings
 
 RESOLUTION = 250
-# Pfad ändern wenn Projekt anlegen vorhanden
 projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
 projekt_name = "Projekt"
 
@@ -104,7 +103,6 @@ class AutocutController:
 
         try:
             if self.filename_video is not None:
-                # get fps
                 video = cv2.VideoCapture(self.filename_video)
                 fps = video.get(cv2.CAP_PROP_FPS)
 
@@ -115,9 +113,9 @@ class AutocutController:
                 audio = video_splitter.audio_from_video_cut()
                 self.progressbar.setValue(randint(29, 34))
                 QApplication.processEvents()
-                # video_splitter.foil_video_cut(fps)
-                # self.progressbar.setValue(randint(37, 53))
-                # QApplication.processEvents()
+                foil_video = video_splitter.foil_video_cut(fps)
+                self.progressbar.setValue(randint(37, 53))
+                QApplication.processEvents()
 
                 board_video = video_splitter.large_video_cut(fps)
                 board_video.board_area()
@@ -143,6 +141,7 @@ class AutocutController:
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.file_path)
         filemanager.addFileNames(visualiser_video.file_path)
+        filemanager.addFileNames(foil_video.file_path)
         filemanager.addFileNames(audio.get())
 
         timeline_controller.create_autocut_timeables(board_video.file_path, 2,
