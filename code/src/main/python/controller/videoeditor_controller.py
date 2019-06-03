@@ -97,10 +97,13 @@ class VideoEditorController:
     def __start_save_as(self):
         """ Lets the user select a file and saves the project in that file """
         # selectc file
-        filename, _ = QFileDialog.getSaveFileName(
-            self.__video_editor_view, 'Save File')
-
-        if filename == '':
+        file_dialog = QFileDialog(self.__video_editor_view)
+        file_dialog.setAcceptMode(QFileDialog.AcceptSave)
+        file_dialog.setNameFilter('uc files (*.uc)')
+        file_dialog.setDefaultSuffix('uc')
+        if file_dialog.exec_() == QFileDialog.Accepted:
+            filename = file_dialog.selectedFiles()[0]
+        else:
             return
 
         self.__write_project_data(filename)
