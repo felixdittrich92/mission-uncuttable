@@ -15,6 +15,18 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item row="0" column="0">
      <widget class="QSplitter" name="horizontalSplitter">
       <property name="sizeIncrement">
@@ -70,7 +82,7 @@
          <bool>false</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true">background: rgbrgb(30, 30, 30);</string>
+         <string notr="true"/>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -82,9 +94,6 @@
          <property name="topMargin">
           <number>13</number>
          </property>
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="preview"/>
-         </item>
         </layout>
        </widget>
       </widget>
@@ -142,6 +151,8 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
    </widget>
    <addaction name="menuProgramm"/>
    <addaction name="menuProjekt"/>
@@ -183,10 +194,18 @@
     <string>Export</string>
    </property>
   </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../../../icons/preview_buttons/resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -1,0 +1,74 @@
+Datum
+13.05.2019
+
+Protokollant: Markus Leupold
+
+Art des Treffens: Planning
+
+Sprint Nummer
+Sprint 5: Automatisches Schneiden
+
+Fehlende Personen
+Niemand
+
+
+Zusammenfassung
+    Orga
+	    Freitag 17.05.18: Workshop (Sascha ist nicht da)
+		 -> Doodle-Umfrage (Sascha kümmert sich drum)
+
+Sprintplanning
+
+	Tasks/User Stories
+    +--------+----------------------------------------------------+-----------+
+    | ID     | Bezeichnung                                        | Schätzung |
+    +--------+----------------------------------------------------+-----------+
+	| MU-36  | Verschiedene Modi für Video                        |           |
+    | MU-199 | Overlay Spur                                       |           |
+    | MU-27  | Preview Videoplayer                                |           |
+    | MU-197 | Timeline: Timeable lässt sich scrollen             |           |
+    | MU-198 | Timeline: Bilder und Audio keine Länge             |           |
+    | MU-192 | Filemanager: Fehlerhafte Darstellung bei Selektion |           |
+    | MU-145 | Hauptfenster: Menüleisten Hover funktioniert nicht |           |
+    | MU-193 | Filemanager: Videoimport Absturz                   |           |
+    | MU-195 | SettingsView: Mehrere Fenster                      |           |
+    | MU-194 | SettingsView: Maximize Button                      |           |
+    | MU-196 | Timeline: Lücke Dragging von Timeables             |           |
+    | MU-2   | Technologierecherche                               |           |
+    | MU-155 | Preview "Nadel"                                    |           |
+    | MU-157 | Programm Design                                    |           |
+    | MU-112 | Projekteinstellungen                               |           |
+    | MU-153 | Timeable hinzufügen                                |           |
+    | MU-149 | Timeable zerschneiden                              |           |
+    | MU-132 | Dokumentation Grundlayout und Mechanik der         |           |
+	|        |   TimelineScrollArea                               |           |
+    | MU-112 | Projekteinstellungen                               |           |
+    | MU-32  | Audiospur                                          |           |
+    | MU-61  | ShortCuts                                          |           |
+    | MU-115 | Sprintdokumentation                                |           |
+	+--------+----------------------------------------------------+-----------+
+
+
+	Sprintziel
+	Automatischer Schnitt und Verbesserungen
+
+	Zeitraum
+	13.05.2019 -
+
+	Arbeitsaufteilung
+          - Aufteilung in zwei Gruppen zu je vier Personen
+             -> Eine Gruppe für Arbeit an liegen gebliebenen Dingen und Bugfixes
+             -> Eine Gruppe für Arbeit an automatischem Schnitt
+
+        Liegen Gebliebenes und Bugfixes
+          - Speicherung des Projekts
+          - Design
+
+        Automatischer Schnitt
+            Konzept für die Videomodi
+              - Was gibt es für Modi?
+              - Was bringen die Modi dem Nutzer?
+              - Wie kommt der Nutzer in Kontakt mit den Modi?
+
+    Sonstiges
+      - Openshot macht auf den Windows-Systemen momentan noch Probleme

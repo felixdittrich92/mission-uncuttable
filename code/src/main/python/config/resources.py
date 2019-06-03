@@ -7,17 +7,21 @@ files = {
     "projectsettings_view": "ui/projectsettings_window.ui",
     "export_view": "ui/export.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
-    "timeline_view": "ui/timeline_view.ui"
+    "timeline_view": "ui/timeline_view.ui",
+    "decision_widget": "ui/new_project_decision.ui",
+    "select_project_widget": "ui/select_project.ui",
+    "qss_dark": "stylesheets/dark.qss",
+    "qss_light": "stylesheets/light.qss"
 }
 images = {
-    "play_button": "images/buttons/002-play-button.svg",
-    "pause_button": "images/buttons/001-pause.svg",
-    "first_frame_button": "images/buttons/006-back.svg",
-    "last_frame_button": "images/buttons/007-next-1.svg",
-    "back_button": "images/buttons/013-previous.svg",
+    "play_button": "images/buttons/play.png",
+    "pause_button": "images/buttons/pause.png",
+    "first_frame_button": "images/buttons/fast_backwards.png",
+    "last_frame_button": "images/buttons/fast_forward.png",
+    "back_button": "images/buttons/step_back.png",
+    "forward_button": "images/buttons/step_forward.png",
+    "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
-    "forward_button": "images/buttons/004-next.svg",
-    "max_button": "images/buttons/maximize.svg"
 }
 strings = {
     "de": "strings/de/strings.xml",
@@ -31,30 +35,29 @@ class Resources:
     This is necessary because the project has different paths after freezing and installing.
     """
     __instance = None
+    __app = None
 
     def __init__(self, app):
-        self.app = app
+        Resources.__app = app
         if Resources.__instance is not None:
-            raise Exception("This class is a singleton!")
+            raise Exception("Resources already initialized!")
         else:
             Resources.__instance = self
-            self.load_file_paths()
+            Resources.__load_file_paths()
 
-    @staticmethod
-    def get_instance():
-        if Resources.__instance is None:
-            raise Exception("Resources not initialized!")
-        else:
-            return Resources.__instance
-
-    def load_file_paths(self):
-        self.files = Category()
+    def __load_file_paths():
+        Resources.files = Category()
         for attribute, value in files.items():
-            setattr(self.files, attribute, self.app.get_resource(value))
-        self.images = Category()
+            setattr(Resources.files, attribute, Resources.__app.get_resource(value))
+        Resources.images = Category()
         for attribute, value in images.items():
-            setattr(self.images, attribute, self.app.get_resource(value))
+            setattr(Resources.images, attribute, Resources.__app.get_resource(value))
+        Resources.strings = Category()
+        for attribute, value in strings.items():
+            setattr(Resources.strings, attribute, Resources.__app.get_resource(value))
 
 class Category:
-    pass
+    def __iter__(self):
+        for attr, value in self.__dict__.items():
+            yield attr, value
 

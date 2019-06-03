@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from .size_linkable_frame import SizeLinkableFrame
+from .time_needle import TimeNeedle
 
 
 class TrackFrame(SizeLinkableFrame):
@@ -18,9 +19,12 @@ class TrackFrame(SizeLinkableFrame):
         :param parent: the parent component
         """
         super(TrackFrame, self).__init__(parent)
+        vbox_layout = QVBoxLayout()
+        vbox_layout.setSpacing(0)
+        vbox_layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(vbox_layout)
 
-        self.setLayout(QVBoxLayout())
-        self.setStyleSheet("background-color: orange")
+
 
     def add_track(self, track):
         """
@@ -29,4 +33,6 @@ class TrackFrame(SizeLinkableFrame):
         :param track: the Track to add
         """
         self.layout().addWidget(track)
+        needle = self.findChild(QWidget, "needle_bottom")
+        track.stackUnder(needle)
         self.adjustSize()

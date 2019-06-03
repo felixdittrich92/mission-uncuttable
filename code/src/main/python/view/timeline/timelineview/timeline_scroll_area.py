@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import QFrame, QScrollBar
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, QPoint
 from PyQt5 import uic
 
 import os
 
+from .time_needle import TimeNeedle
 from config import Resources
 from .track_button_frame import TrackButtonFrame
 from .time_bar import TimeBar
@@ -51,7 +52,9 @@ class TimelineScrollArea(QFrame):
         :param parent: the parent component
         """
         super(TimelineScrollArea, self).__init__(parent)
-        uic.loadUi(Resources.get_instance().files.timeline_scrollarea_view, self)
+        uic.loadUi(Resources.files.timeline_scrollarea_view, self)
+        self.setObjectName("scroll_area")
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self.__horizontal_scroll_bar = None
         self.__vertical_scroll_bar = None
@@ -64,14 +67,33 @@ class TimelineScrollArea(QFrame):
         self.__track_button_frame = TrackButtonFrame()
         self.__track_button_frame.setObjectName("track_button_frame")
         self.__time_bar = TimeBar()
+        self.__time_bar.setObjectName("time_bar")
 
         self.__time_bar_scroll_area.setWidget(self.__time_bar)
+        self.__time_bar_scroll_area.setObjectName("time_bar_scroll_area")
         self.__track_scroll_area.setWidget(self.__track_frame)
+        self.__track_scroll_area.setObjectName("track_scroll_area")
         self.__track_button_scroll_area.setWidget(self.__track_button_frame)
-
+        self.__track_button_scroll_area.setObjectName("track_button_scroll_area")
         self.__setup_dependencies()
 
         self.__show_debug_info_on_gui()
+
+        self.__needle_top = TimeNeedle(self.__time_bar.height(), True)
+        self.__needle_top.setParent(self.__time_bar)
+        self.__needle_top.move_needle(5)
+
+        self.__needle_bottom = TimeNeedle(self.__track_frame.height())
+        self.__needle_bottom.setParent(self.__track_frame)
+        self.__needle_bottom.setObjectName("needle_bottom")
+        self.__needle_bottom.move_needle(5)
+
+        self.__needle_top.pos_changed.connect(self.__needle_bottom.move_needle)
+        self.__needle_bottom.pos_changed.connect(self.__needle_top.move_needle)
+        self.__track_frame.height_changed.connect(self.__needle_bottom.set_drawing_height)
+
+        self.__needle_bottom.set_drawing_height(300)
+        self.__needle_bottom.repaint()
 
     def __setup_dependencies(self):
         self.__track_button_frame.link_to_height(self.__track_frame)
@@ -129,4 +151,3 @@ class TimelineScrollArea(QFrame):
         Setup the component somehow so that something can be seen which
         makes it possible to say if something works properly or not.
         """
-        self.setStyleSheet('background-color: blue')
