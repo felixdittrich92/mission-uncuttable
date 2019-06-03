@@ -33,7 +33,7 @@ class VideoSplitter:
 
         cap = cv2.VideoCapture(self.video_data)
 
-        large_video_name = 'board_video.mp4'
+        large_video_name = 'board.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         filename = os.path.join(folder, large_video_name)
         out = cv2.VideoWriter(filename, fourcc , fps, (938, 530))
@@ -66,7 +66,7 @@ class VideoSplitter:
 
         cap = cv2.VideoCapture(self.video_data)
 
-        small_video_name = 'foil_video.mp4'
+        small_video_name = 'foil.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         filename = os.path.join(folder, small_video_name)
         out = cv2.VideoWriter(filename, fourcc, fps, (700, 530))
@@ -101,7 +101,7 @@ class VideoSplitter:
 
         cap = cv2.VideoCapture(str(video_file))
 
-        small_video_name = 'visualiser_video.mp4'
+        small_video_name = 'visualiser.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         filename = os.path.join(folder, small_video_name)
         out = cv2.VideoWriter(filename, fourcc, fps, (960, 530))
