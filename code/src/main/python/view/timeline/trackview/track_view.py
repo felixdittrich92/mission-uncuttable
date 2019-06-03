@@ -106,7 +106,8 @@ class TrackView(QGraphicsView):
 
             name = os.path.basename(path)
             TimelineController.get_instance().create_timeable(self.num, name, width,
-                                                              x_pos, model, generate_id())
+                                                              x_pos, model, generate_id(),
+                                                              is_drag=True)
             self.item_dropped = True
 
     def add_from_track(self, drag_event):
@@ -153,7 +154,8 @@ class TrackView(QGraphicsView):
             controller = TimelineController.get_instance()
             controller.create_timeable(self.num, name, width, start_pos, model,
                                        generate_id(), res_left=res_left,
-                                       res_right=res_right, mouse_pos=pos, hist=False)
+                                       res_right=res_right, mouse_pos=pos, hist=False,
+                                       is_drag=True)
             self.drag_from_track = True
 
             # set item_dropped to True because the timeable was succesfully created

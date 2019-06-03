@@ -25,7 +25,7 @@ class TimelineView(QFrame):
         """
         super(TimelineView, self).__init__(parent)
 
-        uic.loadUi(Resources.get_instance().files.timeline_view, self)
+        uic.loadUi(Resources.files.timeline_view, self)
 
         timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())
@@ -70,7 +70,7 @@ class TimelineView(QFrame):
             t.set_width(max_width)
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0):
+                        res_left=0, res_right=0, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
         try:
             track = self.tracks[track_id]
@@ -87,7 +87,8 @@ class TimelineView(QFrame):
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 
-        track.current_timeable = timeable
+        if is_drag:
+            track.current_timeable = timeable
 
         # add timeable to dict
         self.timeables[id] = timeable
