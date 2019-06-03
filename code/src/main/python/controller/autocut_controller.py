@@ -143,7 +143,6 @@ class AutocutController:
         filemanager.addFileNames(foil_video.get())
         filemanager.addFileNames(audio.get())
         for count in range(0, len(self.pictures)):
-            print(count)
             filemanager.addFileNames(self.pictures[count])
 
         timeline_controller.create_autocut_timeables(board_video.get(), 2,

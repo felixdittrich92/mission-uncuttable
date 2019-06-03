@@ -35,7 +35,7 @@ class Filemanager(QWidget):
 
         """Set properties of the Widget"""
         self.listWidget.setViewMode(QListView.IconMode)
-        self.listWidget.setIconSize(QSize(100, 100))
+        self.listWidget.setIconSize(QSize(110, 110))
 
         """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
