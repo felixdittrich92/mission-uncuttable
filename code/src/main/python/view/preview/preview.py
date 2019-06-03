@@ -43,12 +43,15 @@ class PreviewView(QWidget):
         #connect signals of videoWidget and renderer
         self.videoWidget.connectSignals(self.renderer)
 
+        self.renderer.present.connect(self.updateProgress)
+
         #load timline into reader
         self.player.Reader(self.timeline)
 
         #init GUI
         self.initGUI()
 
+        self.initVideo()
 
     def initGUI(self):
         #load icons
@@ -76,6 +79,7 @@ class PreviewView(QWidget):
         self.back_button.released.connect(self.stopLoop)
         self.forward_button.pressed.connect(self.nextFrame)
         self.forward_button.released.connect(self.stopLoop)
+        self.progress_slider.valueChanged.connect(self.valuechange)
         self.looprunning = False
         # self.volumeSlider.valueChanged.connect(self.volumeChange)
 
@@ -83,6 +87,7 @@ class PreviewView(QWidget):
         self.video_layout.layout().insertWidget(0, self.videoWidget)
 
     def play_pause(self):
+        self.progress_slider.setMaximum(self.getlastFrame())
         if self.video_running:
             self.player.Pause()
             self.video_running = False
@@ -97,8 +102,6 @@ class PreviewView(QWidget):
         self.player.Seek(1)
 
     def lastFrame(self):
-        self.player.Play()
-        self.player.Pause()
         self.player.Seek(self.getlastFrame())
 
     def getlastFrame(self):
@@ -138,6 +141,17 @@ class PreviewView(QWidget):
                 break
             position = self.player.Position()
             self.player.Seek(position+10)
+
+    def initVideo(self):
+        self.player.Play()
+        self.player.Pause()
+
+    def updateProgress(self):
+        self.progress_slider.setValue(self.player.Position())
+
+    def valuechange(self):
+        self.player.Seek(self.progress_slider.value())
+
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

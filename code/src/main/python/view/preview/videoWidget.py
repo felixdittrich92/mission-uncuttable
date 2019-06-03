@@ -67,6 +67,7 @@ class VideoWidget(QWidget):
         # End painter
         painter.end()
 
+
     def centeredViewport(self, width, height):
         """ Calculate size of viewport to maintain apsect ratio """
 
