@@ -39,6 +39,7 @@ class AutocutController:
 
         self.filename_video = None
         self.filename_pdf = None
+        self.pictures = []
 
     def start(self):
         """Calls '__show_view()' of AutocutController"""
@@ -142,14 +143,16 @@ class AutocutController:
         filemanager.addFileNames(visualiser_video.get())
         filemanager.addFileNames(foil_video.get())
         filemanager.addFileNames(audio.get())
-        for count in range(0, len(self.pictures)):
-            filemanager.addFileNames(self.pictures[count])
+
+        for pic in self.pictures:
+            filemanager.addFileNames(pic)
 
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.subvideos)
         timeline_controller.create_autocut_timeables(visualiser_video.get(), 1,
                                                      visualiser_video.subvideos)
         timeline_controller.add_clip(foil_video.get(), 0)
+        timeline_controller.add_clip(audio.get(), -1)
 
         self.__autocut_view.close()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
