@@ -1,0 +1,51 @@
+Datum
+20.10.1995
+
+Name Protokollant
+Alexander Bonin 
+
+Art des Treffens 
+Reguläres Treffen
+
+Sprint Nummer
+Sprint 6
+
+Fehlende Personen
+Felix, 
+
+Zusammenfassung
+diverse Organisatorische Dinge wie zum Beispiel Meetingzeiten oder Doodleumfragen
+
+
+Reguläres Treffen
+	
+	Was jeder Gemacht hat?
+
+	Markus: openshot geht (immer noch) nicht
+    Clemens: timeline und filemangaer als datei speichern und widerherstellen
+    Johannes: Ubuntu eingerichtet, Sprintdoku geschrieben
+    Valentin: hat an fullscreen button gearbeitet
+    Alex: Audiospur.. an timeline verzweifelt
+    Max: Shortcuts in Einstellungen, Timeneedle ist mit player gesynct
+    Julian: Einstellungsfenster lässt sich nicht mehr maximieren
+
+
+
+	Woran will jeder arbeiten?
+
+    Johannes: Aufgabe suchen
+    Valentin: Refactoring
+
+    Thema Refactoring
+
+    Tim hält das Team dazu an ein bestimmtest Design Pattern überall zu implementieren.
+
+
+
+
+
+
+	
+
+
+
