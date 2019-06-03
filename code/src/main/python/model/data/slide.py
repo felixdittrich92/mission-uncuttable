@@ -8,7 +8,7 @@ class Slide(MediaFile):
     """
 
     def __init__(self, file_path): 
-        self.__file_path = file_path
+        self.__file_path = str(file_path)
         self.__is_free = False
         self.list_is_free = []
 
@@ -40,9 +40,8 @@ class Slide(MediaFile):
 
         if average[0] > 250:
             self.list_is_free.append(True)
-            self.list_is_free = True
+            self.__is_free = True
             return True
         else:
             self.list_is_free.append(False)
-            self.list_is_free = False
             return False

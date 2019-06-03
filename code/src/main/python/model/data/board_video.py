@@ -11,16 +11,17 @@ class BoardVideo(MediaFile):
     """
 
     def __init__(self, file_path):
-        self.file_path = str(file_path)
-        self.background = None
-        self.accumulate_weight = 0.5
+        self.__file_path = str(file_path)
         self.subvideos = list()
+
+    def get(self):
+        return self.__file_path
 
     def board_area(self):
         """
         a method that analyse the video frame per frame and save the Clips (Board) in a list
         """
-        video = cv2.VideoCapture(self.file_path)
+        video = cv2.VideoCapture(self.__file_path)
         try:
             times = list()
             for frame_number in count():

@@ -38,9 +38,10 @@ class Presentation:
             for page_number, page in enumerate(pages, start=1):
                 target = folder / f"{page_number:03d}.jpg"
                 page.save(str(target),  'JPEG')
-
-            for file in os.listdir(folder):
-                self.files.append(Slide(file))
+                self.files.append(str(target))
+            
+            Slide(self.files)
+            return self.files
 
         else:
             print("the datatype must be .pdf")

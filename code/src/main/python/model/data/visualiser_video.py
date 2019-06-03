@@ -11,14 +11,17 @@ class VisualiserVideo(MediaFile):
     """
 
     def __init__(self, file_path):
-        self.file_path = str(file_path)
+        self.__file_path = str(file_path)
         self.subvideos = list()
+
+    def get(self):
+        return self.__file_path
 
     def visualiser_area(self):
         """
         a method that analyse the video frame per frame and save the Clips (Visualiser) in a list
         """
-        video = cv2.VideoCapture(self.file_path)
+        video = cv2.VideoCapture(self.__file_path)
         try:
             times = list()
 

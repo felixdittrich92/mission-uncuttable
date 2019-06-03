@@ -1,5 +1,4 @@
 import os
-
 import cv2
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
@@ -97,7 +96,7 @@ class AutocutController:
         try:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
-                presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
+                self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
         except:
             pass
 
@@ -139,13 +138,17 @@ class AutocutController:
 
         filemanager = video_editor_view.filemanager
         filemanager.addFileNames(self.filename_video)
-        filemanager.addFileNames(board_video.file_path)
+        filemanager.addFileNames(board_video.get())
+        filemanager.addFileNames(visualiser_video.get())
         filemanager.addFileNames(foil_video.get())
         filemanager.addFileNames(audio.get())
+        for count in range(0, len(self.pictures)):
+            print(count)
+            filemanager.addFileNames(self.pictures[count])
 
-        timeline_controller.create_autocut_timeables(board_video.file_path, 2,
+        timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.subvideos)
-        timeline_controller.create_autocut_timeables(visualiser_video.file_path, 1,
+        timeline_controller.create_autocut_timeables(visualiser_video.get(), 1,
                                                      visualiser_video.subvideos)
         timeline_controller.add_clip(foil_video.get(), 0)
 
