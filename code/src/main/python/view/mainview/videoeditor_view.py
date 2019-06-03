@@ -22,6 +22,9 @@ class VideoEditorView(QMainWindow):
         self.load_timeline_widget()
         self.load_preview()
 
+        self.splittersizes = []
+        self.fullscreen = False
+
         self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         "QSS HOT RELOAD"
@@ -34,6 +37,7 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, previewview)
         previewview.show()
+        previewview.maximize_button.clicked.connect(self.maxim)
 
     def load_timeline_widget(self):
         """
@@ -65,3 +69,28 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def maxim(self):
+        v_splitter = self.findChild(QObject, 'verticalSplitter')
+        h_splitter = self.findChild(QObject, 'horizontalSplitter')
+
+        if(self.fullscreen == False):
+
+            self.v_sizes = v_splitter.sizes()
+            self.h_sizes = h_splitter.sizes()
+
+            self.splittersizes = (self.v_sizes, self.h_sizes)
+
+            width = self.frameGeometry().width()
+            height = self.frameGeometry().height()
+            v_splitter.setSizes([0, width])
+            h_splitter.setSizes([height, 0])
+
+            self.fullscreen = True
+
+        else:
+            v_splitter.setSizes(self.splittersizes[0])
+            h_splitter.setSizes(self.splittersizes[1])
+
+            self.fullscreen = False
+            
