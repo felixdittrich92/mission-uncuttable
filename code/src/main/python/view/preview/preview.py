@@ -104,8 +104,6 @@ class PreviewView(QWidget):
 
         self.current_frame_label = self.findChild(QWidget, "current_frame_label")
 
-        print(self.parent())
-
     def playing(self):
         """Thread that moves the needle, when Player is playing."""
         while self.video_running:
@@ -201,6 +199,10 @@ class PreviewView(QWidget):
 
             self.current_frame_label.setText(str(self.player.Position()))
         self.current_frame_label.setText(str(self.player.Position()))
+
+    def set_player_to_frame(self, frame):
+        self.player.Seek(frame)
+        print(frame)
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

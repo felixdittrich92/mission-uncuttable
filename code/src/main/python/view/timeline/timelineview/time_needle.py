@@ -151,9 +151,11 @@ class TimeNeedle(QWidget):
 
     def mouseReleaseEvent(self, event):
         """
-        Sets the cursor to a pointing hand when mouse button is released.
+        Sets the cursor to a pointing hand when mouse button is released
+        and emits position"
 
         :param event: EventHandler
         """
         self.setCursor(Qt.PointingHandCursor)
         self.needle_moved.emit(self.pos().x())
+        print(self.pos().x())

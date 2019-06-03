@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QObject, QFileSystemWatcher
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QWidget
 from PyQt5.QtWidgets import QSplitter
 from PyQt5 import uic
 from config import Resources
@@ -20,6 +20,11 @@ class VideoEditorView(QMainWindow):
 
         self.load_filemanager()
         self.load_timeline_widget()
+
+        self.needle = self.findChild(QWidget, "needle_top")
+
+        print(self.needle)
+
         self.load_preview()
 
         self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
@@ -29,11 +34,16 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
+    def test(self, frame):
+        print(frame)
+
     def load_preview(self):
         previewview = PreviewView.get_instance()
+
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, previewview)
         previewview.show()
+        self.needle.needle_moved.connect(self.test)
 
     def load_timeline_widget(self):
         """
