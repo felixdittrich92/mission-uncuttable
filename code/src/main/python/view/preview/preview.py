@@ -6,7 +6,7 @@ from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
 from model.data import TimelineModel
 from .videoWidget import VideoWidget
 from threading import Thread
-
+from datetime import datetime
 import openshot
 import sip
 import time
@@ -62,7 +62,6 @@ class PreviewView(QWidget):
         #connect signals of videoWidget and renderer
         self.videoWidget.connectSignals(self.renderer)
 
-
         #load timline into reader
         self.player.Reader(self.timeline)
 
@@ -95,26 +94,27 @@ class PreviewView(QWidget):
         self.back_button.released.connect(self.stopLoop)
         self.forward_button.pressed.connect(self.nextFrame)
         self.forward_button.released.connect(self.stopLoop)
-        self.progress_slider.valueChanged.connect(self.valuechange)
+        self.progress_slider.sliderMoved.connect(self.changeProgressBar)
         self.looprunning = False
-        # self.volumeSlider.valueChanged.connect(self.volumeChange)
+
+        self.updateLabels()
 
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
-
-        self.current_frame_label = self.findChild(QWidget, "current_frame_label")
 
     def playing(self):
         """Thread that moves the needle, when Player is playing."""
         while self.video_running:
             current_frame = self.player.Position()
-            self.current_frame_label.setText(str(current_frame))
+            self.updateLabels()
+            self.progress_slider.setValue(current_frame)
             new_position = (current_frame * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
             self.frame_changed.emit(QPoint(new_position, 0))
 
             time.sleep(0.1)
 
     def play_pause(self):
+        self.progress_slider.setMaximum(self.getlastFrame())
         playing_thread = Thread(target=self.playing)
 
         if self.video_running:
@@ -131,15 +131,15 @@ class PreviewView(QWidget):
     def firstFrame(self):
         self.player.Seek(1)
         self.frame_changed.emit(QPoint(0, 0))
-
-        self.current_frame_label.setText(str(self.player.Position()))
+        self.updateProgressBar()
+        self.updateLabels()
 
     def lastFrame(self):
         self.player.Seek(self.getlastFrame())
         new_position = (self.player.Position() * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
         self.frame_changed.emit(QPoint(new_position, 0))
-
-        self.current_frame_label.setText(str(self.player.Position()))
+        self.updateProgressBar()
+        self.updateLabels()
 
 
     def getlastFrame(self):
@@ -170,9 +170,10 @@ class PreviewView(QWidget):
             self.player.Seek(new_position)
             new_position = (new_position * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
             self.frame_changed.emit(QPoint(new_position, 0))
-
-            self.current_frame_label.setText(str(self.player.Position()))
-        self.current_frame_label.setText(str(self.player.Position()))
+            self.updateLabels()
+            self.updateProgressBar()
+        self.updateLabels()
+        self.updateProgressBar()
 
     def stopLoop(self):
         self.looprunning = False
@@ -194,29 +195,39 @@ class PreviewView(QWidget):
             self.player.Seek(new_position)
             new_position = (new_position * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
             self.frame_changed.emit(QPoint(new_position, 0))
-
-            self.current_frame_label.setText(str(self.player.Position()))
-        self.current_frame_label.setText(str(self.player.Position()))
+            self.updateProgressBar()
+            self.updateLabels()
+        self.updateLabels()
+        self.updateProgressBar()
 
     def set_player_to_frame(self, frame):
         self.player.Seek(frame)
         print(frame)
 
-    # def volumeChange(self):
-    #     slicerValue = self.volumeSlider.value()/10
-    #     print(slicerValue)
-    #     self.player.Volume(slicerValue)
-    #     print(self.player.Volume())
+    def changeProgressBar(self):
+        self.player.Seek(self.progress_slider.value())
+        new_position = (self.player.Position() * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+        self.updateLabels()
 
-class ThreadProgress(QThread):
-    def __init__(self):
-        QThread.__init__(self)
+        self.frame_changed.emit(QPoint(new_position, 0))
+
+    def updateProgressBar(self):
+        self.progress_slider.setValue(self.player.Position())
+
+    def updateLabels(self):
+        self.updateFrameLabel()
+        self.updateTimeLabel()
     
-    def __del__(self):
-        self.wait
+    def updateFrameLabel(self):
+        currentFrame = str(self.player.Position())
+        numOfFrames = str(self.getlastFrame())
+        if numOfFrames == "1":
+            numOfFrames = "0"  
+        self.current_frame_label.setText(currentFrame + " | " + numOfFrames + " FRAMES")
 
-    def run(self):
-        self.updateProgress()
-
-    def updateProgress(self):
-        self.progress_slider.setValue(self.player.Position())        
+    def updateTimeLabel(self):
+        currentFrame = self.player.Position()
+        numOfFrames = self.getlastFrame()
+        currentTime = str(time.strftime('%H:%M:%S', time.gmtime((1 / FRAMES_PER_SECOND) * currentFrame)))
+        numOfTime = str(time.strftime('%H:%M:%S', time.gmtime((1 / FRAMES_PER_SECOND) * numOfFrames)))
+        self.current_time_label.setText(currentTime + " | " + numOfTime)
