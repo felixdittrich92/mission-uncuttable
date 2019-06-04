@@ -92,7 +92,7 @@ class TimeableView(QGraphicsRectItem):
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
             painter.setPen(QColor(245, 245, 245))
-            painter.drawText(QPoint(8, 20), self.name)
+            painter.drawText(QPoint(100, 20), self.name)
 
             self.name_visible = True
         else:
