@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import *
 from config import Resources
-from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication
+from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication, QObject
 import openshot
 import sip
 from model.data import TimelineModel
@@ -158,3 +158,16 @@ class PreviewView(QWidget):
     #     print(slicerValue)
     #     self.player.Volume(slicerValue)
     #     print(self.player.Volume())
+
+class ThreadProgress(QThread):
+    def __init__(self):
+        QThread.__init__(self)
+    
+    def __del__(self):
+        self.wait
+
+    def run(self):
+        self.updateProgress()
+
+    def updateProgress(self):
+        self.progress_slider.setValue(self.player.Position())        
