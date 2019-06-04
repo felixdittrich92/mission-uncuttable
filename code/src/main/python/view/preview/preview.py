@@ -37,8 +37,7 @@ class PreviewView(QWidget):
 
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
-        self.RESOURCES = Resources.get_instance()
-        uic.loadUi(self.RESOURCES.files.preview_view, self)
+        uic.loadUi(Resources.files.preview_view, self)
 
         self.video_running = False
 
@@ -72,13 +71,13 @@ class PreviewView(QWidget):
 
     def initGUI(self):
         #load icons
-        self.iconplay = QtGui.QPixmap(self.RESOURCES.images.play_button)
-        self.iconpause = QtGui.QPixmap(self.RESOURCES.images.pause_button)
-        iconfirstframe = QtGui.QPixmap(self.RESOURCES.images.first_frame_button)
-        iconlastframe = QtGui.QPixmap(self.RESOURCES.images.last_frame_button)
-        iconback = QtGui.QPixmap(self.RESOURCES.images.back_button)
-        iconforward = QtGui.QPixmap(self.RESOURCES.images.forward_button)
-        iconmax = QtGui.QPixmap(self.RESOURCES.images.maximize_button)
+        self.iconplay = QtGui.QPixmap(Resources.images.play_button)
+        self.iconpause = QtGui.QPixmap(Resources.images.pause_button)
+        iconfirstframe = QtGui.QPixmap(Resources.images.first_frame_button)
+        iconlastframe = QtGui.QPixmap(Resources.images.last_frame_button)
+        iconback = QtGui.QPixmap(Resources.images.back_button)
+        iconforward = QtGui.QPixmap(Resources.images.forward_button)
+        iconmax = QtGui.QPixmap(Resources.images.maximize_button)
 
         #set icons to buttons
         self.play_button.setIcon(QIcon(self.iconplay))
@@ -96,6 +95,7 @@ class PreviewView(QWidget):
         self.back_button.released.connect(self.stopLoop)
         self.forward_button.pressed.connect(self.nextFrame)
         self.forward_button.released.connect(self.stopLoop)
+        self.progress_slider.valueChanged.connect(self.valuechange)
         self.looprunning = False
         # self.volumeSlider.valueChanged.connect(self.volumeChange)
 
@@ -135,8 +135,6 @@ class PreviewView(QWidget):
         self.current_frame_label.setText(str(self.player.Position()))
 
     def lastFrame(self):
-        self.player.Play()
-        self.player.Pause()
         self.player.Seek(self.getlastFrame())
         new_position = (self.player.Position() * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
         self.frame_changed.emit(QPoint(new_position, 0))
@@ -209,3 +207,16 @@ class PreviewView(QWidget):
     #     print(slicerValue)
     #     self.player.Volume(slicerValue)
     #     print(self.player.Volume())
+
+class ThreadProgress(QThread):
+    def __init__(self):
+        QThread.__init__(self)
+    
+    def __del__(self):
+        self.wait
+
+    def run(self):
+        self.updateProgress()
+
+    def updateProgress(self):
+        self.progress_slider.setValue(self.player.Position())        

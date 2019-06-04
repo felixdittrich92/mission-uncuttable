@@ -1,9 +1,15 @@
+import json
+
+from PyQt5.QtWidgets import QFileDialog
+
+from shortcuts import ShortcutLoader
 from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
+from .timeline_controller import TimelineController
 from model.project import Project
-from view.settingsview import SettingsView
-from view.settingsview import ProjectSettingsView
+from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
+from projectconfig import Projectsettings
 
 
 class VideoEditorController:
@@ -25,8 +31,13 @@ class VideoEditorController:
             self.__start_undo)
         self.__video_editor_view.actionRedo.triggered.connect(
             self.__start_redo)
+        self.__video_editor_view.actionSpeichern.triggered.connect(
+            self.__start_save)
+        self.__video_editor_view.actionSpeichern_als.triggered.connect(
+            self.__start_save_as)
 
         self.__history = Project.get_instance().get_history()
+        ShortcutLoader(self.__video_editor_view)
 
     def __show_view(self):
         """Calls show() of 'VideoEditorView'."""
@@ -48,7 +59,6 @@ class VideoEditorController:
             self.__settings_controller.start()
         else:
             self.__settings_controller.focus()
-
 
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
@@ -74,3 +84,47 @@ class VideoEditorController:
             self.__history.redo_last_operation()
         except:
             pass
+
+    def __start_save(self):
+        """ Save the Project """
+        project = Project.get_instance()
+        if project.path is None:
+            self.__start_save_as()
+            return
+
+        self.__write_project_data(project.path)
+
+    def __start_save_as(self):
+        """ Lets the user select a file and saves the project in that file """
+        # selectc file
+        filename, _ = QFileDialog.getSaveFileName(
+            self.__video_editor_view, 'Save File')
+
+        if filename == '':
+            return
+
+        self.__write_project_data(filename)
+
+        project = Project.get_instance()
+        project.path = filename
+
+        Projectsettings.add_project(filename)
+
+    def __write_project_data(self, filename):
+        """ Saves project data into a file """
+        # get timeline data
+        timeline_controller = TimelineController.get_instance()
+        timeline_data = timeline_controller.get_project_timeline()
+
+        # get filemanager data
+        filemanager = self.__video_editor_view.filemanager
+        filemanager_data = filemanager.get_project_filemanager()
+
+        project_data = {
+            "timeline": timeline_data,
+            "filemanager": filemanager_data
+        }
+
+        # write data
+        with open(filename, 'w') as f:
+            json.dump(project_data, f, ensure_ascii=False)

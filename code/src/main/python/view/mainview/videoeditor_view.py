@@ -16,7 +16,7 @@ class VideoEditorView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
-        uic.loadUi(Resources.get_instance().files.mainview, self)
+        uic.loadUi(Resources.files.mainview, self)
 
         self.load_filemanager()
         self.load_timeline_widget()
@@ -27,11 +27,14 @@ class VideoEditorView(QMainWindow):
 
         self.load_preview()
 
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.splittersizes = []
+        self.fullscreen = False
+
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
     def test(self, frame):
@@ -44,6 +47,7 @@ class VideoEditorView(QMainWindow):
         splitter.replaceWidget(1, previewview)
         previewview.show()
         self.needle.needle_moved.connect(self.test)
+        previewview.maximize_button.clicked.connect(self.maxim)
 
     def load_timeline_widget(self):
         """
@@ -64,14 +68,39 @@ class VideoEditorView(QMainWindow):
         self.showMaximized()
 
     def load_filemanager(self):
-        filemanager = Filemanager()
+        self.filemanager = Filemanager()
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, filemanager)
-        filemanager.show()
+        splitter.replaceWidget(0, self.filemanager)
+        self.filemanager.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def maxim(self):
+        v_splitter = self.findChild(QObject, 'verticalSplitter')
+        h_splitter = self.findChild(QObject, 'horizontalSplitter')
+
+        if(self.fullscreen == False):
+
+            self.v_sizes = v_splitter.sizes()
+            self.h_sizes = h_splitter.sizes()
+
+            self.splittersizes = (self.v_sizes, self.h_sizes)
+
+            width = self.frameGeometry().width()
+            height = self.frameGeometry().height()
+            v_splitter.setSizes([0, width])
+            h_splitter.setSizes([height, 0])
+
+            self.fullscreen = True
+
+        else:
+            v_splitter.setSizes(self.splittersizes[0])
+            h_splitter.setSizes(self.splittersizes[1])
+
+            self.fullscreen = False
+            
