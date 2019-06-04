@@ -20,6 +20,7 @@ class PreviewView(QWidget):
     QWidget for Previewplayer
     """
     frame_changed = pyqtSignal(QPoint)
+    needle_moved = pyqtSignal(int)
 
     __instance = None
     @staticmethod
