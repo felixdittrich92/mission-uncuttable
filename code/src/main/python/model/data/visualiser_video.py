@@ -17,7 +17,7 @@ class VisualiserVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def visualiser_area(self):
+    def check_visualiser_area(self):
         """
         a method that analyse the video frame per frame and save the Clips (Visualiser) in a list
         """

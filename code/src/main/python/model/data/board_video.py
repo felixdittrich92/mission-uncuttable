@@ -17,7 +17,7 @@ class BoardVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def board_area(self):
+    def check_board_area(self):
         """
         a method that analyse the video frame per frame and save the Clips (Board) in a list
         """
@@ -34,8 +34,8 @@ class BoardVideo(MediaFile):
                     break
 
                 average = cv2.mean(frame)
-                sum = average[0] + average[1] + average[2]
-                percentage_green = (100 * average[1]) / sum
+                summe = average[0] + average[1] + average[2]
+                percentage_green = (100 * average[1]) / summe
 
                 if percentage_green > 40:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)

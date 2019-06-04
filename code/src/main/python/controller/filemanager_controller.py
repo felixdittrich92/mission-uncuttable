@@ -69,6 +69,9 @@ class Filemanager(QWidget):
         """
         This method create a QListWidgetItem with a preview picture and the filename as text dependent from the file type.
         This method also looks to see if the item already exists.
+
+        @param file: the current file from the fileNames list
+        @return: Nothing
         """
 
         if file in self.file_list:

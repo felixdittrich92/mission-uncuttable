@@ -24,10 +24,13 @@ class VideoSplitter:
         self.files = []
         self.audio_files = []
 
-    def large_video_cut(self, fps):
+    def cut_large_video(self, fps):
         """
         a method to get the part of the speaker from the "main video" and save it in the project folder
         and create a object of this
+
+        @param fps: the frames per sec for the video
+        @return: a BoardVideo object
         """
         folder = Path(self.folder_path, self.folder_name)
 
@@ -57,10 +60,13 @@ class VideoSplitter:
 
         return BoardVideo(filename)
 
-    def foil_video_cut(self, fps):
+    def cut_foil_video(self, fps):
         """
         a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
         and create a object of this
+
+        @param fps: the frames per sec for the video
+        @return: a FoilVideo object
         """
         folder = Path(self.folder_path, self.folder_name)
 
@@ -91,10 +97,13 @@ class VideoSplitter:
         return FoilVideo(filename)
 
 
-    def visualiser_video_cut(self, fps):
+    def cut_visualiser_video(self, fps):
         """
         a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
         and create a object of this
+
+        @param fps: the frames per sec for the video
+        @return: a VisualiserVideo object
         """
         video_file = self.video_data
         folder = Path(self.folder_path, self.folder_name)
@@ -125,10 +134,12 @@ class VideoSplitter:
 
         return VisualiserVideo(filename)
 
-    def audio_from_video_cut(self):
+    def cut_audio_from_video(self):
         """
         a method to get the audio from a video and save it in the project folder
         and create a object of this
+
+        @return: a Audio object
         """
 
         folder = Path(self.folder_path, self.folder_name)

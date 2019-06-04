@@ -110,20 +110,22 @@ class AutocutController:
                                                projekt_name, self.filename_video)
                 self.progressbar.setValue(randint(15, 26))
                 QApplication.processEvents()
-                audio = video_splitter.audio_from_video_cut()
+
+                audio = video_splitter.cut_audio_from_video()
                 self.progressbar.setValue(randint(29, 34))
                 QApplication.processEvents()
-                foil_video = video_splitter.foil_video_cut(fps)
+
+                foil_video = video_splitter.cut_foil_video(fps)
                 self.progressbar.setValue(randint(37, 53))
                 QApplication.processEvents()
 
-                board_video = video_splitter.large_video_cut(fps)
-                board_video.board_area()
+                board_video = video_splitter.cut_large_video(fps)
+                board_video.check_board_area()
                 self.progressbar.setValue(randint(60, 70))
                 QApplication.processEvents()
-                visualiser_video = video_splitter.visualiser_video_cut(fps)
-                visualiser_video.visualiser_area()
 
+                visualiser_video = video_splitter.cut_visualiser_video(fps)
+                visualiser_video.check_visualiser_area()
                 self.progressbar.setValue(randint(80, 90))
                 QApplication.processEvents()
 

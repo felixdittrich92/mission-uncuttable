@@ -10,8 +10,6 @@ class Presentation:
     def __init__(self, file_data):
         """
         Constructor of the class
-        @param file_path: the path to the pdf
-        @param filename: the name of the pdf
         """
         self.file_data = file_data
         self.files = []
@@ -26,6 +24,7 @@ class Presentation:
         @param folder_path: path to the project folder
         @param folder_name: name of the project folder
         @param resolution: resolution for every converted pdf picture
+        @return: a list with the filepath strings
         """
 
         input_file = self.file_data
