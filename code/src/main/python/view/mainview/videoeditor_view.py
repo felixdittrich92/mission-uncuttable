@@ -16,7 +16,7 @@ class VideoEditorView(QMainWindow):
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
-        uic.loadUi(Resources.get_instance().files.mainview, self)
+        uic.loadUi(Resources.files.mainview, self)
 
         self.load_filemanager()
         self.load_timeline_widget()
@@ -25,11 +25,11 @@ class VideoEditorView(QMainWindow):
 
         self.load_preview()
 
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
     def load_preview(self):
@@ -58,14 +58,14 @@ class VideoEditorView(QMainWindow):
         self.showMaximized()
 
     def load_filemanager(self):
-        filemanager = Filemanager()
+        self.filemanager = Filemanager()
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, filemanager)
-        filemanager.show()
+        splitter.replaceWidget(0, self.filemanager)
+        self.filemanager.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.get_instance().files.qss_dark, "r").read())
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.get_instance().files.qss_dark)
+        self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)

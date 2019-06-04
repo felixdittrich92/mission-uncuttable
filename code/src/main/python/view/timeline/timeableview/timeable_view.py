@@ -92,7 +92,7 @@ class TimeableView(QGraphicsRectItem):
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
         if painter.fontMetrics().width(self.name) <= self.width:
             painter.setPen(QColor(245, 245, 245))
-            painter.drawText(QPoint(8, 20), self.name)
+            painter.drawText(QPoint(100, 20), self.name)
 
             self.name_visible = True
         else:
@@ -107,7 +107,8 @@ class TimeableView(QGraphicsRectItem):
             "resizable_left": self.resizable_left,
             "x_pos": self.x_pos,
             "view_id": self.view_id,
-            "track_id": self.track_id
+            "track_id": self.track_id,
+            "model": self.model.get_info_dict()
         }
 
     def set_pixmap(self):
@@ -118,8 +119,7 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(
-                QSize(100, self.height), Qt.IgnoreAspectRatio)
+            self.pixmap = px.scaled(QSize(100, self.height), Qt.KeepAspectRatio)
         else:
             self.pixmap = None
 
@@ -220,8 +220,8 @@ class TimeableView(QGraphicsRectItem):
             diff = pos - self.mouse_press_pos
             w = self.width - diff
 
-            if (w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0
-                    or diff < self.resizable_left) and not is_image:
+            if ((w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0)
+                    or (diff < self.resizable_left and not is_image)):
                 return
 
             new_x_pos = self.x_pos + diff
@@ -240,8 +240,8 @@ class TimeableView(QGraphicsRectItem):
                     - self.mouse_press_pos - self.width)
             w = self.width + diff
 
-            if (w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH
-                    or diff > self.resizable_right) and not is_image:
+            if ((w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH)
+                    or (diff > self.resizable_right and not is_image)):
                 return
 
             if self.collides_with_other_timeable(QRectF(self.x_pos, 0, w, self.height)):

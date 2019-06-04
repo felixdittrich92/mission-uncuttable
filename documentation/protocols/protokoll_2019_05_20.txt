@@ -45,9 +45,6 @@ Reguläres Treffen
 			  * Zusätzlich zu den AutoCut-Modi gibt es auch den Modus
 			    "Manuell" für vom Nutzer hinzugefügte Spuren
 	  - Gespräch über Speicherung
-	#
-	#Woran er noch weiter arbeiten will?
-	#Franz will Timline löschen Tasks beenden
 
 Ausblick:
-    Nächste Woche (Montag, 27.05.19): Code-Review mit Prof. Weicker
+    Nächste Woche (Montag, 27.05.19): Code-Review und Planning mit Prof. Weicker

@@ -15,8 +15,7 @@ VIDEORUNNING = False
 class PreviewView(QWidget):
     def __init__(self):
         super(PreviewView, self).__init__()
-        RESOURCES = Resources.get_instance()
-        uic.loadUi(RESOURCES.files.preview_view, self)
+        uic.loadUi(Resources.files.preview_view, self)
 
         play_button = self.findChild(QPushButton, "play_button")
         first_frame_button = self.findChild(QPushButton, "first_frame_button")
@@ -25,13 +24,13 @@ class PreviewView(QWidget):
         forward_button = self.findChild(QPushButton, "forward_button")
         maximize_button = self.findChild(QPushButton, "maximize_button")
 
-        icon_play = QPixmap(RESOURCES.images.play_button)
-        icon_pause = QPixmap(RESOURCES.images.pause_button)
-        icon_firstframe = QPixmap(RESOURCES.images.first_frame_button)
-        icon_lastframe = QPixmap(RESOURCES.images.last_frame_button)
-        icon_back = QPixmap(RESOURCES.images.back_button)
-        icon_forward = QPixmap(RESOURCES.images.forward_button)
-        icon_max = QPixmap(RESOURCES.images.maximize_button)
+        icon_play = QPixmap(Resources.images.play_button)
+        icon_pause = QPixmap(Resources.images.pause_button)
+        icon_firstframe = QPixmap(Resources.images.first_frame_button)
+        icon_lastframe = QPixmap(Resources.images.last_frame_button)
+        icon_back = QPixmap(Resources.images.back_button)
+        icon_forward = QPixmap(Resources.images.forward_button)
+        icon_max = QPixmap(Resources.images.maximize_button)
     
         play_button.setIcon(QIcon(icon_play))
         play_button.setIconSize(QSize(32, 32))
@@ -49,7 +48,7 @@ class PreviewView(QWidget):
         self.videoLabel = self.findChild(QLabel, "video_label")
 
         # FÜR DEVELOPMENT
-        img = QPixmap(RESOURCES.images.bunny)
+        img = QPixmap(Resources.images.bunny)
         self.videoLabel.setPixmap(img)
 
         self.videoLabel.move(280, 120)

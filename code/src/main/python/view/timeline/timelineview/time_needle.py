@@ -151,4 +151,5 @@ class TimeNeedle(QWidget):
     def update_player(self, x):
         """ Updates Player when needle dragged."""
         self.preview.player.Seek(int((x / SECONDS_PER_PIXEL) * FRAMES_PER_SECOND))
+        self.preview.current_frame_label.setText(str(self.preview.player.Position()))
 
