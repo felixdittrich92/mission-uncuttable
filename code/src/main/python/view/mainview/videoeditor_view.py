@@ -40,15 +40,6 @@ class VideoEditorView(QMainWindow):
     def test(self, frame):
         print(frame)
 
-    def load_preview(self):
-        previewview = PreviewView.get_instance()
-
-        splitter = self.findChild(QSplitter, "verticalSplitter")
-        splitter.replaceWidget(1, previewview)
-        previewview.show()
-        self.needle.needle_moved.connect(self.test)
-        previewview.maximize_button.clicked.connect(self.maxim)
-
     def load_timeline_widget(self):
         """
         Replaces the 'bottomFrame'-named QObject with a new instance of
@@ -62,6 +53,15 @@ class VideoEditorView(QMainWindow):
         TimelineController(timeline_view)
         splitter.replaceWidget(i, timeline_view)
         timeline_view.show()
+
+    def load_preview(self):
+        previewview = PreviewView.get_instance()
+
+        splitter = self.findChild(QSplitter, "verticalSplitter")
+        splitter.replaceWidget(1, previewview)
+        previewview.show()
+        self.needle.needle_moved.connect(self.test)
+        previewview.maximize_button.clicked.connect(self.maxim)
 
     def show(self):
         """Starts the video-editor-window maximized."""

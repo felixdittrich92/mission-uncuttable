@@ -4,9 +4,9 @@ from PyQt5.QtGui import *
 from config import Resources
 from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
 from model.data import TimelineModel
+from controller import TimelineController
 from .videoWidget import VideoWidget
 from threading import Thread
-from datetime import datetime
 import openshot
 import sip
 import time
@@ -97,7 +97,7 @@ class PreviewView(QWidget):
         self.progress_slider.sliderMoved.connect(self.change_progress_bar)
         self.looprunning = False
 
-        self.update_time_label()
+        # self.update_time_label()
 
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
@@ -233,7 +233,10 @@ class PreviewView(QWidget):
             frame_second = str("0"+frame_second)
         current_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / FRAMES_PER_SECOND) * current_frame)))
         num_of_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / FRAMES_PER_SECOND) * num_of_frames)))
-        self.current_time_label.setText(current_time + ":" + frame_second + " | " + num_of_time + ":" + global_frame_seconds) 
+        timecode = (current_time + ":" + frame_second + " | " + num_of_time + ":" + global_frame_seconds)
+        timecode_timeline = (current_time + ":" + frame_second)
+        self.current_time_label.setText(timecode)
+        TimelineController.get_instance().update_timecode(timecode_timeline) 
 
     def update_player(self):
         if self.video_running:

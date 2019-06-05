@@ -124,3 +124,7 @@ class TimelineView(QFrame):
         makes it possible to say if something works properly or not.
         """
         # self.setStyleSheet('background-color: yellow')
+    
+    def update_timecode(self, timecode):
+        self.time_label = self.findChild(QObject, 'time_label')
+        self.time_label.setText(timecode)
