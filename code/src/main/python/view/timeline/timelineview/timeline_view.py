@@ -32,6 +32,8 @@ class TimelineView(QFrame):
         timeline_scroll_area.deleteLater()
 
         self.track_frame = self.findChild(QFrame, "track_frame")
+        self.track_frame_2 = self.findChild(QFrame, "track_frame_2")
+        
         self.track_button_frame = self.findChild(QFrame, "track_button_frame")
 
         self.timeables = dict()
@@ -50,6 +52,9 @@ class TimelineView(QFrame):
         self.track_button_frame.add_button(btn1)
 
         self.track_frame.add_track(track)
+        self.track_frame_2.add_track(track)
+        
+        
 
         self.adjust_track_sizes()
 

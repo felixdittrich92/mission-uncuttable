@@ -58,12 +58,18 @@ class TimelineScrollArea(QFrame):
 
         self.__horizontal_scroll_bar = None
         self.__vertical_scroll_bar = None
+        self.__vertical_scroll_bar_2 = None
+
         self.__find_scroll_bars()
 
         self.__init_scroll_areas()
 
         self.__track_frame = TrackFrame()
+        self.__track_frame_2 = TrackFrame()
+        
         self.__track_frame.setObjectName("track_frame")
+        self.__track_frame_2.setObjectName("track_frame_2")
+
         self.__track_button_frame = TrackButtonFrame()
         self.__track_button_frame.setObjectName("track_button_frame")
         self.__time_bar = TimeBar()
@@ -71,8 +77,15 @@ class TimelineScrollArea(QFrame):
 
         self.__time_bar_scroll_area.setWidget(self.__time_bar)
         self.__time_bar_scroll_area.setObjectName("time_bar_scroll_area")
+
         self.__track_scroll_area.setWidget(self.__track_frame)
+        self.__track_scroll_area_2.setWidget(self.__track_frame_2)
+
+
         self.__track_scroll_area.setObjectName("track_scroll_area")
+        self.__track_scroll_area_2.setObjectName("track_scroll_area_2")
+
+
         self.__track_button_scroll_area.setWidget(self.__track_button_frame)
         self.__track_button_scroll_area.setObjectName("track_button_scroll_area")
         self.__setup_dependencies()
@@ -98,12 +111,21 @@ class TimelineScrollArea(QFrame):
     def __setup_dependencies(self):
         self.__track_button_frame.link_to_height(self.__track_frame)
         self.__time_bar.link_to_width(self.__track_frame)
+
         self.__track_scroll_area \
             .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
+        self.__track_scroll_area_2 \
+            .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
+
         self.__track_scroll_area \
             .connect_vertical_scrollbar(self.__vertical_scroll_bar)
+
+        self.__track_scroll_area_2 \
+            .connect_vertical_scrollbar(self.__vertical_scroll_bar_2)
+
         self.__track_button_scroll_area \
             .connect_vertical_scrollbar(self.__vertical_scroll_bar)
+
         self.__time_bar_scroll_area \
             .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
         self.__track_button_scroll_area.set_adjusting_to_width(True)
@@ -113,20 +135,32 @@ class TimelineScrollArea(QFrame):
         track_scroll_area_placeholder = self.findChild(
             QObject, 'track_scroll_area_placeholder'
         )
+        track_scroll_area_placeholder_2 = self.findChild(
+            QObject, 'track_scroll_area_placeholder_2'
+        )
+
         track_button_scroll_area_placeholder = self.findChild(
             QObject, 'track_button_scroll_area_placeholder'
         )
         time_bar_scroll_area_placeholder = self.findChild(
             QObject, 'time_bar_scroll_area_placeholder'
         )
+
         self.__time_bar_scroll_area \
             = ContentAdjustableConnectableScrollArea()
         self.__track_button_scroll_area \
             = ContentAdjustableConnectableScrollArea()
+
         self.__track_scroll_area \
             = ConnectableScrollArea()
+        self.__track_scroll_area_2 \
+            = ConnectableScrollArea()
+
         self.layout().replaceWidget(
             track_scroll_area_placeholder, self.__track_scroll_area)
+        self.layout().replaceWidget(
+            track_scroll_area_placeholder_2, self.__track_scroll_area_2)
+
         self.layout().replaceWidget(
             track_button_scroll_area_placeholder,
             self.__track_button_scroll_area
@@ -142,8 +176,13 @@ class TimelineScrollArea(QFrame):
         self.__horizontal_scroll_bar = self.findChild(
             QScrollBar, 'horizontal_scroll_bar'
         )
+
         self.__vertical_scroll_bar = self.findChild(
             QScrollBar, 'vertical_scroll_bar'
+        )
+        # audio
+        self.__vertical_scroll_bar_2 = self.findChild(
+            QScrollBar, 'vertical_scroll_bar_2'
         )
 
     def __show_debug_info_on_gui(self):
