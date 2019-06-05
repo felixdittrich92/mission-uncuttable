@@ -37,8 +37,6 @@ class TimelineView(QFrame):
         self.timeables = dict()
         self.tracks = dict()
 
-        self.controller = TimelineController(self)
-
         self.__show_debug_info_on_gui()
 
     def create_track(self, name, width, height, num):

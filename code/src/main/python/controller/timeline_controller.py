@@ -181,6 +181,15 @@ class TimelineController:
         self.create_track("Track 1", 1000, 50, 2)
         self.create_track("Track 2", 2000, 50, 1)
 
+    def clear_timeline(self):
+        """ Removes all timeline data """
+        TimelineModel.get_instance().remove_all_clips()
+
+        for t in self.__timeline_view.tracks.values():
+            t.deleteLater()
+
+        # TODO remove trackbuttons
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()

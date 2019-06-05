@@ -69,6 +69,7 @@ default_settings = {
     },
     "Invisible": {
         "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "project_formats": 'Files ( *.uc);;',
         "pixels_per_second": 16
-        }
+    }
 }

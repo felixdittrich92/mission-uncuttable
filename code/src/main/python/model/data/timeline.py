@@ -115,3 +115,8 @@ class TimelineModel:
             w.WriteFrame(self.timeline.GetFrame(frame_number))
 
         w.Close()
+
+    def remove_all_clips(self):
+        """ Deletes all clips in the timeline (but not the views!!!) """
+        for c in self.timeline.Clips():
+            self.change("delete", ["clips", {"id": c.Id()}], {})

@@ -72,5 +72,3 @@ class MainController:
             self.__start_view.close()
             self.__video_editor_controller = VideoEditorController(video_editor_view)
             self.__video_editor_controller.start()
-
-        # TODO show error window if path does not exist

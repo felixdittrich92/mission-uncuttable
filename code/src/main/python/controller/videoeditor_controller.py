@@ -10,6 +10,7 @@ from model.project import Project
 from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
 from projectconfig import Projectsettings
+from config import Settings
 
 
 class VideoEditorController:
@@ -35,6 +36,8 @@ class VideoEditorController:
             self.__start_save)
         self.__video_editor_view.actionSpeichern_als.triggered.connect(
             self.__start_save_as)
+        self.__video_editor_view.actionOeffnen.triggered.connect(
+            self.__start_open)
 
         self.__history = Project.get_instance().get_history()
         ShortcutLoader(self.__video_editor_view)
@@ -96,7 +99,7 @@ class VideoEditorController:
 
     def __start_save_as(self):
         """ Lets the user select a file and saves the project in that file """
-        # selectc file
+        # select file
         file_dialog = QFileDialog(self.__video_editor_view)
         file_dialog.setAcceptMode(QFileDialog.AcceptSave)
         file_dialog.setNameFilter('uc files (*.uc)')
@@ -131,3 +134,31 @@ class VideoEditorController:
         # write data
         with open(filename, 'w') as f:
             json.dump(project_data, f, ensure_ascii=False)
+
+    def __start_open(self):
+        """ Open a project """
+        filetypes = Settings.get_instance().get_dict_settings()[
+            "Invisible"]["project_formats"]
+        path, _ = QFileDialog.getOpenFileName(self.__video_editor_view,
+                                              'Open Project', '', filetypes)
+
+        with open(path, 'r') as f:
+            project_data = json.load(f)
+
+        # set up timeline
+        timeline_controller = TimelineController.get_instance()
+        timeline_controller.clear_timeline()
+
+        if "timeline" in project_data:
+            timeline_controller.create_project_timeline(project_data["timeline"])
+        else:
+            timeline_controller.create_default_tracks()
+
+        # set up filemanager
+        if "filemanager" in project_data:
+            filemanager = self.__video_editor_view.filemanager
+            filemanager.create_project_filemanager(project_data["filemanager"])
+
+        # set project path
+        project = Project.get_instance()
+        project.path = path
