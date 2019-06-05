@@ -49,13 +49,6 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2" rowspan="2">
-    <widget class="QScrollBar" name="vertical_scroll_bar">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QWidget" name="track_button_scroll_area_placeholder" native="true">
      <property name="sizePolicy">
@@ -104,6 +97,13 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QScrollBar" name="vertical_scroll_bar">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
     </widget>
    </item>
    <item row="2" column="0">
@@ -156,7 +156,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="2" rowspan="2">
+   <item row="2" column="2">
     <widget class="QScrollBar" name="vertical_scroll_bar_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

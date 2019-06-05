@@ -137,9 +137,13 @@ class TimelineController:
         """
         pass
 
-    def create_track(self, name, width, height, num):
+    def create_video_track(self, name, width, height, num):
         """ Creates a new track in the timeline """
-        self.__timeline_view.create_track(name, width, height, num)
+        self.__timeline_view.create_video_track(name, width, height, num)
+
+    def create_audio_track(self, name, width, height, num):
+        """ Creates a new track in the timeline """
+        self.__timeline_view.create_audio_track(name, width, height, num)
 
     def get_project_timeline(self):
         """ Returns a dict with the data needed to recreate the timeline """
@@ -178,8 +182,10 @@ class TimelineController:
 
     def create_default_tracks(self):
         """ Creates 2 default tracks when the user chooses manual cut """
-        self.create_track("Track 1", 1000, 50, 2)
-        self.create_track("Track 2", 2000, 50, 1)
+        self.create_video_track("Track 1", 1000, 50, 2)
+        self.create_audio_track("Track 2", 2000, 50, 1)
+        self.create_video_track("Track 1", 1000, 50, 2)
+        self.create_audio_track("Track 2", 2000, 50, 1)
 
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
