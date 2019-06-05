@@ -1,12 +1,7 @@
 from PyQt5.QtWidgets import *
-from PyQt5 import uic, QtGui
 from PyQt5.QtGui import *
-from config import Resources
-from PyQt5.QtCore import QObject, QMutex, Qt, QRect
+from PyQt5.QtCore import Qt, QRect
 import openshot
-import sip
-from model.data import TimelineModel
-import time
 
 class VideoWidget(QWidget):
     def __init__(self, *args):
