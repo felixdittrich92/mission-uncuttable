@@ -47,7 +47,7 @@ class TimelineView(QFrame):
         self.tracks[num] = track
 
         btn1 = QPushButton(name)
-        btn1.setFixedSize(80, 50)
+        btn1.setFixedSize(80, height)
         self.track_button_frame.add_button(btn1)
 
         self.track_frame.add_track(track)

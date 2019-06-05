@@ -5,6 +5,7 @@ from PyQt5 import uic
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
+
 from config import Resources
 from view.mainview import FileListView
 from config import Settings
@@ -34,7 +35,7 @@ class Filemanager(QWidget):
 
         """Set properties of the Widget"""
         self.listWidget.setViewMode(QListView.IconMode)
-        self.listWidget.setIconSize(QSize(100, 100))
+        self.listWidget.setIconSize(QSize(115, 115))
 
         """Set the functionality to the Widgets"""
         self.pickButton.clicked.connect(self.pickFileNames)
@@ -49,7 +50,7 @@ class Filemanager(QWidget):
         This method ensures that only supported files are displayed and can be used.
         """
 
-        supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["import_formats"]
+        supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["filemanager_import_formats"]
         fileNames, _ = QFileDialog.getOpenFileNames(
             self,
             'QFileDialog.getOpenFileNames()',
@@ -60,6 +61,7 @@ class Filemanager(QWidget):
         )
 
         for file in fileNames:
+
             QApplication.processEvents()
             self.addFileNames(file)
 
@@ -67,6 +69,9 @@ class Filemanager(QWidget):
         """
         This method create a QListWidgetItem with a preview picture and the filename as text dependent from the file type.
         This method also looks to see if the item already exists.
+
+        @param file: the current file from the fileNames list
+        @return: Nothing
         """
 
         if file in self.file_list:
@@ -76,7 +81,6 @@ class Filemanager(QWidget):
         if file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
-
         elif file.upper().endswith(('.MP4')):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
@@ -104,11 +108,11 @@ class Filemanager(QWidget):
 
         else:
             print("The datatype is not supported")
-            pass
+            return
 
         QApplication.processEvents()
         icon = QIcon(pixmap.scaled(QSize(275,200)))
-        item = QListWidgetItem(os.path.basename(file)[:20], self.listWidget)
+        item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
         item.setIcon(icon)
         item.setToolTip(file)
         item.setStatusTip(file)
@@ -127,7 +131,7 @@ class Filemanager(QWidget):
         """This method saves the selected files to a list"""
         try:
             selected_files = []
-            path = self.listWidget.currentItem().statusTip() #String
+            path = self.listWidget.currentItem().statusTip()
             selected_files.append(path)
         except:
             return

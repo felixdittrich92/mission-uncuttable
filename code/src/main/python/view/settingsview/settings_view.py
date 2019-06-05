@@ -18,6 +18,8 @@ class SettingsView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(SettingsView, self).__init__()
         uic.loadUi(Resources.files.settingsview, self)
+
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
