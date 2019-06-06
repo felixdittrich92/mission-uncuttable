@@ -225,9 +225,10 @@ class TimelineController:
         TimelineModel.get_instance().remove_all_clips()
 
         for t in self.__timeline_view.tracks.values():
+            t.button.deleteLater()
             t.deleteLater()
 
-        # TODO remove trackbuttons
+        self.__history.clear_history()
 
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
