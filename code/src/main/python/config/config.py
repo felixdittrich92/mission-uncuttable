@@ -78,6 +78,5 @@ default_settings = {
         "autocutvideo_import_formats": 'Files ( *.mp4);;',
         "autocutpdf_import_formats": 'Files ( *.pdf);;',
         "pixels_per_second": 16,
-        "history_limit": 10
     }
 }
