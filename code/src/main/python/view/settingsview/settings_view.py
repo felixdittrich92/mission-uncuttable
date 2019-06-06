@@ -1,5 +1,7 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidget,
+                             QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
+                             QCheckBox, QLineEdit, QSpinBox)
+from PyQt5.QtCore import Qt, QFileSystemWatcher
 from PyQt5 import uic
 
 from config import Resources
@@ -45,10 +47,10 @@ class SettingsView(QMainWindow):
         saveButton = self.findChild(QPushButton,"cancelButton")
         saveButton.clicked.connect(lambda: self.close())
 
-        
+
     def addSettings(self, settings):
         """
-        this method goes through the settings dictionary and 
+        this method goes through the settings dictionary and
         puts the settings in layouts in the tabs where they belong.
         """
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
@@ -62,7 +64,7 @@ class SettingsView(QMainWindow):
                     tabWidget.widget(i).layout.addWidget(testWidget)
                 tabWidget.widget(i).layout.setAlignment(Qt.AlignTop)
                 tabWidget.widget(i).setLayout(tabWidget.widget(i).layout)
-                i += 1      
+                i += 1
 
 
     def makeSetting(self, x,y):
@@ -73,7 +75,7 @@ class SettingsView(QMainWindow):
 
         if(type != "invisible"):
             name = self.settings[x][y].get("name")
-            
+
             values = self.settings[x][y].get("values")
             current = self.settings[x][y].get("current")
 
@@ -96,6 +98,12 @@ class SettingsView(QMainWindow):
                 text_edit.setText(current)
 
                 layout.addWidget(text_edit)
+            elif type == "spinbox":
+                sb = QSpinBox()
+                sb.setMinimum(values[0])
+                sb.setMaximum(values[1])
+                sb.setValue(current)
+                layout.addWidget(sb)
             else:
                 layout.addWidget(QLabel("I'm not implemented yet :("))
             widget.setLayout(layout)
@@ -119,17 +127,17 @@ class SettingsView(QMainWindow):
                     name = self.settings[x][y].get("name")
                     widget = self.findChild(QWidget, name)
                     self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
-                    i += 1    
-        
+                    i += 1
+
         self.settingsInstance.save_settings(self.settings)
         self.close()
 
     def saveSetting(self, type, widget, x, y):
         """
-        takes the current UI settings element and the current position in the 
+        takes the current UI settings element and the current position in the
         dictionary and saves the value that was maybe changed by the user
         """
-        
+
         if type == "dropdown":
             combobox = widget.findChild(QComboBox)
             values = self.settings[x][y].get("values")
@@ -146,6 +154,9 @@ class SettingsView(QMainWindow):
         elif type == "shortcut":  # TODO VALIDIERUNG
             text_edit = widget.findChild(QLineEdit)
             self.settings[x][y]["current"] = text_edit.text()
+        elif type == "spinbox":
+            sb = widget.findChild(QSpinBox)
+            self.settings[x][y]["current"] = sb.value()
         else:
             return 0
 

@@ -20,6 +20,12 @@ default_settings = {
             "values": ["English", "German", "Esperanto"],
             "current": 0
         },
+        "history_limit": {
+            "name": "History Limit",
+            "type": "spinbox",
+            "values": [1, 100],  # min and max history size
+            "current": 10
+        },
     },
     "Design": {
         "color_theme": {
@@ -69,9 +75,9 @@ default_settings = {
     },
     "Invisible": {
         "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
-        "frames_per_second": 21,
-        "pixels_per_second": 16,
         "autocutvideo_import_formats": 'Files ( *.mp4);;',
-        "autocutpdf_import_formats": 'Files ( *.pdf);;'
-        }
+        "autocutpdf_import_formats": 'Files ( *.pdf);;',
+        "pixels_per_second": 16,
+        "history_limit": 10
+    }
 }
