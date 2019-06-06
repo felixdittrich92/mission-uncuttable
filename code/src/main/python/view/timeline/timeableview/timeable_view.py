@@ -86,7 +86,7 @@ class TimeableView(QGraphicsRectItem):
 
         # show thumbnail if there is enough space
         if self.width > 101 and self.pixmap is not None:
-            painter.drawPixmap(QPoint(1, 0), self.pixmap)
+            painter.drawPixmap(QPoint(1, 1), self.pixmap)
 
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
