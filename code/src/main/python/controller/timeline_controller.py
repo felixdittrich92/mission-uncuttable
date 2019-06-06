@@ -182,11 +182,11 @@ class TimelineController:
 
     def create_default_tracks(self):
         """ Creates 2 default tracks when the user chooses manual cut """
-        self.create_video_track("Track 1", 1000, 50, 2)
-        self.create_audio_track("Track 2", 2000, 50, 1)
-        self.create_video_track("Track 1", 1000, 50, 2)
-        self.create_audio_track("Track 2", 2000, 50, 1)
+        self.create_video_track("Track 1", 1000, 50, 1)
+        self.create_video_track("Track 2", 2000, 50, 2)
 
+        self.create_audio_track("Track 3", 2000, 50, 3)        
+        
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()

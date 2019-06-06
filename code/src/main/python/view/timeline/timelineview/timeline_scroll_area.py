@@ -102,7 +102,7 @@ class TimelineScrollArea(QFrame):
         self.__needle_top.setParent(self.__time_bar)
         self.__needle_top.move_needle(5)
 
-        self.__needle_bottom = TimeNeedle(self.__track_frame.height())
+        self.__needle_bottom = TimeNeedle(self.__track_frame.height()+self.__track_frame_2.height())
         self.__needle_bottom.setParent(self.__track_frame)
         self.__needle_bottom.setObjectName("needle_bottom")
         self.__needle_bottom.move_needle(5)
@@ -111,7 +111,7 @@ class TimelineScrollArea(QFrame):
         self.__needle_bottom.pos_changed.connect(self.__needle_top.move_needle)
         self.__track_frame.height_changed.connect(self.__needle_bottom.set_drawing_height)
 
-        self.__needle_bottom.set_drawing_height(300)
+        self.__needle_bottom.set_drawing_height(600)
         self.__needle_bottom.repaint()
 
     def __setup_dependencies(self):
