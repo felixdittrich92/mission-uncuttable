@@ -3,8 +3,8 @@ import cv2
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
-from model.splitter import VideoSplitter
-from model.splitter import Presentation
+from autocut import VideoSplitter
+from autocut import Presentation
 from controller import VideoEditorController, TimelineController
 from controller.filemanager_controller import FilemanagerController
 from view import VideoEditorView
