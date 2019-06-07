@@ -13,8 +13,7 @@ from random import randint
 from config import Settings
 
 RESOLUTION = 250
-projekt_path = os.path.join(os.path.expanduser("~"), "Desktop")
-print(projekt_path)
+projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
 projekt_name = "Projekt"
 
 
