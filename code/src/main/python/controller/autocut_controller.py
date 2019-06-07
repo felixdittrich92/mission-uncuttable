@@ -101,7 +101,6 @@ class AutocutController:
                 presentation = Presentation(self.filename_pdf)
                 self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
         except:
-            print("pdf error")
             pass
 
         try:
@@ -133,7 +132,6 @@ class AutocutController:
                 QApplication.processEvents()
 
         except:
-            print("video error")
             return
 
         self.progressbar.setValue(100)
