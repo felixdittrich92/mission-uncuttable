@@ -11,6 +11,8 @@ class AutocutView(QMainWindow):
         super(AutocutView, self).__init__()
         uic.loadUi(Resources.files.autocut_view, self)
 
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+
         # centering the window
         rectangle = self.frameGeometry()
         center_point = QDesktopWidget().availableGeometry().center()

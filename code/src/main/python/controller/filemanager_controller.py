@@ -97,6 +97,7 @@ class FilemanagerController:
 
         QApplication.processEvents()
         self.__filemanager_view.add_item(pixmap, file)
+        self.file_list.append(file)
 
     def remove(self):
         """This method removes a single file in the filemanager window and in the list"""
