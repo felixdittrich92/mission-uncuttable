@@ -6,7 +6,9 @@ from PyQt5.QtCore import Qt
 from model.splitter import VideoSplitter
 from model.splitter import Presentation
 from controller import VideoEditorController, TimelineController
+from controller.filemanager_controller import FilemanagerController
 from view import VideoEditorView
+from view.filemanagerview import FilemanagerView
 from random import randint
 from config import Settings
 
@@ -139,7 +141,8 @@ class AutocutController:
         timeline_controller = TimelineController.get_instance()
         timeline_controller.create_autocut_tracks()
 
-        filemanager = video_editor_view.filemanager
+        filemanager_view = FilemanagerView()
+        filemanager = FilemanagerController(filemanager_view)
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.get())
         filemanager.addFileNames(visualiser_video.get())

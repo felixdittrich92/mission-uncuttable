@@ -1,17 +1,15 @@
 import os
 import cv2
 
-from PyQt5 import uic
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
 
 from config import Resources
-from view.mainview import FileListView
 from config import Settings
 
 
-class Filemanager(QWidget):
+class FilemanagerController:
     """
     a class used as the controller for the filemanager window.
 
@@ -21,30 +19,18 @@ class Filemanager(QWidget):
     Furthermore, the class contains all applications like adding and deleting files from the filemanager window.
     """
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        """Loads the UI file"""
-        uic.loadUi(Resources.files.filemanager, self)
-        self.deleteButton = self.findChild(QObject, 'pushButton_1')
-        self.pickButton = self.findChild(QObject, 'pushButton_2')
-        self.listWidget = FileListView()
-        self.listWidget.setObjectName("list_widget")
-        old_list_widget = self.findChild(QObject, 'listWidget')
-        self.layout().replaceWidget(old_list_widget, self.listWidget)
-        old_list_widget.deleteLater()
-
-        """Set properties of the Widget"""
-        self.listWidget.setViewMode(QListView.IconMode)
-        self.listWidget.setIconSize(QSize(115, 115))
+    def __init__(self, view):
+        self.__filemanager_view = view
 
         """Set the functionality to the Widgets"""
-        self.pickButton.clicked.connect(self.pickFileNames)
-        self.deleteButton.clicked.connect(self.remove)
-        self.listWidget.itemSelectionChanged.connect(self.selected)
+        self.__filemanager_view.pickButton.clicked.connect(self.pickFileNames)
+        self.__filemanager_view.deleteButton.clicked.connect(self.remove)
+        self.__filemanager_view.listWidget.itemSelectionChanged.connect(self.selected)
 
         self.file_list = []
 
     def pickFileNames(self):
+        print("hdgd")
         """
         This method saves the selected files in a list and add this to the filemanager window
         This method ensures that only supported files are displayed and can be used.
@@ -52,7 +38,7 @@ class Filemanager(QWidget):
 
         supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["filemanager_import_formats"]
         fileNames, _ = QFileDialog.getOpenFileNames(
-            self,
+            self.__filemanager_view,
             'QFileDialog.getOpenFileNames()',
             '',
             (

@@ -5,10 +5,11 @@ from PyQt5 import uic
 from config import Resources
 from view.preview.preview import PreviewView
 
-from controller.filemanager_controller import Filemanager
+from controller.filemanager_controller import FilemanagerController
 from controller import TimelineController
 
 from view.timeline.timelineview import TimelineView
+from view.filemanagerview import FilemanagerView
 
 
 class VideoEditorView(QMainWindow):
@@ -58,10 +59,11 @@ class VideoEditorView(QMainWindow):
         self.showMaximized()
 
     def load_filemanager(self):
-        self.filemanager = Filemanager()
+        self.filemanager_view = FilemanagerView()
+        FilemanagerController(self.filemanager_view)
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, self.filemanager)
-        self.filemanager.show()
+        splitter.replaceWidget(0, self.filemanager_view)
+        self.filemanager_view.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
