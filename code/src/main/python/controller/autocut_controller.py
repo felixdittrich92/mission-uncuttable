@@ -13,7 +13,8 @@ from random import randint
 from config import Settings
 
 RESOLUTION = 250
-projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
+projekt_path = os.path.join(os.path.expanduser("~"), "Desktop")
+print(projekt_path)
 projekt_name = "Projekt"
 
 
@@ -101,37 +102,39 @@ class AutocutController:
                 presentation = Presentation(self.filename_pdf)
                 self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
         except:
+            print("pdf error")
             pass
 
         try:
             if self.filename_video is not None:
                 video = cv2.VideoCapture(self.filename_video)
                 fps = video.get(cv2.CAP_PROP_FPS)
-
                 video_splitter = VideoSplitter(projekt_path,
                                                projekt_name, self.filename_video)
                 self.progressbar.setValue(randint(15, 26))
-                QApplication.processEvents()
 
+                QApplication.processEvents()
                 audio = video_splitter.cut_audio_from_video()
                 self.progressbar.setValue(randint(29, 34))
-                QApplication.processEvents()
 
+                QApplication.processEvents()
                 foil_video = video_splitter.cut_foil_video(fps)
                 self.progressbar.setValue(randint(37, 53))
-                QApplication.processEvents()
 
+                QApplication.processEvents()
                 board_video = video_splitter.cut_large_video(fps)
                 board_video.check_board_area()
                 self.progressbar.setValue(randint(60, 70))
-                QApplication.processEvents()
 
+                QApplication.processEvents()
                 visualiser_video = video_splitter.cut_visualiser_video(fps)
                 visualiser_video.check_visualiser_area()
                 self.progressbar.setValue(randint(80, 90))
+
                 QApplication.processEvents()
 
         except:
+            print("video error")
             return
 
         self.progressbar.setValue(100)
@@ -139,10 +142,19 @@ class AutocutController:
 
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
+        video_editor_controller = VideoEditorController(video_editor_view)
+        self._AutocutController__main_controller.__video_editor_controller = video_editor_controller
         timeline_controller.create_autocut_tracks()
 
-        filemanager_view = FilemanagerView()
-        filemanager = FilemanagerController(filemanager_view)
+        timeline_controller.create_autocut_timeables(board_video.get(), 2,
+                                                     board_video.subvideos)
+        timeline_controller.create_autocut_timeables(visualiser_video.get(), 1,
+                                                     visualiser_video.subvideos)
+        timeline_controller.add_clip(foil_video.get(), 0)
+        timeline_controller.add_clip(audio.get(), -1)
+        
+        video_editor_controller = VideoEditorController(video_editor_view)
+        filemanager = video_editor_controller.get_filemanager_controller()
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.get())
         filemanager.addFileNames(visualiser_video.get())
@@ -152,13 +164,5 @@ class AutocutController:
         for pic in self.pictures:
             filemanager.addFileNames(pic)
 
-        timeline_controller.create_autocut_timeables(board_video.get(), 2,
-                                                     board_video.subvideos)
-        timeline_controller.create_autocut_timeables(visualiser_video.get(), 1,
-                                                     visualiser_video.subvideos)
-        timeline_controller.add_clip(foil_video.get(), 0)
-        timeline_controller.add_clip(audio.get(), -1)
-
         self.__autocut_view.close()
-        self.__video_editor_controller = VideoEditorController(video_editor_view)
-        self.__video_editor_controller.start()
+        video_editor_controller.start()

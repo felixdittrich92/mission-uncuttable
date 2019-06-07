@@ -19,7 +19,6 @@ class VideoEditorView(QMainWindow):
         super(VideoEditorView, self).__init__()
         uic.loadUi(Resources.files.mainview, self)
 
-        self.load_filemanager()
         self.load_timeline_widget()
 
         self.needle = self.findChild(QWidget, "needle_top")
@@ -58,12 +57,10 @@ class VideoEditorView(QMainWindow):
         """Starts the video-editor-window maximized."""
         self.showMaximized()
 
-    def load_filemanager(self):
-        self.filemanager_view = FilemanagerView()
-        FilemanagerController(self.filemanager_view)
+    def set_filemanager_view(self, filemanager_view):
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, self.filemanager_view)
-        self.filemanager_view.show()
+        splitter.replaceWidget(0, filemanager_view)
+        filemanager_view.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
@@ -71,3 +68,4 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+        

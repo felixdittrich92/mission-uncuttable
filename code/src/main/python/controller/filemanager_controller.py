@@ -129,3 +129,4 @@ class FilemanagerController:
         """
         for f in files:
             self.addFileNames(f)
+            
