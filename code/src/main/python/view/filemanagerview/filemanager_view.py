@@ -1,3 +1,5 @@
+import os
+
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView, QListWidget
@@ -25,3 +27,24 @@ class FilemanagerView(QWidget):
         self.listWidget.setViewMode(QListView.IconMode)
         self.listWidget.setIconSize(QSize(115, 115))
 
+    def set_delete_action(self, action):
+        self.deleteButton.clicked.connect(action)
+
+    def set_pick_action(self, action):
+        self.pickButton.clicked.connect(action)
+
+    def set_selected_action(self, action):
+        self.listWidget.itemSelectionChanged.connect(action)
+
+    def get_current_item(self):
+        return self.listWidget.currentItem().statusTip()
+
+    def remove_selected_item(self):
+        self.listWidget.takeItem(self.listWidget.currentRow())
+
+    def add_item(self, pixmap, file):
+        icon = QIcon(pixmap.scaled(QSize(275, 200)))
+        item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
+        item.setIcon(icon)
+        item.setToolTip(file)
+        item.setStatusTip(file)

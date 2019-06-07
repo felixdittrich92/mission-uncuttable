@@ -23,14 +23,13 @@ class FilemanagerController:
         self.__filemanager_view = view
 
         """Set the functionality to the Widgets"""
-        self.__filemanager_view.pickButton.clicked.connect(self.pickFileNames)
-        self.__filemanager_view.deleteButton.clicked.connect(self.remove)
-        self.__filemanager_view.listWidget.itemSelectionChanged.connect(self.selected)
+        self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
+        self.__filemanager_view.set_delete_action(lambda: self.remove())
+        self.__filemanager_view.set_selected_action(lambda: self.selected())
 
         self.file_list = []
 
     def pickFileNames(self):
-        print("hdgd")
         """
         This method saves the selected files in a list and add this to the filemanager window
         This method ensures that only supported files are displayed and can be used.
@@ -97,19 +96,14 @@ class FilemanagerController:
             return
 
         QApplication.processEvents()
-        icon = QIcon(pixmap.scaled(QSize(275,200)))
-        item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
-        item.setIcon(icon)
-        item.setToolTip(file)
-        item.setStatusTip(file)
-        self.file_list.append(file)
+        self.__filemanager_view.add_item(pixmap, file)
 
     def remove(self):
         """This method removes a single file in the filemanager window and in the list"""
         try:
-            path = self.listWidget.currentItem().statusTip()
+            path = self.__filemanager_view.get_current_item()
             self.file_list.remove(path)
-            self.listWidget.takeItem(self.listWidget.currentRow())
+            self.__filemanager_view.remove_selected_item()
         except:
             return
 
@@ -117,7 +111,7 @@ class FilemanagerController:
         """This method saves the selected files to a list"""
         try:
             selected_files = []
-            path = self.listWidget.currentItem().statusTip()
+            path = self.__filemanager_view.get_current_item()
             selected_files.append(path)
         except:
             return
