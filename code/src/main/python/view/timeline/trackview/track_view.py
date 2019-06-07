@@ -15,7 +15,7 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, name, parent=None):
+    def __init__(self, width, height, num, name, is_video, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -31,6 +31,7 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
         self.name = name
+        self.isvideo = is_video
 
         # for drag and drop handling
         self.item_dropped = False
@@ -59,7 +60,8 @@ class TrackView(QGraphicsView):
             "width": self.width,
             "height": self.height,
             "num": self.num,
-            "name": self.name
+            "name": self.name,
+            "type": self.isvideo,
         }
 
     def wheelEvent(self, event):

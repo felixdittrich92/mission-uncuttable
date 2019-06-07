@@ -31,11 +31,14 @@ class TimelineView(QFrame):
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())
         timeline_scroll_area.deleteLater()
 
-        self.track_frame = self.findChild(QFrame, "track_frame")
-        self.track_frame_2 = self.findChild(QFrame, "track_frame_2")
+        self.video_track_frame = self.findChild(QFrame, "video_track_frame")
+        self.audio_track_frame = self.findChild(QFrame, "audio_track_frame")
+
+        self.track_frame_frame = self.findChild(QFrame, "track_frame_frame")
+        
         
         self.track_button_frame = self.findChild(QFrame, "track_button_frame")
-        self.track_button_frame_2 = self.findChild(QFrame, "track_button_frame_2")
+        
 
         self.timeables = dict()
         self.tracks = dict()
@@ -45,26 +48,26 @@ class TimelineView(QFrame):
         self.__show_debug_info_on_gui()
 
     def create_video_track(self, name, width, height, num):
-        track = TrackView(width, height, num, name)
+        track = TrackView(width, height, num, name, True)
         self.tracks[num] = track
 
         btn1 = QPushButton(name)
         btn1.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn1)
+        self.track_button_frame.add_button(btn1, True)
 
-        self.track_frame.add_track(track)
-        
+        self.video_track_frame.add_track(track)
+        print("video")
         self.adjust_track_sizes()
     
     def create_audio_track(self, name, width, height, num):
-        track = TrackView(width, height, num, name)
+        track = TrackView(width, height, num, name, False)
         self.tracks[num] = track
 
         btn2 = QPushButton(name)
         btn2.setFixedSize(80, 50)
-        self.track_button_frame_2.add_button(btn2)
-
-        self.track_frame_2.add_track(track)
+        self.track_button_frame.add_button(btn2, False)
+        print("audio")
+        self.track_frame_frame.add_track(track)
         
         self.adjust_track_sizes()
 

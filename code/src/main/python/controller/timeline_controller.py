@@ -167,7 +167,10 @@ class TimelineController:
         @param data: dictionary with info of timeables
         """
         for t in data["tracks"]:
-            self.create_track(t["name"], t["width"], t["height"], t["num"])
+            if t["type"]:
+                self.create_video_track(t["name"], t["width"], t["height"], t["num"])
+            else:
+                self.create_audio_track(t["name"], t["width"], t["height"], t["num"])
 
         for t in data["timeables"]:
             m = t["model"]
@@ -185,7 +188,8 @@ class TimelineController:
         self.create_video_track("Track 1", 1000, 50, 1)
         self.create_video_track("Track 2", 2000, 50, 2)
 
-        self.create_audio_track("Track 3", 2000, 50, 3)        
+        self.create_audio_track("Track 3", 100, 50, 3)     
+        self.create_audio_track("Track 3", 100, 50, 4)        
         
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """

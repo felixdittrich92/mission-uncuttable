@@ -225,7 +225,7 @@ QScrollArea #track_frame_2 QFrame{
     padding-left: 5px;
 }
 
-#track_button, #track_button_light {
+#track_button, #track_button_light, #track_button_audio {
     background: #7D4E57;
     border: 1px solid #364156;
     color: #F5F5F5;
@@ -234,6 +234,10 @@ QScrollArea #track_frame_2 QFrame{
 
 #track_button_light {
     background: #955F69;
+}
+
+#track_button_audio {
+    background: rgb(108, 149, 95);
 }
 
 #time_bar_scroll_area {

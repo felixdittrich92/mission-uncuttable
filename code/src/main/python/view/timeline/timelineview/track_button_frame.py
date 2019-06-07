@@ -27,17 +27,20 @@ class TrackButtonFrame(SizeLinkableFrame):
 
         # self.setStyleSheet('background-color: orange')
 
-    def add_button(self, button):
+    def add_button(self, button, type):
         """
         Adds a new Button to the TrackButtonFrame
 
         :param button: the button to add
         """
-        self.button_counter += 1
-        if self.button_counter % 2 == 1:
-            button.setObjectName('track_button')
+        if type:
+            self.button_counter += 1
+            if self.button_counter % 2 == 1:
+                button.setObjectName('track_button')
+            else:
+                button.setObjectName('track_button_light')
         else:
-            button.setObjectName('track_button_light')
-
+            button.setObjectName('track_button_audio')
+            
         self.layout().addWidget(button)
         self.adjustSize()

@@ -127,7 +127,7 @@ class TimeNeedle(QWidget):
         :param x: Integer: new x value
         """
         half_width = self.width()/2
-        parent_width = self.parent().parent().parent().parent().findChild(QWidget, "track_frame").width()
+        parent_width = self.parent().parent().parent().parent().findChild(QWidget, "track_frame_frame").width()
         new_x = self.x() + delta_x
 
         if new_x >= half_width and new_x < parent_width - half_width:
