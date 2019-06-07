@@ -24,7 +24,7 @@ default_settings = {
             "name": "History Limit",
             "type": "spinbox",
             "values": [1, 100],  # min and max history size
-            "current": 10
+            "current": 30
         },
     },
     "Design": {
