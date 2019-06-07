@@ -1,5 +1,6 @@
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QLabel
+from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from config import Resources
 
@@ -10,6 +11,8 @@ class AutocutView(QMainWindow):
         """Loads the UI-file and sets up the GUI."""
         super(AutocutView, self).__init__()
         uic.loadUi(Resources.files.autocut_view, self)
+
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
 
         # centering the window
         rectangle = self.frameGeometry()
