@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QFileSystemWatcher
+from PyQt5.QtCore import QFileSystemWatcher, Qt
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout
 from PyQt5 import uic
 from config import Settings, Resources
@@ -24,6 +24,8 @@ class StartView(QMainWindow):
         """
         super(StartView, self).__init__()
         uic.loadUi(Resources.files.startview, self)
+
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
 
         self.setStyleSheet(
             open(Resources.files.qss_dark, "r").read())
