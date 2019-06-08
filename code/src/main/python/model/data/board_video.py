@@ -17,14 +17,17 @@ class BoardVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def check_board_area(self):
+    def check_board_area(self, progress):
         """
         a method that analyse the video frame per frame and save the Clips (Board) in a list
         """
         video = cv2.VideoCapture(self.__file_path)
+        maxframes = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         try:
             times = list()
             for frame_number in count():
+                if frame_number % 30 == 0:
+                    progress(frame_number/maxframes*100)
                 is_ok, frame = video.read()
 
                 if not is_ok:
@@ -45,3 +48,4 @@ class BoardVideo(MediaFile):
         finally:
             video.release()
             cv2.destroyAllWindows()
+            

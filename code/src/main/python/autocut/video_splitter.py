@@ -1,8 +1,8 @@
 import os
 import cv2
 from pathlib import Path
-from moviepy.editor import VideoFileClip
-from model.data import VisualiserVideo, BoardVideo, Audio, FoilVideo
+from moviepy.editor import AudioFileClip
+from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo
 
 
 class VideoSplitter:
@@ -23,116 +23,55 @@ class VideoSplitter:
         self.video_data = video_data
         self.files = []
         self.audio_files = []
+        self.frame = 0
+        self.number_frames = 0
 
-    def cut_large_video(self, fps):
-        """
-        a method to get the part of the speaker from the "main video" and save it in the project folder
-        and create a object of this
-
-        @param fps: the frames per sec for the video
-        @return: a BoardVideo object
-        """
+    def cut_video(self, update_progress):
+        self.frame = 0
+        video = cv2.VideoCapture(self.video_data)
+        self.number_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+        fps = video.get(cv2.CAP_PROP_FPS)
         folder = Path(self.folder_path, self.folder_name)
-
-        cap = cv2.VideoCapture(self.video_data)
-
-        large_video_name = 'board.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        filename = os.path.join(folder, large_video_name)
-        out = cv2.VideoWriter(filename, fourcc , fps, (938, 530))
-
-        if(cap.isOpened() == False):
+        board_filename = os.path.join(folder, 'board.mp4')
+        slide_filename = os.path.join(folder, 'slides.mp4')
+        visualizer_filename = os.path.join(folder, 'visualizer.mp4')
+        board_out = cv2.VideoWriter(board_filename, fourcc, fps, (938, 530))
+        slide_out = cv2.VideoWriter(slide_filename, fourcc, fps, (700, 530))
+        visualizer_out = cv2.VideoWriter(visualizer_filename, fourcc, fps, (960, 530))
+        if(video.isOpened() is False):
             print("Error opening video stream or file")
-
-        while(cap.isOpened()):
-            ret, frame = cap.read()
-            if ret == True:
-                frame = frame[275:805, 17:955]
-                out.write(frame)
-
+        while(video.isOpened()):
+            ret, frame = video.read()
+            if ret is True:
+                board_out.write(frame[275:805, 17:955])
+                slide_out.write(frame[275:805, 1080:1780])
+                visualizer_out.write(frame[275:805, 960:1920])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100))
             else:
                 break
-        cap.release()
-        out.release()
+        video.release()
+        board_out.release()
+        slide_out.release()
+        visualizer_out.release()
         cv2.destroyAllWindows()
-        new_large_video_path = Path(folder, large_video_name)
-        self.files.append(new_large_video_path)
+        self.files.append(board_filename)
+        self.files.append(slide_filename)
+        self.files.append(visualizer_filename)
+        self.__board_video = BoardVideo(board_filename)
+        self.__slide_video = SlideVideo(slide_filename)
+        self.__visualizer_video = VisualizerVideo(visualizer_filename)
 
-        return BoardVideo(filename)
+    def get_board_video(self):
+        return self.__board_video
 
-    def cut_foil_video(self, fps):
-        """
-        a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
-        and create a object of this
+    def get_slide_video(self):
+        return self.__slide_video
 
-        @param fps: the frames per sec for the video
-        @return: a FoilVideo object
-        """
-        folder = Path(self.folder_path, self.folder_name)
-
-        cap = cv2.VideoCapture(self.video_data)
-
-        small_video_name = 'foil.mp4'
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        filename = os.path.join(folder, small_video_name)
-        out = cv2.VideoWriter(filename, fourcc, fps, (700, 530))
-
-        if not cap.isOpened():
-            print("Error opening video stream or file")
-
-        while(cap.isOpened()):
-            ret, frame = cap.read()
-            if ret:
-                frame = frame[275:805, 1080:1780]
-                out.write(frame)
-
-            else:
-                break
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
-        new_small_video_path = Path(folder, small_video_name)
-        self.files.append(new_small_video_path)
-
-        return FoilVideo(filename)
-
-
-    def cut_visualiser_video(self, fps):
-        """
-        a method to get the part of the foil/visualiser from the "main video" and save it in the project folder
-        and create a object of this
-
-        @param fps: the frames per sec for the video
-        @return: a VisualiserVideo object
-        """
-        video_file = self.video_data
-        folder = Path(self.folder_path, self.folder_name)
-
-        cap = cv2.VideoCapture(str(video_file))
-
-        small_video_name = 'visualiser.mp4'
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        filename = os.path.join(folder, small_video_name)
-        out = cv2.VideoWriter(filename, fourcc, fps, (960, 530))
-
-        if(cap.isOpened() == False):
-            print("Error opening video stream or file")
-
-        while(cap.isOpened()):
-            ret, frame = cap.read()
-            if ret == True:
-                frame = frame[275:805, 960:1920]
-                out.write(frame)
-
-            else:
-                break
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
-        new_small_video_path = Path(folder, small_video_name)
-        self.files.append(new_small_video_path)
-
-        return VisualiserVideo(filename)
+    def get_visualizer_video(self):
+        return self.__visualizer_video
 
     def cut_audio_from_video(self):
         """
@@ -143,11 +82,9 @@ class VideoSplitter:
         """
 
         folder = Path(self.folder_path, self.folder_name)
-
         audio_from_video = 'audio.mp3'
-        video = VideoFileClip(self.video_data)
-        audio = video.audio
-        audio.write_audiofile(os.path.join(folder, audio_from_video))
+        audio = AudioFileClip(self.video_data)
+        audio.write_audiofile(os.path.join(folder, audio_from_video), verbose=False, logger=None)
         extracted_audio = Path(folder, audio_from_video)
         self.audio_files.append(extracted_audio)
         return Audio(extracted_audio)
