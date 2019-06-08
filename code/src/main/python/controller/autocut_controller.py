@@ -14,7 +14,7 @@ from config import Settings
 from config import Language
 
 RESOLUTION = 250
-projekt_path = os.path.join(os.path.expanduser("~"), "Desktop")
+projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
 projekt_name = "Projekt"
 
 
@@ -39,6 +39,7 @@ class AutocutController:
         self.progressbar = self.__autocut_view.progress_bar
         self.progressbar.setMinimum(0)
         self.progressbar.setMaximum(100)
+        self.ok_button.setEnabled(False)
 
         self.filename_video = None
         self.filename_pdf = None
@@ -68,6 +69,7 @@ class AutocutController:
         if self.filename_video:
             self.textlabel.setText(str(Language.default.autocut.ready))
             self.__autocut_view.change_icon(self.__autocut_view.video_image_label)
+            self.ok_button.setEnabled(True)
 
     def pick_pdf(self):
         """Opens a file picker to select a pdf."""
@@ -94,8 +96,8 @@ class AutocutController:
         self.textlabel.setText(str(Language.default.autocut.inprogress))
         self.video_button.setEnabled(False)
         self.pdf_button.setEnabled(False)
-        self.ok_button.setEnabled(False)
         self.cancel_button.setEnabled(False)
+        self.ok_button.setEnabled(False)
         QApplication.processEvents()
         try:
             if self.filename_pdf is not None:
