@@ -106,29 +106,29 @@ class AutocutController:
 
         try:
             if self.filename_video is not None:
-                video = cv2.VideoCapture(self.filename_video)
-                fps = video.get(cv2.CAP_PROP_FPS)
                 video_splitter = VideoSplitter(projekt_path,
                                                projekt_name, self.filename_video)
-                self.progressbar.setValue(randint(15, 26))
+                # self.progressbar.setValue(randint(5, 10))
 
                 QApplication.processEvents()
                 audio = video_splitter.cut_audio_from_video()
-                self.progressbar.setValue(randint(29, 34))
+                # self.progressbar.setValue(randint(10, 15))
 
                 QApplication.processEvents()
-                foil_video = video_splitter.cut_foil_video(fps)
-                self.progressbar.setValue(randint(37, 53))
+                update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
+                video_splitter.cut_video(update_progress)
+                QApplication.processEvents()
+                slide_video = video_splitter.get_slide_video()
 
                 QApplication.processEvents()
-                board_video = video_splitter.cut_large_video(fps)
-                board_video.check_board_area()
-                self.progressbar.setValue(randint(60, 70))
+                update_progress2 = lambda progress: self.progressbar.setValue(int(60+progress*0.2))
+                board_video = video_splitter.get_board_video()
+                board_video.check_board_area(update_progress2)
 
                 QApplication.processEvents()
-                visualiser_video = video_splitter.cut_visualiser_video(fps)
-                visualiser_video.check_visualiser_area()
-                self.progressbar.setValue(randint(80, 90))
+                update_progress3 = lambda progress: self.progressbar.setValue(int(80+progress*0.2))
+                visualizer_video = video_splitter.get_visualizer_video()
+                visualizer_video.check_visualiser_area(update_progress3)
 
                 QApplication.processEvents()
 
@@ -137,8 +137,6 @@ class AutocutController:
             return
 
         self.progressbar.setValue(100)
-        QApplication.processEvents()
-
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
         video_editor_controller = VideoEditorController(video_editor_view)
@@ -147,17 +145,17 @@ class AutocutController:
 
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.subvideos)
-        timeline_controller.create_autocut_timeables(visualiser_video.get(), 1,
-                                                     visualiser_video.subvideos)
-        timeline_controller.add_clip(foil_video.get(), 0)
+        timeline_controller.create_autocut_timeables(visualizer_video.get(), 1,
+                                                     visualizer_video.subvideos)
+        timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
         
         video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.get())
-        filemanager.addFileNames(visualiser_video.get())
-        filemanager.addFileNames(foil_video.get())
+        filemanager.addFileNames(visualizer_video.get())
+        filemanager.addFileNames(slide_video.get())
         filemanager.addFileNames(audio.get())
 
         for pic in self.pictures:

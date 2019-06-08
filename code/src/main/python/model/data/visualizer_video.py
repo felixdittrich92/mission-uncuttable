@@ -2,10 +2,9 @@ from .media_file import MediaFile
 from itertools import count
 
 import cv2
-# import openshot
 
 
-class VisualiserVideo(MediaFile):
+class VisualizerVideo(MediaFile):
     """
     This class contains the video
     """
@@ -17,17 +16,19 @@ class VisualiserVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def check_visualiser_area(self):
+    def check_visualiser_area(self, progress):
         """
         a method that analyse the video frame per frame and save the Clips (Visualiser) in a list
         """
         video = cv2.VideoCapture(self.__file_path)
+        maxframes = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         try:
             times = list()
 
             for frame_number in count():
                 is_ok, frame = video.read()
-
+                if frame_number % 30 == 0:
+                    progress(frame_number/maxframes*100)
                 if not is_ok:
                     if times:
                         self.subvideos.append((times[0], times[-1]))
@@ -46,3 +47,4 @@ class VisualiserVideo(MediaFile):
         finally:
             video.release()
             cv2.destroyAllWindows()
+            
