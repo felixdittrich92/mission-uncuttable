@@ -90,14 +90,18 @@ class AutocutController:
         """autocut the input files and start the video editor view"""
         self.progressbar.setValue(0)
         QApplication.processEvents()
-        self.textlabel.setText("Working...")
-        self.video_button.setEnabled(False)
-        self.pdf_button.setEnabled(False)
-        self.ok_button.setEnabled(False)
-        self.cancel_button.setEnabled(False)
-        QApplication.processEvents()
+
+        # ToDo
+        #if (self.filename_pdf and self.filename_video) is None:
+        #    return
+
         try:
             if self.filename_pdf is not None:
+                self.pdf_button.setEnabled(False)
+                self.video_button.setEnabled(False)
+                self.ok_button.setEnabled(False)
+                self.cancel_button.setEnabled(False)
+                QApplication.processEvents()
                 presentation = Presentation(self.filename_pdf)
                 self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
         except:
@@ -105,13 +109,17 @@ class AutocutController:
 
         try:
             if self.filename_video is not None:
+                self.textlabel.setText("Working...")
+                self.video_button.setEnabled(False)
+                self.ok_button.setEnabled(False)
+                self.cancel_button.setEnabled(False)
+                QApplication.processEvents()
+
                 video_splitter = VideoSplitter(projekt_path,
                                                projekt_name, self.filename_video)
-                # self.progressbar.setValue(randint(5, 10))
 
                 QApplication.processEvents()
                 audio = video_splitter.cut_audio_from_video()
-                # self.progressbar.setValue(randint(10, 15))
 
                 QApplication.processEvents()
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
