@@ -13,6 +13,7 @@ class VideoSplitter:
     def __init__(self, folder_path, folder_name, video_data):
         """
         Constructor of the class
+
         @param folder_path: the path to the project folder
         @param folder_name: the name of the project folder
         @param video_data: the path of the video file
@@ -27,6 +28,11 @@ class VideoSplitter:
         self.number_frames = 0
 
     def cut_video(self, update_progress):
+        """
+        a method which cut the modivideos from the "main" video
+
+        @param update_progress: a function which handles the progressbar countprocess
+        """
         self.frame = 0
         video = cv2.VideoCapture(self.video_data)
         self.number_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -78,7 +84,7 @@ class VideoSplitter:
         a method to get the audio from a video and save it in the project folder
         and create a object of this
 
-        @return: a Audio object
+        @return: a audio object which contains the path
         """
 
         folder = Path(self.folder_path, self.folder_name)
