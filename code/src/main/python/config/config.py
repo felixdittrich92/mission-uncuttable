@@ -17,7 +17,7 @@ default_settings = {
         "language": {
             "name": "Language",
             "type": "dropdown",
-            "values": ["English", "German", "Esperanto"],
+            "values": ["English", "Deutsch"],
             "current": 0
         },
         "history_limit": {
