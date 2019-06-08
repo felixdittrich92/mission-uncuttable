@@ -11,9 +11,10 @@ from view import VideoEditorView
 from view.filemanagerview import FilemanagerView
 from random import randint
 from config import Settings
+from config import Language
 
 RESOLUTION = 250
-projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
+projekt_path = os.path.join(os.path.expanduser("~"), "Desktop")
 projekt_name = "Projekt"
 
 
@@ -32,7 +33,7 @@ class AutocutController:
         self.cancel_button.clicked.connect(self.stop)
         self.__main_controller = main_controller
         self.textlabel = self.__autocut_view.text_label
-        self.textlabel.setText("Please choose a video and optionally a pdf")
+        self.textlabel.setText(str(Language.default.autocut.starttext))
         self.textlabel.setAlignment(Qt.AlignCenter)
         self.textlabel.setWordWrap(True)
         self.progressbar = self.__autocut_view.progress_bar
@@ -65,7 +66,7 @@ class AutocutController:
             )
         )
         if self.filename_video:
-            self.textlabel.setText("Ready to continue")
+            self.textlabel.setText(str(Language.default.autocut.ready))
             self.__autocut_view.change_icon(self.__autocut_view.video_image_label)
 
     def pick_pdf(self):
@@ -90,43 +91,38 @@ class AutocutController:
         """autocut the input files and start the video editor view"""
         self.progressbar.setValue(0)
         QApplication.processEvents()
-
-        # ToDo
-        #if (self.filename_pdf and self.filename_video) is None:
-        #    return
-
+        self.textlabel.setText(str(Language.default.autocut.inprogress))
+        self.video_button.setEnabled(False)
+        self.pdf_button.setEnabled(False)
+        self.ok_button.setEnabled(False)
+        self.cancel_button.setEnabled(False)
+        QApplication.processEvents()
         try:
             if self.filename_pdf is not None:
-                self.pdf_button.setEnabled(False)
-                self.video_button.setEnabled(False)
-                self.ok_button.setEnabled(False)
-                self.cancel_button.setEnabled(False)
-                QApplication.processEvents()
                 presentation = Presentation(self.filename_pdf)
+                self.textlabel.setText(str(Language.default.autocut.slidesprogressing))
                 self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
         except:
+            print("pdf error")
             pass
 
         try:
             if self.filename_video is not None:
-                self.textlabel.setText("Working...")
-                self.video_button.setEnabled(False)
-                self.ok_button.setEnabled(False)
-                self.cancel_button.setEnabled(False)
-                QApplication.processEvents()
-
                 video_splitter = VideoSplitter(projekt_path,
                                                projekt_name, self.filename_video)
 
                 QApplication.processEvents()
+                self.textlabel.setText(str(Language.default.autocut.audioprogress))
                 audio = video_splitter.cut_audio_from_video()
-
+                
                 QApplication.processEvents()
+                self.textlabel.setText(str(Language.default.autocut.splittingprogress))
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
                 video_splitter.cut_video(update_progress)
                 QApplication.processEvents()
                 slide_video = video_splitter.get_slide_video()
 
+                self.textlabel.setText(str(Language.default.autocut.videoanalysis))
                 QApplication.processEvents()
                 update_progress2 = lambda progress: self.progressbar.setValue(int(60+progress*0.2))
                 board_video = video_splitter.get_board_video()
@@ -136,10 +132,11 @@ class AutocutController:
                 update_progress3 = lambda progress: self.progressbar.setValue(int(80+progress*0.2))
                 visualizer_video = video_splitter.get_visualizer_video()
                 visualizer_video.check_visualiser_area(update_progress3)
-
+                self.textlabel.setText(str(Language.default.autocut.cutting))
                 QApplication.processEvents()
 
         except:
+            print("video error")
             return
 
         self.progressbar.setValue(100)

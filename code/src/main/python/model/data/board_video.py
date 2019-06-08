@@ -7,7 +7,7 @@ import cv2
 
 class BoardVideo(MediaFile):
     """
-    This class contains the video and analyse the areas for autocut
+    This class contains the board video and a method to analyse the video
     """
 
     def __init__(self, file_path):

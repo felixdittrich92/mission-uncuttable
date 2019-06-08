@@ -6,7 +6,7 @@ import cv2
 
 class VisualizerVideo(MediaFile):
     """
-    This class contains the video
+    This class contains the visualizer video
     """
 
     def __init__(self, file_path):
