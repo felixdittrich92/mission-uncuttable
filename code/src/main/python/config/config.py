@@ -13,7 +13,7 @@ If you want to add settings that shouldn't be accessible for the user just put t
 """
 
 default_settings = {
-    "Allgemein": {
+    "General": {
         "language": {
             "name": "Language",
             "type": "dropdown",
