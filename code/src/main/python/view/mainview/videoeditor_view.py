@@ -1,15 +1,12 @@
 from PyQt5.QtCore import QObject, QFileSystemWatcher
-from PyQt5.QtWidgets import QMainWindow, QWidget
-from PyQt5.QtWidgets import QSplitter
+from PyQt5.QtWidgets import QMainWindow, QWidget, QSplitter, QApplication
 from PyQt5 import uic
 from config import Resources
 from view.preview.preview import PreviewView
 
-from controller.filemanager_controller import FilemanagerController
 from controller import TimelineController
 
 from view.timeline.timelineview import TimelineView
-from view.filemanagerview import FilemanagerView
 
 
 class VideoEditorView(QMainWindow):
@@ -68,4 +65,8 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
-        
+
+    def closeEvent(self, event):
+        """ Closes all open Windows """
+        QApplication.closeAllWindows()
+        QMainWindow.closeEvent(self, event)
