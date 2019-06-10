@@ -10,6 +10,7 @@ from util.timeline_utils import get_pixmap_from_file
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
+TIMEABLE_COLOR = "#AE6759"
 
 HANDLE_LEFT = 1
 HANDLE_RIGHT = 2
@@ -80,8 +81,8 @@ class TimeableView(QGraphicsRectItem):
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
-        self.brush = QBrush(QColor("#AE6759"))
-        painter.setBrush(self.brush)
+        brush = QBrush(QColor(TIMEABLE_COLOR))
+        painter.setBrush(brush)
         painter.drawRect(self.rect())
 
         # show thumbnail if there is enough space
@@ -318,7 +319,7 @@ class TimeableView(QGraphicsRectItem):
         sets the cursor according to the position of the mouse and shows timeable name
         """
         if not self.name_visible:
-            self.setToolTip("<font color=\"#ffffff\">" + self.name + "</font>")
+            self.setToolTip("<font color=\"#000000\">" + self.name + "</font>")
 
         # get handle at current position
         handle = self.handle_at(event.pos())
