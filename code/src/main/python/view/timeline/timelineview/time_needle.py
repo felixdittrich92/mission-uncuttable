@@ -4,13 +4,12 @@ from PyQt5.QtCore import Qt, QPoint, QPointF, pyqtSignal
 import math
 
 from view.preview.preview import PreviewView
+from model.data import TimelineModel
+from util.timeline_utils import get_px_per_second
 
 NEEDLE_COLOR = "#D66853"
 NEEDLE_WIDTH = 10
 NEEDLE_LINE_WIDTH = 2
-FRAMES_PER_SECOND = 25
-SECONDS_PER_PIXEL = 16
-
 
 
 class TimeNeedle(QWidget):
@@ -150,6 +149,7 @@ class TimeNeedle(QWidget):
 
     def update_player(self, x):
         """ Updates Player when needle dragged."""
-        self.preview.player.Seek(int((x / SECONDS_PER_PIXEL) * FRAMES_PER_SECOND))
+        fps = TimelineModel.get_instance().timeline.info.fps.num
+        pixels_per_second = get_px_per_second()
+        self.preview.player.Seek(int((x / pixels_per_second) * fps))
         self.preview.current_frame_label.setText(str(self.preview.player.Position()))
-
