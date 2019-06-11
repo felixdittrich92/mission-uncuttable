@@ -1,5 +1,7 @@
 import os
 import skvideo.io
+import cv2
+
 from pathlib import Path
 from moviepy.editor import AudioFileClip
 from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo, SpeakerVideo
