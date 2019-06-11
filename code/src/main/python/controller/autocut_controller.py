@@ -1,5 +1,6 @@
 import os
 import cv2
+import sys
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
@@ -122,7 +123,7 @@ class AutocutController:
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
                 video_splitter.cut_video(update_progress)
 
-                video_splitter.cut_zoom_video(update_progress)
+                video_splitter.cut_zoom_video() #update_progress
                 speaker_video = video_splitter.get_speaker_video()
 
                 QApplication.processEvents()
