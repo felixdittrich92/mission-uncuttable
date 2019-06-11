@@ -1,5 +1,5 @@
 import os
-import cv2
+import skvideo.io
 from pathlib import Path
 from moviepy.editor import AudioFileClip
 from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo
@@ -34,35 +34,39 @@ class VideoSplitter:
         @param update_progress: a function which handles the progressbar countprocess
         """
         self.frame = 0
-        video = cv2.VideoCapture(self.video_data)
-        self.number_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-        fps = video.get(cv2.CAP_PROP_FPS)
+        reader = skvideo.io.FFmpegReader(self.video_data, {}, {})
+        videometadata = skvideo.io.ffprobe(self.video_data)
+        self.frame_rate = videometadata['video']['@avg_frame_rate']
+        self.number_frames = int(videometadata['video']['@nb_frames'])
         folder = Path(self.folder_path, self.folder_name)
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+
         board_filename = os.path.join(folder, 'board.mp4')
         slide_filename = os.path.join(folder, 'slides.mp4')
         visualizer_filename = os.path.join(folder, 'visualizer.mp4')
-        board_out = cv2.VideoWriter(board_filename, fourcc, fps, (938, 530))
-        slide_out = cv2.VideoWriter(slide_filename, fourcc, fps, (700, 530))
-        visualizer_out = cv2.VideoWriter(visualizer_filename, fourcc, fps, (960, 530))
-        if(video.isOpened() is False):
-            print("Error opening video stream or file")
-        while(video.isOpened()):
-            ret, frame = video.read()
-            if ret is True:
-                board_out.write(frame[275:805, 17:955])
-                slide_out.write(frame[275:805, 1080:1780])
-                visualizer_out.write(frame[275:805, 960:1920])
-                self.frame += 1
-                if self.frame % 30 == 0:
-                    update_progress((int)(self.frame/self.number_frames*100))
-            else:
-                break
-        video.release()
-        board_out.release()
-        slide_out.release()
-        visualizer_out.release()
-        cv2.destroyAllWindows()
+
+        board_out = skvideo.io.FFmpegWriter(board_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        slide_out = skvideo.io.FFmpegWriter(slide_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        visualizer_out = skvideo.io.FFmpegWriter(visualizer_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        # iterate through the frames
+        for frame in reader.nextFrame():
+            board_out.writeFrame(frame[183:537, 11:637])
+            slide_out.writeFrame(frame[183:537, 720:1187])
+            visualizer_out.writeFrame(frame[183:537, 640:1280])
+            self.frame += 1
+            if self.frame % 30 == 0:
+                update_progress((int)(self.frame/self.number_frames*100))
+        board_out.close()
+        slide_out.close()
+        visualizer_out.close()
         self.files.append(board_filename)
         self.files.append(slide_filename)
         self.files.append(visualizer_filename)
