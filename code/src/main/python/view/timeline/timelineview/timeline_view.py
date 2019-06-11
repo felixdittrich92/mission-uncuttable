@@ -36,10 +36,8 @@ class TimelineView(QFrame):
 
         self.track_frame_frame = self.findChild(QFrame, "track_frame_frame")
         
-        
         self.track_button_frame = self.findChild(QFrame, "track_button_frame")
         
-
         self.timeables = dict()
         self.tracks = dict()
 
@@ -56,7 +54,7 @@ class TimelineView(QFrame):
         self.track_button_frame.add_button(btn1, True)
 
         self.video_track_frame.add_track(track)
-        print("video")
+        
         self.adjust_track_sizes()
     
     def create_audio_track(self, name, width, height, num):
@@ -66,8 +64,8 @@ class TimelineView(QFrame):
         btn2 = QPushButton(name)
         btn2.setFixedSize(80, 50)
         self.track_button_frame.add_button(btn2, False)
-        print("audio")
-        self.track_frame_frame.add_track(track)
+
+        self.audio_track_frame.add_track(track)
         
         self.adjust_track_sizes()
 
