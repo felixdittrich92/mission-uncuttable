@@ -2,7 +2,7 @@ import os
 import skvideo.io
 from pathlib import Path
 from moviepy.editor import AudioFileClip
-from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo
+from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo, SpeakerVideo
 
 
 class VideoSplitter:
@@ -83,6 +83,9 @@ class VideoSplitter:
     def get_visualizer_video(self):
         return self.__visualizer_video
 
+    def get_speaker_video(self):
+        return self.__speaker_video
+
     def cut_audio_from_video(self):
         """
         a method to get the audio from a video and save it in the project folder
@@ -98,3 +101,44 @@ class VideoSplitter:
         extracted_audio = Path(folder, audio_from_video)
         self.audio_files.append(extracted_audio)
         return Audio(extracted_audio)
+    
+    def cut_zoom_video(self):
+        """
+        a method which track the speaker in the video and cut a video from this
+        """
+
+        folder = Path(self.folder_path, self.folder_name)
+        speaker_filename = os.path.join(folder, 'speaker.mp4')
+        video = self.get_board_video()
+
+        cap = cv2.VideoCapture(str(video))
+        #fgbg = cv2.createBackgroundSubtractorMOG2()
+        fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
+
+        is_ok, frame = cap.read()
+
+        r, h, c, w = 180, 400, 400, 550
+        track_window = (c,r,w,h)
+        roi = frame[r:h, c:w]
+
+        term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 5 , 1)
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(zoom_filename, fourcc , 21, (150, 220))
+
+        while True:
+            is_ok, frame = cap.read()
+            gmask = fgbg.apply(frame)
+
+            if is_ok == True:
+                is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
+                r, h, c, w = track_window
+                #rect = cv2.rectangle(frame, track_window, 255, 2)
+                out.write(track_window)    
+            else:
+                break
+
+        cap.release()
+        out.release()
+        self.files.append(speaker_filename)
+        self.__speaker_video = SpeakerVideo(speaker_filename)
