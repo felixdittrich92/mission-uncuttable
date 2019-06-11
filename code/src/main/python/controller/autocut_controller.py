@@ -142,6 +142,8 @@ class AutocutController:
                 QApplication.processEvents()
 
         except:
+            print("Unexpected error:", sys.exc_info()[0])
+            raise
             print("video error")
             return
 
@@ -167,7 +169,7 @@ class AutocutController:
         filemanager.addFileNames(slide_video.get())
 
         filemanager.addFileNames(speaker_video.get())
-        
+
         filemanager.addFileNames(audio.get())
 
         for pic in self.pictures:
