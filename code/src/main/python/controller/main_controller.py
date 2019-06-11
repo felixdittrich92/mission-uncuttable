@@ -3,17 +3,21 @@ import json
 
 from PyQt5.QtWidgets import QWidget
 
-from controller import VideoEditorController, TimelineController
+from controller import VideoEditorController, AutocutController, TimelineController
 from view import VideoEditorView
 from model.project import Project
+from view import AutocutView
 
 
 class MainController:
-    """A class uses as the Controller, that manages the windows of the program."""
+    """A class used as the Controller, that manages the windows of the program."""
     def __init__(self, view):
         self.__start_view = view
         manual_cut_button = self.__start_view.findChild(QWidget, "manual_cut_button")
         manual_cut_button.clicked.connect(self.__start_main_controller)
+
+        auto_cut_button = self.__start_view.findChild(QWidget, "auto_cut_button")
+        auto_cut_button.clicked.connect(self.__start_autocut_controller)
 
         load_project_button = self.__start_view.findChild(QWidget, "load_project_button")
         load_project_button.clicked.connect(self.__load_project)
@@ -38,6 +42,12 @@ class MainController:
         timeline_controller.create_default_tracks()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
         self.__video_editor_controller.start()
+
+    def __start_autocut_controller(self):
+        self.__start_view.close()
+        autocut_view = AutocutView()
+        self.__autocut_controller = AutocutController(autocut_view, self)
+        self.__autocut_controller.start()
 
     def __load_project(self):
         """ Closes the start window and loads the selected project """

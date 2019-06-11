@@ -12,4 +12,14 @@
             <errormessage>Es gab einen Fehler beim Exportieren.\nVersuche es mit anderen Einstellungen.</errormessage>
         </export>
     </errors>
+    <autocut>
+        <starttext>Wählen Sie ein Video und eine PDF-Präsentation (optional).</starttext>
+        <ready>Autocutting kann gestartet werden.</ready>
+        <inprogress>Verarbeitung läuft...</inprogress>
+        <slidesprogressing>Folien werden berechnet...</slidesprogressing>
+        <audioprogress>Audio wird verarbeitet...</audioprogress>
+        <splittingprogress>Video wird zerteilt...</splittingprogress>
+        <videoanalysis>Video wird analysiert...</videoanalysis>
+        <cutting>Video wird geschnitten</cutting>
+    </autocut>
 </strings>

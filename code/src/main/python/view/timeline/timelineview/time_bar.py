@@ -1,3 +1,6 @@
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import Qt
+
 from .size_linkable_frame import SizeLinkableFrame
 
 
@@ -14,7 +17,7 @@ class TimeBar(SizeLinkableFrame):
         """
         Create a TimeBar with a simple debug look.
 
-        :param parent: the parent component
+        :param paren -> Nonet: the parent component
         """
         super(TimeBar, self).__init__(parent)
 
@@ -28,5 +31,12 @@ class TimeBar(SizeLinkableFrame):
         self.setLayout(QHBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
         for i in range(30):
-            self.layout().addWidget(QPushButton(str(i)))
+            button = QPushButton(str(i))
+            button.setAttribute(Qt.WA_TransparentForMouseEvents)
+            self.layout().addWidget(button)
 
+    def mousePressEvent(self, event):
+        pos = event.pos()
+        needle = self.findChild(QWidget, "needle_top")
+        needle.pos_changed.emit(pos.x() - needle.pos().x())
+        needle.update_player(pos.x())

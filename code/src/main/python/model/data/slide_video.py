@@ -1,8 +1,9 @@
 from .media_file import MediaFile
 
-class Audio(MediaFile):
+
+class SlideVideo(MediaFile):
     """
-    This class contains the audiotrack of the video
+    This class contains the video
     """
 
     def __init__(self, file_path):

@@ -101,6 +101,7 @@ class TimelineScrollArea(QFrame):
 
         self.__needle_top = TimeNeedle(self.__time_bar.height(), True)
         self.__needle_top.setParent(self.__time_bar)
+        self.__needle_top.setObjectName("needle_top")
         self.__needle_top.move_needle(5)
 
         self.__needle_bottom = TimeNeedle(self.__track_frame_frame.height())

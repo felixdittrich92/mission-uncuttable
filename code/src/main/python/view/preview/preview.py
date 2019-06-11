@@ -2,19 +2,40 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import *
 from config import Resources
-from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication
+from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
+from model.data import TimelineModel
+from .videoWidget import VideoWidget
+from util.timeline_utils import get_px_per_second
+from threading import Thread
+
 import openshot
 import sip
-from model.data import TimelineModel
 import time
-from .videoWidget import VideoWidget
+
+FRAMES_PER_SECOND = TimelineModel.get_instance().timeline.info.fps.num
+PIXELS_PER_SECOND = get_px_per_second()
+
 
 class PreviewView(QWidget):
     """
     QWidget for Previewplayer
     """
+    frame_changed = pyqtSignal(QPoint)
+    needle_moved = pyqtSignal(int)
+
+    __instance = None
+    @staticmethod
+    def get_instance():
+        if PreviewView.__instance is None:
+            PreviewView()
+        return PreviewView.__instance
 
     def __init__(self):
+
+        if PreviewView.__instance is not None:
+            raise Exception("singleton")
+        else:
+            PreviewView.__instance = self
 
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
@@ -43,12 +64,12 @@ class PreviewView(QWidget):
         #connect signals of videoWidget and renderer
         self.videoWidget.connectSignals(self.renderer)
 
+
         #load timline into reader
         self.player.Reader(self.timeline)
 
         #init GUI
         self.initGUI()
-
 
     def initGUI(self):
         #load icons
@@ -82,7 +103,21 @@ class PreviewView(QWidget):
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
 
+        self.current_frame_label = self.findChild(QWidget, "current_frame_label")
+
+    def playing(self):
+        """Thread that moves the needle, when Player is playing."""
+        while self.video_running:
+            current_frame = self.player.Position()
+            self.current_frame_label.setText(str(current_frame))
+            new_position = (current_frame * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+            self.frame_changed.emit(QPoint(new_position, 0))
+
+            time.sleep(0.1)
+
     def play_pause(self):
+        playing_thread = Thread(target=self.playing)
+
         if self.video_running:
             self.player.Pause()
             self.video_running = False
@@ -92,14 +127,23 @@ class PreviewView(QWidget):
             self.player.Play()
             self.video_running = True
             self.play_button.setIcon(QIcon(self.iconpause))
+            playing_thread.start()
 
     def firstFrame(self):
         self.player.Seek(1)
+        self.frame_changed.emit(QPoint(0, 0))
+
+        self.current_frame_label.setText(str(self.player.Position()))
 
     def lastFrame(self):
         self.player.Play()
         self.player.Pause()
         self.player.Seek(self.getlastFrame())
+        new_position = (self.player.Position() * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+        self.frame_changed.emit(QPoint(new_position, 0))
+
+        self.current_frame_label.setText(str(self.player.Position()))
+
 
     def getlastFrame(self):
         last_frame = 0
@@ -114,7 +158,10 @@ class PreviewView(QWidget):
 
     def prevFrame(self):
         position = self.player.Position()
-        self.player.Seek(position-1)
+        new_position = position - 1
+        self.player.Seek(new_position)
+        new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+        self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -122,14 +169,23 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position-10)
+            new_position = position - 10
+            self.player.Seek(new_position)
+            new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+            self.frame_changed.emit(QPoint(new_position, 0))
+
+            self.current_frame_label.setText(str(self.player.Position()))
+        self.current_frame_label.setText(str(self.player.Position()))
 
     def stopLoop(self):
         self.looprunning = False
 
     def nextFrame(self):
         position = self.player.Position()
-        self.player.Seek(position+1)
+        new_position = position + 1
+        self.player.Seek(new_position)
+        new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+        self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -137,7 +193,17 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position+10)
+            new_position = position + 10
+            self.player.Seek(new_position)
+            new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+            self.frame_changed.emit(QPoint(new_position, 0))
+
+            self.current_frame_label.setText(str(self.player.Position()))
+        self.current_frame_label.setText(str(self.player.Position()))
+
+    def set_player_to_frame(self, frame):
+        self.player.Seek(frame)
+        print(frame)
 
     # def volumeChange(self):
     #     slicerValue = self.volumeSlider.value()/10

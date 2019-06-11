@@ -3,7 +3,7 @@ from lxml import etree
 from .resources import Resources
 
 class Language:
-    default = None
+    current = None
     __de = None
     languages = []
     def __init__(self, language=None):
@@ -13,12 +13,13 @@ class Language:
             setattr(Language, "__" + name, etree.parse(path).getroot())
         if language is None:
             language = "de"
+            print("No language")
 
-        Language.default = getattr(Language, language)
-        Language.__default = getattr(Language, "__" + language)
-    
+        Language.current = getattr(Language, language)
+        Language.__current = getattr(Language, "__" + language)
+
     def sub(text):
-        sub = Language.__default.findtext(text)
+        sub = Language.__current.findtext(text)
         if sub is None:
             return text
         else:
@@ -26,4 +27,4 @@ class Language:
 
     def set_language(lang):
         if Language.hasattr(lang) and lang in Language.languages:
-            Language.default = getattr(Language, lang)
+            Language.current = getattr(Language, lang)

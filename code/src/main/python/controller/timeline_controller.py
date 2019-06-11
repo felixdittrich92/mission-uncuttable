@@ -3,9 +3,11 @@ The controller module for communication between timelineview and
 timelinemodel.
 """
 
+import os
+
 from model.project import Project, Operation
 from model.data import TimeableModel, TimelineModel
-from util.timeline_utils import generate_id, pos_to_seconds
+from util.timeline_utils import generate_id, pos_to_seconds, seconds_to_pos
 
 
 class TimelineController:
@@ -191,6 +193,42 @@ class TimelineController:
         self.create_audio_track("Track 3", 100, 50, 3)     
         self.create_audio_track("Track 3", 100, 50, 4)        
         
+    def create_autocut_tracks(self):
+        """
+        Creates tracks for overlay, board, visualizer, audio when user chooses autocut
+        """
+        self.create_track("Overlay", 2000, 50, 3)
+        self.create_track("Tafel", 2000, 50, 2)
+        self.create_track("Visualizer", 2000, 50, 1)
+        self.create_track("Folien", 2000, 50, 0)
+        self.create_track("Audio", 2000, 50, -1)
+
+    def create_autocut_timeables(self, file_path, track, data):
+        """
+        Creates timeables for autocut.
+
+        @param file_path: the path to the input video
+        @param track:     the track where the timeables will be added
+        @param data:      a list of tuples with start and end time of the video
+        """
+        for start, end in data:
+            model = TimeableModel(file_path, generate_id())
+            model.set_start(start, is_sec=True)
+            model.set_end(end, is_sec=True)
+            model.move(start, is_sec=True)
+
+            width = seconds_to_pos(model.clip.Duration())
+            x_pos = seconds_to_pos(start)
+            self.create_timeable(track, os.path.basename(file_path),
+                                 width, x_pos, model, generate_id(), hist=False)
+
+    def add_clip(self, file_path, track):
+        """ Gets a path to file and a track and creates a timeable """
+        model = TimeableModel(file_path, generate_id())
+        width = seconds_to_pos(model.clip.Duration())
+        self.create_timeable(track, os.path.basename(file_path),
+                             width, 0, model, generate_id(), hist=False)
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()

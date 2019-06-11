@@ -12,4 +12,14 @@
             <errormessage>There was an Error while exporting.\nPlease try different export settings.</errormessage>
         </export>
     </errors>
+    <autocut>
+        <starttext>Please choose a video and optionally a pdf.</starttext>
+        <ready>Ready to continue.</ready>
+        <inprogress>started autocutting</inprogress>
+        <slidesprogressing>calculating slides...</slidesprogressing>
+        <audioprogress>extracting audio...</audioprogress>
+        <splittingprogress>splitting video...</splittingprogress>
+        <videoanalysis>analysing video...</videoanalysis>
+        <cutting>cutting video...</cutting>
+    </autocut>
 </strings>
