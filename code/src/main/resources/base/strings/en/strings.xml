@@ -48,10 +48,12 @@
     <export>
         <filename>Filename</filename>
         <folder>Folder</folder>
-        <export_as>Export as</export_as>
         <format>Format</format>
         <resolution>Resolution</resolution>
         <quality>Quality</quality>
+        <high>high</high>
+        <medium>medium</medium>
+        <low>low</low>
     </export>
     <errors>
         <export>

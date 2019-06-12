@@ -15,14 +15,14 @@ FORMAT_OPTIONS = {
         "audiocodec": "libmp3lame",
         "bitrate": {
             "video": {
-                "hoch": 15000000,
-                "mittel": 5000000,
-                "niedrig": 384000
+                "high": 15000000,
+                "medium": 5000000,
+                "low": 384000
             },
             "audio": {
-                "hoch": 192000,
-                "mittel": 128000,
-                "niedrig": 96000
+                "high": 192000,
+                "medium": 128000,
+                "low": 96000
             }
         }
     },
@@ -32,14 +32,14 @@ FORMAT_OPTIONS = {
         "audiocodec": "aac",
         "bitrate": {
             "video": {
-                "hoch": 15000000,
-                "mittel": 5000000,
-                "niedrig": 384000
+                "high": 15000000,
+                "medium": 5000000,
+                "low": 384000
             },
             "audio": {
-                "hoch": 192000,
-                "mittel": 128000,
-                "niedrig": 96000
+                "high": 192000,
+                "medium": 128000,
+                "low": 96000
             }
         }
     }
@@ -65,7 +65,7 @@ class ExportView(QDialog):
 
         timeline_instance = TimelineModel.get_instance()
 
-        for name in ["filename", "folder", "export_as", "format", "resolution", "quality"]:
+        for name in ["filename", "folder", "format", "resolution", "quality"]:
             text = str(getattr(Language.current.export, name))
             self.findChild(QLabel, name + "_label").setText(text)
 
@@ -90,6 +90,9 @@ class ExportView(QDialog):
             self.format_cb.addItem(k)
 
         self.quality_cb = self.findChild(QComboBox, "quality_cb")
+        self.quality_cb.addItem(str(Language.current.export.high))
+        self.quality_cb.addItem(str(Language.current.export.medium))
+        self.quality_cb.addItem(str(Language.current.export.low))
 
         self.size_cb = self.findChild(QComboBox, "size_cb")
         for k in SIZE_OPTIONS.keys():
@@ -109,24 +112,20 @@ class ExportView(QDialog):
 
     def start(self):
         if self.exec_():
-            has_audio = False
-            has_video = False
-
-            export_type = self.export_as_cb.currentText()
-            if export_type == "Video und Audio":
-                has_video = True
-                has_audio = True
-            elif export_type == "Nur Video":
-                has_video = True
-            elif export_type == "Nur Audio":
-                has_audio = True
-
             format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
-            quality_selected = self.quality_cb.currentText()
+            quality_index = self.quality_cb.currentIndex()
             audio_codec = format_selected["audiocodec"]
-            audio_bitrate = format_selected["bitrate"]["audio"][quality_selected]
             video_codec = format_selected["videocodec"]
-            video_bitrate = format_selected["bitrate"]["video"][quality_selected]
+            if quality_index == 0:
+                audio_bitrate = format_selected["bitrate"]["audio"]["high"]
+                video_bitrate = format_selected["bitrate"]["video"]["high"]
+            elif quality_index == 1:
+                audio_bitrate = format_selected["bitrate"]["audio"]["medium"]
+                video_bitrate = format_selected["bitrate"]["video"]["medium"]
+            else:
+                audio_bitrate = format_selected["bitrate"]["audio"]["low"]
+                video_bitrate = format_selected["bitrate"]["video"]["low"]
+
             video_format = format_selected["videoformat"]
 
             size_selected = SIZE_OPTIONS[self.size_cb.currentText()]
@@ -136,8 +135,8 @@ class ExportView(QDialog):
             data = {
                 "path": os.path.join(self.folder_edit.text(),
                                      self.filename_edit.text()),
-                "has_audio": has_audio,
-                "has_video": has_video,
+                "has_audio": True,
+                "has_video": True,
                 "video_format": video_format,
                 "audio_codec": audio_codec,
                 "audio_bitrate": audio_bitrate,

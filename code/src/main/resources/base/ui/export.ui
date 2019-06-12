@@ -49,36 +49,6 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="export_as_label">
-         <property name="text">
-          <string>Exportieren als</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="export_as_cb">
-         <item>
-          <property name="text">
-           <string>Video und Audio</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Nur Audio</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Nur Video</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
         <widget class="QLabel" name="format_label">
@@ -116,23 +86,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="quality_cb">
-         <item>
-          <property name="text">
-           <string>hoch</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>mittel</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>niedrig</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="quality_cb"/>
        </item>
       </layout>
      </item>
