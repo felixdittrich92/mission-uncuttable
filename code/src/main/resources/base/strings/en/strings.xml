@@ -2,6 +2,12 @@
     <application>
         <name>UbiCut</name>
     </application>
+    <startview>
+        <last_projects>last projects</last_projects>
+        <newproject>new project</newproject>
+        <load_project>load project</load_project>
+        <back>back</back>
+    </startview>
     <menubar>
         <program>Program</program>
         <settings>Settings</settings>
@@ -39,6 +45,14 @@
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
     </filemanager>
+    <export>
+        <filename>Filename</filename>
+        <folder>Folder</folder>
+        <export_as>Export as</export_as>
+        <format>Format</format>
+        <resolution>Resolution</resolution>
+        <quality>Quality</quality>
+    </export>
     <errors>
         <export>
             <windowtitle>Exporterror</windowtitle>
