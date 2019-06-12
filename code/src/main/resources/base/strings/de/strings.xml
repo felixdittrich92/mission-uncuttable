@@ -2,6 +2,20 @@
     <application>
         <name>UbiCut</name>
     </application>
+    <menubar>
+        <program>Programm</program>
+        <settings>Einstellungen</settings>
+        <project>Projekt</project>
+        <new>Neu</new>
+        <open>Öffnen</open>
+        <save>Speichern</save>
+        <saveas>Speichern als</saveas>
+        <projectsettings>Projekteinstellungen</projectsettings>
+        <export>Exportieren</export>
+        <edit>Bearbeiten</edit>
+        <undo>Rückgängig</undo>
+        <redo>Wiederherstellen</redo>
+    </menubar>
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
@@ -14,6 +28,7 @@
     </errors>
     <autocut>
         <starttext>Wählen Sie ein Video und eine PDF-Präsentation (optional).</starttext>
+        <addvideotext>Bitte fügen Sie ein Video hinzu.</addvideotext>
         <ready>Autocutting kann gestartet werden.</ready>
         <inprogress>Verarbeitung läuft...</inprogress>
         <slidesprogressing>Folien werden berechnet...</slidesprogressing>

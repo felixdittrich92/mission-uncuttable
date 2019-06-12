@@ -84,7 +84,7 @@ class AutocutController:
             )
         )
         if self.filename_pdf:
-            self.textlabel.setText("Please add a video file to continue")
+            self.textlabel.setText(str(Language.current.autocut.addvideotext))
             self.__autocut_view.change_icon(self.__autocut_view.pdf_image_label)
         else:
             pass
@@ -116,7 +116,7 @@ class AutocutController:
                 QApplication.processEvents()
                 self.textlabel.setText(str(Language.current.autocut.audioprogress))
                 audio = video_splitter.cut_audio_from_video()
-                
+
                 QApplication.processEvents()
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
@@ -154,7 +154,7 @@ class AutocutController:
                                                      visualizer_video.subvideos)
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
-        
+
         video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()
         filemanager.addFileNames(self.filename_video)

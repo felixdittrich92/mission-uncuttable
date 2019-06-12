@@ -2,6 +2,20 @@
     <application>
         <name>UbiCut</name>
     </application>
+    <menubar>
+        <program>Program</program>
+        <settings>Settings</settings>
+        <project>Project</project>
+        <new>New</new>
+        <open>Open</open>
+        <save>Save</save>
+        <saveas>Save As</saveas>
+        <projectsettings>Projectsettings</projectsettings>
+        <export>Export</export>
+        <edit>Edit</edit>
+        <undo>Undo</undo>
+        <redo>Redo</redo>
+    </menubar>
     <filemanager>
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
@@ -14,6 +28,7 @@
     </errors>
     <autocut>
         <starttext>Please choose a video and optionally a pdf.</starttext>
+        <addvideotext>Please add a video file to continue</addvideotext>
         <ready>Ready to continue.</ready>
         <inprogress>started autocutting</inprogress>
         <slidesprogressing>calculating slides...</slidesprogressing>
