@@ -51,7 +51,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="export_as_label">
          <property name="text">
           <string>Exportieren als</string>
          </property>
@@ -81,7 +81,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="format_label">
          <property name="text">
           <string>Format</string>
          </property>
@@ -95,7 +95,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="resolution_label">
          <property name="text">
           <string>Auflösung</string>
          </property>
@@ -109,7 +109,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="quality_label">
          <property name="text">
           <string>Qualität</string>
          </property>
@@ -139,7 +139,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="startframe_label">
          <property name="text">
           <string>Startframe</string>
          </property>
@@ -153,7 +153,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="endframe_label">
          <property name="text">
           <string>Endframe</string>
          </property>

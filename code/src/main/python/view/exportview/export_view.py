@@ -1,9 +1,10 @@
 import os
 
-from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QDialogButtonBox, QComboBox, QSpinBox
+from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
+                             QComboBox, QSpinBox, QLabel)
 from PyQt5 import uic
 
-from config import Resources
+from config import Resources, Language
 from controller.export_controller import ExportController
 from model.data import TimelineModel
 
@@ -64,6 +65,10 @@ class ExportView(QDialog):
 
         timeline_instance = TimelineModel.get_instance()
 
+        for name in ["filename", "folder", "export_as", "format", "resolution", "quality"]:
+            text = str(getattr(Language.current.export, name))
+            self.findChild(QLabel, name + "_label").setText(text)
+
         self.filename_edit = self.findChild(QLineEdit, "filename_edit")
 
         # set default folder to home folder
@@ -99,6 +104,8 @@ class ExportView(QDialog):
         self.end_frame_sb = self.findChild(QSpinBox, "end_sb")
         self.end_frame_sb.setRange(1, last_frame)
         self.end_frame_sb.setValue(last_frame)
+
+        # TODO translate text in values
 
     def start(self):
         if self.exec_():
