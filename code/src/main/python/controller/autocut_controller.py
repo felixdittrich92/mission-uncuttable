@@ -30,6 +30,7 @@ class AutocutController:
         self.ok_button = self.__autocut_view.ok_button
         self.ok_button.clicked.connect(self.ready)
         self.cancel_button = self.__autocut_view.cancel_button
+        self.cancel_button.setText(str(Language.current.autocut.cancel))
         self.cancel_button.clicked.connect(self.stop)
         self.__main_controller = main_controller
         self.textlabel = self.__autocut_view.text_label

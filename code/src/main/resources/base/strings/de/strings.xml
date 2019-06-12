@@ -62,6 +62,7 @@
         </export>
     </errors>
     <autocut>
+        <cancel>Abbrechen</cancel>
         <starttext>Wählen Sie ein Video und eine PDF-Präsentation (optional).</starttext>
         <addvideotext>Bitte fügen Sie ein Video hinzu.</addvideotext>
         <ready>Autocutting kann gestartet werden.</ready>

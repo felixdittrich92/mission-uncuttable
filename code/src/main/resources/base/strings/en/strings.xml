@@ -62,6 +62,7 @@
         </export>
     </errors>
     <autocut>
+        <cancel>cancel</cancel>
         <starttext>Please choose a video and optionally a pdf.</starttext>
         <addvideotext>Please add a video file to continue</addvideotext>
         <ready>Ready to continue.</ready>
