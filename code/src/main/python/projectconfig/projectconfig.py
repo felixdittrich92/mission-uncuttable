@@ -11,25 +11,25 @@ the type it's just an empty string.
 default_settings = {
   "general":{
     "framerate":{
-      "name":"Framerate",
+      # "name":"Framerate",
       "type":"dropdown",
       "values":["30 FPS","60 FPS"],
       "current":0
     },
     "resolution":{
-      "name":"Auflösung",
+      # "name":"Auflösung",
       "type":"dropdown",
       "values":["800 x 600","1366 x 768","1280 x 720","1920 x 1080"],
       "current":2
     },
     "projectname":{
-      "name":"Projektname",
+      # "name":"Projektname",
       "type":"textwindow",
       "values":"",
       "current":"unbenanntes Projekt"
     },
     "projectlocation":{
-      "name":"Projektpfad",
+      # "name":"Projektpfad",
       "type":"textwindow",
       "values":"",
       "current":"Hier Projektpfad eingeben",
