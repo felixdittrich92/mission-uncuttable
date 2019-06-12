@@ -13,7 +13,7 @@ If you want to add settings that shouldn't be accessible for the user just put t
 """
 
 default_settings = {
-    "General": {
+    "general": {
         "language": {
             "type": "dropdown",
             "values": ["English", "Deutsch"],
@@ -25,14 +25,14 @@ default_settings = {
             "current": 30
         },
     },
-    "Design": {
+    "design": {
         "color_theme": {
             "type": "dropdown",
             "values": ["dark", "light"],
             "current": 0
         },
     },
-    "Shortcuts": {
+    "shortcuts": {
         "starter": {
             "type": "text",
             "values": "",

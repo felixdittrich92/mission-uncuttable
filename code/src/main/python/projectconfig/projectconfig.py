@@ -35,26 +35,26 @@ default_settings = {
       "current":"Hier Projektpfad eingeben",
     }
   },
-  "dummy1":{
-    "color_theme":{
-      "name":"Color Theme",
-      "type":"dropdown",
-      "values":["dark", "light"],
-      "current":0
-    },
-    "option2":{
-      "name":"Option 2",
-      "type":"checkbox",
-      "values":"",
-      "current":False
-    },
-  },
-  "dummy2":{
-    "option1":{
-      "name":"Option 1",
-      "type":"checkbox",
-      "values":"",
-      "current":True
-    }
-  }
+  # "dummy1":{
+  #   "color_theme":{
+  #     "name":"Color Theme",
+  #     "type":"dropdown",
+  #     "values":["dark", "light"],
+  #     "current":0
+  #   },
+  #   "option2":{
+  #     "name":"Option 2",
+  #     "type":"checkbox",
+  #     "values":"",
+  #     "current":False
+  #   },
+  # },
+  # "dummy2":{
+  #   "option1":{
+  #     "name":"Option 1",
+  #     "type":"checkbox",
+  #     "values":"",
+  #     "current":True
+  #   }
+  # }
 }

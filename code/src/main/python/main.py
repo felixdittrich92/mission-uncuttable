@@ -16,7 +16,7 @@ class AppContext(ApplicationContext):
         # init resources
         Resources(self)
         # init language
-        lang = Settings.get_instance().get_settings().General.language.current
+        lang = Settings.get_instance().get_settings().general.language.current
         if lang == 0:
             Language('en')
         elif lang == 1:

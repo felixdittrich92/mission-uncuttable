@@ -57,7 +57,7 @@ class SettingsView(QMainWindow):
         i = 0
         for x in settings:
             if x != "Invisible":
-                tabWidget.addTab(QWidget(), x)
+                tabWidget.addTab(QWidget(), str(getattr(Language.current.settings, x)))
                 tabWidget.widget(i).layout = QVBoxLayout()
                 for y in settings[x]:
                     testWidget = self.makeSetting(x,y)
