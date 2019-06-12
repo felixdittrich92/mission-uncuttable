@@ -126,7 +126,7 @@ class VideoSplitter:
         term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 5 , 1)
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(zoom_filename, fourcc , 21, (150, 220))
+        out = cv2.VideoWriter(speaker_filename, fourcc , 21, (150, 220))
 
         while True:
             is_ok, frame = cap.read()
