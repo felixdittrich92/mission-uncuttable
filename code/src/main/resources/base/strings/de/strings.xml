@@ -29,6 +29,7 @@
         <export>Exportieren</export>
     </settings>
     <projectsettings>
+        <general>Allgemein</general>
         <framerate>Framerate</framerate>
         <resolution>Auflösung</resolution>
         <projectname>Projektname</projectname>
