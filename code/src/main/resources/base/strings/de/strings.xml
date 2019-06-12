@@ -28,6 +28,12 @@
         <redo>Wiederherstellen</redo>
         <export>Exportieren</export>
     </settings>
+    <projectsettings>
+        <framerate>Framerate</framerate>
+        <resolution>Auflösung</resolution>
+        <projectname>Projektname</projectname>
+        <projectlocation>Projektpfad</projectlocation>
+    </projectsettings>
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>

@@ -28,6 +28,12 @@
         <redo>Redo</redo>
         <export>Export</export>
     </settings>
+    <projectsettings>
+        <framerate>Framerate</framerate>
+        <resolution>Resolution</resolution>
+        <projectname>Project Name</projectname>
+        <projectlocation>Project Location</projectlocation>
+    </projectsettings>
     <filemanager>
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
