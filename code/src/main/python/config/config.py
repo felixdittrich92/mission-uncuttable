@@ -13,12 +13,18 @@ If you want to add settings that shouldn't be accessible for the user just put t
 """
 
 default_settings = {
-    "Allgemein": {
+    "General": {
         "language": {
             "name": "Language",
             "type": "dropdown",
-            "values": ["English", "German", "Esperanto"],
+            "values": ["English", "Deutsch"],
             "current": 0
+        },
+        "history_limit": {
+            "name": "History Limit",
+            "type": "spinbox",
+            "values": [1, 100],  # min and max history size
+            "current": 30
         },
     },
     "Design": {
@@ -68,7 +74,9 @@ default_settings = {
         }
     },
     "Invisible": {
-        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
-        "pixels_per_second": 16
-        }
+        "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
+        "autocutvideo_import_formats": 'Files ( *.mp4);;',
+        "autocutpdf_import_formats": 'Files ( *.pdf);;',
+        "pixels_per_second": 16,
+    }
 }

@@ -1,11 +1,9 @@
 from PyQt5.QtCore import QObject, QFileSystemWatcher
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QSplitter
+from PyQt5.QtWidgets import QMainWindow, QWidget, QSplitter, QApplication
 from PyQt5 import uic
 from config import Resources
 from view.preview.preview import PreviewView
 
-from controller.filemanager_controller import Filemanager
 from controller import TimelineController
 
 from view.timeline.timelineview import TimelineView
@@ -18,8 +16,10 @@ class VideoEditorView(QMainWindow):
         super(VideoEditorView, self).__init__()
         uic.loadUi(Resources.files.mainview, self)
 
-        self.load_filemanager()
         self.load_timeline_widget()
+
+        self.needle = self.findChild(QWidget, "needle_top")
+
         self.load_preview()
 
         self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
@@ -30,7 +30,8 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
     def load_preview(self):
-        previewview = PreviewView()
+        previewview = PreviewView.get_instance()
+
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, previewview)
         previewview.show()
@@ -53,11 +54,10 @@ class VideoEditorView(QMainWindow):
         """Starts the video-editor-window maximized."""
         self.showMaximized()
 
-    def load_filemanager(self):
-        self.filemanager = Filemanager()
+    def set_filemanager_view(self, filemanager_view):
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, self.filemanager)
-        self.filemanager.show()
+        splitter.replaceWidget(0, filemanager_view)
+        filemanager_view.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
@@ -65,3 +65,8 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def closeEvent(self, event):
+        """ Closes all open Windows """
+        QApplication.closeAllWindows()
+        QMainWindow.closeEvent(self, event)

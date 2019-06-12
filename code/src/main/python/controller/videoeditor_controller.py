@@ -1,4 +1,5 @@
 import json
+import sys
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -9,6 +10,8 @@ from .timeline_controller import TimelineController
 from model.project import Project
 from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
+from view.filemanagerview import FilemanagerView
+from .filemanager_controller import FilemanagerController
 from projectconfig import Projectsettings
 
 
@@ -20,6 +23,9 @@ class VideoEditorController:
     """
     def __init__(self, view):
         self.__video_editor_view = view
+        self.__filemanager_view = FilemanagerView()
+        self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
+        self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
         self.__settings_controller = SettingsController(None)
@@ -50,6 +56,7 @@ class VideoEditorController:
     def stop(self):
         """Closes the video-editor Window."""
         self.__video_editor_view.close()
+        sys.exit(0)
 
     def __start_settings_controller(self):
         """Opens the settings window"""
@@ -113,6 +120,9 @@ class VideoEditorController:
 
         Projectsettings.add_project(filename)
 
+    def get_filemanager_controller(self):
+        return self.__filemanager_controller
+
     def __write_project_data(self, filename):
         """ Saves project data into a file """
         # get timeline data
@@ -131,3 +141,4 @@ class VideoEditorController:
         # write data
         with open(filename, 'w') as f:
             json.dump(project_data, f, ensure_ascii=False)
+            

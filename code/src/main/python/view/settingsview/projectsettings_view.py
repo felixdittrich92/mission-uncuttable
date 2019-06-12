@@ -15,6 +15,8 @@ class ProjectSettingsView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(ProjectSettingsView, self).__init__()
         uic.loadUi(Resources.files.projectsettings_view, self)
+
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         """ centering the window """
