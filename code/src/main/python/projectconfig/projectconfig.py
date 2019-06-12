@@ -24,13 +24,13 @@ default_settings = {
     },
     "projectname":{
       # "name":"Projektname",
-      "type":"textwindow",
+      "type":"text",
       "values":"",
       "current":"unbenanntes Projekt"
     },
     "projectlocation":{
       # "name":"Projektpfad",
-      "type":"textwindow",
+      "type":"text",
       "values":"",
       "current":"Hier Projektpfad eingeben",
     }
