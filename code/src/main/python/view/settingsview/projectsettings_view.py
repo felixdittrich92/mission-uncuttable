@@ -4,9 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5 import uic
 from PyQt5 import QtGui
 from config import Resources
-import os
 from projectconfig import Projectsettings
-import json
 
 
 class ProjectSettingsView(QMainWindow):

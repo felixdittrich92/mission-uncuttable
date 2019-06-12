@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidge
 from PyQt5.QtCore import Qt, QFileSystemWatcher
 from PyQt5 import uic
 
-from config import Resources
+from config import Resources, Language
 from config import Settings
 
 
@@ -74,7 +74,7 @@ class SettingsView(QMainWindow):
         type = self.settings[x][y].get("type")
 
         if(type != "invisible"):
-            name = self.settings[x][y].get("name")
+            name = str(getattr(Language.current.settings, y))
 
             values = self.settings[x][y].get("values")
             current = self.settings[x][y].get("current")
@@ -118,16 +118,12 @@ class SettingsView(QMainWindow):
         and saves the new dictionary with the save_settings() method from Settings.
         """
 
-        tabWidget = self.findChild(QTabWidget, 'tabWidget')
-
-        i = 0
         for x in self.settings:
             if x != "Invisible":
                 for y in self.settings[x]:
-                    name = self.settings[x][y].get("name")
+                    name = str(getattr(Language.current.settings, y))
                     widget = self.findChild(QWidget, name)
                     self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
-                    i += 1
 
         self.settingsInstance.save_settings(self.settings)
         self.close()
@@ -140,7 +136,6 @@ class SettingsView(QMainWindow):
 
         if type == "dropdown":
             combobox = widget.findChild(QComboBox)
-            values = self.settings[x][y].get("values")
             self.settings[x][y]["current"]= combobox.currentIndex()
         elif type == "checkbox":
             checkbox = widget.findChild(QCheckBox)
