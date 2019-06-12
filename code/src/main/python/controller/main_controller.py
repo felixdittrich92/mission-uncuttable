@@ -7,6 +7,7 @@ from controller import VideoEditorController, AutocutController, TimelineControl
 from view import VideoEditorView
 from model.project import Project
 from view import AutocutView
+from config import Language
 
 
 class MainController:
@@ -20,6 +21,7 @@ class MainController:
         auto_cut_button.clicked.connect(self.__start_autocut_controller)
 
         load_project_button = self.__start_view.findChild(QWidget, "load_project_button")
+        load_project_button.setText(str(Language.current.startview.load_project))
         load_project_button.clicked.connect(self.__load_project)
 
     def start(self):
