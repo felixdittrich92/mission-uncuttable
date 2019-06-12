@@ -36,3 +36,4 @@ class TrackFrame(SizeLinkableFrame):
         needle = self.findChild(QWidget, "needle_bottom")
         track.stackUnder(needle)
         self.adjustSize()
+        self.parent().adjustSize()
