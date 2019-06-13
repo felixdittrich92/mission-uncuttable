@@ -45,6 +45,10 @@
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
     </filemanager>
+    <timeable>
+        <delete>löschen</delete>
+        <cut>schneiden</cut>
+    </timeable>
     <export>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>

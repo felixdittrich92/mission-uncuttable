@@ -45,6 +45,10 @@
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
     </filemanager>
+    <timeable>
+        <delete>delete</delete>
+        <cut>cut</cut>
+    </timeable>
     <export>
         <filename>Filename</filename>
         <folder>Folder</folder>
