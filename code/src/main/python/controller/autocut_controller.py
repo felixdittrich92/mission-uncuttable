@@ -120,10 +120,11 @@ class AutocutController:
 
                 QApplication.processEvents()
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
-                update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
+                update_progress = lambda progress: self.progressbar.setValue(int(progress*0.4))
                 video_splitter.cut_video(update_progress)
-                update_progress2 = lambda progress: self.progressbar.setValue(int(progress*0.2))
+                update_progress2 = lambda progress: self.progressbar.setValue(int(40+progress*0.2))
                 video_splitter.cut_zoom_video(update_progress2)
+                speaker_video = video_splitter.get_speaker_video()
                 QApplication.processEvents()
                 slide_video = video_splitter.get_slide_video()
 
@@ -164,6 +165,7 @@ class AutocutController:
         filemanager.addFileNames(board_video.get())
         filemanager.addFileNames(visualizer_video.get())
         filemanager.addFileNames(slide_video.get())
+        filemanager.addFileNames(speaker_video.get())
         filemanager.addFileNames(audio.get())
 
         for pic in self.pictures:

@@ -1,6 +1,7 @@
 import os
 import skvideo.io
 import cv2
+import time
 
 from pathlib import Path
 from moviepy.editor import AudioFileClip
@@ -112,7 +113,8 @@ class VideoSplitter:
         self.frame = 0
         folder = Path(self.folder_path, self.folder_name)
         speaker_filename = os.path.join(folder, 'speaker.mp4')
-        video_data = self.get_board_video()
+        time.sleep(0.5)
+        video_data = self.files[0]
 
         cap = cv2.VideoCapture(str(video_data))
         reader = skvideo.io.FFmpegReader(video_data, {}, {})
@@ -129,7 +131,7 @@ class VideoSplitter:
         x, y, width, height = 220, 400, 400, 650
         track_window = (width,x,height,y)
 
-        speaker_out = skvideo.io.FFmpegWriter("speaker.mp4", inputdict={
+        speaker_out = skvideo.io.FFmpegWriter(speaker_filename, inputdict={
             "-r": self.frame_rate
         })
 

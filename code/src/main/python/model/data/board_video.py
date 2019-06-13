@@ -12,6 +12,7 @@ class BoardVideo(MediaFile):
 
     def __init__(self, file_path):
         self.__file_path = str(file_path)
+        print(__file_path)
         self.subvideos = list()
 
     def get(self):
