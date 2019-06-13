@@ -65,6 +65,9 @@ class TimelineModel:
     def getTimeline(self):
         return self.timeline
 
+    def get_fps(self):
+        return int(self.timeline.info.fps.num / self.timeline.info.fps.den)
+
     def change(self, change_type, key, data):
         """
         @param change_type: insert, delete or update

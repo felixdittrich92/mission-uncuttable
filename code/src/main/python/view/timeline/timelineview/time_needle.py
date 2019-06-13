@@ -149,7 +149,7 @@ class TimeNeedle(QWidget):
 
     def update_player(self, x):
         """ Updates Player when needle dragged."""
-        fps = TimelineModel.get_instance().timeline.info.fps.num
+        fps = TimelineModel.get_instance().get_fps()
         pixels_per_second = get_px_per_second()
         self.preview.player.Seek(int((x / pixels_per_second) * fps))
         self.preview.current_frame_label.setText(str(self.preview.player.Position()))
