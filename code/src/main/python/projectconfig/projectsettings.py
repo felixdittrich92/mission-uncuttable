@@ -84,7 +84,20 @@ class Projectsettings:
         return self.dict
 
     @staticmethod
-    def save_projectsettings(new_projectsettings):
+
+    def get_config_dir():
+        """ Returns the directory where the config will be saved """
+        home = os.path.expanduser('~')
+        config_location = ""
+        if platform.system() == 'Linux':
+            config_location = os.path.join(home, '.config', 'ubicut')
+        elif platform.system() == 'Windows':
+            config_location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
+
+        return config_location
+
+    @staticmethod
+    def save_settings(new_projectsettings):
         """
         Method that saves the custom user settings to a file.
 
@@ -94,12 +107,7 @@ class Projectsettings:
         @type   new_projectsettings: Dictionary
         @param  new_projectsettings: Settings to be saved
         """
-        home = os.path.expanduser('~')
-        location = ""
-        if platform.system() == 'Linux':
-            location = os.path.join(home, '.config', 'ubicut')
-        elif platform.system() == 'Windows':
-            location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
+        location = Projectsettings.get_config_dir()
 
         if not os.path.exists(location):
             os.makedirs(location)
@@ -109,4 +117,31 @@ class Projectsettings:
         with open(file, 'w') as outfile:        # writes json to file
             json.dump(new_projectsettings, outfile, ensure_ascii=False)
 
+    @staticmethod
+    def get_projects():
+        """ Returns a list a known projects """
+        location = Projectsettings.get_config_dir()
+        project_file = os.path.join(location, 'projects')
 
+        if not os.path.isfile(project_file):
+            return []
+
+        res = []
+        with open(project_file, 'r') as f:
+            for file in f.read().splitlines():
+                if os.path.isfile(file):
+                    res.append(file)
+
+        return res
+
+    @staticmethod
+    def add_project(filename):
+        """ Adds a project to the projects file """
+        location = Projectsettings.get_config_dir()
+        project_file = os.path.join(location, 'projects')
+        if not os.path.isfile(project_file):
+            with open(project_file, 'w') as f:
+                f.write(filename + '\n')
+        else:
+            with open(project_file, 'a') as f:
+                f.write(filename + '\n')

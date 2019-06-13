@@ -3,18 +3,15 @@ import os
 from fnmatch import fnmatch
 from PIL import Image
 from pathlib import Path
-#from .slide import Slide
+from model.data import Slide
 
 class Presentation:
 
-    def __init__(self, file_path, filename):
+    def __init__(self, file_data):
         """
         Constructor of the class
-        @param file_path: the path to the pdf
-        @param filename: the name of the pdf
         """
-        self.file_path = file_path
-        self.filename = filename
+        self.file_data = file_data
         self.files = []
 
 
@@ -27,21 +24,23 @@ class Presentation:
         @param folder_path: path to the project folder
         @param folder_name: name of the project folder
         @param resolution: resolution for every converted pdf picture
+        @return: a list with the filepath strings
         """
 
-        input_file = Path(self.file_path, self.filename)
+        input_file = self.file_data
         check_pdf = fnmatch(input_file, '*.pdf')
         if check_pdf == True:
             folder = Path(folder_path, folder_name)
 
-            pages = convert_from_path(str(input_file), resolution) #Standardwert sollte 250 sein
+            pages = convert_from_path(str(input_file), resolution) #resolution standard must be 250
 
             for page_number, page in enumerate(pages, start=1):
                 target = folder / f"{page_number:03d}.jpg"
                 page.save(str(target),  'JPEG')
-
-            for file in os.listdir(folder):
-                self.files.append(Slide(file))
+                self.files.append(str(target))
+            
+            Slide(self.files)
+            return self.files
 
         else:
             print("the datatype must be .pdf")
