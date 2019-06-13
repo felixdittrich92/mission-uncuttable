@@ -114,7 +114,6 @@ class VideoSplitter:
         speaker_filename = os.path.join(folder, 'speaker.mp4')
         video_data = self.files[0]
 
-        cap = cv2.VideoCapture(str(video_data))
         reader = skvideo.io.FFmpegReader(video_data, {}, {})
         #fgbg = cv2.createBackgroundSubtractorMOG2()
         fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
@@ -124,8 +123,6 @@ class VideoSplitter:
         self.frame_rate = videometadata['video']['@avg_frame_rate']
         self.number_frames = int(videometadata['video']['@nb_frames'])
 
-        is_ok, frame = cap.read()
-
         x, y, width, height = 220, 400, 400, 650
         track_window = (width,x,height,y)
 
@@ -133,23 +130,15 @@ class VideoSplitter:
             "-r": self.frame_rate
         })
 
-        while True:
-            is_ok, frame = cap.read()
-
-            if is_ok == True:
-
-                for frame in reader.nextFrame():
-                    gmask = fgbg.apply(frame)
-                    is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
-                    x, y, width, height = track_window
-                    speaker_out.writeFrame(frame[y:y+height, x:x+width])
-                    self.frame += 1
-                    if self.frame % 30 == 0:
-                        update_progress((int)(self.frame/self.number_frames*100))
-            else:
-                break
-    
-        cap.release()
+        for frame in reader.nextFrame():
+            gmask = fgbg.apply(frame)
+            is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
+            x, y, width, height = track_window
+            speaker_out.writeFrame(frame[y:y+height, x:x+width])
+            self.frame += 1
+            if self.frame % 30 == 0:
+                update_progress((int)(self.frame/self.number_frames*100))
+   
         speaker_out.close()
         self.files.append(speaker_filename)
         self.__speaker_video = SpeakerVideo(speaker_filename)
