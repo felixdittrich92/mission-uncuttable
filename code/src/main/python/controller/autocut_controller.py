@@ -122,20 +122,21 @@ class AutocutController:
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
                 video_splitter.cut_video(update_progress)
-                video_splitter.cut
+                update_progress2 = lambda progress: self.progressbar.setValue(int(progress*0.2))
+                video_splitter.cut_zoom_video(update_progress2)
                 QApplication.processEvents()
                 slide_video = video_splitter.get_slide_video()
 
                 self.textlabel.setText(str(Language.current.autocut.videoanalysis))
                 QApplication.processEvents()
-                update_progress2 = lambda progress: self.progressbar.setValue(int(60+progress*0.2))
+                update_progress3 = lambda progress: self.progressbar.setValue(int(60+progress*0.2))
                 board_video = video_splitter.get_board_video()
-                board_video.check_board_area(update_progress2)
+                board_video.check_board_area(update_progress3)
 
                 QApplication.processEvents()
-                update_progress3 = lambda progress: self.progressbar.setValue(int(80+progress*0.2))
+                update_progress4 = lambda progress: self.progressbar.setValue(int(80+progress*0.2))
                 visualizer_video = video_splitter.get_visualizer_video()
-                visualizer_video.check_visualiser_area(update_progress3)
+                visualizer_video.check_visualiser_area(update_progress4)
                 self.textlabel.setText(str(Language.current.autocut.cutting))
                 QApplication.processEvents()
 
