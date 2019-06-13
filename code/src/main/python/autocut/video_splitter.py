@@ -1,7 +1,6 @@
 import os
 import skvideo.io
 import cv2
-import time
 
 from pathlib import Path
 from moviepy.editor import AudioFileClip
@@ -113,7 +112,6 @@ class VideoSplitter:
         self.frame = 0
         folder = Path(self.folder_path, self.folder_name)
         speaker_filename = os.path.join(folder, 'speaker.mp4')
-        time.sleep(0.5)
         video_data = self.files[0]
 
         cap = cv2.VideoCapture(str(video_data))
