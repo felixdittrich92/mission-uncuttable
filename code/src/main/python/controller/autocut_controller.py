@@ -122,6 +122,7 @@ class AutocutController:
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
                 video_splitter.cut_video(update_progress)
+                video_splitter.cu
                 QApplication.processEvents()
                 slide_video = video_splitter.get_slide_video()
 
