@@ -49,5 +49,5 @@ class BoardVideo(MediaFile):
                     times.clear()
         finally:
             video.release()
-            cv2.destroyAllWindows()
+
             
