@@ -33,6 +33,8 @@
         <undo>Undo</undo>
         <redo>Redo</redo>
         <export>Export</export>
+        <save>Save</save>
+        <cancel>Cancel</cancel>
     </settings>
     <projectsettings>
         <general>General</general>
