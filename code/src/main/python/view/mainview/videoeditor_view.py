@@ -91,7 +91,7 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, previewview)
         previewview.show()
-        self.needle.needle_moved.connect(self.test)
+        # self.needle.needle_moved.connect(self.test)
         previewview.maximize_button.clicked.connect(self.maxim)
 
     def show(self):

@@ -216,7 +216,7 @@ class PreviewView(QWidget):
 
     def change_progress_bar(self):
         self.player.Seek(self.progress_slider.value())
-        new_position = (self.player.Position() * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+        new_position = (self.player.Position() * get_px_per_second()) / TimelineModel.get_instance().get_fps()
         self.update_time_label()
 
         self.frame_changed.emit(QPoint(new_position, 0))
@@ -227,18 +227,19 @@ class PreviewView(QWidget):
     def update_time_label(self):
         current_frame = (self.player.Position() - 1)
         num_of_frames = (self.get_last_frame() - 1)
-        frame_second = str(current_frame % FRAMES_PER_SECOND)
-        global_frame_seconds = str(num_of_frames % FRAMES_PER_SECOND)
-        if (num_of_frames % FRAMES_PER_SECOND) >= 10:
+        frame_second = str(int(current_frame % TimelineModel.get_instance().get_fps()))
+        print(TimelineModel.get_instance().get_fps())
+        global_frame_seconds = str(int(num_of_frames % TimelineModel.get_instance().get_fps()))
+        if (num_of_frames % TimelineModel.get_instance().get_fps()) >= 10:
             None
         else:
             global_frame_seconds = str("0"+global_frame_seconds)
-        if (current_frame % FRAMES_PER_SECOND) >= 10:
+        if (current_frame % TimelineModel.get_instance().get_fps()) >= 10:
             None
         else:
             frame_second = str("0"+frame_second)
-        current_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / FRAMES_PER_SECOND) * current_frame)))
-        num_of_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / FRAMES_PER_SECOND) * num_of_frames)))
+        current_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / TimelineModel.get_instance().get_fps()) * current_frame)))
+        num_of_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / TimelineModel.get_instance().get_fps()) * num_of_frames)))
         timecode = (current_time + ":" + frame_second + " | " + num_of_time + ":" + global_frame_seconds)
         timecode_timeline = (current_time + ":" + frame_second)
         self.current_time_label.setText(timecode)
