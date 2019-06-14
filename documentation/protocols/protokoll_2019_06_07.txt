@@ -1,0 +1,41 @@
+Datum
+07.06.2019
+
+Name Protokollant
+Alexander Bonin
+
+Art des Treffens 
+Review
+
+Sprint Nummer
+Sprint 6
+
+Fehlende Personen
+Max, Julian, Johannes
+
+
+Review
+
+	Welche Task abgeschlossen wurde?
+        
+	MU-225 Speichern der Timeline
+        MU-226 Speichern der Filemanager MediaFiles in uc.
+        MU-229 Laden des Projektes
+        MU-251 Spuren Füllen
+        MU-121 Fullscreen Button
+        MU-209 Slider
+        MU-247
+        MU-262
+        MU-76
+        MU-227
+        MU-136
+        MU-216
+        MU-211
+        
+	
+	Ist das Ziel erreicht wurden?
+        joa glaub schon
+	
+
+
+

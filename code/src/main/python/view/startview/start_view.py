@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QFileSystemWatcher, Qt
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout, QLabel
 from PyQt5 import uic
-from config import Settings, Resources
+from config import Settings, Resources, Language
 from projectconfig import Projectsettings
 
 
@@ -45,7 +45,10 @@ class StartView(QMainWindow):
         self.centralWidget().setLayout(self.stacked_layout)
 
         new_project_button = self.findChild(QWidget, "new_project_button")
+        new_project_button.setText(str(Language.current.startview.newproject))
+
         back_button = self.findChild(QWidget, "back_button")
+        back_button.setText(str(Language.current.startview.back))
 
         new_project_button.clicked.connect(self.switch_frame)
         back_button.clicked.connect(self.switch_frame)
@@ -104,6 +107,9 @@ class SelectProjectWidget(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         uic.loadUi(Resources.files.select_project_widget, self)
+
+        text = str(Language.current.startview.last_projects)
+        self.findChild(QLabel, "lbl_text").setText(text)
 
         self.projects_list_view = self.findChild(QWidget, "projects_list_view")
 

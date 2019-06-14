@@ -1,13 +1,9 @@
 from .media_file import MediaFile
-from itertools import count
-
-import cv2
-# import openshot
 
 
-class BoardVideo(MediaFile):
+class SpeakerVideo(MediaFile):
     """
-    This class contains the board video and a method to analyse the video
+    This class contains the video
     """
 
     def __init__(self, file_path):
@@ -17,9 +13,9 @@ class BoardVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def check_board_area(self, progress):
+    def check_speaker(self, update_progress):
         """
-        a method that analyse the video frame per frame and save the Clips (Board) in a list
+        a method that analyse the video frame per frame and save the Clips (Speaker) in a list
         """
         video = cv2.VideoCapture(self.__file_path)
         maxframes = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -49,7 +45,3 @@ class BoardVideo(MediaFile):
                     times.clear()
         finally:
             video.release()
-
-
-
-            

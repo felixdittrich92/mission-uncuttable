@@ -5,8 +5,6 @@ from view import StartView
 from config import Resources
 from config import Language
 from config import Settings
-from PyQt5 import QtCore
-import os
 
 import sys
 
@@ -18,12 +16,13 @@ class AppContext(ApplicationContext):
         # init resources
         Resources(self)
         # init language
-        lang = Settings.get_instance().get_settings().General.language.current
-        print(lang)
+        lang = Settings.get_instance().get_settings().general.language.current
         if lang == 0:
             Language('en')
         elif lang == 1:
             Language('de')
+        else:
+            Language()
 
         # start view and controller
         start_view = StartView()
