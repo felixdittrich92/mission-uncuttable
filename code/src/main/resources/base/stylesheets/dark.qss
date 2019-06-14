@@ -244,7 +244,8 @@ QScrollArea, #timeline_toolbar {
 }
 
 #track_button_audio {
-    background: rgb(108, 149, 95);
+    background: #4586B1;
+    border: 1px solid #364156;
 }
 
     /* track button frames */
