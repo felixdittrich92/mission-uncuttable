@@ -12,9 +12,6 @@ import openshot
 import sip
 import time
 
-FRAMES_PER_SECOND = TimelineModel.get_instance().timeline.info.fps.num
-PIXELS_PER_SECOND = get_px_per_second()
-
 
 class PreviewView(QWidget):
     """
@@ -110,7 +107,8 @@ class PreviewView(QWidget):
         while self.video_running:
             current_frame = self.player.Position()
             self.current_frame_label.setText(str(current_frame))
-            new_position = (current_frame * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+            new_position = (current_frame * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
             self.frame_changed.emit(QPoint(new_position, 0))
 
             time.sleep(0.1)
@@ -139,7 +137,8 @@ class PreviewView(QWidget):
         self.player.Play()
         self.player.Pause()
         self.player.Seek(self.getlastFrame())
-        new_position = (self.player.Position() * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+        new_position = (self.player.Position() * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
 
         self.current_frame_label.setText(str(self.player.Position()))
@@ -160,7 +159,8 @@ class PreviewView(QWidget):
         position = self.player.Position()
         new_position = position - 1
         self.player.Seek(new_position)
-        new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+        new_position = (new_position * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
@@ -171,7 +171,8 @@ class PreviewView(QWidget):
             position = self.player.Position()
             new_position = position - 10
             self.player.Seek(new_position)
-            new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+            new_position = (new_position * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
             self.frame_changed.emit(QPoint(new_position, 0))
 
             self.current_frame_label.setText(str(self.player.Position()))
@@ -184,7 +185,8 @@ class PreviewView(QWidget):
         position = self.player.Position()
         new_position = position + 1
         self.player.Seek(new_position)
-        new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+        new_position = (new_position * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
@@ -195,7 +197,8 @@ class PreviewView(QWidget):
             position = self.player.Position()
             new_position = position + 10
             self.player.Seek(new_position)
-            new_position = (new_position * PIXELS_PER_SECOND) / FRAMES_PER_SECOND
+            new_position = (new_position * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
             self.frame_changed.emit(QPoint(new_position, 0))
 
             self.current_frame_label.setText(str(self.player.Position()))

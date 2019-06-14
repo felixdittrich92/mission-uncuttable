@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphi
 
 from controller import TimelineController
 from model.data import FileType
+from config import Language
 from util.timeline_utils import get_pixmap_from_file
 
 
@@ -139,11 +140,11 @@ class TimeableView(QGraphicsRectItem):
 
         menu = QMenu()
 
-        delete = QAction('löschen')
+        delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
         delete.triggered.connect(lambda: self.delete(hist=True))
 
-        cut = QAction('schneiden')
+        cut = QAction(str(Language.current.timeable.cut))
         menu.addAction(cut)
         cut.triggered.connect(lambda: self.cut(event.pos().x()))
 

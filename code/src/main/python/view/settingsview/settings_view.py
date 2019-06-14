@@ -42,10 +42,12 @@ class SettingsView(QMainWindow):
 
         """savesettings button"""
         saveButton = self.findChild(QPushButton,"saveButton")
+        saveButton.setText(str(Language.current.settings.save))
         saveButton.clicked.connect(lambda: self.saveSettings())
 
-        saveButton = self.findChild(QPushButton,"cancelButton")
-        saveButton.clicked.connect(lambda: self.close())
+        cancelButton = self.findChild(QPushButton, "cancelButton")
+        cancelButton.setText(str(Language.current.settings.cancel))
+        cancelButton.clicked.connect(lambda: self.close())
 
 
     def addSettings(self, settings):

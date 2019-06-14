@@ -33,6 +33,8 @@
         <undo>Rückgängig</undo>
         <redo>Wiederherstellen</redo>
         <export>Exportieren</export>
+        <save>Speichern</save>
+        <cancel>Abbrechen</cancel>
     </settings>
     <projectsettings>
         <general>Allgemein</general>
@@ -45,6 +47,10 @@
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
     </filemanager>
+    <timeable>
+        <delete>löschen</delete>
+        <cut>schneiden</cut>
+    </timeable>
     <export>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>

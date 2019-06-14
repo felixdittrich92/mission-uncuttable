@@ -247,6 +247,7 @@ class TrackView(QGraphicsView):
         elif event.mimeData().hasFormat('ubicut/file'):
             # clear data for next drag
             self.item_dropped = False
+            self.current_timeable.model.move(self.current_timeable.x_pos)
             self.current_timeable = None
             self.update()
 
