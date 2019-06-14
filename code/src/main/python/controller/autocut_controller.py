@@ -1,6 +1,5 @@
 import os
 import cv2
-import sys
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
@@ -143,8 +142,6 @@ class AutocutController:
                 QApplication.processEvents()
 
         except:
-            print("Unexpected error:", sys.exc_info()[0])
-            raise
             print("video error")
             return
 
@@ -161,6 +158,7 @@ class AutocutController:
                                                      visualizer_video.subvideos)
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
+        timeline_controller.add_clip(speaker_video.get(), 3)
 
         video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()
