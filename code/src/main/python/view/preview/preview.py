@@ -139,6 +139,7 @@ class PreviewView(QWidget):
         self.update_player()
         self.player.Seek(self.get_last_frame())
         self.player.Pause()
+        self.play_button.setIcon(QIcon(self.iconplay))
         new_position = (self.player.Position() * get_px_per_second()) \
             / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
