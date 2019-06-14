@@ -16,7 +16,7 @@ class TimelineController:
     """
 
     __instance = None
-
+    
     @staticmethod
     def get_instance():
         if TimelineController.__instance is None:

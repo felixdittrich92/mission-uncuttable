@@ -252,3 +252,6 @@ class PreviewView(QWidget):
         else:
             self.player.Play()
             self.player.Pause()
+
+    def update_information(self):
+        print("test")

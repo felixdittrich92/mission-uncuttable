@@ -86,13 +86,13 @@ class VideoEditorView(QMainWindow):
         timeline_view.show()
 
     def load_preview(self):
-        previewview = PreviewView.get_instance()
+        self.previewview = PreviewView.get_instance()
 
         splitter = self.findChild(QSplitter, "verticalSplitter")
-        splitter.replaceWidget(1, previewview)
-        previewview.show()
+        splitter.replaceWidget(1, self.previewview)
+        self.previewview.show()
         # self.needle.needle_moved.connect(self.test)
-        previewview.maximize_button.clicked.connect(self.maxim)
+        self.previewview.maximize_button.clicked.connect(self.maxim)
 
     def show(self):
         """Starts the video-editor-window maximized."""
@@ -138,4 +138,7 @@ class VideoEditorView(QMainWindow):
             h_splitter.setSizes(self.splittersizes[1])
 
             self.fullscreen = False
-            
+    
+    def connect_update(self):
+        None
+        # timeable.update_previewplayer.connect(self.previewview.update_information)
