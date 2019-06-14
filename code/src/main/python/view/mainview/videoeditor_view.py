@@ -143,5 +143,4 @@ class VideoEditorView(QMainWindow):
             self.fullscreen = False
     
     def connect_update(self):
-        None
-        # timeable.update_previewplayer.connect(self.previewview.update_information)
+        PreviewView.get_instance().update_information()

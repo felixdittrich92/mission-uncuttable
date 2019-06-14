@@ -74,9 +74,6 @@ class TimeableView(QGraphicsRectItem):
 
         self.handles = dict()
         self.update_handles_pos()
-        print(self.parentObject)
-
-        print(self.parent())
 
     def boundingRect(self):
         """
@@ -403,4 +400,3 @@ class TimeableView(QGraphicsRectItem):
         self.mouse_press_rect = None
 
         QGraphicsItem.mouseReleaseEvent(self, event)
-        self.update_preview()

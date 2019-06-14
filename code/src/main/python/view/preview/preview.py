@@ -67,9 +67,6 @@ class PreviewView(QWidget):
         #init GUI
         self.initGUI()
 
-    def testprint(self):
-        print("it works")
-
     def initGUI(self):
         #load icons
         self.iconplay = QtGui.QPixmap(Resources.images.play_button)
@@ -257,3 +254,6 @@ class PreviewView(QWidget):
 
     def update_information(self):
         print("test")
+        self.update_player()
+        self.update_progress_bar()
+        self.update_time_label()
