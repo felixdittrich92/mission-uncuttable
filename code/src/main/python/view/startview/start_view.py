@@ -44,37 +44,11 @@ class StartView(QMainWindow):
 
         self.centralWidget().setLayout(self.stacked_layout)
 
-        new_project_button = self.findChild(QWidget, "new_project_button")
-        back_button = self.findChild(QWidget, "back_button")
-
-        new_project_button.clicked.connect(self.switch_frame)
-        back_button.clicked.connect(self.switch_frame)
-
         # centering the window
         rectangle = self.frameGeometry()
         center_point = QDesktopWidget().availableGeometry().center()
         rectangle.moveCenter(center_point)
         self.move(rectangle.topLeft())
-
-        settings = Settings.get_instance()
-        self.settings = settings.get_settings()
-
-        # new_settings = {
-        # "color_theme":[{
-        #     "name":"Color Theme",
-        #     "category":"neudesign",
-        #     "type":"dropdown",
-        #     "setting":"dark"
-        # }],
-        # "Option_1":[{
-        #     "name":"Color Theme",
-        #     "category":"neudesign",
-        #     "type":"checkbox",
-        #     "setting":"dark"
-        # }]
-        # }
-
-        # settings.save_settings(new_settings)
 
     def show(self):
         """Starts the start-window normal (not maximized)."""

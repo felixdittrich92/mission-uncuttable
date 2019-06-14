@@ -1,8 +1,9 @@
 import os
 import json
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
 
+from config import Settings
 from controller import VideoEditorController, AutocutController, TimelineController
 from view import VideoEditorView
 from model.project import Project
@@ -22,6 +23,22 @@ class MainController:
         load_project_button = self.__start_view.findChild(QWidget, "load_project_button")
         load_project_button.clicked.connect(self.__load_project)
 
+        new_project_button = self.__start_view.findChild(QWidget, "new_project_button")
+        back_button = self.__start_view.findChild(QWidget, "back_button")
+
+        new_project_button.clicked.connect(self.__start_view.switch_frame)
+        back_button.clicked.connect(self.__start_view.switch_frame)
+
+        pick_folder_button = self.__start_view.findChild(QWidget, "pick_folder_button")
+        pick_folder_button.clicked.connect(self.__pick_folder)
+
+        settings = Settings.get_instance().get_settings()
+
+        self.folder_line_edit = self.__start_view.findChild(QWidget, "folder_line_edit")
+        self.folder_line_edit.setText(settings.General.projects_path.current)
+
+        self.name_line_edit = self.__start_view.findChild(QWidget, "name_line_edit")
+
     def start(self):
         """Calls show() of StartView"""
         self.__start_view.show()
@@ -36,6 +53,9 @@ class MainController:
 
     def __start_main_controller(self):
         """Closes the start window and starts the video-editor window."""
+
+        self.__new_project()
+
         self.__start_view.close()
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
@@ -84,3 +104,21 @@ class MainController:
             self.__video_editor_controller.start()
 
         # TODO show error window if path does not exist
+
+    def __new_project(self):
+        settings = Settings.get_instance().get_settings()
+        path = self.folder_line_edit.text()
+        name = self.name_line_edit.text()
+
+        if path == "" or name == "":
+            message_box = QMessageBox()
+            message_box.setWindowTitle("Fehler")
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("Bitte alle Felder ausfüllen") # TODO multilanguage
+            message_box.setInformativeText("This is additional information")
+            message_box.exec_()
+        print(path)
+
+    def __pick_folder(self):
+        file = str(QFileDialog.getExistingDirectory(self.__start_view, "Select Directory"))
+        self.folder_line_edit.setText(file)
