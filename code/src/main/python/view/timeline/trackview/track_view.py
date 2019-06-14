@@ -167,7 +167,6 @@ class TrackView(QGraphicsView):
     def move_dropped_timeable(self, event):
         pos = event.pos().x() - self.current_timeable.mouse_press_pos
         self.current_timeable.move_on_track(pos)
-        self.update_player()
 
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
