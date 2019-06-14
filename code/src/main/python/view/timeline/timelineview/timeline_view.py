@@ -84,7 +84,7 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id)
+                                model, id, track_id )
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 
@@ -125,3 +125,7 @@ class TimelineView(QFrame):
         makes it possible to say if something works properly or not.
         """
         # self.setStyleSheet('background-color: yellow')
+    
+    def update_timecode(self, timecode):
+        self.time_label = self.findChild(QObject, 'time_label')
+        self.time_label.setText(timecode)

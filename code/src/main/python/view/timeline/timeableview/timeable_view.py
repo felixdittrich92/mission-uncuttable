@@ -1,5 +1,5 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
-                          QMimeData, Qt, QSize)
+                          QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
@@ -26,6 +26,8 @@ class TimeableView(QGraphicsRectItem):
     The TimeableView can be resized and moved on the Track and it can also be dragged
     to another Track.
     """
+
+    update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
                  model, view_id, track_id, parent=None):
