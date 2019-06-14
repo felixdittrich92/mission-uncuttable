@@ -60,6 +60,7 @@ class MainController:
         # check if file exists
         if os.path.isfile(path):
             video_editor_view = VideoEditorView()
+            self.__video_editor_controller = VideoEditorController(video_editor_view)
 
             with open(path, 'r') as f:
                 project_data = json.load(f)
@@ -73,7 +74,7 @@ class MainController:
 
             # set up filemanager
             if "filemanager" in project_data:
-                filemanager = video_editor_view.filemanager
+                filemanager = self.__video_editor_controller.get_filemanager_controller()
                 filemanager.create_project_filemanager(project_data["filemanager"])
 
             # set project path
@@ -82,7 +83,6 @@ class MainController:
 
             # show videoeditor
             self.__start_view.close()
-            self.__video_editor_controller = VideoEditorController(video_editor_view)
             self.__video_editor_controller.start()
 
         # TODO show error window if path does not exist
