@@ -120,21 +120,24 @@ class AutocutController:
 
                 QApplication.processEvents()
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
-                update_progress = lambda progress: self.progressbar.setValue(int(progress*0.6))
+                update_progress = lambda progress: self.progressbar.setValue(int(progress*0.4))
                 video_splitter.cut_video(update_progress)
+                update_progress2 = lambda progress: self.progressbar.setValue(int(40+progress*0.2))
+                video_splitter.cut_zoom_video(update_progress2)
+                speaker_video = video_splitter.get_speaker_video()
                 QApplication.processEvents()
                 slide_video = video_splitter.get_slide_video()
 
                 self.textlabel.setText(str(Language.current.autocut.videoanalysis))
                 QApplication.processEvents()
-                update_progress2 = lambda progress: self.progressbar.setValue(int(60+progress*0.2))
+                update_progress3 = lambda progress: self.progressbar.setValue(int(60+progress*0.2))
                 board_video = video_splitter.get_board_video()
-                board_video.check_board_area(update_progress2)
+                board_video.check_board_area(update_progress3)
 
                 QApplication.processEvents()
-                update_progress3 = lambda progress: self.progressbar.setValue(int(80+progress*0.2))
+                update_progress4 = lambda progress: self.progressbar.setValue(int(80+progress*0.2))
                 visualizer_video = video_splitter.get_visualizer_video()
-                visualizer_video.check_visualiser_area(update_progress3)
+                visualizer_video.check_visualiser_area(update_progress4)
                 self.textlabel.setText(str(Language.current.autocut.cutting))
                 QApplication.processEvents()
 
@@ -155,6 +158,7 @@ class AutocutController:
                                                      visualizer_video.subvideos)
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
+        timeline_controller.add_clip(speaker_video.get(), 3)
 
         video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()
@@ -162,6 +166,7 @@ class AutocutController:
         filemanager.addFileNames(board_video.get())
         filemanager.addFileNames(visualizer_video.get())
         filemanager.addFileNames(slide_video.get())
+        filemanager.addFileNames(speaker_video.get())
         filemanager.addFileNames(audio.get())
 
         for pic in self.pictures:
