@@ -130,8 +130,7 @@ class VideoEditorController:
         timeline_data = timeline_controller.get_project_timeline()
 
         # get filemanager data
-        filemanager = self.__video_editor_view.filemanager
-        filemanager_data = filemanager.get_project_filemanager()
+        filemanager_data = self.__filemanager_controller.get_project_filemanager()
 
         project_data = {
             "timeline": timeline_data,
@@ -141,4 +140,4 @@ class VideoEditorController:
         # write data
         with open(filename, 'w') as f:
             json.dump(project_data, f, ensure_ascii=False)
-            
+
