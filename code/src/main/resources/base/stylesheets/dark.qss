@@ -415,3 +415,16 @@ QComboBox::down-arrow {
     color: #F5F5F5;
     font-size: 20px;
 }
+
+QProgressBar {
+    border: 2px solid #364156;
+    border-radius: 3px;
+    text-align: center;
+    color: #F5F5F5;
+    background: transparent;
+}
+
+QProgressBar::chunk {
+    background-color: #D66853;
+    width: 20px;
+}
