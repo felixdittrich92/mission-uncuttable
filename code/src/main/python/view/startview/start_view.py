@@ -51,7 +51,8 @@ class StartView(QMainWindow):
         height = self.select_project_widget.frameGeometry().height()
         logo_with_name = QtGui.QPixmap(Resources.images.logo_with_name)
         picture = self.findChild(QLabel, "label_pic")
-        logo_with_name = logo_with_name.scaledToHeight(height)
+        # logo_with_name = logo_with_name.scaledToHeight(height, transformMode=Qt.SmoothTransformation)
+        logo_with_name = logo_with_name.scaled(height-50, height-50, Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
         picture.setPixmap(logo_with_name)
 
 

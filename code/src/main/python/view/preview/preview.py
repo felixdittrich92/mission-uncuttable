@@ -253,7 +253,6 @@ class PreviewView(QWidget):
             self.player.Pause()
 
     def update_information(self):
-        print("test")
         self.update_player()
         self.update_progress_bar()
         self.update_time_label()
