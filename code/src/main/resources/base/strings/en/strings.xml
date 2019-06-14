@@ -33,6 +33,7 @@
         <undo>Undo</undo>
         <redo>Redo</redo>
         <export>Export</export>
+        <saveas>Save As</saveas>
         <save>Save</save>
         <cancel>Cancel</cancel>
     </settings>

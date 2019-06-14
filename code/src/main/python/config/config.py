@@ -48,6 +48,16 @@ default_settings = {
             "values": "",
             "current": "y"
         },
+        "save": {
+            "type": "text",
+            "values": "",
+            "current": "s"
+        },
+        "saveas": {
+            "type": "text",
+            "values": "",
+            "current": "Shift+s"
+        },
         "export": {
             "type": "text",
             "values": "",
