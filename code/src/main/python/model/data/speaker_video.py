@@ -1,4 +1,7 @@
 from .media_file import MediaFile
+from itertools import count
+
+import cv2
 
 
 class SpeakerVideo(MediaFile):
@@ -13,7 +16,7 @@ class SpeakerVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def check_speaker(self, update_progress):
+    def check_speaker(self, progress):
         """
         a method that analyse the video frame per frame and save the Clips (Speaker) in a list
         """
@@ -38,7 +41,7 @@ class SpeakerVideo(MediaFile):
                 #percentage_green = (100 * average[1]) / summe
                 #percentage_blue = (100 * average[2]) / summe
 
-                if percentage_red < 31:
+                if percentage_red < 30:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
                     self.subvideos.append((times[0], times[-1]))
