@@ -138,6 +138,7 @@ class PreviewView(QWidget):
     def last_frame(self):
         self.update_player()
         self.player.Seek(self.get_last_frame())
+        self.player.Pause()
         new_position = (self.player.Position() * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
         self.frame_changed.emit(QPoint(new_position, 0))
         self.update_progress_bar()
