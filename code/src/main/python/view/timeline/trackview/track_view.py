@@ -84,6 +84,8 @@ class TrackView(QGraphicsView):
         """ Adds a TimeableView to the GraphicsScene """
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
+        print(self.parent().parent().parent().parent().parent().parent().parent().parent())
+        self.parent().parent().parent().parent().parent().parent().parent().parent().testmethod()
 
     def add_from_filemanager(self, drag_event):
         """ Adds a timeable when item from filemanager is dragged into the track """

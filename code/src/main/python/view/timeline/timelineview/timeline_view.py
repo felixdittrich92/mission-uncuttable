@@ -84,7 +84,7 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id)
+                                model, id, track_id )
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 

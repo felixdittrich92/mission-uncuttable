@@ -74,6 +74,7 @@ class TimeableView(QGraphicsRectItem):
 
         self.handles = dict()
         self.update_handles_pos()
+        print(self.parentObject)
 
         print(self.parent())
 
