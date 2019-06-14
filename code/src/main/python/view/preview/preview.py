@@ -228,7 +228,6 @@ class PreviewView(QWidget):
         current_frame = (self.player.Position() - 1)
         num_of_frames = (self.get_last_frame() - 1)
         frame_second = str(int(current_frame % TimelineModel.get_instance().get_fps()))
-        print(TimelineModel.get_instance().get_fps())
         global_frame_seconds = str(int(num_of_frames % TimelineModel.get_instance().get_fps()))
         if (num_of_frames % TimelineModel.get_instance().get_fps()) >= 10:
             None
