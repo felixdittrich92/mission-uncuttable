@@ -67,6 +67,9 @@ class PreviewView(QWidget):
         #init GUI
         self.initGUI()
 
+    def testprint(self):
+        print("it works")
+
     def initGUI(self):
         #load icons
         self.iconplay = QtGui.QPixmap(Resources.images.play_button)

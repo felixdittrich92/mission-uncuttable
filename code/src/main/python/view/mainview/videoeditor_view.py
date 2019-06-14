@@ -33,6 +33,9 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
+    def testmethod(self):
+        PreviewView.get_instance().testprint()
+
     def set_texts(self):
         """ Loads the text for the menu from the language files """
         menu_program = self.findChild(QMenu, "menuProgramm")
