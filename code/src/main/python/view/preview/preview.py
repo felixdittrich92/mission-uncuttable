@@ -6,13 +6,11 @@ from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
 from model.data import TimelineModel
 from controller import TimelineController
 from .videoWidget import VideoWidget
+from util.timeline_utils import get_px_per_second
 from threading import Thread
 import openshot
 import sip
 import time
-
-FRAMES_PER_SECOND = 25
-SECONDS_PER_PIXEL = 16
 
 
 class PreviewView(QWidget):
@@ -20,6 +18,7 @@ class PreviewView(QWidget):
     QWidget for Previewplayer
     """
     frame_changed = pyqtSignal(QPoint)
+    needle_moved = pyqtSignal(int)
 
     __instance = None
     @staticmethod
@@ -106,9 +105,10 @@ class PreviewView(QWidget):
         """Thread that moves the needle, when Player is playing."""
         while self.video_running:
             current_frame = self.player.Position()
+            new_position = (current_frame * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
             self.update_time_label()
             self.progress_slider.setValue(current_frame)
-            new_position = (current_frame * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
             self.frame_changed.emit(QPoint(new_position, 0))
 
             time.sleep(0.1)
@@ -139,7 +139,8 @@ class PreviewView(QWidget):
         self.update_player()
         self.player.Seek(self.get_last_frame())
         self.player.Pause()
-        new_position = (self.player.Position() * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+        new_position = (self.player.Position() * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
         self.update_progress_bar()
         self.update_time_label()
@@ -161,7 +162,8 @@ class PreviewView(QWidget):
         position = self.player.Position()
         new_position = position - 1
         self.player.Seek(new_position)
-        new_position = (new_position * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+        new_position = (new_position * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
@@ -172,7 +174,8 @@ class PreviewView(QWidget):
             position = self.player.Position()
             new_position = position - 10
             self.player.Seek(new_position)
-            new_position = (new_position * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+            new_position = (new_position * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
             self.frame_changed.emit(QPoint(new_position, 0))
             self.update_time_label()
             self.update_progress_bar()
@@ -187,7 +190,8 @@ class PreviewView(QWidget):
         position = self.player.Position()
         new_position = position + 1
         self.player.Seek(new_position)
-        new_position = (new_position * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+        new_position = (new_position * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
         self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
@@ -198,7 +202,8 @@ class PreviewView(QWidget):
             position = self.player.Position()
             new_position = position + 10
             self.player.Seek(new_position)
-            new_position = (new_position * SECONDS_PER_PIXEL) / FRAMES_PER_SECOND
+            new_position = (new_position * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
             self.frame_changed.emit(QPoint(new_position, 0))
             self.update_progress_bar()
             self.update_time_label()

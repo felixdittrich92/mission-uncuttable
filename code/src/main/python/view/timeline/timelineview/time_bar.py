@@ -39,3 +39,4 @@ class TimeBar(SizeLinkableFrame):
         pos = event.pos()
         needle = self.findChild(QWidget, "needle_top")
         needle.pos_changed.emit(pos.x() - needle.pos().x())
+        needle.update_player(pos.x())

@@ -11,50 +11,50 @@ the type it's just an empty string.
 default_settings = {
   "general":{
     "framerate":{
-      "name":"Framerate",
+      # "name":"Framerate",
       "type":"dropdown",
       "values":["30 FPS","60 FPS"],
       "current":0
     },
     "resolution":{
-      "name":"Auflösung",
+      # "name":"Auflösung",
       "type":"dropdown",
       "values":["800 x 600","1366 x 768","1280 x 720","1920 x 1080"],
       "current":2
     },
     "projectname":{
-      "name":"Projektname",
-      "type":"textwindow",
+      # "name":"Projektname",
+      "type":"text",
       "values":"",
       "current":"unbenanntes Projekt"
     },
     "projectlocation":{
-      "name":"Projektpfad",
-      "type":"textwindow",
+      # "name":"Projektpfad",
+      "type":"text",
       "values":"",
       "current":"Hier Projektpfad eingeben",
     }
   },
-  "dummy1":{
-    "color_theme":{
-      "name":"Color Theme",
-      "type":"dropdown",
-      "values":["dark", "light"],
-      "current":0
-    },
-    "option2":{
-      "name":"Option 2",
-      "type":"checkbox",
-      "values":"",
-      "current":False
-    },
-  },
-  "dummy2":{
-    "option1":{
-      "name":"Option 1",
-      "type":"checkbox",
-      "values":"",
-      "current":True
-    }
-  }
+  # "dummy1":{
+  #   "color_theme":{
+  #     "name":"Color Theme",
+  #     "type":"dropdown",
+  #     "values":["dark", "light"],
+  #     "current":0
+  #   },
+  #   "option2":{
+  #     "name":"Option 2",
+  #     "type":"checkbox",
+  #     "values":"",
+  #     "current":False
+  #   },
+  # },
+  # "dummy2":{
+  #   "option1":{
+  #     "name":"Option 1",
+  #     "type":"checkbox",
+  #     "values":"",
+  #     "current":True
+  #   }
+  # }
 }
