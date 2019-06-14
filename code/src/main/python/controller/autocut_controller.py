@@ -1,5 +1,6 @@
 import os
 import cv2
+import sys
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
@@ -144,7 +145,10 @@ class AutocutController:
                 QApplication.processEvents()
 
         except:
+            print("Unexpected error:", sys.exc_info()[0])
+            raise
             print("video error")
+
             return
 
         self.progressbar.setValue(100)
