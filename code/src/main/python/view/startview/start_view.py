@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QFileSystemWatcher, Qt
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout, QLabel
-from PyQt5 import uic
+from PyQt5 import uic, QtGui, QtSvg
+from PyQt5.QtGui import QPixmap
 from config import Settings, Resources, Language
 from projectconfig import Projectsettings
 
@@ -46,6 +47,14 @@ class StartView(QMainWindow):
 
         new_project_button = self.findChild(QWidget, "new_project_button")
         new_project_button.setText(str(Language.current.startview.newproject))
+
+        height = self.select_project_widget.frameGeometry().height()
+        logo_with_name = QtGui.QPixmap(Resources.images.logo_with_name)
+        picture = self.findChild(QLabel, "label_pic")
+        # logo_with_name = logo_with_name.scaledToHeight(height, transformMode=Qt.SmoothTransformation)
+        logo_with_name = logo_with_name.scaled(height-50, height-50, Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
+        picture.setPixmap(logo_with_name)
+
 
         back_button = self.findChild(QWidget, "back_button")
         back_button.setText(str(Language.current.startview.back))

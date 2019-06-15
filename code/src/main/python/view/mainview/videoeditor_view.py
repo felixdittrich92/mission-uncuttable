@@ -23,12 +23,18 @@ class VideoEditorView(QMainWindow):
 
         self.load_preview()
 
+        self.splittersizes = []
+        self.fullscreen = False
+
         self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def testmethod(self):
+        PreviewView.get_instance().testprint()
 
     def set_texts(self):
         """ Loads the text for the menu from the language files """
@@ -68,13 +74,6 @@ class VideoEditorView(QMainWindow):
         action_redo = self.findChild(QAction, "actionRedo")
         action_redo.setText(str(Language.current.menubar.redo))
 
-    def load_preview(self):
-        previewview = PreviewView.get_instance()
-
-        splitter = self.findChild(QSplitter, "verticalSplitter")
-        splitter.replaceWidget(1, previewview)
-        previewview.show()
-
     def load_timeline_widget(self):
         """
         Replaces the 'bottomFrame'-named QObject with a new instance of
@@ -88,6 +87,15 @@ class VideoEditorView(QMainWindow):
         TimelineController(timeline_view)
         splitter.replaceWidget(i, timeline_view)
         timeline_view.show()
+
+    def load_preview(self):
+        self.previewview = PreviewView.get_instance()
+
+        splitter = self.findChild(QSplitter, "verticalSplitter")
+        splitter.replaceWidget(1, self.previewview)
+        self.previewview.show()
+        # self.needle.needle_moved.connect(self.test)
+        self.previewview.maximize_button.clicked.connect(self.maxim)
 
     def show(self):
         """Starts the video-editor-window maximized."""
@@ -109,3 +117,30 @@ class VideoEditorView(QMainWindow):
         """ Closes all open Windows """
         QApplication.closeAllWindows()
         QMainWindow.closeEvent(self, event)
+
+    def maxim(self):
+        v_splitter = self.findChild(QObject, 'verticalSplitter')
+        h_splitter = self.findChild(QObject, 'horizontalSplitter')
+
+        if(self.fullscreen == False):
+
+            self.v_sizes = v_splitter.sizes()
+            self.h_sizes = h_splitter.sizes()
+
+            self.splittersizes = (self.v_sizes, self.h_sizes)
+
+            width = self.frameGeometry().width()
+            height = self.frameGeometry().height()
+            v_splitter.setSizes([0, width])
+            h_splitter.setSizes([height, 0])
+
+            self.fullscreen = True
+
+        else:
+            v_splitter.setSizes(self.splittersizes[0])
+            h_splitter.setSizes(self.splittersizes[1])
+
+            self.fullscreen = False
+    
+    def connect_update(self):
+        PreviewView.get_instance().update_information()

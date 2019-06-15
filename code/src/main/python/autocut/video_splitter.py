@@ -95,7 +95,7 @@ class VideoSplitter:
 
         @return: a audio object which contains the path
         """
-
+    
         folder = Path(self.folder_path, self.folder_name)
         audio_from_video = 'audio.mp3'
         audio = AudioFileClip(self.video_data)
@@ -107,6 +107,8 @@ class VideoSplitter:
     def cut_zoom_video(self, update_progress):
         """
         a method which track the speaker in the video and cut a video from this
+
+        @param update_progress: a function which handles the progressbar countprocess
         """
 
         self.frame = 0
@@ -134,6 +136,7 @@ class VideoSplitter:
             gmask = fgbg.apply(frame)
             is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
             x, y, width, height = track_window
+            y = 150
             speaker_out.writeFrame(frame[y:y+height, x:x+width])
             self.frame += 1
             if self.frame % 30 == 0:

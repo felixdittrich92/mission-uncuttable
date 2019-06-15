@@ -1,5 +1,6 @@
 import os
 import cv2
+import sys
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
@@ -122,9 +123,11 @@ class AutocutController:
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.4))
                 video_splitter.cut_video(update_progress)
-                update_progress2 = lambda progress: self.progressbar.setValue(int(40+progress*0.2))
+                update_progress2 = lambda progress: self.progressbar.setValue(int(40+progress*0.1))
                 video_splitter.cut_zoom_video(update_progress2)
                 speaker_video = video_splitter.get_speaker_video()
+                update_progress3 = lambda progress: self.progressbar.setValue(int(50+progress*0.1))
+                speaker_video.check_speaker(update_progress3)
                 QApplication.processEvents()
                 slide_video = video_splitter.get_slide_video()
 
@@ -143,6 +146,7 @@ class AutocutController:
 
         except:
             print("video error")
+
             return
 
         self.progressbar.setValue(100)
@@ -152,13 +156,14 @@ class AutocutController:
         self._AutocutController__main_controller.__video_editor_controller = video_editor_controller
         timeline_controller.create_autocut_tracks()
 
+        timeline_controller.create_autocut_timeables(speaker_video.get(), 3,
+                                                     speaker_video.subvideos)
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.subvideos)
         timeline_controller.create_autocut_timeables(visualizer_video.get(), 1,
                                                      visualizer_video.subvideos)
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
-        timeline_controller.add_clip(speaker_video.get(), 3)
 
         video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()

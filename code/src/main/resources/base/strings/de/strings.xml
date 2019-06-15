@@ -33,6 +33,7 @@
         <undo>Rückgängig</undo>
         <redo>Wiederherstellen</redo>
         <export>Exportieren</export>
+        <saveas>Speichern als</saveas>
         <save>Speichern</save>
         <cancel>Abbrechen</cancel>
     </settings>
