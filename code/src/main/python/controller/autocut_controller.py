@@ -157,11 +157,11 @@ class AutocutController:
         timeline_controller.create_autocut_tracks()
 
         timeline_controller.create_autocut_timeables(speaker_video.get(), 3,
-                                                     speaker_video.subvideos)
+                                                     speaker_video.speaker_subvideos)
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
-                                                     board_video.subvideos)
+                                                     board_video.board_subvideos)
         timeline_controller.create_autocut_timeables(visualizer_video.get(), 1,
-                                                     visualizer_video.subvideos)
+                                                     visualizer_video.visualizer_subvideos)
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
 
