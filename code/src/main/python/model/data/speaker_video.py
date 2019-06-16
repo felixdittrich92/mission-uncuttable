@@ -28,6 +28,7 @@ class SpeakerVideo(MediaFile):
                 if frame_number % 30 == 0:
                     progress(frame_number/maxframes*100)
                 is_ok, frame = video.read()
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                 if not is_ok:
                     if times:
@@ -36,12 +37,12 @@ class SpeakerVideo(MediaFile):
                     break
 
                 average = cv2.mean(frame)
-                summe = average[0] + average[1] + average[2]
-                percentage_red = (100 * average[0]) / summe
+                #summe = average[0] + average[1] + average[2]
+                #percentage_red = (100 * average[0]) / summe
                 #percentage_green = (100 * average[1]) / summe
                 #percentage_blue = (100 * average[2]) / summe
 
-                if percentage_red > 31:
+                if average[0] < 162:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
                     self.subvideos.append((times[0], times[-1]))
