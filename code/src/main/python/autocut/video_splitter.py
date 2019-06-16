@@ -28,6 +28,7 @@ class VideoSplitter:
         self.audio_files = []
         self.frame = 0
         self.number_frames = 0
+        self.width = 0
 
     def cut_video(self, update_progress):
         """
@@ -60,12 +61,21 @@ class VideoSplitter:
 
         # iterate through the frames
         for frame in reader.nextFrame():
-            board_out.writeFrame(frame[183:537, 11:637])
-            slide_out.writeFrame(frame[183:537, 720:1187])
-            visualizer_out.writeFrame(frame[183:537, 640:1280])
-            self.frame += 1
-            if self.frame % 30 == 0:
-                update_progress((int)(self.frame/self.number_frames*100))
+            self.height, self.width = frame.shape[:2]
+            if self.width == 1920:
+                board_out.writeFrame(frame[275:805, 17:955])
+                slide_out.writeFrame(frame[275:805, 1080:1780])
+                visualizer_out.writeFrame(frame[275:805, 960:1920])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100)) 
+            else:
+                board_out.writeFrame(frame[183:537, 11:637])
+                slide_out.writeFrame(frame[183:537, 720:1187])
+                visualizer_out.writeFrame(frame[183:537, 640:1280])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100))
         board_out.close()
         slide_out.close()
         visualizer_out.close()
@@ -136,12 +146,19 @@ class VideoSplitter:
             gmask = fgbg.apply(frame)
             is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
             x, y, width, height = track_window
-            y = 150
-            speaker_out.writeFrame(frame[y:y+height, x:x+width])
-            self.frame += 1
-            if self.frame % 30 == 0:
-                update_progress((int)(self.frame/self.number_frames*100))
-   
+            if self.width == 1920:
+                y = 200
+                speaker_out.writeFrame(frame[y:y+height, x+100:x+width])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100))
+            else:   
+                y = 150
+                speaker_out.writeFrame(frame[y:y+height, x:x+width])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100))  
+                
         speaker_out.close()
         self.files.append(speaker_filename)
         self.__speaker_video = SpeakerVideo(speaker_filename)
