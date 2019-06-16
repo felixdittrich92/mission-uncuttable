@@ -41,7 +41,7 @@ class SpeakerVideo(MediaFile):
                 #percentage_green = (100 * average[1]) / summe
                 #percentage_blue = (100 * average[2]) / summe
 
-                if percentage_red < 31:
+                if percentage_red > 31:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
                     self.subvideos.append((times[0], times[-1]))
