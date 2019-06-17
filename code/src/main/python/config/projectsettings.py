@@ -2,12 +2,13 @@ import json
 import os
 import platform
 
-import projectconfig
+from config import projectconfig
+from config import Settings
 
 from collections import namedtuple
 
 
-class Projectsettings:
+class Projectsettings(Settings):
     """
     A Class, using the singleton pattern, that loads the settings file
 
@@ -31,6 +32,7 @@ class Projectsettings:
         return Projectsettings.__instance
 
     def __init__(self):
+        Settings.__init__(self)
         """
         Virtually private constructor.
 
@@ -65,22 +67,6 @@ class Projectsettings:
                 self.parsed_json,
                 object_hook=lambda d: namedtuple('X', d.keys())(*d.values())
             )
-
-    def get_settings(self):
-        """
-        Getter that returns all settings as an object.
-
-        @return: object of settings
-        """
-        return self.projectsettings
-
-    def get_dict_settings(self):
-        """
-        Getter that returns all settings as a dictionary.
-
-        @return:  dictionary with all settings
-        """
-        return self.dict
 
     @staticmethod
     def get_config_dir():

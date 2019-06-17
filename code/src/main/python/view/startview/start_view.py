@@ -1,8 +1,7 @@
 from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout
 from PyQt5 import uic
-from config import Settings, Resources
-from projectconfig import Projectsettings
+from config import Settings, Resources, Projectsettings
 
 
 class StartView(QMainWindow):
