@@ -69,23 +69,6 @@ class Projectsettings(Settings):
                 object_hook=lambda d: namedtuple('X', d.keys())(*d.values())
             )
 
-
-    def get_settings(self):
-        """
-        Getter that returns all settings as an object.
-
-        @return: object of settings
-        """
-        return self.projectsettings
-
-    def get_dict_projectsettings(self):
-        """
-        Getter that returns all settings as a dictionary.
-
-        @return:  dictionary with all settings
-        """
-        return self.dict
-
     @staticmethod
     def get_config_dir():
         """ Returns the directory where the config will be saved """

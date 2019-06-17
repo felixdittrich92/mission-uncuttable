@@ -3,7 +3,7 @@ import os
 import platform
 
 import config
-import settings
+import Settings
 
 from collections import namedtuple
 

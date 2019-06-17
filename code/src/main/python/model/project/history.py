@@ -1,4 +1,4 @@
-from config import Settings
+from config import ProgramSettings
 
 
 class History:
