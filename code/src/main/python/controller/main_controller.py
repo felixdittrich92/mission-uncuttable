@@ -15,10 +15,10 @@ class MainController:
     def __init__(self, view):
         self.__start_view = view
         manual_cut_button = self.__start_view.findChild(QWidget, "manual_cut_button")
-        manual_cut_button.clicked.connect(self.__start_main_controller)
+        manual_cut_button.clicked.connect(lambda: self.__new_project("SimpleCut"))
 
         auto_cut_button = self.__start_view.findChild(QWidget, "auto_cut_button")
-        auto_cut_button.clicked.connect(self.__start_autocut_controller)
+        auto_cut_button.clicked.connect(lambda: self.__new_project("AutoCut"))
 
         load_project_button = self.__start_view.findChild(QWidget, "load_project_button")
         load_project_button.clicked.connect(self.__load_project)
@@ -51,10 +51,8 @@ class MainController:
         except NameError:
             pass
 
-    def __start_main_controller(self):
+    def __start_videoeditor_controller(self):
         """Closes the start window and starts the video-editor window."""
-
-        self.__new_project()
 
         self.__start_view.close()
         video_editor_view = VideoEditorView()
@@ -105,19 +103,37 @@ class MainController:
 
         # TODO show error window if path does not exist
 
-    def __new_project(self):
-        settings = Settings.get_instance().get_settings()
+    def __new_project(self, type):
         path = self.folder_line_edit.text()
         name = self.name_line_edit.text()
-
+        path = os.path.join(path, name)
         if path == "" or name == "":
             message_box = QMessageBox()
             message_box.setWindowTitle("Fehler")
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("Bitte alle Felder ausfüllen") # TODO multilanguage
-            message_box.setInformativeText("This is additional information")
+            message_box.setInformativeText("Es fehlen noch Informationen!")
             message_box.exec_()
-        print(path)
+            return
+        else:
+            if os.path.isdir(path):
+                message_box = QMessageBox()
+                message_box.setWindowTitle("Fehler")
+                message_box.setIcon(QMessageBox.Critical)
+                message_box.setText("Projekt schon vorhanden")  # TODO multilanguage
+                message_box.setInformativeText("Wähle einen anderen Namen!")
+                message_box.exec_()
+                return
+            else:
+                try:
+                    os.mkdir(path)
+                except OSError:
+                    print("Creation of the directory %s failed" % path)
+
+                if type == "SimpleCut":
+                    self.__start_videoeditor_controller()
+                else:
+                    self.__start_autocut_controller()
 
     def __pick_folder(self):
         file = str(QFileDialog.getExistingDirectory(self.__start_view, "Select Directory"))
