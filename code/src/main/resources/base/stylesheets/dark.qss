@@ -3,6 +3,10 @@ QMainWindow, QMenuBar {
 
 }
 
+* {
+    font-size: 14px;
+}
+
 QSplitter::handle:horizontal {
     background: #212D40;
     width: 2px;
@@ -15,6 +19,57 @@ QSplitter::handle:vertical {
 #videoplayer_frame {
     background-color: #212D40;
     border: 1px solid #364156;
+}
+
+/* BUTTONS */
+
+QPushButton {
+    background: #955F69;
+    border: 1px solid #7D4E57;
+    padding: 8px;
+    color: #F5F5F5;
+}
+
+
+QPushButton:hover {
+    border-width: 2px;
+    border-color: #AD7882;
+}
+
+QPushButton:pressed {
+    background: #6F454D;
+    border-width: 1px;
+    border-color: #7D4E57;
+    color: rgb(214, 214, 214);
+}
+
+/* BLUE BUTTONS */
+
+#new_project_button,
+#saveButton,
+#pushButton_2,
+#auto_cut_button,
+#ok_button {
+    background: #4586B1;
+    border: 1px solid #364156;
+}
+
+#new_project_button:hover,
+#saveButton:hover,
+#pushButton_2:hover,
+#auto_cut_button:hover,
+#ok_button:hover {
+    border-width: 2px;
+    border-color: #88ABDB;
+}
+
+#new_project_button:pressed,
+#saveButton:pressed,
+#pushButton_2:pressed,
+#auto_cut_button:pressed,
+#ok_button:pressed{
+    border: 1px solid #4E637F;
+    background: #34698c;
 }
 
 /* MENU */
@@ -47,16 +102,16 @@ QScrollBar:horizontal, QScrollBar:vertical {
 
 }
 QScrollBar:horizontal {
-    height: 20px;
-    margin: 0 20px 0 20px;
+    height: 15px;
+    margin: 0 13px 0 13px;
     border-top: 1px solid #212D40;
     border-bottom: 1px solid #212D40;
 
 }
 
 QScrollBar:vertical {
-    width: 20px;
-    margin: 20px 0 20px 0;
+    width: 15px;
+    margin: 13px 0 13px 0;
     border-left: 1px solid #212D40;
     border-right: 1px solid #212D40;
 }
@@ -82,7 +137,7 @@ QScrollBar::sub-line:vertical {
     subcontrol-origin: margin;
 }
 QScrollBar::add-line:horizontal {
-    width: 20px;
+    width: 15px;
     subcontrol-position: right;
     border-top: 1px solid #212D40;
     border-right: 1px solid #212D40;
@@ -90,7 +145,7 @@ QScrollBar::add-line:horizontal {
     margin-right: 10px;
 }
 QScrollBar::add-line:vertical {
-    height: 20px;
+    height: 15px;
     subcontrol-position: bottom;
 
     border-right: 1px solid #212D40;
@@ -99,7 +154,7 @@ QScrollBar::add-line:vertical {
     margin-bottom: 10px;
 }
 QScrollBar::sub-line:horizontal {
-    width: 20px;
+    width: 15px;
     subcontrol-position: left;
     border-top: 1px solid #212D40;
     border-left: 1px solid #212D40;
@@ -107,7 +162,7 @@ QScrollBar::sub-line:horizontal {
 }
 
 QScrollBar::sub-line:vertical {
-    height: 20px;
+    height: 15px;
     subcontrol-position: top;
     border-top: 1px solid #212D40;
     border-left: 1px solid #212D40;
@@ -231,7 +286,8 @@ QScrollArea #track_frame QFrame{
 
 #videoplayer_frame QPushButton {
     border: none;
-
+    background: none;
+    padding: 0px;
 }
 
 #first_frame_button {
@@ -266,4 +322,109 @@ QSlider::sub-page:horizontal {
     border: 0;
     border-radius: 3px;
     margin-left: 10px;
+}
+
+/* TAB WIDGET */
+QTabWidget::tab-bar {
+}
+QTabWidget::pane {
+    background-color: #212D40;
+    border: 2px solid #364156;
+}
+QTabWidget::pane QFrame {
+    background: #212D40;
+    color: #F5F5F5;
+}
+
+QTabBar::tab {
+    background: #364156;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 0;
+    color: #F5F5F5;
+    border: 2px solid #364156;
+    border-bottom: none;
+}
+
+QTabBar::tab:selected {
+    background: #212D40;
+    border-bottom: 2px solid #212D40;
+    margin-bottom: -2px;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
+/* ComboBox */
+
+QComboBox {
+    border: 2px solid #364156;
+    background: #2A3649;
+    color: #F5F5F5;
+}
+
+QComboBox QAbstractItemView {
+    border: 2px solid #364156;
+}
+
+
+QComboBox::drop-down {
+    border: none;
+}
+
+QComboBox::down-arrow {
+}
+
+/* START VIEW */
+
+#start_frame, #start_frame_2, #new_project_frame, #projects_list_view{
+    background-color: #212D40;
+    border: 1px solid #364156;
+}
+
+#start_frame #lbl_text {
+    color: #D66853;
+    font-size: 25px;
+}
+
+#projects_list_view {
+    border: none;
+    color: #F5F5F5;
+    font-size: 18px;
+}
+
+#projects_list_view::item:selected  {
+    background: transparent;
+    color: #D66853;
+}
+#projects_list_view::item:selected:active {
+    background: #212D40;
+    border: 1px solid #212D40;
+}
+
+/* AUTOCUT VIEW */
+
+#autocut_frame {
+    background-color: #212D40;
+    border: 1px solid #364156;
+    margin: 9px;
+}
+
+#autocut_frame #text_label {
+    color: #F5F5F5;
+    font-size: 20px;
+}
+
+QProgressBar {
+    border: 2px solid #364156;
+    border-radius: 3px;
+    text-align: center;
+    color: #F5F5F5;
+    background: transparent;
+}
+
+QProgressBar::chunk {
+    background-color: #D66853;
+    width: 20px;
 }

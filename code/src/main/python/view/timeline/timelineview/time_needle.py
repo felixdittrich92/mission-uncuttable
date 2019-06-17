@@ -1,7 +1,11 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QSlider
-from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPolygonF, QDrag
-from PyQt5.QtCore import Qt, QPoint, QPointF, QObject, pyqtSignal, QMimeData
-import sys, math, time
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPolygonF
+from PyQt5.QtCore import Qt, QPoint, QPointF, pyqtSignal
+import math
+
+from view.preview.preview import PreviewView
+from model.data import TimelineModel
+from util.timeline_utils import get_px_per_second
 
 NEEDLE_COLOR = "#D66853"
 NEEDLE_WIDTH = 10
@@ -20,6 +24,7 @@ class TimeNeedle(QWidget):
     """
 
     pos_changed = pyqtSignal(int)
+
 
     def __init__(self, drawing_height, top=False):
         """
@@ -42,6 +47,9 @@ class TimeNeedle(QWidget):
         self.setGeometry(0, 0, NEEDLE_WIDTH, self.__drawing_height)
         self.setCursor(Qt.PointingHandCursor)
         self.pos_changed.connect(self.move_needle)
+
+        self.preview = PreviewView.get_instance()
+        self.preview.frame_changed.connect(self.move)
 
     def paintEvent(self, e):
         self.__qp.begin(self)
@@ -103,18 +111,6 @@ class TimeNeedle(QWidget):
         :param evt: EventHandler
         """
         delta = QPointF(evt.localPos().x() - self.width()/2, evt.localPos().y())
-        # if (self.mapToParent(QPoint(0, 0)).x() < (self.width)):
-        # print(self.mapToParent(QPoint(0, 0)).x())
-        # print(self.mapTo(self.parent().parent().parent()), QPoint(0, 0))
-        # timeline_scroll_area = self.parent().parent().parent().parent()
-        # track_scroll_area = timeline_scroll_area.findChild(QWidget, "track_scroll_area")
-        # horizontal_scroll_bar = timeline_scroll_area.findChild(QWidget, "horizontal_scroll_bar")
-        # print(horizontal_scroll_bar)
-        
-        # if self.mapTo(track_scroll_area, QPoint(0, 0)).x() < 20:
-        #     print("TRUE")
-        #     old_value = horizontal_scroll_bar.value()
-        #     horizontal_scroll_bar.setValue(old_value - 1)
 
         self.pos_changed.emit(delta.x())
 
@@ -129,10 +125,8 @@ class TimeNeedle(QWidget):
         half_width = self.width()/2
         parent_width = self.parent().parent().parent().parent().findChild(QWidget, "track_frame").width()
         new_x = self.x() + delta_x
-
         if new_x >= half_width and new_x < parent_width - half_width:
             self.move(new_x, 0)
-        
 
     def mousePressEvent(self, event):
         """
@@ -144,8 +138,19 @@ class TimeNeedle(QWidget):
 
     def mouseReleaseEvent(self, event):
         """
-        Sets the cursor to a pointing hand when mouse button is released.
+        Sets the cursor to a pointing hand when mouse button is released
+        and emits position"
 
         :param event: EventHandler
         """
         self.setCursor(Qt.PointingHandCursor)
+        self.update_player(self.pos().x())
+
+    def update_player(self, x):
+        """ Updates Player when needle dragged."""
+        fps = TimelineModel.get_instance().get_fps()
+        pixels_per_second = get_px_per_second()
+        self.preview.player.Seek(int((x / pixels_per_second) * fps))
+        self.preview.update_time_label()
+        self.preview.update_progress_bar()
+        

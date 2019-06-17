@@ -3,9 +3,11 @@ The controller module for communication between timelineview and
 timelinemodel.
 """
 
+import os
+
 from model.project import Project, Operation
 from model.data import TimeableModel, TimelineModel
-from util.timeline_utils import generate_id, pos_to_seconds
+from util.timeline_utils import generate_id, pos_to_seconds, seconds_to_pos
 
 
 class TimelineController:
@@ -14,7 +16,7 @@ class TimelineController:
     """
 
     __instance = None
-
+    
     @staticmethod
     def get_instance():
         if TimelineController.__instance is None:
@@ -29,7 +31,7 @@ class TimelineController:
         self.__history = Project.get_instance().get_history()
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0, hist=True):
+                        res_left=0, res_right=0, mouse_pos=0, hist=True, is_drag=False):
         """
         Create a new object in the timeline model to represent a new timeable.
 
@@ -41,8 +43,7 @@ class TimelineController:
         @return:     Nothing.
         """
         op = CreationOperation(track_id, name, width, x_pos, model, id,
-                               res_left=res_left, res_right=res_right,
-                               mouse_pos=mouse_pos)
+                               res_left, res_right, mouse_pos, is_drag)
 
         if hist:
             self.__history.do_operation(op)
@@ -138,6 +139,87 @@ class TimelineController:
         """
         pass
 
+    def create_track(self, name, width, height, num):
+        """ Creates a new track in the timeline """
+        self.__timeline_view.create_track(name, width, height, num)
+
+    def get_project_timeline(self):
+        """ Returns a dict with the data needed to recreate the timeline """
+        data = {
+            "tracks": [],
+            "timeables": []
+        }
+
+        for tr in self.__timeline_view.tracks.values():
+            data["tracks"].append(tr.get_info_dict())
+
+        for ti in self.__timeline_view.timeables.values():
+            data["timeables"].append(ti.get_info_dict())
+
+        return data
+
+    def create_project_timeline(self, data):
+        """
+        Recreates the timeline when a project is loaded
+
+        @param data: dictionary with info of timeables
+        """
+        for t in data["tracks"]:
+            self.create_track(t["name"], t["width"], t["height"], t["num"])
+
+        for t in data["timeables"]:
+            m = t["model"]
+            model = TimeableModel(m["file_name"], m["id"])
+            model.set_start(m["start"], is_sec=True)
+            model.set_end(m["end"], is_sec=True)
+            model.move(m["position"], is_sec=True)
+
+            self.create_timeable(t["track_id"], t["name"], t["width"], t["x_pos"],
+                                 model, t["view_id"], res_left=t["resizable_left"],
+                                 res_right=t["resizable_right"], hist=False)
+
+    def create_default_tracks(self):
+        """ Creates 3 default tracks when the user chooses manual cut """
+        self.create_track("Track 1", 2000, 50, 2)
+        self.create_track("Track 2", 2000, 50, 1)
+        self.create_track("Track 3", 2000, 50, 0)
+
+    def create_autocut_tracks(self):
+        """
+        Creates tracks for overlay, board, visualizer, audio when user chooses autocut
+        """
+        self.create_track("Overlay", 2000, 50, 3)
+        self.create_track("Tafel", 2000, 50, 2)
+        self.create_track("Visualizer", 2000, 50, 1)
+        self.create_track("Folien", 2000, 50, 0)
+        self.create_track("Audio", 2000, 50, -1)
+
+    def create_autocut_timeables(self, file_path, track, data):
+        """
+        Creates timeables for autocut.
+
+        @param file_path: the path to the input video
+        @param track:     the track where the timeables will be added
+        @param data:      a list of tuples with start and end time of the video
+        """
+        for start, end in data:
+            model = TimeableModel(file_path, generate_id())
+            model.set_start(start, is_sec=True)
+            model.set_end(end, is_sec=True)
+            model.move(start, is_sec=True)
+
+            width = seconds_to_pos(model.clip.Duration())
+            x_pos = seconds_to_pos(start)
+            self.create_timeable(track, os.path.basename(file_path),
+                                 width, x_pos, model, generate_id(), hist=False)
+
+    def add_clip(self, file_path, track):
+        """ Gets a path to file and a track and creates a timeable """
+        model = TimeableModel(file_path, generate_id())
+        width = seconds_to_pos(model.clip.Duration())
+        self.create_timeable(track, os.path.basename(file_path),
+                             width, 0, model, generate_id(), hist=False)
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()
@@ -158,13 +240,16 @@ class TimelineController:
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
+    
+    def update_timecode(self, timecode):
+        self.__timeline_view.update_timecode(timecode)
 
 
 class CreationOperation(Operation):
     """ Creates a new timeable """
 
     def __init__(self, track_id, name, width, x_pos, model, id,
-                 res_left, res_right, mouse_pos):
+                 res_left, res_right, mouse_pos, is_drag):
         self.track_id = track_id
         self.name = name
         self.width = width
@@ -174,6 +259,8 @@ class CreationOperation(Operation):
         self.res_left = res_left
         self.res_right = res_right
         self.mouse_pos = mouse_pos
+        self.is_drag = is_drag
+
 
     def do(self):
         self.model.move(self.x_pos)
@@ -181,7 +268,7 @@ class CreationOperation(Operation):
         timeline_view.create_timeable(self.track_id, self.name, self.width,
                                       self.x_pos, self.model, self.id,
                                       res_left=self.res_left, res_right=self.res_right,
-                                      mouse_pos=self.mouse_pos)
+                                      mouse_pos=self.mouse_pos, is_drag=self.is_drag)
 
     def undo(self):
         TimelineController.get_instance().get_timeable_by_id(self.id).delete(hist=False)

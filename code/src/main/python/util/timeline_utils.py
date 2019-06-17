@@ -49,8 +49,8 @@ def get_pixmap_from_file(path, frame):
             return None
 
     elif t == FileType.AUDIO_FILE:
-        path = Resources.get_instance().images.media_symbols
-        path_to_file = os.path.join(path, "mp3logo.jpg")
+        path = Resources.images.media_symbols
+        path_to_file = os.path.join(path, "mp3.png")
         pixmap = QPixmap(path_to_file)
 
         return pixmap
@@ -81,8 +81,8 @@ def get_file_type(path):
 
 
 def get_px_per_second():
-    s = Settings.get_instance().get_dict_settings()
-    return int(s["Invisible"]["pixels_per_second"])
+    s = Settings.get_instance().get_settings()
+    return int(s.Invisible.pixels_per_second)
 
 
 def pos_to_seconds(pos):

@@ -52,7 +52,7 @@ class TimelineScrollArea(QFrame):
         :param parent: the parent component
         """
         super(TimelineScrollArea, self).__init__(parent)
-        uic.loadUi(Resources.get_instance().files.timeline_scrollarea_view, self)
+        uic.loadUi(Resources.files.timeline_scrollarea_view, self)
         self.setObjectName("scroll_area")
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -81,6 +81,7 @@ class TimelineScrollArea(QFrame):
 
         self.__needle_top = TimeNeedle(self.__time_bar.height(), True)
         self.__needle_top.setParent(self.__time_bar)
+        self.__needle_top.setObjectName("needle_top")
         self.__needle_top.move_needle(5)
 
         self.__needle_bottom = TimeNeedle(self.__track_frame.height())

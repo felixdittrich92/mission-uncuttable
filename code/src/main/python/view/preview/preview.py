@@ -2,24 +2,41 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import *
 from config import Resources
-from PyQt5.QtCore import QObject, QMutex, Qt, QRect, QCoreApplication
+from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
+from model.data import TimelineModel
+from controller import TimelineController
+from .videoWidget import VideoWidget
+from util.timeline_utils import get_px_per_second
+from threading import Thread
 import openshot
 import sip
-from model.data import TimelineModel
 import time
-from .videoWidget import VideoWidget
+
 
 class PreviewView(QWidget):
     """
     QWidget for Previewplayer
     """
+    frame_changed = pyqtSignal(QPoint)
+    needle_moved = pyqtSignal(int)
+
+    __instance = None
+    @staticmethod
+    def get_instance():
+        if PreviewView.__instance is None:
+            PreviewView()
+        return PreviewView.__instance
 
     def __init__(self):
 
+        if PreviewView.__instance is not None:
+            raise Exception("singleton")
+        else:
+            PreviewView.__instance = self
+
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
-        self.RESOURCES = Resources.get_instance()
-        uic.loadUi(self.RESOURCES.files.preview_view, self)
+        uic.loadUi(Resources.files.preview_view, self)
 
         self.video_running = False
 
@@ -50,16 +67,15 @@ class PreviewView(QWidget):
         #init GUI
         self.initGUI()
 
-
     def initGUI(self):
         #load icons
-        self.iconplay = QtGui.QPixmap(self.RESOURCES.images.play_button)
-        self.iconpause = QtGui.QPixmap(self.RESOURCES.images.pause_button)
-        iconfirstframe = QtGui.QPixmap(self.RESOURCES.images.first_frame_button)
-        iconlastframe = QtGui.QPixmap(self.RESOURCES.images.last_frame_button)
-        iconback = QtGui.QPixmap(self.RESOURCES.images.back_button)
-        iconforward = QtGui.QPixmap(self.RESOURCES.images.forward_button)
-        iconmax = QtGui.QPixmap(self.RESOURCES.images.maximize_button)
+        self.iconplay = QtGui.QPixmap(Resources.images.play_button)
+        self.iconpause = QtGui.QPixmap(Resources.images.pause_button)
+        iconfirstframe = QtGui.QPixmap(Resources.images.first_frame_button)
+        iconlastframe = QtGui.QPixmap(Resources.images.last_frame_button)
+        iconback = QtGui.QPixmap(Resources.images.back_button)
+        iconforward = QtGui.QPixmap(Resources.images.forward_button)
+        iconmax = QtGui.QPixmap(Resources.images.maximize_button)
 
         #set icons to buttons
         self.play_button.setIcon(QIcon(self.iconplay))
@@ -71,19 +87,36 @@ class PreviewView(QWidget):
 
         #connect events
         self.play_button.clicked.connect(self.play_pause)
-        self.first_frame_button.clicked.connect(self.firstFrame)
-        self.last_frame_button.clicked.connect(self.lastFrame)
-        self.back_button.pressed.connect(self.prevFrame)
-        self.back_button.released.connect(self.stopLoop)
-        self.forward_button.pressed.connect(self.nextFrame)
-        self.forward_button.released.connect(self.stopLoop)
+        self.first_frame_button.clicked.connect(self.first_frame)
+        self.last_frame_button.clicked.connect(self.last_frame)
+        self.back_button.pressed.connect(self.prev_frame)
+        self.back_button.released.connect(self.stop_loop)
+        self.forward_button.pressed.connect(self.next_frame)
+        self.forward_button.released.connect(self.stop_loop)
+        self.progress_slider.sliderMoved.connect(self.change_progress_bar)
         self.looprunning = False
-        # self.volumeSlider.valueChanged.connect(self.volumeChange)
+
+        # self.update_time_label()
 
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
 
+    def playing(self):
+        """Thread that moves the needle, when Player is playing."""
+        while self.video_running:
+            current_frame = self.player.Position()
+            new_position = (current_frame * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
+            self.update_time_label()
+            self.progress_slider.setValue(current_frame)
+            self.frame_changed.emit(QPoint(new_position, 0))
+
+            time.sleep(0.1)
+
     def play_pause(self):
+        self.progress_slider.setMaximum(self.get_last_frame())
+        playing_thread = Thread(target=self.playing)
+
         if self.video_running:
             self.player.Pause()
             self.video_running = False
@@ -93,16 +126,28 @@ class PreviewView(QWidget):
             self.player.Play()
             self.video_running = True
             self.play_button.setIcon(QIcon(self.iconpause))
+            playing_thread.start()
 
-    def firstFrame(self):
+    def first_frame(self):
+        self.update_player()
         self.player.Seek(1)
+        self.frame_changed.emit(QPoint(0, 0))
+        self.update_progress_bar()
+        self.update_time_label()
 
-    def lastFrame(self):
-        self.player.Play()
+    def last_frame(self):
+        self.update_player()
+        self.player.Seek(self.get_last_frame())
         self.player.Pause()
-        self.player.Seek(self.getlastFrame())
+        self.play_button.setIcon(QIcon(self.iconplay))
+        new_position = (self.player.Position() * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
+        self.frame_changed.emit(QPoint(new_position, 0))
+        self.update_progress_bar()
+        self.update_time_label()
 
-    def getlastFrame(self):
+
+    def get_last_frame(self):
         last_frame = 0
         for c in self.timeline.Clips():
             clip_last_frame = c.Position() + c.Duration()
@@ -113,9 +158,14 @@ class PreviewView(QWidget):
 
         return last_frame
 
-    def prevFrame(self):
+    def prev_frame(self):
+        self.update_player()
         position = self.player.Position()
-        self.player.Seek(position-1)
+        new_position = position - 1
+        self.player.Seek(new_position)
+        new_position = (new_position * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
+        self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -123,14 +173,27 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position-10)
+            new_position = position - 10
+            self.player.Seek(new_position)
+            new_position = (new_position * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
+            self.frame_changed.emit(QPoint(new_position, 0))
+            self.update_time_label()
+            self.update_progress_bar()
+        self.update_time_label()
+        self.update_progress_bar()
 
-    def stopLoop(self):
+    def stop_loop(self):
         self.looprunning = False
 
-    def nextFrame(self):
+    def next_frame(self):
+        self.update_player()
         position = self.player.Position()
-        self.player.Seek(position+1)
+        new_position = position + 1
+        self.player.Seek(new_position)
+        new_position = (new_position * get_px_per_second()) \
+            / TimelineModel.get_instance().get_fps()
+        self.frame_changed.emit(QPoint(new_position, 0))
         self.looprunning = True
         while True:
             time.sleep(0.1)
@@ -138,10 +201,59 @@ class PreviewView(QWidget):
             if self.looprunning == False:
                 break
             position = self.player.Position()
-            self.player.Seek(position+10)
+            new_position = position + 10
+            self.player.Seek(new_position)
+            new_position = (new_position * get_px_per_second()) \
+                / TimelineModel.get_instance().get_fps()
+            self.frame_changed.emit(QPoint(new_position, 0))
+            self.update_progress_bar()
+            self.update_time_label()
+        self.update_time_label()
+        self.update_progress_bar()
 
-    # def volumeChange(self):
-    #     slicerValue = self.volumeSlider.value()/10
-    #     print(slicerValue)
-    #     self.player.Volume(slicerValue)
-    #     print(self.player.Volume())
+    def set_player_to_frame(self, frame):
+        self.player.Seek(frame)
+        print(frame)
+
+    def change_progress_bar(self):
+        self.player.Seek(self.progress_slider.value())
+        new_position = (self.player.Position() * get_px_per_second()) / TimelineModel.get_instance().get_fps()
+        self.update_time_label()
+
+        self.frame_changed.emit(QPoint(new_position, 0))
+
+    def update_progress_bar(self):
+        self.progress_slider.setValue(self.player.Position())
+    
+    def update_time_label(self):
+        current_frame = (self.player.Position() - 1)
+        num_of_frames = (self.get_last_frame() - 1)
+        frame_second = str(int(current_frame % TimelineModel.get_instance().get_fps()))
+        global_frame_seconds = str(int(num_of_frames % TimelineModel.get_instance().get_fps()))
+        if (num_of_frames % TimelineModel.get_instance().get_fps()) >= 10:
+            None
+        else:
+            global_frame_seconds = str("0"+global_frame_seconds)
+        if (current_frame % TimelineModel.get_instance().get_fps()) >= 10:
+            None
+        else:
+            frame_second = str("0"+frame_second)
+        current_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / TimelineModel.get_instance().get_fps()) * current_frame)))
+        num_of_time = str(time.strftime('%H:%M:%S', time.gmtime((1 / TimelineModel.get_instance().get_fps()) * num_of_frames)))
+        timecode = (current_time + ":" + frame_second + " | " + num_of_time + ":" + global_frame_seconds)
+        timecode_timeline = (current_time + ":" + frame_second)
+        self.current_time_label.setText(timecode)
+        TimelineController.get_instance().update_timecode(timecode_timeline) 
+
+    def update_player(self):
+        if self.video_running:
+            self.player.Pause()
+            self.player.Play()
+        else:
+            self.player.Play()
+            self.player.Pause()
+
+    def update_information(self):
+        self.update_player()
+        self.update_progress_bar()
+        self.update_time_label()

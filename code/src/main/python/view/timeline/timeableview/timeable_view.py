@@ -1,15 +1,21 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
-                          QMimeData, Qt, QSize)
+                          QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 from model.data import FileType
+from config import Language
 from util.timeline_utils import get_pixmap_from_file
 
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
+TIMEABLE_COLOR = "#AE6759"
+
+HANDLE_LEFT = 1
+HANDLE_RIGHT = 2
+HANDLE_MIDDLE = 3
 
 
 class TimeableView(QGraphicsRectItem):
@@ -20,6 +26,8 @@ class TimeableView(QGraphicsRectItem):
     The TimeableView can be resized and moved on the Track and it can also be dragged
     to another Track.
     """
+
+    update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
                  model, view_id, track_id, parent=None):
@@ -64,10 +72,6 @@ class TimeableView(QGraphicsRectItem):
         self.mouse_press_rect = None
         self.infos_on_click = dict()
 
-        self.handle_left = 1
-        self.handle_right = 2
-        self.handle_middle = 3
-
         self.handles = dict()
         self.update_handles_pos()
 
@@ -80,19 +84,19 @@ class TimeableView(QGraphicsRectItem):
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
-        self.brush = QBrush(QColor("#AE6759"))
-        painter.setBrush(self.brush)
+        brush = QBrush(QColor(TIMEABLE_COLOR))
+        painter.setBrush(brush)
         painter.drawRect(self.rect())
 
         # show thumbnail if there is enough space
         if self.width > 101 and self.pixmap is not None:
-            painter.drawPixmap(QPoint(1, 0), self.pixmap)
+            painter.drawPixmap(QPoint(1, 1), self.pixmap)
 
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
-        if painter.fontMetrics().width(self.name) <= self.width:
+        if painter.fontMetrics().width(self.name) + 100 <= self.width:
             painter.setPen(QColor(245, 245, 245))
-            painter.drawText(QPoint(8, 20), self.name)
+            painter.drawText(QPoint(100, 20), self.name)
 
             self.name_visible = True
         else:
@@ -107,7 +111,8 @@ class TimeableView(QGraphicsRectItem):
             "resizable_left": self.resizable_left,
             "x_pos": self.x_pos,
             "view_id": self.view_id,
-            "track_id": self.track_id
+            "track_id": self.track_id,
+            "model": self.model.get_info_dict()
         }
 
     def set_pixmap(self):
@@ -118,8 +123,7 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(
-                QSize(100, self.height), Qt.IgnoreAspectRatio)
+            self.pixmap = px.scaled(QSize(100, self.height), Qt.KeepAspectRatio)
         else:
             self.pixmap = None
 
@@ -138,11 +142,11 @@ class TimeableView(QGraphicsRectItem):
 
         menu = QMenu()
 
-        delete = QAction('löschen')
+        delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
         delete.triggered.connect(lambda: self.delete(hist=True))
 
-        cut = QAction('schneiden')
+        cut = QAction(str(Language.current.timeable.cut))
         menu.addAction(cut)
         cut.triggered.connect(lambda: self.cut(event.pos().x()))
 
@@ -177,15 +181,15 @@ class TimeableView(QGraphicsRectItem):
         is changed (when resizing)
         """
         # handle for resizing on the left side
-        self.handles[self.handle_left] = QRectF(
+        self.handles[HANDLE_LEFT] = QRectF(
             self.rect().left(), 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for resizing on the right side
-        self.handles[self.handle_right] = QRectF(
+        self.handles[HANDLE_RIGHT] = QRectF(
             self.rect().right() - RESIZE_AREA_WIDTH, 0, RESIZE_AREA_WIDTH, self.height)
 
         # handle for moving
-        self.handles[self.handle_middle] = QRectF(
+        self.handles[HANDLE_MIDDLE] = QRectF(
             self.rect().left() + RESIZE_AREA_WIDTH, 0,
             self.width - (2 * RESIZE_AREA_WIDTH), self.height)
 
@@ -216,12 +220,12 @@ class TimeableView(QGraphicsRectItem):
         @param pos: the position of the mouse
         """
         is_image = self.model.file_type == FileType.IMAGE_FILE
-        if self.handle_selected == self.handle_left:
+        if self.handle_selected == HANDLE_LEFT:
             diff = pos - self.mouse_press_pos
             w = self.width - diff
 
-            if (w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0
-                    or diff < self.resizable_left) and not is_image:
+            if ((w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0)
+                    or (diff < self.resizable_left and not is_image)):
                 return
 
             new_x_pos = self.x_pos + diff
@@ -235,13 +239,13 @@ class TimeableView(QGraphicsRectItem):
             self.x_pos = self.x_pos + diff
             self.setPos(self.x_pos, 0)
 
-        elif self.handle_selected == self.handle_right:
+        elif self.handle_selected == HANDLE_RIGHT:
             diff = (self.mouse_press_rect.right() + pos
                     - self.mouse_press_pos - self.width)
             w = self.width + diff
 
-            if (w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH
-                    or diff > self.resizable_right) and not is_image:
+            if ((w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH)
+                    or (diff > self.resizable_right and not is_image)):
                 return
 
             if self.collides_with_other_timeable(QRectF(self.x_pos, 0, w, self.height)):
@@ -318,13 +322,13 @@ class TimeableView(QGraphicsRectItem):
         sets the cursor according to the position of the mouse and shows timeable name
         """
         if not self.name_visible:
-            self.setToolTip("<font color=\"#ffffff\">" + self.name + "</font>")
+            self.setToolTip("<font color=\"#000000\">" + self.name + "</font>")
 
         # get handle at current position
         handle = self.handle_at(event.pos())
 
         # set the cursor according to the handle
-        cursor = Qt.OpenHandCursor if handle == self.handle_middle else Qt.SizeHorCursor
+        cursor = Qt.OpenHandCursor if handle == HANDLE_MIDDLE else Qt.SizeHorCursor
         self.setCursor(cursor)
 
         QGraphicsItem.hoverMoveEvent(self, event)
@@ -357,7 +361,7 @@ class TimeableView(QGraphicsRectItem):
         called when mouse is pressed and moved, calls the move, drag or resize function
         according to selected handle
         """
-        if self.handle_selected == self.handle_middle:
+        if self.handle_selected == HANDLE_MIDDLE:
             self.setCursor(Qt.ClosedHandCursor)
 
             # start drag event only when cursor leaves current track
