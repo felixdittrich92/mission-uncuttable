@@ -48,7 +48,8 @@ QPushButton:pressed {
 #new_project_button,
 #saveButton,
 #pushButton_2,
-#auto_cut_button {
+#auto_cut_button,
+#ok_button {
     background: #4586B1;
     border: 1px solid #364156;
 }
@@ -56,7 +57,8 @@ QPushButton:pressed {
 #new_project_button:hover,
 #saveButton:hover,
 #pushButton_2:hover,
-#auto_cut_button:hover {
+#auto_cut_button:hover,
+#ok_button:hover {
     border-width: 2px;
     border-color: #88ABDB;
 }
@@ -64,7 +66,8 @@ QPushButton:pressed {
 #new_project_button:pressed,
 #saveButton:pressed,
 #pushButton_2:pressed,
-#auto_cut_button:pressed {
+#auto_cut_button:pressed,
+#ok_button:pressed{
     border: 1px solid #4E637F;
     background: #34698c;
 }
@@ -398,4 +401,30 @@ QComboBox::down-arrow {
 #projects_list_view::item:selected:active {
     background: #212D40;
     border: 1px solid #212D40;
+}
+
+/* AUTOCUT VIEW */
+
+#autocut_frame {
+    background-color: #212D40;
+    border: 1px solid #364156;
+    margin: 9px;
+}
+
+#autocut_frame #text_label {
+    color: #F5F5F5;
+    font-size: 20px;
+}
+
+QProgressBar {
+    border: 2px solid #364156;
+    border-radius: 3px;
+    text-align: center;
+    color: #F5F5F5;
+    background: transparent;
+}
+
+QProgressBar::chunk {
+    background-color: #D66853;
+    width: 20px;
 }

@@ -24,7 +24,8 @@ images = {
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
     "cross": "images/cross.svg",
-    "tick": "images/tick.svg"
+    "tick": "images/tick.svg",
+    "logo_with_name": "images/artwork/logo neu_mit Schrift_blau.png"
 }
 strings = {
     "de": "strings/de/strings.xml",
