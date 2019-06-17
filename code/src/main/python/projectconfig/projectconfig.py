@@ -22,17 +22,5 @@ default_settings = {
       "values":["800 x 600","1366 x 768","1280 x 720","1920 x 1080"],
       "current":2
     },
-    "projectname":{
-      "name":"Projektname",
-      "type":"text",
-      "values":"",
-      "current":"unbenanntes Projekt"
-    },
-    "projectlocation":{
-      "name":"Projektpfad",
-      "type":"text",
-      "values":"",
-      "current":"Hier Projektpfad eingeben",
-    }
   },
 }
