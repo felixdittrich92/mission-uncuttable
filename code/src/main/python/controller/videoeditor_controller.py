@@ -31,6 +31,7 @@ class VideoEditorController:
         self.__settings_controller = SettingsController(None)
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
+        self.__projectsettings_controller = ProjectSettingsController(None)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
         self.__video_editor_view.actionUndo.triggered.connect(
@@ -69,9 +70,12 @@ class VideoEditorController:
 
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
-        projectsettings_view = ProjectSettingsView()
-        self.__projectsettings_controller = ProjectSettingsController(projectsettings_view)
-        self.__projectsettings_controller.start()
+        if self.__projectsettings_controller.checkIfClosed():
+            self.projectsettings_view = ProjectSettingsView()
+            self.__projectsettings_controller = ProjectSettingsController(self.projectsettings_view)
+            self.__projectsettings_controller.start()
+        else:
+            self.__projectsettings_controller.focus()
 
     def __start_export_controller(self):
         """shows the export view"""
@@ -134,7 +138,8 @@ class VideoEditorController:
 
         project_data = {
             "timeline": timeline_data,
-            "filemanager": filemanager_data
+            "filemanager": filemanager_data,
+            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings()
         }
 
         # write data

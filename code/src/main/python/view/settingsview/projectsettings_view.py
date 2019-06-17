@@ -9,7 +9,7 @@ from projectconfig import Projectsettings
 
 
 class ProjectSettingsView(QMainWindow):
-    """A class used as the View for the settings window."""
+    """A class used as the View for the projectsettings window."""
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(ProjectSettingsView, self).__init__()
@@ -24,24 +24,25 @@ class ProjectSettingsView(QMainWindow):
         rectangle.moveCenter(center_point)
         self.move(rectangle.topLeft())
 
-        """imports settings instance and applies it"""
+        """imports projectsettings instance and applies it"""
         self.projectsettingsInstance = Projectsettings.get_instance()
-        self.projectsettings = self.projectsettingsInstance.get_dict_settings()
+        self.projectsettings = self.projectsettingsInstance.get_dict_projectsettings()
         self.addProjectsettings(self.projectsettings)
 
-        """savesettings button"""
+        """saveprojectsettings button"""
         saveButton = self.findChild(QPushButton, "saveButton")
-        saveButton.setText(str(Language.current.settings.save))
+        saveButton.setText(str(Language.current.projectsettings.accept))
         saveButton.clicked.connect(lambda: self.saveProjectsettings())
 
         cancelButton = self.findChild(QPushButton, "cancelButton")
         cancelButton.setText(str(Language.current.settings.cancel))
         cancelButton.clicked.connect(lambda: self.close())
 
+
     def addProjectsettings(self, projectsettings):
         """
-        this method goes through the settings dictionary and
-        puts the settings in layouts in the tabs where they belong.
+        this method goes through the projectsettings dictionary and
+        puts the projectsettings in layouts in the tabs where they belong.
         """
         tabWidget = self.findChild(QTabWidget, 'tabWidget')
         i = 0
@@ -57,7 +58,7 @@ class ProjectSettingsView(QMainWindow):
 
     def makeProjectsetting(self, x, y):
         """
-        constructs a setting in form of a QWidget with a QHBoxLayout
+        constructs a projectsetting in form of a QWidget with a QHBoxLayout
         """
         # name = self.projectsettings[x][y].get("name")
         name = str(getattr(Language.current.projectsettings, y))
@@ -69,6 +70,11 @@ class ProjectSettingsView(QMainWindow):
         widget.setObjectName(name)
         layout = QHBoxLayout()
         layout.addWidget(QLabel(name))
+
+        """
+        Adds the projectsettings to the layout according to the type of option
+        More options to be added when needed
+        """
 
         if type == "dropdown":
             box = QComboBox()
@@ -82,12 +88,17 @@ class ProjectSettingsView(QMainWindow):
         elif type == "text":
             textwindow = QPlainTextEdit()
             textwindow.setPlainText(current)
-
+            """
+            Resizing the window to fit the text properly
+            """
             font = textwindow.document().defaultFont()
             fontmetrics = QtGui.QFontMetrics(font)
             textsize = fontmetrics.size(0, current)
 
-            textwindow.setMaximumSize(textsize.width() + 60, textsize.height() + 10)
+            windowwidth = 300
+            windowextraheight = 15
+
+            textwindow.setMaximumSize(windowwidth, textsize.height() + windowextraheight)
 
             layout.addWidget(textwindow)
         else:
@@ -97,8 +108,8 @@ class ProjectSettingsView(QMainWindow):
 
     def saveProjectsettings(self):
         """
-        goes through all the settings and saves the values to the dictionary
-        and saves the new dictionary with the save_settings() method from Settings.
+        goes through all the projectsettings and saves the values to the dictionary
+        and saves the new dictionary with the save_projectsettings() method from Projectsettings.
 
         """
         for x in self.projectsettings:
@@ -108,13 +119,15 @@ class ProjectSettingsView(QMainWindow):
                 widget = self.findChild(QWidget, name)
                 self.saveProjectsetting(self.projectsettings[x][y].get("type"), widget, x, y)
 
-        self.projectsettingsInstance.save_settings(self.projectsettings)
         self.close()
 
     def saveProjectsetting(self, type, widget, x, y):
         """
-        takes the current UI settings element and the current position in the
+        takes the current UI projectsettings element and the current position in the
         dictionary and saves the value that was maybe changed by the user
+
+        different usage of the data according to the type of option ("textwindow","dropdown","checkbox",...)
+        more types to be added
         """
 
         if type == "dropdown":
@@ -133,5 +146,5 @@ class ProjectSettingsView(QMainWindow):
             return 0
 
     def show(self):
-        """Starts the settings window maximized."""
+        """Starts the projectsettings window maximized."""
         self.showNormal()

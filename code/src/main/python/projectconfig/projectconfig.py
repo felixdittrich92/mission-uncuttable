@@ -1,6 +1,6 @@
 """
 In this file you can add settings by adding entrys to the dictionary.
-If you add Setting here, it's going to show up in the settings window
+If you add Settings here, it's going to show up in the PROJECTsettings window
 automatically!
 So if you do, be careful to specify all details about your setting.
 "Values" contains a list with all possible values for the setting. Depending on
@@ -22,39 +22,5 @@ default_settings = {
       "values":["800 x 600","1366 x 768","1280 x 720","1920 x 1080"],
       "current":2
     },
-    "projectname":{
-      # "name":"Projektname",
-      "type":"text",
-      "values":"",
-      "current":"unbenanntes Projekt"
-    },
-    "projectlocation":{
-      # "name":"Projektpfad",
-      "type":"text",
-      "values":"",
-      "current":"Hier Projektpfad eingeben",
-    }
   },
-  # "dummy1":{
-  #   "color_theme":{
-  #     "name":"Color Theme",
-  #     "type":"dropdown",
-  #     "values":["dark", "light"],
-  #     "current":0
-  #   },
-  #   "option2":{
-  #     "name":"Option 2",
-  #     "type":"checkbox",
-  #     "values":"",
-  #     "current":False
-  #   },
-  # },
-  # "dummy2":{
-  #   "option1":{
-  #     "name":"Option 1",
-  #     "type":"checkbox",
-  #     "values":"",
-  #     "current":True
-  #   }
-  # }
 }
