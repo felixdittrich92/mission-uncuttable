@@ -4,6 +4,7 @@ import platform
 
 import projectconfig
 import config
+from model.project import Project
 
 from collections import namedtuple
 
@@ -47,11 +48,10 @@ class Projectsettings:
             raise Exception("This class is a singleton!")
         else:
             Projectsettings.__instance = self
-            home = os.path.expanduser('~')
-            project_config = os.path.join(home, '.config', 'ubicut', 'projectconfig.uc')
-            if os.path.exists(project_config):
+            project_config = Project.get_instance().path
+            if project_config is not None and os.path.exists(project_config):
                 with open(project_config, 'r') as read_file:
-                    self.project_config_data = json.load(read_file)
+                    self.project_config_data = json.load(read_file)["projectsettings"]
                     projectconfig.default_settings.update(self.project_config_data)
                     self.parsed_data = projectconfig.default_settings
 
@@ -84,7 +84,6 @@ class Projectsettings:
         return self.dict
 
     @staticmethod
-
     def get_config_dir():
         """ Returns the directory where the config will be saved """
         home = os.path.expanduser('~')
@@ -97,31 +96,10 @@ class Projectsettings:
         return config_location
 
     @staticmethod
-    def save_settings(new_projectsettings):
-        """
-        Method that saves the custom user settings to a file.
-
-        Depending on the platform, the program is running on, a directory,
-        containing the json file is created.
-
-        @type   new_projectsettings: Dictionary
-        @param  new_projectsettings: Settings to be saved
-        """
-        location = Projectsettings.get_config_dir()
-
-        if not os.path.exists(location):
-            os.makedirs(location)
-
-        file = os.path.join(location, 'projectconfig.uc')
-
-        with open(file, 'w') as outfile:        # writes json to file
-            json.dump(new_projectsettings, outfile, ensure_ascii=False)
-
-    @staticmethod
     def get_projects():
         """ Returns a list a known projects """
         location = Projectsettings.get_config_dir()
-        project_file = os.path.join(location, 'projects')
+        project_file = os.path.join(location, 'projects.txt')
 
         if not os.path.isfile(project_file):
             return []
@@ -138,7 +116,7 @@ class Projectsettings:
     def add_project(filename):
         """ Adds a project to the projects file """
         location = Projectsettings.get_config_dir()
-        project_file = os.path.join(location, 'projects')
+        project_file = os.path.join(location, 'projects.txt')
         if not os.path.isfile(project_file):
             with open(project_file, 'w') as f:
                 f.write(filename + '\n')

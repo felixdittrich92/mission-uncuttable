@@ -31,7 +31,7 @@ class ProjectSettingsView(QMainWindow):
 
         """saveprojectsettings button"""
         saveButton = self.findChild(QPushButton, "saveButton")
-        saveButton.setText(str(Language.current.settings.save))
+        saveButton.setText(str(Language.current.projectsettings.accept))
         saveButton.clicked.connect(lambda: self.saveProjectsettings())
 
         cancelButton = self.findChild(QPushButton, "cancelButton")
@@ -119,7 +119,6 @@ class ProjectSettingsView(QMainWindow):
                 widget = self.findChild(QWidget, name)
                 self.saveProjectsetting(self.projectsettings[x][y].get("type"), widget, x, y)
 
-        self.projectsettingsInstance.save_projectsettings(self.projectsettings)
         self.close()
 
     def saveProjectsetting(self, type, widget, x, y):

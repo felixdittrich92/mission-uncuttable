@@ -9,7 +9,7 @@ the type it's just an empty string.
 """
 
 default_settings = {
-  "Allgemein":{
+  "general":{
     "framerate":{
       # "name":"Framerate",
       "type":"dropdown",
@@ -35,27 +35,4 @@ default_settings = {
       "current":"Hier Projektpfad eingeben",
     }
   },
-
-  "ToBeAdded":{
-    "random_setting":{
-      "name":"Aha",
-      "type":"dropdown",
-      "values":["option1", "option2", "option3"],
-      "current":0
-    },
-    "random_setting2":{
-      "name":"Interessant",
-      "type":"checkbox",
-      "values":"",
-      "current":False
-    },
-  },
-  "ToBeAdded2":{
-    "random_setting":{
-      "name":"Hallo",
-      "type":"checkbox",
-      "values":"",
-      "current":True
-    }
-  }
 }

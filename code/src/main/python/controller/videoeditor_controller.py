@@ -138,7 +138,8 @@ class VideoEditorController:
 
         project_data = {
             "timeline": timeline_data,
-            "filemanager": filemanager_data
+            "filemanager": filemanager_data,
+            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings()
         }
 
         # write data

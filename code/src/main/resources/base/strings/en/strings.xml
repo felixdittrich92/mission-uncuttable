@@ -42,6 +42,7 @@
         <resolution>Resolution</resolution>
         <projectname>Project Name</projectname>
         <projectlocation>Project Location</projectlocation>
+        <accept>Accept</accept>
     </projectsettings>
     <filemanager>
         <pushButtonName>pick files</pushButtonName>
