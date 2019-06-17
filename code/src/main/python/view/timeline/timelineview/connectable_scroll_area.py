@@ -160,9 +160,13 @@ class ConnectableScrollArea(QScrollArea):
         old_size = event.oldSize()
         new_size = event.size()
         if old_size.width() != new_size.width():
-            self.viewport_width_changed.emit(self.viewport().width())
+            self.viewport_width_changed.emit(
+                self.__own_scroll_bars[Qt.Horizontal].pageStep()
+            )
         if old_size.height() != new_size.height():
-            self.viewport_height_changed.emit(self.viewport().height())
+            self.viewport_height_changed.emit(
+                self.__own_scroll_bars[Qt.Vertical].pageStep()
+            )
         super().resizeEvent(event)
 
 
