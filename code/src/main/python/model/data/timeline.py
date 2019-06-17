@@ -52,6 +52,8 @@ class TimelineModel:
 
         self.timeline.Open()
 
+        self.groups = []
+
     def get_clip_by_id(self, clip_id):
         """
         @param clip_id: id of the clip

@@ -6,7 +6,7 @@ timelinemodel.
 import os
 
 from model.project import Project, Operation
-from model.data import TimeableModel, TimelineModel
+from model.data import TimeableModel, TimelineModel, TimeableGroup
 from util.timeline_utils import generate_id, pos_to_seconds, seconds_to_pos
 
 
@@ -16,7 +16,7 @@ class TimelineController:
     """
 
     __instance = None
-    
+
     @staticmethod
     def get_instance():
         if TimelineController.__instance is None:
@@ -28,6 +28,7 @@ class TimelineController:
         TimelineController.__instance = self
 
         self.__timeline_view = timeline_view
+        self.__timeline_model = TimelineModel.get_instance()
         self.__history = Project.get_instance().get_history()
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
@@ -237,10 +238,26 @@ class TimelineController:
         except KeyError:
             return None
 
+    def get_group_by_id(self, id):
+        """ Returns None if the timeable is not in a group and the group otherwhise """
+        groups = self.__timeline_model.groups
+
+        for g in groups:
+            if g.has_timeable(id):
+                return g
+
+        return None
+
+    def group_selected(self):
+        """ Groups all selected timeables """
+        items = self.__timeline_view.get_selected_timeables()
+
+        TimeableGroup(items)
+
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
-    
+
     def update_timecode(self, timecode):
         self.__timeline_view.update_timecode(timecode)
 

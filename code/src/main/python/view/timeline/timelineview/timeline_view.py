@@ -104,6 +104,15 @@ class TimelineView(QFrame):
         timeable.remove_from_scene()
         self.timeables.pop(id, None)
 
+    def get_selected_timeables(self):
+        """ Returns a list of all selected items in the timeline """
+        res = []
+
+        for t in self.tracks.values():
+            res.extend(t.scene().selectedItems())
+
+        return res
+
     def set_timeable_name(self, id, name):
         pass
 
@@ -125,7 +134,7 @@ class TimelineView(QFrame):
         makes it possible to say if something works properly or not.
         """
         # self.setStyleSheet('background-color: yellow')
-    
+
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')
         self.time_label.setText(timecode)
