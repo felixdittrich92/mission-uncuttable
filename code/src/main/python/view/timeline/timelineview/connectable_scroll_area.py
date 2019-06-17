@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QScrollArea
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal
 
 
 class ConnectableScrollArea(QScrollArea):
@@ -47,6 +48,9 @@ class ConnectableScrollArea(QScrollArea):
     methods.
     """
 
+    viewport_width_changed = pyqtSignal(int)
+    viewport_height_changed = pyqtSignal(int)
+
     def __init__(self, parent=None):
         """Create a ConnectableScrollArea without any connection."""
         super(ConnectableScrollArea, self).__init__(parent)
@@ -93,6 +97,12 @@ class ConnectableScrollArea(QScrollArea):
                 .connect(scroll_bar.setValue)
             self.__own_scroll_bars[orientation].rangeChanged\
                 .connect(scroll_bar.setRange)
+            if orientation == Qt.Horizontal:
+                self.viewport_width_changed\
+                    .connect(scroll_bar.setPageStep)
+            elif orientation == Qt.Vertical:
+                self.viewport_height_changed \
+                    .connect(scroll_bar.setPageStep)
 
     def disconnect_scrollbar(self, scroll_bar, orientation=None):
         """
@@ -132,6 +142,28 @@ class ConnectableScrollArea(QScrollArea):
                 self.__own_scroll_bars[o].rangeChanged\
                     .disconnect(scroll_bar.setRange)
                 self.__connected_scroll_bars[o].remove(scroll_bar)
+            if o == Qt.Horizontal:
+                self.viewport_width_changed\
+                    .disconnect(scroll_bar.setPageStep)
+            elif o == Qt.Vertical:
+                self.viewport_height_changed \
+                    .disconnect(scroll_bar.setPageStep)
+
+    # noinspection PyPep8Naming
+    def resizeEvent(self, event):
+        """
+        Extend resizeEvent() to emit Qt signals if a ResizeEvent occurs.
+
+        Emit the following signals according to the ResizeEvent:
+        self.viewport_height_changed, self.viewport_width_changed
+        """
+        old_size = event.oldSize()
+        new_size = event.size()
+        if old_size.width() != new_size.width():
+            self.viewport_width_changed.emit(self.viewport().width())
+        if old_size.height() != new_size.height():
+            self.viewport_height_changed.emit(self.viewport().height())
+        super().resizeEvent(event)
 
 
 class NotConnectedError(ValueError):
