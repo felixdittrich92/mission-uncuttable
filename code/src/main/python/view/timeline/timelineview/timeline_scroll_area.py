@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QScrollBar
-from PyQt5.QtCore import QObject, QPoint
+from PyQt5.QtCore import Qt, QObject, QPoint
 from PyQt5 import uic
 
 import os
@@ -98,16 +98,24 @@ class TimelineScrollArea(QFrame):
     def __setup_dependencies(self):
         self.__track_button_frame.link_to_height(self.__track_frame)
         self.__time_bar.link_to_width(self.__track_frame)
-        self.__track_scroll_area \
-            .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
-        self.__track_scroll_area \
-            .connect_vertical_scrollbar(self.__vertical_scroll_bar)
-        self.__track_button_scroll_area \
-            .connect_vertical_scrollbar(self.__vertical_scroll_bar)
-        self.__time_bar_scroll_area \
-            .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
+        self.__track_scroll_area\
+            .connect_scrollbar(self.__horizontal_scroll_bar, Qt.Horizontal)
+        self.__track_scroll_area\
+            .connect_scrollbar(self.__vertical_scroll_bar, Qt.Vertical)
+        self.__track_button_scroll_area\
+            .connect_scrollbar(self.__vertical_scroll_bar, Qt.Vertical)
+        self.__time_bar_scroll_area\
+            .connect_scrollbar(self.__horizontal_scroll_bar, Qt.Horizontal)
         self.__track_button_scroll_area.set_adjusting_to_width(True)
         self.__time_bar_scroll_area.set_adjusting_to_height(True)
+        self.__track_scroll_area\
+            .setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.__track_scroll_area\
+            .setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.__track_button_scroll_area\
+            .setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.__time_bar_scroll_area\
+            .setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def __init_scroll_areas(self):
         track_scroll_area_placeholder = self.findChild(
