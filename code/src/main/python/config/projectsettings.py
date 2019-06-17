@@ -2,14 +2,10 @@ import json
 import os
 import platform
 
-<<<<<<< HEAD:code/src/main/python/config/projectsettings.py
 from config import projectconfig
-from config import Settings
-=======
-import projectconfig
 import config
 from model.project import Project
->>>>>>> development:code/src/main/python/projectconfig/projectsettings.py
+
 
 from collections import namedtuple
 
@@ -73,8 +69,7 @@ class Projectsettings(Settings):
                 object_hook=lambda d: namedtuple('X', d.keys())(*d.values())
             )
 
-<<<<<<< HEAD:code/src/main/python/config/projectsettings.py
-=======
+
     def get_settings(self):
         """
         Getter that returns all settings as an object.
@@ -91,7 +86,6 @@ class Projectsettings(Settings):
         """
         return self.dict
 
->>>>>>> development:code/src/main/python/projectconfig/projectsettings.py
     @staticmethod
     def get_config_dir():
         """ Returns the directory where the config will be saved """
