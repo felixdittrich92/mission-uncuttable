@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>716</width>
-    <height>516</height>
+    <height>517</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,6 +74,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -93,7 +99,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="10">
+      <item row="3" column="9">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -105,16 +111,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="3" column="8">
-       <widget class="QLabel" name="current_frame_label">
-        <property name="styleSheet">
-         <string notr="true">color: #f5f5f5;</string>
-        </property>
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
       </item>
       <item row="3" column="6">
        <spacer name="horizontalSpacer">
@@ -129,13 +125,13 @@
         </property>
        </spacer>
       </item>
-      <item row="3" column="7">
-       <widget class="QLabel" name="time_label">
+      <item row="3" column="10">
+       <widget class="QLabel" name="current_time_label">
         <property name="styleSheet">
          <string notr="true">color: #f5f5f5;</string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string>00:00:00:00 | 00:00:00:00</string>
         </property>
        </widget>
       </item>
@@ -148,9 +144,8 @@
      <zorder>back_button</zorder>
      <zorder>maximize_button</zorder>
      <zorder>progress_slider</zorder>
-     <zorder>current_frame_label</zorder>
      <zorder>horizontalSpacer</zorder>
-     <zorder>time_label</zorder>
+     <zorder>current_time_label</zorder>
     </widget>
    </item>
   </layout>

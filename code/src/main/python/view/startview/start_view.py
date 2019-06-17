@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout
 from PyQt5 import uic
 from config import Settings, Resources, Projectsettings
+=======
+from PyQt5.QtCore import QFileSystemWatcher, Qt
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout, QLabel
+from PyQt5 import uic, QtGui, QtSvg
+from PyQt5.QtGui import QPixmap
+from config import Settings, Resources, Language
+from projectconfig import Projectsettings
+>>>>>>> development
 
 
 class StartView(QMainWindow):
@@ -24,6 +33,8 @@ class StartView(QMainWindow):
         super(StartView, self).__init__()
         uic.loadUi(Resources.files.startview, self)
 
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+
         self.setStyleSheet(
             open(Resources.files.qss_dark, "r").read())
 
@@ -42,7 +53,18 @@ class StartView(QMainWindow):
         self.centralWidget().setLayout(self.stacked_layout)
 
         new_project_button = self.findChild(QWidget, "new_project_button")
+        new_project_button.setText(str(Language.current.startview.newproject))
+
+        height = self.select_project_widget.frameGeometry().height()
+        logo_with_name = QtGui.QPixmap(Resources.images.logo_with_name)
+        picture = self.findChild(QLabel, "label_pic")
+        # logo_with_name = logo_with_name.scaledToHeight(height, transformMode=Qt.SmoothTransformation)
+        logo_with_name = logo_with_name.scaled(height-50, height-50, Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
+        picture.setPixmap(logo_with_name)
+
+
         back_button = self.findChild(QWidget, "back_button")
+        back_button.setText(str(Language.current.startview.back))
 
         new_project_button.clicked.connect(self.switch_frame)
         back_button.clicked.connect(self.switch_frame)
@@ -101,6 +123,9 @@ class SelectProjectWidget(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         uic.loadUi(Resources.files.select_project_widget, self)
+
+        text = str(Language.current.startview.last_projects)
+        self.findChild(QLabel, "lbl_text").setText(text)
 
         self.projects_list_view = self.findChild(QWidget, "projects_list_view")
 

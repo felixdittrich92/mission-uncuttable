@@ -1,8 +1,10 @@
 import os
+import skvideo.io
 import cv2
+
 from pathlib import Path
 from moviepy.editor import AudioFileClip
-from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo
+from model.data import VisualizerVideo, BoardVideo, Audio, SlideVideo, SpeakerVideo
 
 
 class VideoSplitter:
@@ -13,6 +15,7 @@ class VideoSplitter:
     def __init__(self, folder_path, folder_name, video_data):
         """
         Constructor of the class
+
         @param folder_path: the path to the project folder
         @param folder_name: the name of the project folder
         @param video_data: the path of the video file
@@ -25,38 +28,57 @@ class VideoSplitter:
         self.audio_files = []
         self.frame = 0
         self.number_frames = 0
+        self.width = 0
 
     def cut_video(self, update_progress):
+        """
+        a method which cut the modivideos from the "main" video
+
+        @param update_progress: a function which handles the progressbar countprocess
+        """
         self.frame = 0
-        video = cv2.VideoCapture(self.video_data)
-        self.number_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-        fps = video.get(cv2.CAP_PROP_FPS)
+        reader = skvideo.io.FFmpegReader(self.video_data, {}, {})
+        videometadata = skvideo.io.ffprobe(self.video_data)
+        self.frame_rate = videometadata['video']['@avg_frame_rate']
+        self.number_frames = int(videometadata['video']['@nb_frames'])
         folder = Path(self.folder_path, self.folder_name)
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+
         board_filename = os.path.join(folder, 'board.mp4')
         slide_filename = os.path.join(folder, 'slides.mp4')
         visualizer_filename = os.path.join(folder, 'visualizer.mp4')
-        board_out = cv2.VideoWriter(board_filename, fourcc, fps, (938, 530))
-        slide_out = cv2.VideoWriter(slide_filename, fourcc, fps, (700, 530))
-        visualizer_out = cv2.VideoWriter(visualizer_filename, fourcc, fps, (960, 530))
-        if(video.isOpened() is False):
-            print("Error opening video stream or file")
-        while(video.isOpened()):
-            ret, frame = video.read()
-            if ret is True:
-                board_out.write(frame[275:805, 17:955])
-                slide_out.write(frame[275:805, 1080:1780])
-                visualizer_out.write(frame[275:805, 960:1920])
+
+        board_out = skvideo.io.FFmpegWriter(board_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        slide_out = skvideo.io.FFmpegWriter(slide_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        visualizer_out = skvideo.io.FFmpegWriter(visualizer_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        # iterate through the frames
+        for frame in reader.nextFrame():
+            self.height, self.width = frame.shape[:2]
+            if self.width == 1920:
+                board_out.writeFrame(frame[275:805, 17:955])
+                slide_out.writeFrame(frame[275:805, 1080:1780])
+                visualizer_out.writeFrame(frame[275:805, 960:1920])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100)) 
+            else:
+                board_out.writeFrame(frame[183:537, 11:637])
+                slide_out.writeFrame(frame[183:537, 720:1187])
+                visualizer_out.writeFrame(frame[183:537, 640:1280])
                 self.frame += 1
                 if self.frame % 30 == 0:
                     update_progress((int)(self.frame/self.number_frames*100))
-            else:
-                break
-        video.release()
-        board_out.release()
-        slide_out.release()
-        visualizer_out.release()
-        cv2.destroyAllWindows()
+        board_out.close()
+        slide_out.close()
+        visualizer_out.close()
         self.files.append(board_filename)
         self.files.append(slide_filename)
         self.files.append(visualizer_filename)
@@ -73,14 +95,17 @@ class VideoSplitter:
     def get_visualizer_video(self):
         return self.__visualizer_video
 
+    def get_speaker_video(self):
+        return self.__speaker_video
+
     def cut_audio_from_video(self):
         """
         a method to get the audio from a video and save it in the project folder
         and create a object of this
 
-        @return: a Audio object
+        @return: a audio object which contains the path
         """
-
+    
         folder = Path(self.folder_path, self.folder_name)
         audio_from_video = 'audio.mp3'
         audio = AudioFileClip(self.video_data)
@@ -88,3 +113,52 @@ class VideoSplitter:
         extracted_audio = Path(folder, audio_from_video)
         self.audio_files.append(extracted_audio)
         return Audio(extracted_audio)
+    
+    def cut_zoom_video(self, update_progress):
+        """
+        a method which track the speaker in the video and cut a video from this
+
+        @param update_progress: a function which handles the progressbar countprocess
+        """
+
+        self.frame = 0
+        folder = Path(self.folder_path, self.folder_name)
+        speaker_filename = os.path.join(folder, 'speaker.mp4')
+        video_data = self.files[0]
+
+        reader = skvideo.io.FFmpegReader(video_data, {}, {})
+        #fgbg = cv2.createBackgroundSubtractorMOG2()
+        fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
+        term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 5 , 1)
+
+        videometadata = skvideo.io.ffprobe(video_data)
+        self.frame_rate = videometadata['video']['@avg_frame_rate']
+        self.number_frames = int(videometadata['video']['@nb_frames'])
+
+        x, y, width, height = 220, 400, 400, 650
+        track_window = (width,x,height,y)
+
+        speaker_out = skvideo.io.FFmpegWriter(speaker_filename, inputdict={
+            "-r": self.frame_rate
+        })
+
+        for frame in reader.nextFrame():
+            gmask = fgbg.apply(frame)
+            is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
+            x, y, width, height = track_window
+            if self.width == 1920:
+                y = 200
+                speaker_out.writeFrame(frame[y:y+height, x+100:x+width])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100))
+            else:   
+                y = 150
+                speaker_out.writeFrame(frame[y:y+height, x:x+width])
+                self.frame += 1
+                if self.frame % 30 == 0:
+                    update_progress((int)(self.frame/self.number_frames*100))  
+                
+        speaker_out.close()
+        self.files.append(speaker_filename)
+        self.__speaker_video = SpeakerVideo(speaker_filename)

@@ -81,8 +81,8 @@ def get_file_type(path):
 
 
 def get_px_per_second():
-    s = Settings.get_instance().get_dict_settings()
-    return int(s["Invisible"]["pixels_per_second"])
+    s = Settings.get_instance().get_settings()
+    return int(s.Invisible.pixels_per_second)
 
 
 def pos_to_seconds(pos):

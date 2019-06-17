@@ -16,7 +16,7 @@ class TimelineController:
     """
 
     __instance = None
-
+    
     @staticmethod
     def get_instance():
         if TimelineController.__instance is None:
@@ -240,6 +240,9 @@ class TimelineController:
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
+    
+    def update_timecode(self, timecode):
+        self.__timeline_view.update_timecode(timecode)
 
 
 class CreationOperation(Operation):
@@ -257,6 +260,7 @@ class CreationOperation(Operation):
         self.res_right = res_right
         self.mouse_pos = mouse_pos
         self.is_drag = is_drag
+
 
     def do(self):
         self.model.move(self.x_pos)
