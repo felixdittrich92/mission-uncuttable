@@ -174,8 +174,8 @@ class VideoEditorController:
 
         # set up filemanager
         if "filemanager" in project_data:
-            filemanager = self.__video_editor_view.filemanager
-            filemanager.create_project_filemanager(project_data["filemanager"])
+            filemanager_data = project_data["filemanager"]
+            self.__filemanager_controller.create_project_filemanager(filemanager_data)
 
         # set project path
         project = Project.get_instance()
