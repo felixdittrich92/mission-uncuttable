@@ -15,7 +15,7 @@ class ShortcutLoader:
         @type  window: QMainWindow
         @param window: The Window, the shortcut gets assigned to.
         """
-        shortcuts = Settings.get_instance().get_dict_settings()["Shortcuts"]
+        shortcuts = Settings.get_instance().get_dict_settings()["shortcuts"]
 
         self.loaded_shortcuts = []
         for operation in shortcuts:

@@ -130,3 +130,17 @@ class TimeableModel:
         data = {"position": new_position}
         self.timeline_instance.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
+
+    def to_corner(self):
+        k1 = openshot.Keyframe()
+        k1.AddPoint(0, 0.2)
+        k2 = openshot.Keyframe()
+        k2.AddPoint(0, 0.4)
+        k3 = openshot.Keyframe()
+        k3.AddPoint(0, 0.4)
+        self.clip.location_x = k2
+        self.clip.location_y = k3
+        self.clip.scale_x = k1
+        self.clip.scale_y = k1
+        self.clip.scale = openshot.SCALE_FIT
+

@@ -49,39 +49,9 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Exportieren als</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="export_as_cb">
-         <item>
-          <property name="text">
-           <string>Video und Audio</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Nur Audio</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Nur Video</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="format_label">
          <property name="text">
           <string>Format</string>
          </property>
@@ -95,7 +65,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="resolution_label">
          <property name="text">
           <string>Auflösung</string>
          </property>
@@ -109,37 +79,21 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="quality_label">
          <property name="text">
           <string>Qualität</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="quality_cb">
-         <item>
-          <property name="text">
-           <string>hoch</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>mittel</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>niedrig</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="quality_cb"/>
        </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="startframe_label">
          <property name="text">
           <string>Startframe</string>
          </property>
@@ -153,7 +107,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="endframe_label">
          <property name="text">
           <string>Endframe</string>
          </property>

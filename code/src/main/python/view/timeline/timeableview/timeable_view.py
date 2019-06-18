@@ -1,10 +1,11 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
-                          QMimeData, Qt, QSize)
+                          QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 from model.data import FileType
+from config import Language
 from util.timeline_utils import get_pixmap_from_file
 
 
@@ -25,6 +26,8 @@ class TimeableView(QGraphicsRectItem):
     The TimeableView can be resized and moved on the Track and it can also be dragged
     to another Track.
     """
+
+    update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
                  model, view_id, track_id, parent=None):
@@ -139,11 +142,11 @@ class TimeableView(QGraphicsRectItem):
 
         menu = QMenu()
 
-        delete = QAction('löschen')
+        delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
         delete.triggered.connect(lambda: self.delete(hist=True))
 
-        cut = QAction('schneiden')
+        cut = QAction(str(Language.current.timeable.cut))
         menu.addAction(cut)
         cut.triggered.connect(lambda: self.cut(event.pos().x()))
 

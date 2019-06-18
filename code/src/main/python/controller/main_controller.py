@@ -8,6 +8,7 @@ from controller import VideoEditorController, AutocutController, TimelineControl
 from view import VideoEditorView
 from model.project import Project
 from view import AutocutView
+from config import Language
 
 
 class MainController:
@@ -21,6 +22,7 @@ class MainController:
         auto_cut_button.clicked.connect(lambda: self.__new_project("AutoCut"))
 
         load_project_button = self.__start_view.findChild(QWidget, "load_project_button")
+        load_project_button.setText(str(Language.current.startview.load_project))
         load_project_button.clicked.connect(self.__load_project)
 
         new_project_button = self.__start_view.findChild(QWidget, "new_project_button")
@@ -35,7 +37,7 @@ class MainController:
         settings = Settings.get_instance().get_settings()
 
         self.folder_line_edit = self.__start_view.findChild(QWidget, "folder_line_edit")
-        self.folder_line_edit.setText(settings.General.projects_path.current)
+        self.folder_line_edit.setText(settings.general.projects_path.current)
 
         self.name_line_edit = self.__start_view.findChild(QWidget, "name_line_edit")
 
@@ -76,6 +78,7 @@ class MainController:
         # check if file exists
         if os.path.isfile(path):
             video_editor_view = VideoEditorView()
+            self.__video_editor_controller = VideoEditorController(video_editor_view)
 
             with open(path, 'r') as f:
                 project_data = json.load(f)
@@ -89,7 +92,7 @@ class MainController:
 
             # set up filemanager
             if "filemanager" in project_data:
-                filemanager = video_editor_view.filemanager
+                filemanager = self.__video_editor_controller.get_filemanager_controller()
                 filemanager.create_project_filemanager(project_data["filemanager"])
 
             # set project path
@@ -98,7 +101,6 @@ class MainController:
 
             # show videoeditor
             self.__start_view.close()
-            self.__video_editor_controller = VideoEditorController(video_editor_view)
             self.__video_editor_controller.start()
 
         # TODO show error window if path does not exist

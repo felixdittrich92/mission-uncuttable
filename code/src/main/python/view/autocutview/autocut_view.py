@@ -30,8 +30,8 @@ class AutocutView(QMainWindow):
 
         cross_path = Resources.images.cross
         tick_path = Resources.images.tick
-        self.cross = QPixmap(cross_path).scaledToHeight(64, mode=1)
-        self.tick = QPixmap(tick_path).scaledToHeight(64, mode=1)
+        self.cross = QPixmap(cross_path).scaledToHeight(50, mode=1)
+        self.tick = QPixmap(tick_path).scaledToHeight(50, mode=1)
 
         self.video_image_label.setPixmap(self.cross)
         self.pdf_image_label.setPixmap(self.cross)

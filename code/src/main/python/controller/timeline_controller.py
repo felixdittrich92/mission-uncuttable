@@ -194,7 +194,7 @@ class TimelineController:
         self.create_track("Folien", 2000, 50, 0)
         self.create_track("Audio", 2000, 50, -1)
 
-    def create_autocut_timeables(self, file_path, track, data):
+    def create_autocut_timeables(self, file_path, track, data, corner=False):
         """
         Creates timeables for autocut.
 
@@ -208,6 +208,9 @@ class TimelineController:
             model.set_end(end, is_sec=True)
             model.move(start, is_sec=True)
 
+            if corner:
+                model.to_corner()
+
             width = seconds_to_pos(model.clip.Duration())
             x_pos = seconds_to_pos(start)
             self.create_timeable(track, os.path.basename(file_path),
@@ -216,6 +219,7 @@ class TimelineController:
     def add_clip(self, file_path, track):
         """ Gets a path to file and a track and creates a timeable """
         model = TimeableModel(file_path, generate_id())
+
         width = seconds_to_pos(model.clip.Duration())
         self.create_timeable(track, os.path.basename(file_path),
                              width, 0, model, generate_id(), hist=False)
@@ -241,6 +245,9 @@ class TimelineController:
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
 
+    def update_timecode(self, timecode):
+        self.__timeline_view.update_timecode(timecode)
+
 
 class CreationOperation(Operation):
     """ Creates a new timeable """
@@ -257,6 +264,7 @@ class CreationOperation(Operation):
         self.res_right = res_right
         self.mouse_pos = mouse_pos
         self.is_drag = is_drag
+
 
     def do(self):
         self.model.move(self.x_pos)
