@@ -157,7 +157,7 @@ class AutocutController:
         timeline_controller.create_autocut_tracks()
 
         timeline_controller.create_autocut_timeables(speaker_video.get(), 3,
-                                                     speaker_video.speaker_subvideos, corner=True)
+                                                     speaker_video.speaker_subvideos)
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.board_subvideos)
         timeline_controller.create_autocut_timeables(visualizer_video.get(), 1,

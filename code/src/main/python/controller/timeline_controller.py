@@ -129,19 +129,15 @@ class TimelineController:
         op = ResizeOperation(view_info_old, view_info_new)
         self.__history.do_operation(op)
 
-    def select_timeable(self, id, selected=True):
-        """
-        Set the selected-state of the model's representation of a timeable.
+    def is_overlay_track(self, track_id):
+        if track_id not in self.__timeline_view.tracks:
+            return False
 
-        @param id:       The timeable's unique ID.
-        @param selected: The selected-state.
-        @return:         Nothing.
-        """
-        pass
+        return self.__timeline_view.tracks[track_id].is_overlay
 
-    def create_track(self, name, width, height, num):
+    def create_track(self, name, width, height, num, is_overlay=False):
         """ Creates a new track in the timeline """
-        self.__timeline_view.create_track(name, width, height, num)
+        self.__timeline_view.create_track(name, width, height, num, is_overlay)
 
     def get_project_timeline(self):
         """ Returns a dict with the data needed to recreate the timeline """
@@ -188,13 +184,13 @@ class TimelineController:
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_track("Overlay", 2000, 50, 3)
+        self.create_track("Overlay", 2000, 50, 3, is_overlay=True)
         self.create_track("Tafel", 2000, 50, 2)
         self.create_track("Visualizer", 2000, 50, 1)
         self.create_track("Folien", 2000, 50, 0)
         self.create_track("Audio", 2000, 50, -1)
 
-    def create_autocut_timeables(self, file_path, track, data, corner=False):
+    def create_autocut_timeables(self, file_path, track, data):
         """
         Creates timeables for autocut.
 
@@ -207,9 +203,6 @@ class TimelineController:
             model.set_start(start, is_sec=True)
             model.set_end(end, is_sec=True)
             model.move(start, is_sec=True)
-
-            if corner:
-                model.to_corner()
 
             width = seconds_to_pos(model.clip.Duration())
             x_pos = seconds_to_pos(start)
@@ -264,7 +257,6 @@ class CreationOperation(Operation):
         self.res_right = res_right
         self.mouse_pos = mouse_pos
         self.is_drag = is_drag
-
 
     def do(self):
         self.model.move(self.x_pos)
