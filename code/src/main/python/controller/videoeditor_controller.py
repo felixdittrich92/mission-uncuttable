@@ -24,8 +24,10 @@ class VideoEditorController:
     """
     def __init__(self, view):
         self.__video_editor_view = view
+        self.__timeline_controller = TimelineController.get_instance()
         self.__filemanager_view = FilemanagerView()
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
+
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
@@ -133,8 +135,7 @@ class VideoEditorController:
     def __write_project_data(self, filename):
         """ Saves project data into a file """
         # get timeline data
-        timeline_controller = TimelineController.get_instance()
-        timeline_data = timeline_controller.get_project_timeline()
+        timeline_data = self.__timeline_controller.get_project_timeline()
 
         # get filemanager data
         filemanager_data = self.__filemanager_controller.get_project_filemanager()
@@ -164,15 +165,16 @@ class VideoEditorController:
             project_data = json.load(f)
 
         # set up timeline
-        timeline_controller = TimelineController.get_instance()
-        timeline_controller.clear_timeline()
+        self.__timeline_controller.clear_timeline()
 
         if "timeline" in project_data:
-            timeline_controller.create_project_timeline(project_data["timeline"])
+            self.__timeline_controller.create_project_timeline(project_data["timeline"])
         else:
-            timeline_controller.create_default_tracks()
+            self.__timeline_controller.create_default_tracks()
 
         # set up filemanager
+        self.__filemanager_controller.clear()
+
         if "filemanager" in project_data:
             filemanager_data = project_data["filemanager"]
             self.__filemanager_controller.create_project_filemanager(filemanager_data)
