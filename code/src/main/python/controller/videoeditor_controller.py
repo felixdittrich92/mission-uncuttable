@@ -156,6 +156,10 @@ class VideoEditorController:
         path, _ = QFileDialog.getOpenFileName(self.__video_editor_view,
                                               'Open Project', '', filetypes)
 
+        # do nothing if cancel was clicked
+        if path == "":
+            return
+
         with open(path, 'r') as f:
             project_data = json.load(f)
 
