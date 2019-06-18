@@ -37,18 +37,15 @@ class TimelineView(QFrame):
         self.timeables = dict()
         self.tracks = dict()
 
-        self.controller = TimelineController(self)
-
         self.__show_debug_info_on_gui()
 
-
-    def create_track(self, name, width, height, num):
-        track = TrackView(width, height, num, name)
+    def create_track(self, name, width, height, num, is_overlay):
+        """ Creates a new trackView and adds it to the track_frame """
+        btn = QPushButton(name)
+        btn.setFixedSize(80, height)
+        self.track_button_frame.add_button(btn)
+        track = TrackView(width, height, num, name, btn, is_overlay=is_overlay)
         self.tracks[num] = track
-
-        btn1 = QPushButton(name)
-        btn1.setFixedSize(80, height)
-        self.track_button_frame.add_button(btn1)
 
         self.track_frame.add_track(track)
 

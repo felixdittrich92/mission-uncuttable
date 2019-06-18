@@ -15,7 +15,7 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, name, parent=None):
+    def __init__(self, width, height, num, name, button, is_overlay=False, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -31,6 +31,8 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
         self.name = name
+        self.button = button
+        self.is_overlay = is_overlay
 
         # for drag and drop handling
         self.item_dropped = False
@@ -135,7 +137,7 @@ class TrackView(QGraphicsView):
         rect = QRectF(start_pos - pos, 0, width, self.height)
         colliding = [item for item in self.scene().items(rect)
                      if item.isVisible]
-    
+
         # only add the timeable if colliding is empty
         if not colliding:
             res_left = timeable.resizable_left

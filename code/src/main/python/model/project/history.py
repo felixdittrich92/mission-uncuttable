@@ -86,3 +86,8 @@ class History:
             self.__last_operation -= 1
 
         del self.operations[-1]
+
+    def clear_history(self):
+        """ Removes all operations from the history """
+        self.operations = []
+        self.__last_operation = -1

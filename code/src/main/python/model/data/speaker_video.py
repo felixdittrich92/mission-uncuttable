@@ -11,7 +11,7 @@ class SpeakerVideo(MediaFile):
 
     def __init__(self, file_path):
         self.__file_path = str(file_path)
-        self.subvideos = list()
+        self.speaker_subvideos = list()
 
     def get(self):
         return self.__file_path
@@ -31,20 +31,17 @@ class SpeakerVideo(MediaFile):
 
                 if not is_ok:
                     if times:
-                        self.subvideos.append((times[0], times[-1]))
+                        self.speaker_subvideos.append((times[0], times[-1]))
 
                     break
 
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 average = cv2.mean(frame)
-                summe = average[0] + average[1] + average[2]
-                percentage_red = (100 * average[0]) / summe
-                #percentage_green = (100 * average[1]) / summe
-                #percentage_blue = (100 * average[2]) / summe
 
-                if percentage_red < 31:
+                if average[0] > 110:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
-                    self.subvideos.append((times[0], times[-1]))
+                    self.speaker_subvideos.append((times[0], times[-1]))
                     times.clear()
         finally:
             video.release()
