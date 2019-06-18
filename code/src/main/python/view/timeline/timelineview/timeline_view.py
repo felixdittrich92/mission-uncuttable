@@ -41,9 +41,9 @@ class TimelineView(QFrame):
 
         self.__show_debug_info_on_gui()
 
-
-    def create_track(self, name, width, height, num):
-        track = TrackView(width, height, num, name)
+    def create_track(self, name, width, height, num, is_overlay):
+        """ Creates a new trackView and adds it to the track_frame """
+        track = TrackView(width, height, num, name, is_overlay=is_overlay)
         self.tracks[num] = track
 
         btn1 = QPushButton(name)
@@ -125,7 +125,7 @@ class TimelineView(QFrame):
         makes it possible to say if something works properly or not.
         """
         # self.setStyleSheet('background-color: yellow')
-    
+
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')
         self.time_label.setText(timecode)
