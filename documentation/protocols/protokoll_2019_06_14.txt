@@ -1,0 +1,40 @@
+Datum
+14.06.2019
+
+Name Protokollant
+Valentin Ackva (vertreten durch Alexander Bonin)
+
+Art des Treffens 
+Reguläres Treffen
+
+Sprint Nummer
+Sprint 7
+
+Fehlende Personen
+Valentin
+
+Zusammenfassung
+
+Normal Treffen, 
+Product-Owner erwähnt, dass das Zeit Buchen nicht vergessen werden soll
+
+Reguläres Treffen
+	
+	Was jeder Gemacht hat?
+
+    Markus hat angefangen Linux zu installieren
+	Clemens hat die Sprachänderung implementiert
+    Julian hat nichts Gemacht
+    Johannes hat Sprintdoku und seine Technologierecherche Gemacht
+    Alex hat die Audiospur UI Gemacht
+    Max hat am Projektordner gearbeitet
+    Felix hat am automatischen Videoschnitt gearbeitet
+
+
+	Woran er noch weiter arbeiten will?
+
+    Julian will sich helfen lassen
+    Felix will Ruckeln reduzieren
+    Max will mit Felix die Filemanager Ordner Struktur machen
+
+	

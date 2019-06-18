@@ -1,3 +1,6 @@
+from config import Settings
+
+
 class History:
     """
     Represents the history of a project and manages operations.
@@ -51,6 +54,12 @@ class History:
         self.__last_operation += 1
         # Execute operation
         operation.do()
+
+        # delete first operation if limit was reached
+        limit = Settings.get_instance().get_settings().general.history_limit.current
+        if len(self.operations) > limit:
+            self.operations = self.operations[len(self.operations) - limit:]
+            self.__last_operation = limit - 1
 
     def get_num_operations(self):
         """

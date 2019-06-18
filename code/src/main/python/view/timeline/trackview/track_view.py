@@ -15,7 +15,7 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, name, button, parent=None):
+    def __init__(self, width, height, num, name, button, is_overlay=False, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -32,6 +32,7 @@ class TrackView(QGraphicsView):
         self.num = num
         self.name = name
         self.button = button
+        self.is_overlay = is_overlay
 
         # for drag and drop handling
         self.item_dropped = False
@@ -80,11 +81,13 @@ class TrackView(QGraphicsView):
         """
         self.width = new_width
         self.resize()
+        self.update_player()
 
     def add_timeable(self, timeable):
         """ Adds a TimeableView to the GraphicsScene """
         timeable.model.set_layer(self.num)
         self.scene().addItem(timeable)
+        self.update_player()
 
     def add_from_filemanager(self, drag_event):
         """ Adds a timeable when item from filemanager is dragged into the track """
@@ -161,6 +164,7 @@ class TrackView(QGraphicsView):
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
+        self.update_player()
 
     def move_dropped_timeable(self, event):
         pos = event.pos().x() - self.current_timeable.mouse_press_pos
@@ -180,6 +184,7 @@ class TrackView(QGraphicsView):
             event.accept()
         else:
             event.ignore()
+        self.update_player()
 
     def dragLeaveEvent(self, event):
         """ Gets called when something is dragged out of the track """
@@ -197,6 +202,7 @@ class TrackView(QGraphicsView):
 
         self.update()
         event.accept()
+        self.update_player()
 
     def dragMoveEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets moved """
@@ -222,6 +228,7 @@ class TrackView(QGraphicsView):
             event.accept()
         else:
             event.ignore()
+        self.update_player()
 
     def dropEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets released """
@@ -244,12 +251,19 @@ class TrackView(QGraphicsView):
             # set item_dropped to false for next drag
             self.item_dropped = False
             self.update()
+            self.update_player()
 
         elif event.mimeData().hasFormat('ubicut/file'):
             # clear data for next drag
             self.item_dropped = False
+            self.current_timeable.model.move(self.current_timeable.x_pos)
             self.current_timeable = None
             self.update()
 
         else:
             event.ignore()
+
+        self.update_player()
+
+    def update_player(self):
+        self.parent().parent().parent().parent().parent().parent().parent().parent().connect_update()

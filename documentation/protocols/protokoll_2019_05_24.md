@@ -30,4 +30,4 @@ Fortschritte
 
 ## Ausblick
 27.05.2019 (kommender Montag): Code-Review und Planning mit
-Prof. Weicker (Nachträglich: Tatsächlich Frau dingens)
+Prof. Weicker (Nachträglich: Tatsächlich Frau Ludwigs)

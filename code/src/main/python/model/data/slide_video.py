@@ -1,7 +1,7 @@
 from .media_file import MediaFile
 
 
-class FoilVideo(MediaFile):
+class SlideVideo(MediaFile):
     """
     This class contains the video
     """

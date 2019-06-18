@@ -1,4 +1,5 @@
 import json
+import sys
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -9,6 +10,8 @@ from .timeline_controller import TimelineController
 from model.project import Project
 from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
+from view.filemanagerview import FilemanagerView
+from .filemanager_controller import FilemanagerController
 from projectconfig import Projectsettings
 from config import Settings
 
@@ -21,11 +24,15 @@ class VideoEditorController:
     """
     def __init__(self, view):
         self.__video_editor_view = view
+        self.__filemanager_view = FilemanagerView()
+        self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
+        self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
         self.__settings_controller = SettingsController(None)
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
+        self.__projectsettings_controller = ProjectSettingsController(None)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
         self.__video_editor_view.actionUndo.triggered.connect(
@@ -53,6 +60,7 @@ class VideoEditorController:
     def stop(self):
         """Closes the video-editor Window."""
         self.__video_editor_view.close()
+        sys.exit(0)
 
     def __start_settings_controller(self):
         """Opens the settings window"""
@@ -65,9 +73,12 @@ class VideoEditorController:
 
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
-        projectsettings_view = ProjectSettingsView()
-        self.__projectsettings_controller = ProjectSettingsController(projectsettings_view)
-        self.__projectsettings_controller.start()
+        if self.__projectsettings_controller.checkIfClosed():
+            self.projectsettings_view = ProjectSettingsView()
+            self.__projectsettings_controller = ProjectSettingsController(self.projectsettings_view)
+            self.__projectsettings_controller.start()
+        else:
+            self.__projectsettings_controller.focus()
 
     def __start_export_controller(self):
         """shows the export view"""
@@ -116,6 +127,9 @@ class VideoEditorController:
 
         Projectsettings.add_project(filename)
 
+    def get_filemanager_controller(self):
+        return self.__filemanager_controller
+
     def __write_project_data(self, filename):
         """ Saves project data into a file """
         # get timeline data
@@ -123,12 +137,12 @@ class VideoEditorController:
         timeline_data = timeline_controller.get_project_timeline()
 
         # get filemanager data
-        filemanager = self.__video_editor_view.filemanager
-        filemanager_data = filemanager.get_project_filemanager()
+        filemanager_data = self.__filemanager_controller.get_project_filemanager()
 
         project_data = {
             "timeline": timeline_data,
-            "filemanager": filemanager_data
+            "filemanager": filemanager_data,
+            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings()
         }
 
         # write data
