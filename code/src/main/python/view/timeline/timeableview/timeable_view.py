@@ -53,6 +53,9 @@ class TimeableView(QGraphicsRectItem):
 
         self.__controller = TimelineController.get_instance()
 
+        if self.__controller.is_overlay_track(self.track_id):
+            self.model.corner(True)
+
         self.set_pixmap()
 
         self.resizable_left = res_left
