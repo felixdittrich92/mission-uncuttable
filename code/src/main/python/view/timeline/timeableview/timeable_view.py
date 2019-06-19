@@ -262,7 +262,18 @@ class TimeableView(QGraphicsRectItem):
         self.setRect(self.boundingRect())
         self.update_handles_pos()
 
-    def is_move_possible(self, pos):
+    def is_move_possible_diff(self, diff):
+        """
+        Checks if timeable can be moved by value in diff.
+
+        @param diff: the difference between the x_pos before and after move.
+        @return: True if move is possible, False otherwhise.
+        """
+        pos = self.x_pos + diff
+
+        return self.is_move_possible_position(pos)
+
+    def is_move_possible_position(self, pos):
         """
         Checks if move to pos is possible.
 
@@ -281,6 +292,16 @@ class TimeableView(QGraphicsRectItem):
 
         return True
 
+    def do_move(self, pos):
+        """
+        Changes the position of the timeables view.
+
+        @param pos: the new x_pos.
+        @return: Nothing.
+        """
+        self.x_pos = 0 if pos < 5 else pos
+        self.setPos(self.x_pos, 0)
+
     def move_on_track(self, pos):
         """
         called from mouseMoveEvent() when middle handle is selected
@@ -293,13 +314,15 @@ class TimeableView(QGraphicsRectItem):
         """
         group = self.__controller.get_group_by_id(self.view_id)
         if group is not None:
-            return
+            diff = pos - self.x_pos
+            timeables = self.__controller.get_timeables_in_group(group)
+            if all(t.is_move_possible_diff(diff) for t in timeables):
+                for t in timeables:
+                    t.do_move(pos - t.x_pos)
 
         # make move if its possible
-        if self.is_move_possible(pos):
-            self.x_pos = 0 if pos < 5 else pos
-
-            self.setPos(self.x_pos, 0)
+        elif self.is_move_possible_position(pos):
+            self.do_move(pos)
 
         # model gets changed on mouseReleaseEvent
 
