@@ -21,6 +21,18 @@ class TimeableGroup:
         """
         return id in self.ids
 
+    def add_timeable(self, id):
+        """
+        Adds a timeable to a timeable group.
+
+        @param id: id of the timeable view that will be added
+        @return: Nothing
+        """
+        if id in self.ids:
+            return
+
+        self.ids.append(id)
+
     def remove_timeable(self, id):
         """
         Removes the timeable with the given id from the group
