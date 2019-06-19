@@ -262,6 +262,25 @@ class TimeableView(QGraphicsRectItem):
         self.setRect(self.boundingRect())
         self.update_handles_pos()
 
+    def is_move_possible(self, pos):
+        """
+        Checks if move to pos is possible.
+
+        @param pos: the position to which the timeable wants to be moved.
+        @return: True if move is possible, False otherwhise.
+        """
+        # check if theres another Timeable at the given position
+        r = QRectF(pos, 0, self.width, self.height)
+        colliding = self.scene().items(r)
+        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+            return False
+
+        # move only if the new position is still inside the track
+        if pos < 0 and pos + self.width > self.scene().width():
+            return False
+
+        return True
+
     def move_on_track(self, pos):
         """
         called from mouseMoveEvent() when middle handle is selected
@@ -272,14 +291,12 @@ class TimeableView(QGraphicsRectItem):
 
         @param pos: the new x_pos of the timeable
         """
-        # check if theres another Timeable at the given position
-        r = QRectF(pos, 0, self.width, self.height)
-        colliding = self.scene().items(r)
-        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+        group = self.__controller.get_group_by_id(self.view_id)
+        if group is not None:
             return
 
-        # move only if the new position is still inside the track
-        if pos >= 0 and pos + self.width <= self.scene().width():
+        # make move if its possible
+        if self.is_move_possible(pos):
             self.x_pos = 0 if pos < 5 else pos
 
             self.setPos(self.x_pos, 0)
