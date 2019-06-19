@@ -46,6 +46,8 @@ class TimelineController:
         op = CreationOperation(track_id, name, width, x_pos, model, id,
                                res_left, res_right, mouse_pos, is_drag)
 
+        self.__timeline_model.groups[0].add_timeable(id)
+
         if hist:
             self.__history.do_operation(op)
         else:
@@ -265,6 +267,25 @@ class TimelineController:
         """
         group = TimeableGroup(ids)
         self.__timeline_model.groups.append(group)
+
+    def get_timeables_in_group(self, group):
+        """
+        Returns a list of the timeables views that are associated with
+        the ids in this group.
+
+        @param group: object of type TimeableGroup
+        @return: list of timeable views
+        """
+        res = []
+
+        for timeable_id in group.ids:
+            timeable = self.get_timeable_by_id(timeable_id)
+
+            # add timeable to result if it exists
+            if timeable is not None:
+                res.append(timeable)
+
+        return res
 
     def group_selected(self):
         """ Groups all selected timeables """
