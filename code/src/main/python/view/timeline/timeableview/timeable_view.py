@@ -430,8 +430,11 @@ class TimeableView(QGraphicsRectItem):
 
         # update clip position if changed
         if self.x_pos != self.mouse_press_start_pos:
-            self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
-                                            self.x_pos)
+            if self.group_id is None:
+                self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
+                                                self.x_pos)
+            else:
+                self.__controller.group_move_operation(self.group_id)
 
         # trim start or end if resize happened
         if (self.resizable_right != self.infos_on_click["resizable_right"]
