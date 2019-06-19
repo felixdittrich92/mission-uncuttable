@@ -27,7 +27,7 @@ class TimeableView(QGraphicsRectItem):
     """
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
-                 model, view_id, track_id, parent=None):
+                 model, view_id, id2, track_id, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -43,6 +43,7 @@ class TimeableView(QGraphicsRectItem):
 
         self.name = name
         self.view_id = view_id
+        self.id2 = id2
         self.track_id = track_id
         self.width = width
         self.height = height
@@ -385,6 +386,8 @@ class TimeableView(QGraphicsRectItem):
         # update clip position if changed
         if self.x_pos != self.mouse_press_start_pos:
             self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
+                                            self.x_pos)
+            self.__controller.move_timeable(self.id2, self.mouse_press_start_pos,
                                             self.x_pos)
 
         # trim start or end if resize happened

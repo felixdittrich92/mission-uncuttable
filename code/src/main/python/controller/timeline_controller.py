@@ -30,7 +30,7 @@ class TimelineController:
         self.__timeline_view = timeline_view
         self.__history = Project.get_instance().get_history()
 
-    def create_timeable(self, track_id, name, width, x_pos, model, id,
+    def create_timeable(self, track_id, name, width, x_pos, model, id, id2,
                         res_left=0, res_right=0, mouse_pos=0, hist=True, is_drag=False):
         """
         Create a new object in the timeline model to represent a new timeable.
@@ -42,7 +42,7 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
-        op = CreationOperation(track_id, name, width, x_pos, model, id,
+        op = CreationOperation(track_id, name, width, x_pos, model, id, id2,
                                res_left, res_right, mouse_pos, is_drag)
 
         if hist:
@@ -254,7 +254,7 @@ class TimelineController:
 class CreationOperation(Operation):
     """ Creates a new timeable """
 
-    def __init__(self, track_id, name, width, x_pos, model, id,
+    def __init__(self, track_id, name, width, x_pos, model, id, id2,
                  res_left, res_right, mouse_pos, is_drag):
         self.track_id = track_id
         self.name = name
@@ -262,6 +262,7 @@ class CreationOperation(Operation):
         self.x_pos = x_pos
         self.model = model
         self.id = id
+        self.id2 = id2
         self.res_left = res_left
         self.res_right = res_right
         self.mouse_pos = mouse_pos
@@ -271,7 +272,7 @@ class CreationOperation(Operation):
         self.model.move(self.x_pos)
         timeline_view = TimelineController.get_instance().get_timelineview()
         timeline_view.create_timeable(self.track_id, self.name, self.width,
-                                      self.x_pos, self.model, self.id,
+                                      self.x_pos, self.model, self.id, self.id2,
                                       res_left=self.res_left, res_right=self.res_right,
                                       mouse_pos=self.mouse_pos, is_drag=self.is_drag)
 

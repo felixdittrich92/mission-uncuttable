@@ -88,13 +88,27 @@ class TimelineView(QFrame):
         for t in track_views:
             t.set_width(max_width)
 
-    def create_timeable(self, track_id, name, width, x_pos, model, id,
+    def create_timeable(self, track_id, name, width, x_pos, model, id, id2,
                         res_left=0, res_right=0, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
-        try:
-            track = self.tracks[track_id]
-        except KeyError:
-            return
+        if track_id is not None:
+            try:
+                track = self.tracks[track_id]
+            except KeyError:
+                return
+        else:
+            is_empty = False
+            for t in self.tracks:
+                if self.tracks[t].isvideo is False:
+                    is_empty = True
+                    for s in self.timeables:
+                        if self.timeables[s].track_id == t:
+                            is_empty = False
+                if is_empty:      
+                    track = self.tracks[t]
+                    break
+                else:
+                    print("no empty tracks")
 
         x_pos = x_pos - mouse_pos
         if width + x_pos > track.width:
@@ -102,12 +116,14 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id)
+                                model, id, id2, track_id)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 
         if is_drag:
             track.current_timeable = timeable
+            track.current_timeable2 = TimelineController.get_instance().get_timeable_by_id(id2)
+        
 
         # add timeable to dict
         self.timeables[id] = timeable
