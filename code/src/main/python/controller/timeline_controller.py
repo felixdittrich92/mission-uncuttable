@@ -46,13 +46,13 @@ class TimelineController:
         op = CreationOperation(track_id, name, width, x_pos, model, id,
                                res_left, res_right, mouse_pos, is_drag)
 
-        key = list(self.__timeline_model.groups.keys())[0]
-        self.__timeline_model.groups[key].add_timeable(id)
-
         if hist:
             self.__history.do_operation(op)
         else:
             op.do()
+
+        key = list(self.__timeline_model.groups.keys())[0]
+        self.__timeline_model.groups[key].add_timeable(self.get_timeable_by_id(id))
 
     def delete_timeable(self, view_info, model_info, hist=True):
         """
@@ -248,10 +248,6 @@ class TimelineController:
         except KeyError:
             return None
 
-    def get_group_by_timeableid(self, id):
-        """ Returns None if the timeable is not in a group and the group otherwhise """
-        return self.__timeline_model.get_group_by_timeableid(id)
-
     def create_group(self, ids):
         """
         Create a TimeableGroup with all timeables in ids in it.
@@ -260,26 +256,39 @@ class TimelineController:
         @param ids: list of ids of timeable views
         @return: Nothing
         """
-        self.__timeline_model.create_group(generate_id(), ids)
+        timeables = [self.get_timeable_by_id(i) for i in ids]
+        self.__timeline_model.create_group(generate_id(), timeables)
 
-    def get_timeables_in_group(self, group):
+    def remove_timeable_from_group(self, group_id, timeable_id):
         """
-        Returns a list of the timeables views that are associated with
-        the ids in this group.
+        Removes a timeable from a group.
 
-        @param group: object of type TimeableGroup
-        @return: list of timeable views
+        @param group_id: the id of the group from which the timeable will be removed
+        @param timeable_id: the id of the timeable that will be removed from the group
+        @return: Nothing
         """
-        res = []
-
-        for timeable_id in group.ids:
+        try:
             timeable = self.get_timeable_by_id(timeable_id)
+            self.__timeline_model.groups[group_id].remove_timeable(timeable)
+        except KeyError:
+            pass
 
-            # add timeable to result if it exists
-            if timeable is not None:
-                res.append(timeable)
+    def try_group_move(self, group_id, diff):
+        """
+        Checks if all timeables in the group can be moved and executes the moves
+        if its possible.
 
-        return res
+        @param group_id: id of the group that is requested to move
+        @param diff: the difference between the old and new position of the timeables
+        @return: Nothing
+        """
+        try:
+            group = self.__timeline_model.groups[group_id]
+            if group.is_move_possible(diff):
+                for t in group.timeables:
+                    t.do_move(t.x_pos + diff)
+        except KeyError:
+            pass
 
     def group_selected(self):
         """ Groups all selected timeables """
@@ -332,10 +341,12 @@ class DeleteOperation(Operation):
         self.model_info = model_info
 
     def do(self):
+        controller = TimelineController.get_instance()
+        controller.remove_timeable_from_group(self.view_info["group_id"],
+                                              self.view_info["view_id"])
         TimelineModel.get_instance().change(
             "delete", ["clips", {"id": self.model_info["id"]}], {})
-        TimelineController.get_instance().remove_timeable_view(
-            self.view_info["view_id"])
+        controller.remove_timeable_view(self.view_info["view_id"])
 
     def undo(self):
         model = TimeableModel(
@@ -344,12 +355,16 @@ class DeleteOperation(Operation):
         model.set_end(self.model_info["end"], is_sec=True)
         model.move(self.model_info["position"], is_sec=True)
 
-        TimelineController.get_instance().create_timeable(
+        controller = TimelineController.get_instance()
+        controller.create_timeable(
             self.view_info["track_id"], self.view_info["name"],
             self.view_info["width"], self.view_info["x_pos"], model,
             self.view_info["view_id"],
             res_left=self.view_info["resizable_left"],
             res_right=self.view_info["resizable_right"], hist=False)
+
+        controller.get_timeable_by_id(self.view_info["view_id"]).group_id = \
+            self.view_info["group_id"]
 
 
 class CutOperation(Operation):
