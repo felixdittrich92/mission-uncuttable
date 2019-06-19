@@ -255,11 +255,23 @@ class TimelineController:
 
         return None
 
+    def create_group(self, ids):
+        """
+        Create a TimeableGroup with all timeables in ids in it.
+        The group will be added to the timeline model.
+
+        @param ids: list of ids of timeable views
+        @return: Nothing
+        """
+        group = TimeableGroup(ids)
+        self.__timeline_model.groups.append(group)
+
     def group_selected(self):
         """ Groups all selected timeables """
         items = self.__timeline_view.get_selected_timeables()
+        ids = [i.view_id for i in items]
 
-        TimeableGroup(items)
+        self.create_group(ids)
 
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
