@@ -287,7 +287,7 @@ class TimeableView(QGraphicsRectItem):
             return False
 
         # move only if the new position is still inside the track
-        if pos < 0 and pos + self.width > self.scene().width():
+        if pos < 0 or pos + self.width > self.scene().width():
             return False
 
         return True
@@ -317,6 +317,7 @@ class TimeableView(QGraphicsRectItem):
             diff = pos - self.x_pos
             timeables = self.__controller.get_timeables_in_group(group)
             if all(t.is_move_possible_diff(diff) for t in timeables):
+                print("a")
                 for t in timeables:
                     t.do_move(t.x_pos + diff)
 
