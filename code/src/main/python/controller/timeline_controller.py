@@ -290,6 +290,17 @@ class TimelineController:
         except KeyError:
             pass
 
+    def group_move_operation(self, group_id):
+        """
+        Creates as GroupMoveOperation that updates the models of all timeables
+        in the group and saves the move in the history.
+
+        @param group_id: the id of the group that got moved
+        @return: Nothing
+        """
+        op = GroupMoveOperation(group_id)
+        self.__history.do_operation(op)
+
     def group_selected(self):
         """ Groups all selected timeables """
         items = self.__timeline_view.get_selected_timeables()
@@ -537,3 +548,16 @@ class DragOperation(Operation):
         controller.delete_timeable(
             self.view_info_new, self.model_new.get_info_dict(), hist=False)
         self.was_created = False
+
+
+class GroupMoveOperation(Operation):
+    """ Moves a TimeableGroup """
+
+    def __init__(self, group_id):
+        self.group_id = group_id
+
+    def do(self):
+        pass
+
+    def undo(self):
+        pass
