@@ -1,6 +1,9 @@
 import json
 import openshot
 
+from .timeable_group import TimeableGroup
+from util.timeline_utils import generate_id
+
 
 TIMELINE_DEFAULT_SETTINGS = {
     "fps": {
@@ -52,7 +55,7 @@ class TimelineModel:
 
         self.timeline.Open()
 
-        self.groups = []
+        self.groups = {generate_id(): TimeableGroup([])}
 
     def get_clip_by_id(self, clip_id):
         """
@@ -61,6 +64,14 @@ class TimelineModel:
         for clip in self.timeline.Clips():
             if clip.Id() == clip_id:
                 return clip
+
+        return None
+
+    def get_group_by_timeableid(self, id):
+        """ Returns None if the timeable is not in a group and the group otherwhise """
+        for g in list(self.groups.values()):
+            if g.has_timeable(id):
+                return g
 
         return None
 
@@ -84,6 +95,16 @@ class TimelineModel:
 
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
+
+    def create_group(self, group_id, ids):
+        """
+        Create a TimeableGroup with all timeables in ids in it.
+        The group will be added to the timeline model.
+
+        @param ids: list of ids of timeable views
+        @return: Nothing
+        """
+        self.groups[group_id] = TimeableGroup(ids)
 
     def get_last_frame(self):
         """ returns the number of the last frame in the timeline """
