@@ -8,6 +8,12 @@ class TimeableGroup:
         self.ids = ids
 
     def has_timeable(self, id):
+        """
+        Checks if the timeable with the given id is in this group
+
+        @id: id of the timeable view
+        @return: True if if timeable is in group, False otherwhise
+        """
         return id in self.ids
 
     def remove_timeable(self, id):
