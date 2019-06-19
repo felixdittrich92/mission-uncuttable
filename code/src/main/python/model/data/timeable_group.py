@@ -1,9 +1,14 @@
 class TimeableGroup:
-    """ Timeables that are grouped together will also be moved together """
+    """
+    A TimeableGroup represents one or more Timeables that will be connected together.
+    This means that all timeables in the group will be moved together.
+    """
 
     def __init__(self, ids):
         """
-        @param ids: ids of the timeable views in the group
+        Creates a new timeable group
+
+        @param ids: list with ids of the timeable views in the group
         """
         self.ids = ids
 
