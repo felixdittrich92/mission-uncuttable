@@ -45,11 +45,13 @@ class TimeableView(QGraphicsRectItem):
         self.model.add_to_timeline()
 
         self.name = name
-        self.view_id = view_id
-        self.track_id = track_id
         self.width = width
         self.height = height
         self.x_pos = x_pos
+
+        self.view_id = view_id
+        self.track_id = track_id
+        self.group_id = None
 
         self.__controller = TimelineController.get_instance()
 
@@ -115,6 +117,7 @@ class TimeableView(QGraphicsRectItem):
             "x_pos": self.x_pos,
             "view_id": self.view_id,
             "track_id": self.track_id,
+            "group_id": self.group_id,
             "model": self.model.get_info_dict()
         }
 
@@ -299,7 +302,8 @@ class TimeableView(QGraphicsRectItem):
         @param pos: the new x_pos.
         @return: Nothing.
         """
-        self.x_pos = 0 if pos < 5 else pos
+        # self.x_pos = 0 if pos < 5 else pos
+        self.x_pos = pos
         self.setPos(self.x_pos, 0)
 
     def move_on_track(self, pos):
@@ -312,13 +316,9 @@ class TimeableView(QGraphicsRectItem):
 
         @param pos: the new x_pos of the timeable
         """
-        group = self.__controller.get_group_by_timeableid(self.view_id)
-        if group is not None:
+        if self.group_id is not None:
             diff = pos - self.x_pos
-            timeables = self.__controller.get_timeables_in_group(group)
-            if all(t.is_move_possible_diff(diff) for t in timeables):
-                for t in timeables:
-                    t.do_move(t.x_pos + diff)
+            self.__controller.try_group_move(self.group_id, diff)
 
         # make move if its possible
         elif self.is_move_possible_position(pos):
