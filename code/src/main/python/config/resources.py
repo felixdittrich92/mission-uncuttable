@@ -12,7 +12,8 @@ files = {
     "decision_widget": "ui/new_project_decision.ui",
     "select_project_widget": "ui/select_project.ui",
     "qss_dark": "stylesheets/dark.qss",
-    "qss_light": "stylesheets/light.qss"
+    "qss_light": "stylesheets/light.qss",
+    "timeable_settings": "ui/timeable_settings_view.ui"
 }
 images = {
     "play_button": "images/buttons/play.png",

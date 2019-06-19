@@ -7,6 +7,15 @@ QMainWindow, QMenuBar {
     font-size: 14px;
 }
 
+QDialog {
+    background-color: #212D40;
+    color: rgb(214, 214, 214);
+}
+
+#current_volume {
+    color: #F5F5F5;
+}
+
 QSplitter::handle:horizontal {
     background: #212D40;
     width: 2px;

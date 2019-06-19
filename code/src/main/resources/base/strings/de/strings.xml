@@ -52,7 +52,13 @@
     <timeable>
         <delete>löschen</delete>
         <cut>schneiden</cut>
+        <settings>Einstellungen</settings>
     </timeable>
+    <timeablesettings>
+        <save>Speichern</save>
+        <cancel>Abbrechen</cancel>
+        <label>Aktuelle Lautstärke:</label>
+    </timeablesettings>
     <export>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>

@@ -52,7 +52,13 @@
     <timeable>
         <delete>delete</delete>
         <cut>cut</cut>
+        <settings>settings</settings>
     </timeable>
+    <timeablesettings>
+        <save>Save</save>
+        <cancel>Cancel</cancel>
+        <label>Current Volume:</label>
+    </timeablesettings>
     <export>
         <filename>Filename</filename>
         <folder>Folder</folder>
