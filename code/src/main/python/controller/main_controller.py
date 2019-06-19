@@ -53,7 +53,7 @@ class MainController:
         except NameError:
             pass
 
-    def __start_videoeditor_controller(self):
+    def __start_videoeditor_controller(self, filepath):
         """Closes the start window and starts the video-editor window."""
 
         self.__start_view.close()
@@ -62,6 +62,7 @@ class MainController:
         timeline_controller.create_default_tracks()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
         self.__video_editor_controller.start()
+        self.__video_editor_controller.new_project(filepath)
 
     def __start_autocut_controller(self):
         self.__start_view.close()
@@ -128,12 +129,15 @@ class MainController:
             else:
                 try:
                     os.mkdir(path)
-                except OSError:
+                    name = name + ".uc"
+                    open(name, "w+")
 
+                except OSError:
                     pass
 
                 if os.path.isdir(path) and type == "SimpleCut":
-                    self.__start_videoeditor_controller()
+                    self.__start_videoeditor_controller(os.path.join(path, name))
+
                 elif os.path.isdir(path) and type == "AutoCut":
                     self.__start_autocut_controller()
                 else:

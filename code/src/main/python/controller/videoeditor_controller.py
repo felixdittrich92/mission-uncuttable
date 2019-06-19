@@ -124,6 +124,13 @@ class VideoEditorController:
 
         Projectsettings.add_project(filename)
 
+    def new_project(self, path):
+        self.__write_project_data(path)
+        project = Project.get_instance()
+        project.path = path
+
+        Projectsettings.add_project(path)
+
     def get_filemanager_controller(self):
         return self.__filemanager_controller
 
