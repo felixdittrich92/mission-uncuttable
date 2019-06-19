@@ -312,12 +312,11 @@ class TimeableView(QGraphicsRectItem):
 
         @param pos: the new x_pos of the timeable
         """
-        group = self.__controller.get_group_by_id(self.view_id)
+        group = self.__controller.get_group_by_timeableid(self.view_id)
         if group is not None:
             diff = pos - self.x_pos
             timeables = self.__controller.get_timeables_in_group(group)
             if all(t.is_move_possible_diff(diff) for t in timeables):
-                print("a")
                 for t in timeables:
                     t.do_move(t.x_pos + diff)
 
