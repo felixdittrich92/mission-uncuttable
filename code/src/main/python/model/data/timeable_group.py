@@ -4,13 +4,17 @@ class TimeableGroup:
     This means that all timeables in the group will be moved together.
     """
 
-    def __init__(self, ids):
+    def __init__(self, group_id, timeables):
         """
         Creates a new timeable group
 
         @param ids: list with ids of the timeable views in the group
         """
-        self.ids = ids
+        self.group_id = group_id
+        self.timeables = timeables
+
+        for t in self.timeables:
+            t.group_id = self.group_id
 
     def has_timeable(self, id):
         """
@@ -21,28 +25,34 @@ class TimeableGroup:
         """
         return id in self.ids
 
-    def add_timeable(self, id):
+    def add_timeable(self, timeable):
         """
         Adds a timeable to a timeable group.
 
-        @param id: id of the timeable view that will be added
+        @param timeable: the timeable view that will be added
         @return: Nothing
         """
-        if id in self.ids:
+        if timeable in self.timeables:
             return
 
-        self.ids.append(id)
+        self.timeables.append(timeable)
+        timeable.group_id = self.group_id
 
-    def remove_timeable(self, id):
+    def remove_timeable(self, timeable):
         """
         Removes the timeable with the given id from the group
 
-        @param id: id of the timeable view that will be removed
+        @param timeable: the timeable view that will be removed
         @return: Nothing
         """
-        while id in self.ids:
-            self.remove(id)
+        while timeable in self.timeables:
+            self.timeables.remove(timeable)
 
-    def is_move_possible(self, pos):
-        """ checks if all timeables in the group can be moved to pos """
-        return False
+    def is_move_possible(self, diff):
+        """
+        Checks if the group can be moved by the value of diff
+
+        @param diff: the difference between the old and new position of the timeables
+        @return: True if move is possible, False otherwhise
+        """
+        return all(t.is_move_possible_diff(diff) for t in self.timeables)
