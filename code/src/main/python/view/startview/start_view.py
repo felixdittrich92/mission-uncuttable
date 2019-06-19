@@ -79,7 +79,7 @@ class StartView(QMainWindow):
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
-
+"Fehler"
 class SelectProjectWidget(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
@@ -102,8 +102,13 @@ class DecisionWidget(QWidget):
         height = self.frameGeometry().height()
         logo_with_name = QtGui.QPixmap(Resources.images.logo_with_name)
         picture = self.findChild(QLabel, "label_pic")
-        # logo_with_name = logo_with_name.scaledToHeight(height, transformMode=Qt.SmoothTransformation)
         logo_with_name = logo_with_name.scaled(height/2 - 50, height/2 - 50,
                                                Qt.KeepAspectRatio,
                                                transformMode=Qt.SmoothTransformation)
         picture.setPixmap(logo_with_name)
+
+        name_label = self.findChild(QLabel, "name_label")
+        name_label.setText(str(Language.current.startview.namelabel))
+
+        folder_label = self.findChild(QLabel, "folder_label")
+        folder_label.setText(str(Language.current.startview.folderlabel))

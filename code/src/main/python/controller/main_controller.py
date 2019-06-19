@@ -86,6 +86,7 @@ class MainController:
             # set up timeline
             timeline_controller = TimelineController.get_instance()
             if "timeline" in project_data:
+
                 timeline_controller.create_project_timeline(project_data["timeline"])
             else:
                 timeline_controller.create_default_tracks()
@@ -110,33 +111,46 @@ class MainController:
         name = self.name_line_edit.text()
         path = os.path.join(path, name)
         if path == "" or name == "":
-            message_box = QMessageBox()
-            message_box.setWindowTitle("Fehler")
-            message_box.setIcon(QMessageBox.Critical)
-            message_box.setText("Bitte alle Felder ausfüllen") # TODO multilanguage
-            message_box.setInformativeText("Es fehlen noch Informationen!")
-            message_box.exec_()
+            title = str(Language.current.errors.incomplete.msgboxtitle)
+            icon = QMessageBox.Critical
+            text = str(Language.current.errors.incomplete.msgboxtext)
+            info = str(Language.current.errors.incomplete.msgboxinfotext)
+            self.__show_message_box(title, icon, text, info)
             return
         else:
             if os.path.isdir(path):
-                message_box = QMessageBox()
-                message_box.setWindowTitle("Fehler")
-                message_box.setIcon(QMessageBox.Critical)
-                message_box.setText("Projekt schon vorhanden")  # TODO multilanguage
-                message_box.setInformativeText("Wähle einen anderen Namen!")
-                message_box.exec_()
+                title = str(Language.current.errors.projectexists.msgboxtitle)
+                icon = QMessageBox.Critical
+                text = str(Language.current.errors.projectexists.msgboxtext)
+                info = str(Language.current.errors.projectexists.msgboxinfotext)
+                self.__show_message_box(title, icon, text, info)
                 return
             else:
                 try:
                     os.mkdir(path)
                 except OSError:
-                    print("Creation of the directory %s failed" % path)
 
-                if type == "SimpleCut":
+                    pass
+
+                if os.path.isdir(path) and type == "SimpleCut":
                     self.__start_videoeditor_controller()
-                else:
+                elif os.path.isdir(path) and type == "AutoCut":
                     self.__start_autocut_controller()
+                else:
+                    title = str(Language.current.errors.writeerror.msgboxtitle)
+                    icon = QMessageBox.Critical
+                    text = str(Language.current.errors.writeerror.msgboxtext)
+                    info = str(Language.current.errors.writeerror.msgboxinfotext)
+                    self.__show_message_box(title, icon, text, info)
 
     def __pick_folder(self):
         file = str(QFileDialog.getExistingDirectory(self.__start_view, "Select Directory"))
         self.folder_line_edit.setText(file)
+
+    def __show_message_box(self, title, icon, text, info):
+        message_box = QMessageBox()
+        message_box.setWindowTitle(title)
+        message_box.setIcon(icon)
+        message_box.setText(text)
+        message_box.setInformativeText(info)
+        message_box.exec_()
