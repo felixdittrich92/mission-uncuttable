@@ -6,7 +6,7 @@ timelinemodel.
 import os
 
 from model.project import Project, Operation
-from model.data import TimeableModel, TimelineModel, TimeableGroup
+from model.data import TimeableModel, TimelineModel
 from util.timeline_utils import generate_id, pos_to_seconds, seconds_to_pos
 
 
@@ -46,7 +46,8 @@ class TimelineController:
         op = CreationOperation(track_id, name, width, x_pos, model, id,
                                res_left, res_right, mouse_pos, is_drag)
 
-        self.__timeline_model.groups[0].add_timeable(id)
+        key = list(self.__timeline_model.groups.keys())[0]
+        self.__timeline_model.groups[key].add_timeable(id)
 
         if hist:
             self.__history.do_operation(op)
@@ -247,15 +248,9 @@ class TimelineController:
         except KeyError:
             return None
 
-    def get_group_by_id(self, id):
+    def get_group_by_timeableid(self, id):
         """ Returns None if the timeable is not in a group and the group otherwhise """
-        groups = self.__timeline_model.groups
-
-        for g in groups:
-            if g.has_timeable(id):
-                return g
-
-        return None
+        return self.__timeline_model.get_group_by_timeableid(id)
 
     def create_group(self, ids):
         """
@@ -265,8 +260,7 @@ class TimelineController:
         @param ids: list of ids of timeable views
         @return: Nothing
         """
-        group = TimeableGroup(ids)
-        self.__timeline_model.groups.append(group)
+        self.__timeline_model.create_group(generate_id(), ids)
 
     def get_timeables_in_group(self, group):
         """
