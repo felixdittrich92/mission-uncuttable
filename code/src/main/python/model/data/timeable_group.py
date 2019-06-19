@@ -17,7 +17,12 @@ class TimeableGroup:
         return id in self.ids
 
     def remove_timeable(self, id):
-        """ Removes a timeable from the group """
+        """
+        Removes the timeable with the given id from the group
+
+        @param id: id of the timeable view that will be removed
+        @return: Nothing
+        """
         while id in self.ids:
             self.remove(id)
 
