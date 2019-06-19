@@ -318,7 +318,7 @@ class TimeableView(QGraphicsRectItem):
             timeables = self.__controller.get_timeables_in_group(group)
             if all(t.is_move_possible_diff(diff) for t in timeables):
                 for t in timeables:
-                    t.do_move(pos - t.x_pos)
+                    t.do_move(t.x_pos + diff)
 
         # make move if its possible
         elif self.is_move_possible_position(pos):
