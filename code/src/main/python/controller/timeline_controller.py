@@ -134,6 +134,12 @@ class TimelineController:
         self.__history.do_operation(op)
 
     def is_overlay_track(self, track_id):
+        """
+        Checks if the track with track_id is the overlay track.
+
+        @param track_id: id of the track which will be checked
+        @return: True if track is overlay, False otherwhise
+        """
         if track_id not in self.__timeline_view.tracks:
             return False
 
