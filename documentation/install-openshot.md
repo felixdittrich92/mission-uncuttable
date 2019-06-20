@@ -1,8 +1,7 @@
 # OpenShot auf Linux kompilieren
 
 ## Git-Repo Clonen
-```git clone``` 
-https://github.com/OpenShot/libopenshot.git
+`git clone` https://github.com/OpenShot/libopenshot.git
 
 ## Dependencies installieren
 ```
@@ -43,6 +42,7 @@ mkdir -p build
 cd build
 cmake ../
 make
+make install**************
 ```
 
 ## Segmentation Fault Error fixen
