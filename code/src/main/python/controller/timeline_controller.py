@@ -455,8 +455,7 @@ class MoveOperation(Operation):
         timeable = TimelineController.get_instance().get_timeable_by_id(self.view_id)
 
         # set timeableview position
-        timeable.x_pos = self.new_pos
-        timeable.setPos(timeable.x_pos, 0)
+        timeable.do_move(self.new_pos)
         # set clip position on the timeline in seconds
         timeable.model.move(self.new_pos)
 
@@ -464,8 +463,7 @@ class MoveOperation(Operation):
         timeable = TimelineController.get_instance().get_timeable_by_id(self.view_id)
 
         # set timeableview position
-        timeable.x_pos = self.old_pos
-        timeable.setPos(timeable.x_pos, 0)
+        timeable.do_move(self.old_pos)
         # set clip position on the timeline in seconds
         timeable.model.move(self.old_pos)
 
