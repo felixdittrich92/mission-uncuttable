@@ -61,7 +61,8 @@ class TrackView(QGraphicsView):
             "width": self.width,
             "height": self.height,
             "num": self.num,
-            "name": self.name
+            "name": self.name,
+            "is_overlay": self.is_overlay
         }
 
     def wheelEvent(self, event):

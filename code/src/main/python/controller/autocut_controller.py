@@ -1,18 +1,12 @@
 import os
 import shutil
 
-import cv2
-import sys
-
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
 from autocut import VideoSplitter
 from autocut import Presentation
 from controller import VideoEditorController, TimelineController
-from controller.filemanager_controller import FilemanagerController
 from view import VideoEditorView
-from view.filemanagerview import FilemanagerView
-from random import randint
 from config import Settings
 from config import Language
 
@@ -156,8 +150,8 @@ class AutocutController:
                 self.textlabel.setText(str(Language.current.autocut.cutting))
                 QApplication.processEvents()
 
-        except:
-            print("video error")
+        except Exception as e:
+            print(e)
 
             return
 
