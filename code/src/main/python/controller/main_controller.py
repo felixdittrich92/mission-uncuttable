@@ -105,8 +105,6 @@ class MainController:
             self.__start_view.close()
             self.__video_editor_controller.start()
 
-        # TODO show error window if path does not exist
-
     def __new_project(self, type):
         path = self.folder_line_edit.text()
         name = self.name_line_edit.text()

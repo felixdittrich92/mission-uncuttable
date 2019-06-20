@@ -131,16 +131,22 @@ class TimeableModel:
         self.timeline_instance.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
 
-    def to_corner(self):
+    def corner(self, val):
+        """ moves the clip to the bottom right """
         k1 = openshot.Keyframe()
-        k1.AddPoint(0, 0.2)
         k2 = openshot.Keyframe()
-        k2.AddPoint(0, 0.4)
         k3 = openshot.Keyframe()
-        k3.AddPoint(0, 0.4)
+        if val:
+            k1.AddPoint(0, 0.2)
+            k2.AddPoint(0, 0.4)
+            k3.AddPoint(0, 0.4)
+        else:
+            k1.AddPoint(0, 1.0)
+            k2.AddPoint(0, 0.0)
+            k3.AddPoint(0, 0.0)
+
         self.clip.location_x = k2
         self.clip.location_y = k3
         self.clip.scale_x = k1
         self.clip.scale_y = k1
         self.clip.scale = openshot.SCALE_FIT
-
