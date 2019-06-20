@@ -259,6 +259,18 @@ class TimelineController:
         timeables = [self.get_timeable_by_id(i) for i in ids]
         self.__timeline_model.create_group(generate_id(), timeables)
 
+    def get_group_by_id(self, group_id):
+        """
+        Returns the group with the id of group_id.
+
+        @param group_id: id of the group that is requested
+        @return: TimeableGroup with id = group_id
+        """
+        try:
+            return self.__timeline_model.groups[group_id]
+        except KeyError:
+            return None
+
     def remove_timeable_from_group(self, group_id, timeable_id):
         """
         Removes a timeable from a group.
@@ -269,8 +281,8 @@ class TimelineController:
         """
         try:
             timeable = self.get_timeable_by_id(timeable_id)
-            self.__timeline_model.groups[group_id].remove_timeable(timeable)
-        except KeyError:
+            self.get_group_by_id(group_id).remove_timeable(timeable)
+        except AttributeError:
             pass
 
     def try_group_move(self, group_id, diff):
@@ -283,11 +295,11 @@ class TimelineController:
         @return: Nothing
         """
         try:
-            group = self.__timeline_model.groups[group_id]
+            group = self.get_group_by_id(group_id)
             if group.is_move_possible(diff):
                 for t in group.timeables:
                     t.do_move(t.x_pos + diff)
-        except KeyError:
+        except AttributeError:
             pass
 
     def group_move_operation(self, group_id):
