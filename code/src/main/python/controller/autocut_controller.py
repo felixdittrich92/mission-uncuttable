@@ -153,11 +153,11 @@ class AutocutController:
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
         video_editor_controller = VideoEditorController(video_editor_view)
-        self._AutocutController__main_controller.__video_editor_controller = video_editor_controller
+        self.__main_controller.__video_editor_controller = video_editor_controller
         timeline_controller.create_autocut_tracks()
 
         timeline_controller.create_autocut_timeables(speaker_video.get(), 3,
-                                                     speaker_video.speaker_subvideos, corner=True)
+                                                     speaker_video.speaker_subvideos)
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.board_subvideos)
         timeline_controller.create_autocut_timeables(visualizer_video.get(), 1,
@@ -165,7 +165,6 @@ class AutocutController:
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
 
-        video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.get())
