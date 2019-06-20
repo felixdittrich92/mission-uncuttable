@@ -35,12 +35,7 @@ class VisualizerVideo(MediaFile):
                         self.visualizer_subvideos.append((times[0], times[-1]))
                     break
 
-                #height, width = frame.shape[:2]
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-                #if width == 960:
-                    #roi = frame[275:405, 960:1000]
-                #else:
-                    #roi = frame[183:300, 642:662]
 
                 roi = frame[0:50, 0:50]
                 average = cv2.mean(roi)
