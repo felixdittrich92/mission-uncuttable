@@ -64,10 +64,10 @@ class MainController:
         self.__video_editor_controller.start()
         self.__video_editor_controller.new_project(filepath)
 
-    def __start_autocut_controller(self):
+    def __start_autocut_controller(self, path, project_name, filename):
         self.__start_view.close()
         autocut_view = AutocutView()
-        self.__autocut_controller = AutocutController(autocut_view, self)
+        self.__autocut_controller = AutocutController(autocut_view, self, path, project_name, filename)
         self.__autocut_controller.start()
 
     def __load_project(self):
@@ -110,8 +110,8 @@ class MainController:
     def __new_project(self, type):
         path = self.folder_line_edit.text()
         name = self.name_line_edit.text()
-        path = os.path.join(path, name)
-        if path == "" or name == "":
+        projectpath = os.path.join(path, name)
+        if projectpath == "" or name == "":
             title = str(Language.current.errors.incomplete.msgboxtitle)
             icon = QMessageBox.Critical
             text = str(Language.current.errors.incomplete.msgboxtext)
@@ -119,7 +119,7 @@ class MainController:
             self.__show_message_box(title, icon, text, info)
             return
         else:
-            if os.path.isdir(path):
+            if os.path.isdir(projectpath):
                 title = str(Language.current.errors.projectexists.msgboxtitle)
                 icon = QMessageBox.Critical
                 text = str(Language.current.errors.projectexists.msgboxtext)
@@ -128,18 +128,18 @@ class MainController:
                 return
             else:
                 try:
-                    os.mkdir(path)
-                    name = name + ".uc"
-                    open(name, "w+")
+                    os.mkdir(projectpath)
+                    filename = name + ".uc"
 
                 except OSError:
                     pass
 
-                if os.path.isdir(path) and type == "SimpleCut":
-                    self.__start_videoeditor_controller(os.path.join(path, name))
+                if os.path.isdir(projectpath) and type == "SimpleCut":
+                    self.__start_videoeditor_controller(os.path.join(projectpath, filename))
 
-                elif os.path.isdir(path) and type == "AutoCut":
-                    self.__start_autocut_controller()
+                elif os.path.isdir(projectpath) and type == "AutoCut":
+                    os.mkdir(os.path.join(projectpath, "files"))
+                    self.__start_autocut_controller(path, name, filename)
                 else:
                     title = str(Language.current.errors.writeerror.msgboxtitle)
                     icon = QMessageBox.Critical
