@@ -302,7 +302,7 @@ class TimelineController:
         except AttributeError:
             pass
 
-    def group_move_operation(self, group_id):
+    def group_move_operation(self, group_id, diff):
         """
         Creates as GroupMoveOperation that updates the models of all timeables
         in the group and saves the move in the history.
@@ -310,7 +310,7 @@ class TimelineController:
         @param group_id: the id of the group that got moved
         @return: Nothing
         """
-        op = GroupMoveOperation(group_id)
+        op = GroupMoveOperation(group_id, diff)
         self.__history.do_operation(op)
 
     def group_selected(self):
@@ -565,11 +565,24 @@ class DragOperation(Operation):
 class GroupMoveOperation(Operation):
     """ Moves a TimeableGroup """
 
-    def __init__(self, group_id):
+    def __init__(self, group_id, diff):
         self.group_id = group_id
+        self.diff = diff
+        self.was_moved = True
 
     def do(self):
-        pass
+        controller = TimelineController.get_instance()
+        group = controller.get_group_by_id(self.group_id)
+        for t in group.timeables:
+            if not self.was_moved:
+                t.do_move(t.x_pos + self.diff)
+            t.model.move(t.x_pos)
+
+        self.was_moved = False
 
     def undo(self):
-        pass
+        controller = TimelineController.get_instance()
+        group = controller.get_group_by_id(self.group_id)
+        for t in group.timeables:
+            t.do_move(t.x_pos - self.diff)
+            t.model.move(t.x_pos)
