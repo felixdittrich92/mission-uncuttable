@@ -277,6 +277,22 @@ class TimelineController:
         except KeyError:
             return None
 
+    def is_same_group(self, first_timeable, second_timeable):
+        """
+        Checks if two timeables are in the same group
+
+        @param first_timeable: timeable view
+        @param second_timeable: timeable view
+        @return: True if both timeables are in same TimeableGroup, False otherwhise
+        """
+        if first_timeable.group_id is None or second_timeable.group_id is None:
+            return False
+
+        first_group = self.get_group_by_id(first_timeable.group_id)
+        second_group = self.get_group_by_id(second_timeable.group_id)
+
+        return first_group == second_group
+
     def remove_timeable_from_group(self, group_id, timeable_id):
         """
         Removes a timeable from a group.
