@@ -84,6 +84,10 @@ class MainController:
         """ Closes the start window and loads the selected project """
         # get path from listwidget
         project_list = self.__start_view.select_project_widget.projects_list_view
+        # return if no project is selected
+        if project_list.currentItem() is None:
+            return
+
         path = project_list.currentItem().text()
 
         # check if file exists
