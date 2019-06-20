@@ -286,7 +286,8 @@ class TimeableView(QGraphicsRectItem):
         # check if theres another Timeable at the given position
         r = QRectF(pos, 0, self.width, self.height)
         colliding = self.scene().items(r)
-        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
+        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])) \
+                and not self.__controller.is_same_group(self, colliding[0]):
             return False
 
         # move only if the new position is still inside the track
