@@ -24,6 +24,12 @@ default_settings = {
             "values": [1, 100],  # min and max history size
             "current": 30
         },
+        "projects_path": {
+            "name": "Projects Path",
+            "type": "text",
+            "values": "",
+            "current": "~/ubicut/"
+        }
     },
     "design": {
         "color_theme": {
@@ -65,6 +71,8 @@ default_settings = {
         }
     },
     "Invisible": {
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "project_formats": 'Files ( *.uc);;',
         "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
         "autocutvideo_import_formats": 'Files ( *.mp4);;',
         "autocutpdf_import_formats": 'Files ( *.pdf);;',

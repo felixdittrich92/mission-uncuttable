@@ -1,4 +1,6 @@
 import os
+import shutil
+
 import cv2
 import sys
 
@@ -15,14 +17,12 @@ from config import Settings
 from config import Language
 
 RESOLUTION = 250
-projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
-projekt_name = "Projekt"
 
 
 class AutocutController:
     """A class used as the Controller for the autocut window."""
 
-    def __init__(self, view, main_controller):
+    def __init__(self, view, main_controller, project_path, project_name, filename):
         self.__autocut_view = view
         self.video_button = self.__autocut_view.video_button
         self.video_button.clicked.connect(self.pick_video)
@@ -47,6 +47,10 @@ class AutocutController:
         self.filename_pdf = None
         self.pictures = []
 
+        self.project_path = project_path
+        self.project_name = project_name
+        self.filename = filename
+
     def start(self):
         """Calls '__show_view()' of AutocutController"""
         self.__autocut_view.show()
@@ -55,6 +59,11 @@ class AutocutController:
         """Closes the window."""
         self.__autocut_view.close()
         self.__main_controller.start()
+
+        try:
+            shutil.rmtree(os.path.join(self.project_path, self.project_name))
+        except OSError:
+            pass
 
     def pick_video(self):
         """Opens a file picker to select a video file."""
@@ -105,15 +114,18 @@ class AutocutController:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
                 self.textlabel.setText(str(Language.current.autocut.slidesprogressing))
-                self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
+                self.pictures = presentation.convert_pdf(self.project_path,
+                                                         os.path.join(self.project_name, "files"),
+                                                         RESOLUTION)
         except:
             print("pdf error")
             pass
 
         try:
             if self.filename_video is not None:
-                video_splitter = VideoSplitter(projekt_path,
-                                               projekt_name, self.filename_video)
+                video_splitter = VideoSplitter(self.project_path,
+                                               os.path.join(self.project_name, "files"),
+                                               self.filename_video)
 
                 QApplication.processEvents()
                 self.textlabel.setText(str(Language.current.autocut.audioprogress))
@@ -153,7 +165,7 @@ class AutocutController:
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
         video_editor_controller = VideoEditorController(video_editor_view)
-        self._AutocutController__main_controller.__video_editor_controller = video_editor_controller
+        self.__main_controller.__video_editor_controller = video_editor_controller
         timeline_controller.create_autocut_tracks()
 
         timeline_controller.create_autocut_timeables(speaker_video.get(), 3,
@@ -165,7 +177,6 @@ class AutocutController:
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
 
-        video_editor_controller = VideoEditorController(video_editor_view)
         filemanager = video_editor_controller.get_filemanager_controller()
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.get())
@@ -179,3 +190,4 @@ class AutocutController:
 
         self.__autocut_view.close()
         video_editor_controller.start()
+        video_editor_controller.new_project(os.path.join(self.project_path, self.project_name, self.filename))
