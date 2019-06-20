@@ -8,7 +8,7 @@ from model.data import FileType
 from config import Language
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
-
+import openshot
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
@@ -162,11 +162,10 @@ class TimeableView(QGraphicsRectItem):
 
     def settings(self):
         volume_dialog = TimeableSettingsView()
-        'Insert Clip Value'
-        current_clip_volume = 2
+        current_clip_volume = self.model.clip.volume.GetValue(0)
         volume_dialog.set_data(current_clip_volume)
         volume_dialog.exec_()
-        print(volume_dialog.current_volume_value)
+        self.model.clip.volume = openshot.Keyframe(volume_dialog.current_volume_value)
 
     def delete(self, hist=True):
         """ deletes the model from the timeline """

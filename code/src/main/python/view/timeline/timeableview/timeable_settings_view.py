@@ -1,12 +1,8 @@
-from config import Resources, Language
 from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import *
-# from config import Resources
-from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
-
-from config import Settings, Language
+from config import Settings, Language, Resources
 from PyQt5 import uic
 
 
@@ -35,7 +31,7 @@ class TimeableSettingsView(QDialog):
         self.saveButton.setText(str(Language.current.timeablesettings.save))
         self.cancelButton.setText(str(Language.current.timeablesettings.cancel))
 
-        self.current_volume_value = 1
+        self.current_volume_value = None
         self.old_value = None
 
     def update_qss(self):
@@ -54,11 +50,13 @@ class TimeableSettingsView(QDialog):
 
     def changed_volume(self):
         self.current_volume_value = self.volume_slider.value() / 10
-        self.current_volume.setText(str(Language.current.timeablesettings.label + " " + str(self.current_volume_value)))
+        self.current_volume.setText(str(Language.current.timeablesettings.label 
+                        + " " + str(int(self.current_volume_value*10)*10) + "%"))
 
     def update_values(self):
         self.volume_slider.setValue(self.current_volume_value*10)
-        self.current_volume.setText(str(Language.current.timeablesettings.label + " " + str(self.current_volume_value)))
+        self.current_volume.setText(str(Language.current.timeablesettings.label
+                        + " " + str(int(self.current_volume_value*10)*10) + "%"))
 
     def set_data(self, value):
         self.old_value = value
