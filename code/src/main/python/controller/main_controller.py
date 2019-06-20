@@ -54,7 +54,11 @@ class MainController:
             pass
 
     def __start_videoeditor_controller(self, filepath):
-        """Closes the start window and starts the video-editor window."""
+        """
+        Closes the start window and starts the video-editor window.
+
+        :param filepath: String: Path to the project file
+        """
 
         self.__start_view.close()
         video_editor_view = VideoEditorView()
@@ -65,6 +69,12 @@ class MainController:
         self.__video_editor_controller.new_project(filepath)
 
     def __start_autocut_controller(self, path, project_name, filename):
+        """
+        Closes the start window and starts the autocut window.
+        :param path: String - Path to the folder where the project folder will be created in.
+        :param project_name: String - Name of the project
+        :param filename: String - Name of project file *.uc
+        """
         self.__start_view.close()
         autocut_view = AutocutView()
         self.__autocut_controller = AutocutController(autocut_view, self, path, project_name, filename)
@@ -106,6 +116,11 @@ class MainController:
             self.__video_editor_controller.start()
 
     def __new_project(self, type):
+        """
+        Creates the project folder and starts the necessary controler.
+
+        :param type: String - Type of the new Project ["AutoCut", "SimpleCut"]
+        """
         path = self.folder_line_edit.text()
         name = self.name_line_edit.text()
         projectpath = os.path.join(path, name)
@@ -146,10 +161,19 @@ class MainController:
                     self.__show_message_box(title, icon, text, info)
 
     def __pick_folder(self):
+        """ Opens folder picker"""
         file = str(QFileDialog.getExistingDirectory(self.__start_view, "Select Directory"))
         self.folder_line_edit.setText(file)
 
     def __show_message_box(self, title, icon, text, info):
+        """
+        Creates and shows a QMessageBox.
+
+        :param title: String - Title of the message box
+        :param icon: Icon of the message box, e.g. QMessageBox.Critical
+        :param text: String - Text of the message box
+        :param info: String - More text for the message box to provide further information
+        """
         message_box = QMessageBox()
         message_box.setWindowTitle(title)
         message_box.setIcon(icon)

@@ -130,6 +130,11 @@ class VideoEditorController:
         Projectsettings.add_project(filename)
 
     def new_project(self, path):
+        """
+        Initially saves the project to the project file.
+
+        :param path: String - Path to the projects file.
+        """
         self.__write_project_data(path)
         project = Project.get_instance()
         project.path = path
