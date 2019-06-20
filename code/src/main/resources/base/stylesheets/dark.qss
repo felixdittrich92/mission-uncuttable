@@ -21,6 +21,14 @@ QSplitter::handle:vertical {
     border: 1px solid #364156;
 }
 
+/* LINE EDIT*/
+QLineEdit {
+    background-color: #2A3649;
+    color: #F5F5F5;
+    border: 1px solid #364156;
+    padding: 2px;
+}
+
 /* BUTTONS */
 
 QPushButton {
@@ -387,7 +395,10 @@ QComboBox::down-arrow {
     color: #D66853;
     font-size: 25px;
 }
+#name_label, #folder_label {
+    color: #F5F5F5;
 
+}
 #projects_list_view {
     border: none;
     color: #F5F5F5;
@@ -401,6 +412,11 @@ QComboBox::down-arrow {
 #projects_list_view::item:selected:active {
     background: #212D40;
     border: 1px solid #212D40;
+}
+
+#pick_folder_button {
+    height: 7px;
+    font-size: 10px;
 }
 
 /* AUTOCUT VIEW */
