@@ -125,7 +125,7 @@ class MainController:
 
         :param type: String - Type of the new Project ["AutoCut", "SimpleCut"]
         """
-        path = self.folder_line_edit.text()
+        path = os.path.expanduser(self.folder_line_edit.text())
         name = self.name_line_edit.text()
         projectpath = os.path.join(path, name)
         if projectpath == "" or name == "":
