@@ -42,7 +42,7 @@ mkdir -p build
 cd build
 cmake ../
 make
-make install**************
+make install
 ```
 
 ## Segmentation Fault Error fixen
