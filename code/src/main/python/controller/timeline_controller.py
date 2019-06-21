@@ -161,7 +161,8 @@ class TimelineController:
         @param data: dictionary with info of timeables
         """
         for t in data["tracks"]:
-            self.create_track(t["name"], t["width"], t["height"], t["num"])
+            self.create_track(t["name"], t["width"], t["height"], t["num"],
+                              is_overlay=t["is_overlay"])
 
         for t in data["timeables"]:
             m = t["model"]

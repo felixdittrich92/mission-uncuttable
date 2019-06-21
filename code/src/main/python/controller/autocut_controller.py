@@ -1,28 +1,22 @@
 import os
-import cv2
-import sys
+import shutil
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtCore import Qt
 from autocut import VideoSplitter
 from autocut import Presentation
 from controller import VideoEditorController, TimelineController
-from controller.filemanager_controller import FilemanagerController
 from view import VideoEditorView
-from view.filemanagerview import FilemanagerView
-from random import randint
 from config import Settings
 from config import Language
 
 RESOLUTION = 250
-projekt_path = os.path.join(os.path.expanduser("~"), "Schreibtisch")
-projekt_name = "Projekt"
 
 
 class AutocutController:
     """A class used as the Controller for the autocut window."""
 
-    def __init__(self, view, main_controller):
+    def __init__(self, view, main_controller, project_path, project_name, filename):
         self.__autocut_view = view
         self.video_button = self.__autocut_view.video_button
         self.video_button.clicked.connect(self.pick_video)
@@ -47,6 +41,10 @@ class AutocutController:
         self.filename_pdf = None
         self.pictures = []
 
+        self.project_path = project_path
+        self.project_name = project_name
+        self.filename = filename
+
     def start(self):
         """Calls '__show_view()' of AutocutController"""
         self.__autocut_view.show()
@@ -55,6 +53,11 @@ class AutocutController:
         """Closes the window."""
         self.__autocut_view.close()
         self.__main_controller.start()
+
+        try:
+            shutil.rmtree(os.path.join(self.project_path, self.project_name))
+        except OSError:
+            pass
 
     def pick_video(self):
         """Opens a file picker to select a video file."""
@@ -105,15 +108,18 @@ class AutocutController:
             if self.filename_pdf is not None:
                 presentation = Presentation(self.filename_pdf)
                 self.textlabel.setText(str(Language.current.autocut.slidesprogressing))
-                self.pictures = presentation.convert_pdf(projekt_path, projekt_name, RESOLUTION)
+                self.pictures = presentation.convert_pdf(self.project_path,
+                                                         os.path.join(self.project_name, "files"),
+                                                         RESOLUTION)
         except:
             print("pdf error")
             pass
 
         try:
             if self.filename_video is not None:
-                video_splitter = VideoSplitter(projekt_path,
-                                               projekt_name, self.filename_video)
+                video_splitter = VideoSplitter(self.project_path,
+                                               os.path.join(self.project_name, "files"),
+                                               self.filename_video)
 
                 QApplication.processEvents()
                 self.textlabel.setText(str(Language.current.autocut.audioprogress))
@@ -144,8 +150,8 @@ class AutocutController:
                 self.textlabel.setText(str(Language.current.autocut.cutting))
                 QApplication.processEvents()
 
-        except:
-            print("video error")
+        except Exception as e:
+            print(e)
 
             return
 
@@ -178,3 +184,4 @@ class AutocutController:
 
         self.__autocut_view.close()
         video_editor_controller.start()
+        video_editor_controller.new_project(os.path.join(self.project_path, self.project_name, self.filename))

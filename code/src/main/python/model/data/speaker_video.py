@@ -36,9 +36,10 @@ class SpeakerVideo(MediaFile):
                     break
 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                (thresh, frame) = cv2.threshold(frame, 50, 255, cv2.THRESH_BINARY)
                 average = cv2.mean(frame)
 
-                if average[0] > 110:
+                if average[0] < 240:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
                     self.speaker_subvideos.append((times[0], times[-1]))

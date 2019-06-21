@@ -24,6 +24,12 @@ default_settings = {
             "values": [1, 100],  # min and max history size
             "current": 30
         },
+        "projects_path": {
+            "name": "Projects Path",
+            "type": "text",
+            "values": "",
+            "current": "~/ubicut/"
+        }
     },
     "design": {
         "color_theme": {

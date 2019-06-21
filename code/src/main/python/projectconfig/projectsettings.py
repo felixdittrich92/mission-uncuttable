@@ -3,7 +3,6 @@ import os
 import platform
 
 import projectconfig
-import config
 from model.project import Project
 
 from collections import namedtuple
@@ -105,10 +104,22 @@ class Projectsettings:
             return []
 
         res = []
+        changed = False
         with open(project_file, 'r') as f:
             for file in f.read().splitlines():
                 if os.path.isfile(file):
                     res.append(file)
+                else:
+                    changed = True
+
+        res = list(set(res))
+
+        if not changed:
+            return res
+
+        with open(project_file, 'w') as f:
+            for project in res:
+                f.write(project + '\n')
 
         return res
 

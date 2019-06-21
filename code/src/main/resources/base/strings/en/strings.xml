@@ -7,6 +7,8 @@
         <newproject>new project</newproject>
         <load_project>load project</load_project>
         <back>back</back>
+        <namelabel>Project name:</namelabel>
+        <folderlabel>Project directory:</folderlabel>
     </startview>
     <menubar>
         <program>Program</program>
@@ -74,6 +76,21 @@
             <windowtitle>Exporterror</windowtitle>
             <errormessage>There was an Error while exporting.\nPlease try different export settings.</errormessage>
         </export>
+        <incomplete>
+            <msgboxtitle>Error - New Project</msgboxtitle>
+            <msgboxtext>Please fill in all textfields.</msgboxtext>
+            <msgboxinfotext>There are still information missing.</msgboxinfotext>
+        </incomplete>
+        <projectexists>
+            <msgboxtitle>Error - Project already exists</msgboxtitle>
+            <msgboxtext>There is already a project with this name existing.</msgboxtext>
+            <msgboxinfotext>Please fill in another name.</msgboxinfotext>
+        </projectexists>
+        <writeerror>
+            <msgboxtitle>Error - Creating Directory</msgboxtitle>
+            <msgboxtext>The directory could not be created.</msgboxtext>
+            <msgboxinfotext>Please try another path.</msgboxinfotext>
+        </writeerror>
     </errors>
     <autocut>
         <cancel>cancel</cancel>
