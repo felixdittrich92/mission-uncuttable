@@ -7,6 +7,8 @@
         <newproject>Neues Projekt</newproject>
         <load_project>Projekt laden</load_project>
         <back>zurück</back>
+        <namelabel>Projektname:</namelabel>
+        <folderlabel>Projektordner:</folderlabel>
     </startview>
     <menubar>
         <program>Programm</program>
@@ -52,7 +54,13 @@
     <timeable>
         <delete>löschen</delete>
         <cut>schneiden</cut>
+        <settings>Einstellungen</settings>
     </timeable>
+    <timeablesettings>
+        <save>Speichern</save>
+        <cancel>Abbrechen</cancel>
+        <label>Aktuelle Lautstärke:</label>
+    </timeablesettings>
     <export>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>
@@ -68,6 +76,21 @@
             <windowtitle>Fehler beim Export</windowtitle>
             <errormessage>Es gab einen Fehler beim Exportieren.\nVersuche es mit anderen Einstellungen.</errormessage>
         </export>
+        <incomplete>
+            <msgboxtitle>Fehler beim Erstellen</msgboxtitle>
+            <msgboxtext>Bitte alle Felder ausfüllen</msgboxtext>
+            <msgboxinfotext>Es werden noch Informationen benötigt.</msgboxinfotext>
+        </incomplete>
+        <projectexists>
+            <msgboxtitle>Error - Projekt existiert bereits.</msgboxtitle>
+            <msgboxtext>Es existiert bereits ein Projekt mit diesem namen.</msgboxtext>
+            <msgboxinfotext>Bitte wähle einen anderen.</msgboxinfotext>
+        </projectexists>
+        <writeerror>
+            <msgboxtitle>Error beim Erstellen des Ordners</msgboxtitle>
+            <msgboxtext>Der Ordner konnte bei dem angegebenen Pfad nicht erstellt werden.</msgboxtext>
+            <msgboxinfotext>Bitte versuche einen anderen.</msgboxinfotext>
+        </writeerror>
     </errors>
     <autocut>
         <cancel>Abbrechen</cancel>

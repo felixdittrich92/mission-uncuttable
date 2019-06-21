@@ -117,6 +117,10 @@ class FilemanagerController:
         except:
             return
 
+    def clear(self):
+        """ Removes all entries from the filemanager """
+        self.__filemanager_view.listWidget.clear()
+
     def get_project_filemanager(self):
         """ Returns a list with all the files in the filemanager. """
         return self.file_list
@@ -129,4 +133,4 @@ class FilemanagerController:
         """
         for f in files:
             self.addFileNames(f)
-            
+

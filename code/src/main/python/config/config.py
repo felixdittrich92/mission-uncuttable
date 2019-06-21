@@ -65,9 +65,12 @@ default_settings = {
         }
     },
     "Invisible": {
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "project_formats": 'Files ( *.uc);;',
         "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
         "autocutvideo_import_formats": 'Files ( *.mp4);;',
         "autocutpdf_import_formats": 'Files ( *.pdf);;',
         "pixels_per_second": 16,
+        "projects_path": "~/ubicut",
     }
 }
