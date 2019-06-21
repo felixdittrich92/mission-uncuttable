@@ -37,7 +37,7 @@ class MainController:
         settings = Settings.get_instance().get_settings()
 
         self.folder_line_edit = self.__start_view.findChild(QWidget, "folder_line_edit")
-        self.folder_line_edit.setText(settings.general.projects_path.current)
+        self.folder_line_edit.setText(settings.Invisible.projects_path)
 
         self.name_line_edit = self.__start_view.findChild(QWidget, "name_line_edit")
 
