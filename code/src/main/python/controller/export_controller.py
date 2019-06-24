@@ -53,7 +53,6 @@ class ExportController:
 
         # try to start the export, show window with error message if theres an exception
         try:
-            # view = ExportProgressView()
             tm.export(path, audio_options, video_options, start_frame,
                       end_frame, self.view)
         except Exception as e:
