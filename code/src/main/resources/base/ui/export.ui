@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>380</width>
-    <height>295</height>
+    <height>268</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,6 +119,13 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="export_progress">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
