@@ -62,6 +62,7 @@
         <label>Current Volume:</label>
     </timeablesettings>
     <export>
+        <windowtitle>Export Video</windowtitle>
         <filename>Filename</filename>
         <folder>Folder</folder>
         <format>Format</format>

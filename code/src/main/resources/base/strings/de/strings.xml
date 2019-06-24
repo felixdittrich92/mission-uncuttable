@@ -62,6 +62,7 @@
         <label>Aktuelle Lautstärke:</label>
     </timeablesettings>
     <export>
+        <windowtitle>Video exportieren</windowtitle>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>
         <format>Format</format>
