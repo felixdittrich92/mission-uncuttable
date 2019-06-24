@@ -70,6 +70,8 @@
         <high>hoch</high>
         <medium>mittel</medium>
         <low>niedrig</low>
+        <export>Exportieren</export>
+        <cancel>Abbrechen</cancel>
     </export>
     <errors>
         <export>

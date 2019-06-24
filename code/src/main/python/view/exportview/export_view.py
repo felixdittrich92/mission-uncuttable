@@ -77,11 +77,11 @@ class ExportView(QDialog):
 
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
-        self.export_button = QPushButton('Exportieren')
+        self.export_button = QPushButton(str(Language.current.export.export))
         self.export_button.clicked.connect(self.accept)
         self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
 
-        self.cancel_button = QPushButton('Abbrechen')
+        self.cancel_button = QPushButton(str(Language.current.export.cancel))
         self.cancel_button.clicked.connect(self.reject)
         self.buttonBox.addButton(self.cancel_button, QDialogButtonBox.RejectRole)
 
