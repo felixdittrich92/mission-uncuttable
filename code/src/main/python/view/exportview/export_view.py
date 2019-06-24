@@ -83,14 +83,11 @@ class ExportView(QDialog):
         self.folder_edit.setText(os.path.expanduser('~'))
 
         self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
-        self.pick_folder_button.clicked.connect(self.pick_folder)
 
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
         self.export_button = QPushButton(str(Language.current.export.export))
-        self.export_button.clicked.connect(self.export_video)
-        self.buttonBox.addButton(
-            self.export_button, QDialogButtonBox.AcceptRole)
+        self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
 
         self.cancel_button = QPushButton(str(Language.current.export.cancel))
         self.cancel_button.clicked.connect(self.cancel)
@@ -122,14 +119,8 @@ class ExportView(QDialog):
 
         self.export_progress = self.findChild(QProgressBar, "export_progress")
 
-    def start(self):
-        self.exec_()
-
-    def pick_folder(self):
-        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.folder_edit.setText(file)
-
-    def export_video(self):
+    def get_data(self):
+        """ Return dict with selected values """
         format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
         quality_index = self.quality_cb.currentIndex()
         audio_codec = format_selected["audiocodec"]
@@ -166,16 +157,11 @@ class ExportView(QDialog):
             "end_frame": self.end_frame_sb.value()
         }
 
-        self.exporting = True
-        ExportController.start_export(data, self)
-
-        self.accept()
+        return data
 
     def cancel(self):
+        """ Cancel the export and close the view """
         if self.exporting:
-            # self.export_canceled.emit(True)
             self.canceled = True
-            # TODO stop exporting video
-            pass
 
         self.reject()

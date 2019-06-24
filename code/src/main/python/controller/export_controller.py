@@ -1,20 +1,40 @@
 import os
 
 import openshot
+from PyQt5.QtWidgets import QFileDialog
 
 from model.data import TimelineModel
 from view.exportview.export_error_view import ExportErrorView
-# from view.exportview.export_progress_view import ExportProgressView
 
 
 class ExportController:
-    @staticmethod
-    def start_export(options, view):
+    """ Controller for the export window """
+
+    def __init__(self, view):
+        self.view = view
+
+        self.view.pick_folder_button.clicked.connect(self.pick_folder)
+        self.view.export_button.clicked.connect(self.export_video)
+
+    def start(self):
+        """ Shows the export view """
+        self.view.exec_()
+
+    def pick_folder(self):
+        """ Open a filemanager to pick a foldeer for the exported file """
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.view.folder_edit.setText(file)
+
+    def export_video(self):
         """
         exports the timeline
 
         @param options: dict with export options like codecs and bitrate
         """
+        self.view.exporting = True
+
+        options = self.view.get_data()
+
         # get the openshot timeline
         tm = TimelineModel.get_instance()
         t = tm.timeline
@@ -38,6 +58,9 @@ class ExportController:
         # try to start the export, show window with error message if theres an exception
         try:
             # view = ExportProgressView()
-            tm.export(path, audio_options, video_options, start_frame, end_frame, view)
+            tm.export(path, audio_options, video_options, start_frame,
+                      end_frame, self.view)
         except Exception as e:
             ExportErrorView(str(e))
+
+        self.view.accept()
