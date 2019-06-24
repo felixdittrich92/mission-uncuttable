@@ -123,6 +123,9 @@ class TimelineModel:
 
         # export video
         for frame_number in range(start_frame, last_frame):
+            if view.canceled:
+                break
+
             QApplication.processEvents()
             w.WriteFrame(self.timeline.GetFrame(frame_number))
             if frame_number % step == 0:

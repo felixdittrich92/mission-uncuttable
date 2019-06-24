@@ -63,9 +63,13 @@ class ExportView(QDialog):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
 
-        self.setWindowTitle(str(Language.current.export.windowtitle))
+        self.setup_ui()
 
-        timeline_instance = TimelineModel.get_instance()
+        self.exporting = False
+        self.canceled = False
+
+    def setup_ui(self):
+        self.setWindowTitle(str(Language.current.export.windowtitle))
 
         for name in ["filename", "folder", "format", "resolution", "quality"]:
             text = str(getattr(Language.current.export, name))
@@ -81,11 +85,13 @@ class ExportView(QDialog):
 
         self.export_button = QPushButton(str(Language.current.export.export))
         self.export_button.clicked.connect(self.export_video)
-        self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
+        self.buttonBox.addButton(
+            self.export_button, QDialogButtonBox.AcceptRole)
 
         self.cancel_button = QPushButton(str(Language.current.export.cancel))
-        self.cancel_button.clicked.connect(self.reject)
-        self.buttonBox.addButton(self.cancel_button, QDialogButtonBox.RejectRole)
+        self.cancel_button.clicked.connect(self.cancel)
+        self.buttonBox.addButton(
+            self.cancel_button, QDialogButtonBox.RejectRole)
 
         self.format_cb = self.findChild(QComboBox, "format_cb")
         for k in FORMAT_OPTIONS.keys():
@@ -100,7 +106,7 @@ class ExportView(QDialog):
         for k in SIZE_OPTIONS.keys():
             self.size_cb.addItem(k)
 
-        last_frame = timeline_instance.get_last_frame()
+        last_frame = TimelineModel.get_instance().get_last_frame()
 
         self.start_frame_sb = self.findChild(QSpinBox, "start_sb")
         self.start_frame_sb.setRange(1, last_frame)
@@ -111,8 +117,6 @@ class ExportView(QDialog):
         self.end_frame_sb.setValue(last_frame)
 
         self.export_progress = self.findChild(QProgressBar, "export_progress")
-
-        # TODO translate text in values
 
     def start(self):
         self.exec_()
@@ -154,6 +158,16 @@ class ExportView(QDialog):
             "end_frame": self.end_frame_sb.value()
         }
 
+        self.exporting = True
         ExportController.start_export(data, self)
 
         self.accept()
+
+    def cancel(self):
+        if self.exporting:
+            # self.export_canceled.emit(True)
+            self.canceled = True
+            # TODO stop exporting video
+            pass
+
+        self.reject()
