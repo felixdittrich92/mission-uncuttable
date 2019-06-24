@@ -65,6 +65,7 @@
         <windowtitle>Video exportieren</windowtitle>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>
+        <untitled>unbenannt</untitled>
         <format>Format</format>
         <resolution>Auflösung</resolution>
         <quality>Qualität</quality>

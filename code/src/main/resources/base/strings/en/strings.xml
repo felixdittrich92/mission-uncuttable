@@ -64,6 +64,7 @@
     <export>
         <windowtitle>Export Video</windowtitle>
         <filename>Filename</filename>
+        <untitled>untitled</untitled>
         <folder>Folder</folder>
         <format>Format</format>
         <resolution>Resolution</resolution>

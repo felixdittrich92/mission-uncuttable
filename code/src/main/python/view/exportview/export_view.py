@@ -76,6 +76,7 @@ class ExportView(QDialog):
             self.findChild(QLabel, name + "_label").setText(text)
 
         self.filename_edit = self.findChild(QLineEdit, "filename_edit")
+        self.filename_edit.setText(str(Language.current.export.untitled))
 
         # set default folder to home folder
         self.folder_edit = self.findChild(QLineEdit, "folder_edit")
