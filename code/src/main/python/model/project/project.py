@@ -24,10 +24,8 @@ class Project:
         Project.__instance = self
 
         self.path = None
+        self.changed = False
         self.__history = History()
 
     def get_history(self):
         return self.__history
-
-    def save(self, filename, path):
-        pass
