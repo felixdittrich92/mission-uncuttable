@@ -1,6 +1,6 @@
-# Mission Uncuttable - Meeting am 24.05.2019
+# Mission Uncuttable - Meeting am 27.05.2019
 
-**Art:** Retrospektive und Planning
+**Art:** Review, Retrospektive und Planning
 
 **Sprint:** Sprint 5
 
