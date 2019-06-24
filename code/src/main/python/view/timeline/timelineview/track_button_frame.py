@@ -25,8 +25,6 @@ class TrackButtonFrame(SizeLinkableFrame):
         box_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(box_layout)
 
-        # self.setStyleSheet('background-color: orange')
-
     def add_button(self, button):
         """
         Adds a new Button to the TrackButtonFrame

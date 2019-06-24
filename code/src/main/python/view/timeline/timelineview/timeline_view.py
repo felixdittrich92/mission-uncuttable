@@ -37,8 +37,6 @@ class TimelineView(QFrame):
         self.timeables = dict()
         self.tracks = dict()
 
-        self.__show_debug_info_on_gui()
-
     def create_track(self, name, width, height, num, is_overlay):
         """ Creates a new trackView and adds it to the track_frame """
         btn = QPushButton(name)
@@ -115,13 +113,6 @@ class TimelineView(QFrame):
 
     def set_timeable_picture(self, id, picture):
         pass
-
-    def __show_debug_info_on_gui(self):
-        """
-        Setup the component somehow so that something can be seen which
-        makes it possible to say if something works properly or not.
-        """
-        # self.setStyleSheet('background-color: yellow')
 
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')

@@ -77,8 +77,6 @@ class TimelineScrollArea(QFrame):
         self.__track_button_scroll_area.setObjectName("track_button_scroll_area")
         self.__setup_dependencies()
 
-        self.__show_debug_info_on_gui()
-
         self.__needle_top = TimeNeedle(self.__time_bar.height(), True)
         self.__needle_top.setParent(self.__time_bar)
         self.__needle_top.setObjectName("needle_top")
@@ -154,9 +152,3 @@ class TimelineScrollArea(QFrame):
         self.__vertical_scroll_bar = self.findChild(
             QScrollBar, 'vertical_scroll_bar'
         )
-
-    def __show_debug_info_on_gui(self):
-        """
-        Setup the component somehow so that something can be seen which
-        makes it possible to say if something works properly or not.
-        """
