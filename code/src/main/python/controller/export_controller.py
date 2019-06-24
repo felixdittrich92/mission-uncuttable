@@ -26,11 +26,7 @@ class ExportController:
         self.view.folder_edit.setText(file)
 
     def export_video(self):
-        """
-        exports the timeline
-
-        @param options: dict with export options like codecs and bitrate
-        """
+        """ Exports the timeline """
         self.view.exporting = True
 
         options = self.view.get_data()
