@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
-                             QComboBox, QSpinBox, QLabel)
+                             QComboBox, QSpinBox, QLabel, QProgressBar)
 from PyQt5 import uic
 
 from config import Resources, Language
@@ -63,6 +63,8 @@ class ExportView(QDialog):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
 
+        self.setWindowTitle(str(Language.current.export.windowtitle))
+
         timeline_instance = TimelineModel.get_instance()
 
         for name in ["filename", "folder", "format", "resolution", "quality"]:
@@ -78,7 +80,7 @@ class ExportView(QDialog):
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
         self.export_button = QPushButton(str(Language.current.export.export))
-        self.export_button.clicked.connect(self.accept)
+        self.export_button.clicked.connect(self.export_video)
         self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
 
         self.cancel_button = QPushButton(str(Language.current.export.cancel))
@@ -108,44 +110,50 @@ class ExportView(QDialog):
         self.end_frame_sb.setRange(1, last_frame)
         self.end_frame_sb.setValue(last_frame)
 
+        self.export_progress = self.findChild(QProgressBar, "export_progress")
+
         # TODO translate text in values
 
     def start(self):
-        if self.exec_():
-            format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
-            quality_index = self.quality_cb.currentIndex()
-            audio_codec = format_selected["audiocodec"]
-            video_codec = format_selected["videocodec"]
-            if quality_index == 0:
-                audio_bitrate = format_selected["bitrate"]["audio"]["high"]
-                video_bitrate = format_selected["bitrate"]["video"]["high"]
-            elif quality_index == 1:
-                audio_bitrate = format_selected["bitrate"]["audio"]["medium"]
-                video_bitrate = format_selected["bitrate"]["video"]["medium"]
-            else:
-                audio_bitrate = format_selected["bitrate"]["audio"]["low"]
-                video_bitrate = format_selected["bitrate"]["video"]["low"]
+        self.exec_()
 
-            video_format = format_selected["videoformat"]
+    def export_video(self):
+        format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
+        quality_index = self.quality_cb.currentIndex()
+        audio_codec = format_selected["audiocodec"]
+        video_codec = format_selected["videocodec"]
+        if quality_index == 0:
+            audio_bitrate = format_selected["bitrate"]["audio"]["high"]
+            video_bitrate = format_selected["bitrate"]["video"]["high"]
+        elif quality_index == 1:
+            audio_bitrate = format_selected["bitrate"]["audio"]["medium"]
+            video_bitrate = format_selected["bitrate"]["video"]["medium"]
+        else:
+            audio_bitrate = format_selected["bitrate"]["audio"]["low"]
+            video_bitrate = format_selected["bitrate"]["video"]["low"]
 
-            size_selected = SIZE_OPTIONS[self.size_cb.currentText()]
-            width = size_selected["width"]
-            height = size_selected["height"]
+        video_format = format_selected["videoformat"]
 
-            data = {
-                "path": os.path.join(self.folder_edit.text(),
-                                     self.filename_edit.text()),
-                "has_audio": True,
-                "has_video": True,
-                "video_format": video_format,
-                "audio_codec": audio_codec,
-                "audio_bitrate": audio_bitrate,
-                "video_codec": video_codec,
-                "video_bitrate": video_bitrate,
-                "width": width,
-                "height": height,
-                "start_frame": self.start_frame_sb.value(),
-                "end_frame": self.end_frame_sb.value()
-            }
+        size_selected = SIZE_OPTIONS[self.size_cb.currentText()]
+        width = size_selected["width"]
+        height = size_selected["height"]
 
-            ExportController.start_export(data)
+        data = {
+            "path": os.path.join(self.folder_edit.text(),
+                                 self.filename_edit.text()),
+            "has_audio": True,
+            "has_video": True,
+            "video_format": video_format,
+            "audio_codec": audio_codec,
+            "audio_bitrate": audio_bitrate,
+            "video_codec": video_codec,
+            "video_bitrate": video_bitrate,
+            "width": width,
+            "height": height,
+            "start_frame": self.start_frame_sb.value(),
+            "end_frame": self.end_frame_sb.value()
+        }
+
+        ExportController.start_export(data, self)
+
+        self.accept()

@@ -1,6 +1,7 @@
 import json
-import openshot
 
+import openshot
+from PyQt5.QtWidgets import QApplication
 
 TIMELINE_DEFAULT_SETTINGS = {
     "fps": {
@@ -95,8 +96,11 @@ class TimelineModel:
 
         return last_frame
 
-    def export(self, filename, audio_options, video_options, start_frame, last_frame):
+    def export(self, filename, audio_options, video_options, start_frame,
+               last_frame, view):
         """
+        Writes the video to the disk.
+
         @param filename: name of the file in which the video is saved
         @param audio_options: list of audio options
         @param video_options: list of video options
@@ -113,11 +117,20 @@ class TimelineModel:
 
         w.Open()
 
+        bar = view.export_progress
+
+        step = int((last_frame - start_frame) / 100)
+
         # export video
         for frame_number in range(start_frame, last_frame):
+            QApplication.processEvents()
             w.WriteFrame(self.timeline.GetFrame(frame_number))
+            if frame_number % step == 0:
+                bar.setValue(bar.value() + 1)
 
-        w.Close()
+        print("finished export")
+
+        view.close()
 
     def remove_all_clips(self):
         """ Deletes all clips in the timeline (but not the views!!!) """
