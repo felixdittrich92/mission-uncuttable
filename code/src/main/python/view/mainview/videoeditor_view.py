@@ -131,6 +131,7 @@ class VideoEditorView(QMainWindow):
             elif res == QMessageBox.Cancel:
                 event.ignore()
 
+        event.accept()
         QApplication.closeAllWindows()
 
         QMainWindow.closeEvent(self, event)

@@ -197,3 +197,4 @@ class VideoEditorController:
         # set project path
         project = Project.get_instance()
         project.path = path
+        project.changed = False

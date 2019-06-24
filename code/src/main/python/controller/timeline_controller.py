@@ -175,6 +175,8 @@ class TimelineController:
                                  model, t["view_id"], res_left=t["resizable_left"],
                                  res_right=t["resizable_right"], hist=False)
 
+        Project.get_instance().changed = False
+
     def create_default_tracks(self):
         """ Creates 3 default tracks when the user chooses manual cut """
         self.create_track("Track 1", 2000, 50, 2)

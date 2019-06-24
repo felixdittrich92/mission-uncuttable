@@ -1,6 +1,8 @@
 import json
 import openshot
 
+from model.project import Project
+
 
 TIMELINE_DEFAULT_SETTINGS = {
     "fps": {
@@ -82,6 +84,8 @@ class TimelineModel:
 
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
+
+        Project.get_instance().changed = True
 
     def get_last_frame(self):
         """ returns the number of the last frame in the timeline """

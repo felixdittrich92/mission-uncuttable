@@ -1,12 +1,12 @@
 import os
 import cv2
 
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView
-from PyQt5.QtCore import QObject, QSize
+from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QApplication, QFileDialog
 
 from config import Resources
 from config import Settings
+from model.project import Project
 
 
 class FilemanagerController:
@@ -45,10 +45,14 @@ class FilemanagerController:
             )
         )
 
-        for file in fileNames:
+        if not fileNames:
+            return
 
+        for file in fileNames:
             QApplication.processEvents()
             self.addFileNames(file)
+
+        Project.get_instance().changed = True
 
     def addFileNames(self, file):
         """
@@ -105,6 +109,7 @@ class FilemanagerController:
             path = self.__filemanager_view.get_current_item()
             self.file_list.remove(path)
             self.__filemanager_view.remove_selected_item()
+            Project.get_instance().changed = True
         except:
             return
 
@@ -133,4 +138,4 @@ class FilemanagerController:
         """
         for f in files:
             self.addFileNames(f)
-
+        Project.get_instance().changed = False

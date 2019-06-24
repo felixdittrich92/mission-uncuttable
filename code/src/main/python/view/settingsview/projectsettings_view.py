@@ -6,6 +6,7 @@ from PyQt5 import uic
 from PyQt5 import QtGui
 from config import Resources, Language
 from projectconfig import Projectsettings
+from model.project import Project
 
 
 class ProjectSettingsView(QMainWindow):
@@ -120,6 +121,8 @@ class ProjectSettingsView(QMainWindow):
                 self.saveProjectsetting(self.projectsettings[x][y].get("type"), widget, x, y)
 
         self.close()
+
+        Project.get_instance().changed = True
 
     def saveProjectsetting(self, type, widget, x, y):
         """
