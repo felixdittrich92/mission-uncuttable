@@ -130,7 +130,7 @@ class TimelineModel:
 
         print("finished export")
 
-        view.close()
+        w.Close()
 
     def remove_all_clips(self):
         """ Deletes all clips in the timeline (but not the views!!!) """
