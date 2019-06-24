@@ -128,13 +128,16 @@ class VideoEditorView(QMainWindow):
 
             if res == QMessageBox.Yes:
                 self.save_project.emit()
+                QApplication.closeAllWindows()
+
+                QMainWindow.closeEvent(self, event)
+
             elif res == QMessageBox.Cancel:
                 event.ignore()
+        else:
+            QApplication.closeAllWindows()
 
-        event.accept()
-        QApplication.closeAllWindows()
-
-        QMainWindow.closeEvent(self, event)
+            QMainWindow.closeEvent(self, event)
 
     def maxim(self):
         v_splitter = self.findChild(QObject, 'verticalSplitter')
