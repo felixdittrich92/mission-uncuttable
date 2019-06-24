@@ -24,6 +24,7 @@ class VideoEditorController:
     """
     def __init__(self, view):
         self.__video_editor_view = view
+        self.__video_editor_view.save_project.connect(self.__start_save)
         self.__timeline_controller = TimelineController.get_instance()
         self.__filemanager_view = FilemanagerView()
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
@@ -161,6 +162,8 @@ class VideoEditorController:
         # write data
         with open(filename, 'w') as f:
             json.dump(project_data, f, ensure_ascii=False)
+
+        Project.get_instance().changed = False
 
     def __start_open(self):
         """ Open a project """
