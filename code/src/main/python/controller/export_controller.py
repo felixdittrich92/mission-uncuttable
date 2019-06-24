@@ -27,8 +27,6 @@ class ExportController:
 
     def export_video(self):
         """ Exports the timeline """
-        self.view.exporting = True
-
         options = self.view.get_data()
 
         # get the openshot timeline

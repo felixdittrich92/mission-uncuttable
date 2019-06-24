@@ -64,7 +64,6 @@ class ExportView(QDialog):
 
         self.setup_ui()
 
-        self.exporting = False
         self.canceled = False
 
     def setup_ui(self):
@@ -160,7 +159,6 @@ class ExportView(QDialog):
 
     def cancel(self):
         """ Cancel the export and close the view """
-        if self.exporting:
-            self.canceled = True
+        self.canceled = True
 
         self.reject()
