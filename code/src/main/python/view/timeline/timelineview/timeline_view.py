@@ -14,14 +14,14 @@ class TimelineView(QFrame):
     shows the tracks and provides tools and controls to view and
     manipulate them.
 
-    The widget consists of a toolbar and a TimelineScrollArea. The
-    latter one really fulfills the task of displaying the tracks.
+    The widget holds the TimelineScrollArea which fulfills the task of
+    displaying the tracks.
     """
     def __init__(self, parent=None):
         """
-        Create a TimelineView with a new toolbar and TimelineScrollArea.
+        Create a TimelineView with a TimelineScrollArea.
 
-        :param parent: the parent component
+        @param parent the parent component
         """
         super(TimelineView, self).__init__(parent)
 
