@@ -91,6 +91,10 @@
             <msgboxtext>The directory could not be created.</msgboxtext>
             <msgboxinfotext>Please try another path.</msgboxinfotext>
         </writeerror>
+        <unsaved>
+            <msgboxtitle>There are unsaved changes</msgboxtitle>
+            <msgboxtext>Do you want to save the project?</msgboxtext>
+        </unsaved>
     </errors>
     <autocut>
         <cancel>cancel</cancel>

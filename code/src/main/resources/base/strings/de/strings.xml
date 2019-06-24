@@ -91,6 +91,10 @@
             <msgboxtext>Der Ordner konnte bei dem angegebenen Pfad nicht erstellt werden.</msgboxtext>
             <msgboxinfotext>Bitte versuche einen anderen.</msgboxinfotext>
         </writeerror>
+        <unsaved>
+            <msgboxtitle>Es gibt ungespeicherte Änderungen</msgboxtitle>
+            <msgboxtext>Soll das Projekt gespeichert werden?</msgboxtext>
+        </unsaved>
     </errors>
     <autocut>
         <cancel>Abbrechen</cancel>
