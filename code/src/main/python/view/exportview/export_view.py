@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
-                             QComboBox, QSpinBox, QLabel, QProgressBar)
+                             QComboBox, QSpinBox, QLabel, QProgressBar, QFileDialog)
 from PyQt5 import uic
 
 from config import Resources, Language
@@ -82,6 +82,9 @@ class ExportView(QDialog):
         self.folder_edit = self.findChild(QLineEdit, "folder_edit")
         self.folder_edit.setText(os.path.expanduser('~'))
 
+        self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
+        self.pick_folder_button.clicked.connect(self.pick_folder)
+
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
         self.export_button = QPushButton(str(Language.current.export.export))
@@ -121,6 +124,10 @@ class ExportView(QDialog):
 
     def start(self):
         self.exec_()
+
+    def pick_folder(self):
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.folder_edit.setText(file)
 
     def export_video(self):
         format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
