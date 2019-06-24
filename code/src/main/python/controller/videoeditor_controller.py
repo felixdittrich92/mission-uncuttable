@@ -1,5 +1,6 @@
 import json
 import sys
+import os
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -62,7 +63,7 @@ class VideoEditorController:
     def stop(self):
         """Closes the video-editor Window."""
         self.__video_editor_view.close()
-        sys.exit(0)
+        os._exit(1)
 
     def __start_settings_controller(self):
         """Opens the settings window"""

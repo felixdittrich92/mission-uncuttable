@@ -8,6 +8,8 @@ from PyQt5.QtCore import QObject, QSize
 from config import Resources
 from config import Settings
 
+RESOLUTION = 250
+
 
 class FilemanagerController:
     """
@@ -21,6 +23,8 @@ class FilemanagerController:
 
     def __init__(self, view):
         self.__filemanager_view = view
+        path = Settings.get_instance().get_dict_settings()["Invisible"]["projects_path"]
+        print(path)
 
         """Set the functionality to the Widgets"""
         self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
@@ -28,6 +32,7 @@ class FilemanagerController:
         self.__filemanager_view.set_selected_action(lambda: self.selected())
 
         self.file_list = []
+        self.pictures = []
 
     def pickFileNames(self):
         """
@@ -66,6 +71,13 @@ class FilemanagerController:
         if file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
+        #elif file.upper().endswith(('.PDF')):
+        #    presentation = Presentation(file)
+        #    self.pictures = presentation.convert_pdf(self.project_path,
+        #                                                 os.path.join(self.project_name, "files"),
+        #                                                 RESOLUTION)
+        #    for pic in self.pictures:
+        #        filemanager.addFileNames(pic)
         elif file.upper().endswith(('.MP4')):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
