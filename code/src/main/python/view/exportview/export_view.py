@@ -1,11 +1,10 @@
 import os
 
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
-                             QComboBox, QSpinBox, QLabel, QProgressBar, QFileDialog)
+                             QComboBox, QSpinBox, QLabel, QProgressBar)
 from PyQt5 import uic
 
 from config import Resources, Language
-from controller.export_controller import ExportController
 from model.data import TimelineModel
 
 FORMAT_OPTIONS = {
