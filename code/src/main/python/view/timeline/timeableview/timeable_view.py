@@ -1,12 +1,14 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
-                          QMimeData, Qt, QSize)
+                          QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtWidgets import QMenu, QDialog, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 from model.data import FileType
+from config import Language
 from util.timeline_utils import get_pixmap_from_file
-
+from .timeable_settings_view import TimeableSettingsView
+import openshot
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
@@ -25,6 +27,8 @@ class TimeableView(QGraphicsRectItem):
     The TimeableView can be resized and moved on the Track and it can also be dragged
     to another Track.
     """
+
+    update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
                  model, view_id, track_id, parent=None):
@@ -49,6 +53,9 @@ class TimeableView(QGraphicsRectItem):
         self.x_pos = x_pos
 
         self.__controller = TimelineController.get_instance()
+
+        if self.__controller.is_overlay_track(self.track_id):
+            self.model.corner(True)
 
         self.set_pixmap()
 
@@ -139,15 +146,26 @@ class TimeableView(QGraphicsRectItem):
 
         menu = QMenu()
 
-        delete = QAction('löschen')
+        delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
         delete.triggered.connect(lambda: self.delete(hist=True))
 
-        cut = QAction('schneiden')
+        cut = QAction(str(Language.current.timeable.cut))
         menu.addAction(cut)
         cut.triggered.connect(lambda: self.cut(event.pos().x()))
 
+        settings = QAction(str(Language.current.timeable.settings))
+        menu.addAction(settings)
+        settings.triggered.connect(lambda: self.settings())
+
         menu.exec_(event.screenPos() + QPoint(0, 5))
+
+    def settings(self):
+        volume_dialog = TimeableSettingsView()
+        current_clip_volume = self.model.clip.volume.GetValue(0)
+        volume_dialog.set_data(current_clip_volume)
+        volume_dialog.exec_()
+        self.model.clip.volume = openshot.Keyframe(volume_dialog.current_volume_value)
 
     def delete(self, hist=True):
         """ deletes the model from the timeline """

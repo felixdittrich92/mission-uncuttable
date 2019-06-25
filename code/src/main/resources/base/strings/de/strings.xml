@@ -2,18 +2,100 @@
     <application>
         <name>UbiCut</name>
     </application>
+    <startview>
+        <last_projects>Letzte Projekte</last_projects>
+        <newproject>Neues Projekt</newproject>
+        <load_project>Projekt laden</load_project>
+        <back>zurück</back>
+        <namelabel>Projektname:</namelabel>
+        <folderlabel>Projektordner:</folderlabel>
+    </startview>
+    <menubar>
+        <program>Programm</program>
+        <settings>Einstellungen</settings>
+        <project>Projekt</project>
+        <new>Neu</new>
+        <open>Öffnen</open>
+        <save>Speichern</save>
+        <saveas>Speichern als</saveas>
+        <projectsettings>Projekteinstellungen</projectsettings>
+        <export>Exportieren</export>
+        <edit>Bearbeiten</edit>
+        <undo>Rückgängig</undo>
+        <redo>Wiederherstellen</redo>
+    </menubar>
+    <settings>
+        <general>Allgemein</general>
+        <language>Sprache</language>
+        <history_limit>Anzahl gespeicherte Operationen</history_limit>
+        <design>Design</design>
+        <color_theme>Farbschema</color_theme>
+        <shortcuts>Shortcuts</shortcuts>
+        <starter>Starter</starter>
+        <undo>Rückgängig</undo>
+        <redo>Wiederherstellen</redo>
+        <export>Exportieren</export>
+        <saveas>Speichern als</saveas>
+        <save>Speichern</save>
+        <cancel>Abbrechen</cancel>
+    </settings>
+    <projectsettings>
+        <general>Allgemein</general>
+        <framerate>Framerate</framerate>
+        <resolution>Auflösung</resolution>
+        <projectname>Projektname</projectname>
+        <projectlocation>Projektpfad</projectlocation>
+        <accept>Akzeptieren</accept>
+    </projectsettings>
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
     </filemanager>
+    <timeable>
+        <delete>löschen</delete>
+        <cut>schneiden</cut>
+        <settings>Einstellungen</settings>
+    </timeable>
+    <timeablesettings>
+        <save>Speichern</save>
+        <cancel>Abbrechen</cancel>
+        <label>Aktuelle Lautstärke:</label>
+    </timeablesettings>
+    <export>
+        <filename>Dateiname</filename>
+        <folder>Ordner</folder>
+        <format>Format</format>
+        <resolution>Auflösung</resolution>
+        <quality>Qualität</quality>
+        <high>hoch</high>
+        <medium>mittel</medium>
+        <low>niedrig</low>
+    </export>
     <errors>
         <export>
             <windowtitle>Fehler beim Export</windowtitle>
             <errormessage>Es gab einen Fehler beim Exportieren.\nVersuche es mit anderen Einstellungen.</errormessage>
         </export>
+        <incomplete>
+            <msgboxtitle>Fehler beim Erstellen</msgboxtitle>
+            <msgboxtext>Bitte alle Felder ausfüllen</msgboxtext>
+            <msgboxinfotext>Es werden noch Informationen benötigt.</msgboxinfotext>
+        </incomplete>
+        <projectexists>
+            <msgboxtitle>Error - Projekt existiert bereits.</msgboxtitle>
+            <msgboxtext>Es existiert bereits ein Projekt mit diesem namen.</msgboxtext>
+            <msgboxinfotext>Bitte wähle einen anderen.</msgboxinfotext>
+        </projectexists>
+        <writeerror>
+            <msgboxtitle>Error beim Erstellen des Ordners</msgboxtitle>
+            <msgboxtext>Der Ordner konnte bei dem angegebenen Pfad nicht erstellt werden.</msgboxtext>
+            <msgboxinfotext>Bitte versuche einen anderen.</msgboxinfotext>
+        </writeerror>
     </errors>
     <autocut>
+        <cancel>Abbrechen</cancel>
         <starttext>Wählen Sie ein Video und eine PDF-Präsentation (optional).</starttext>
+        <addvideotext>Bitte fügen Sie ein Video hinzu.</addvideotext>
         <ready>Autocutting kann gestartet werden.</ready>
         <inprogress>Verarbeitung läuft...</inprogress>
         <slidesprogressing>Folien werden berechnet...</slidesprogressing>

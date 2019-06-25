@@ -65,6 +65,9 @@ class TimelineModel:
     def getTimeline(self):
         return self.timeline
 
+    def get_fps(self):
+        return self.timeline.info.fps.num / self.timeline.info.fps.den
+
     def change(self, change_type, key, data):
         """
         @param change_type: insert, delete or update
@@ -115,3 +118,8 @@ class TimelineModel:
             w.WriteFrame(self.timeline.GetFrame(frame_number))
 
         w.Close()
+
+    def remove_all_clips(self):
+        """ Deletes all clips in the timeline (but not the views!!!) """
+        for c in self.timeline.Clips():
+            self.change("delete", ["clips", {"id": c.Id()}], {})

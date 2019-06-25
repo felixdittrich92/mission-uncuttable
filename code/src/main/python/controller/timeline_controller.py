@@ -129,15 +129,11 @@ class TimelineController:
         op = ResizeOperation(view_info_old, view_info_new)
         self.__history.do_operation(op)
 
-    def select_timeable(self, id, selected=True):
-        """
-        Set the selected-state of the model's representation of a timeable.
+    def is_overlay_track(self, track_id):
+        if track_id not in self.__timeline_view.tracks:
+            return False
 
-        @param id:       The timeable's unique ID.
-        @param selected: The selected-state.
-        @return:         Nothing.
-        """
-        pass
+        return self.__timeline_view.tracks[track_id].is_overlay
 
     def create_video_track(self, name, width, height, num):
         """ Creates a new track in the timeline """
@@ -197,7 +193,7 @@ class TimelineController:
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_track("Overlay", 2000, 50, 3)
+        self.create_track("Overlay", 2000, 50, 3, is_overlay=True)
         self.create_track("Tafel", 2000, 50, 2)
         self.create_track("Visualizer", 2000, 50, 1)
         self.create_track("Folien", 2000, 50, 0)
@@ -225,9 +221,20 @@ class TimelineController:
     def add_clip(self, file_path, track):
         """ Gets a path to file and a track and creates a timeable """
         model = TimeableModel(file_path, generate_id())
+
         width = seconds_to_pos(model.clip.Duration())
         self.create_timeable(track, os.path.basename(file_path),
                              width, 0, model, generate_id(), hist=False)
+
+    def clear_timeline(self):
+        """ Removes all timeline data """
+        TimelineModel.get_instance().remove_all_clips()
+
+        for t in self.__timeline_view.tracks.values():
+            t.button.deleteLater()
+            t.deleteLater()
+
+        self.__history.clear_history()
 
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
@@ -249,6 +256,9 @@ class TimelineController:
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
+
+    def update_timecode(self, timecode):
+        self.__timeline_view.update_timecode(timecode)
 
 
 class CreationOperation(Operation):

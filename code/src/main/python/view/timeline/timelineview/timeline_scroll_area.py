@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QScrollBar
-from PyQt5.QtCore import QObject, QPoint
+from PyQt5.QtCore import Qt, QObject, QPoint
 from PyQt5 import uic
 
 import os
@@ -159,6 +159,14 @@ class TimelineScrollArea(QFrame):
         self.__track_button_scroll_area.set_adjusting_to_width(True)
         
         self.__time_bar_scroll_area.set_adjusting_to_height(True)
+        self.__track_scroll_area\
+            .setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.__track_scroll_area\
+            .setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.__track_button_scroll_area\
+            .setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.__time_bar_scroll_area\
+            .setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def __init_scroll_areas(self):
 

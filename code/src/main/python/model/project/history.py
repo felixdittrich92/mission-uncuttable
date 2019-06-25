@@ -56,7 +56,7 @@ class History:
         operation.do()
 
         # delete first operation if limit was reached
-        limit = Settings.get_instance().get_settings().General.history_limit.current
+        limit = Settings.get_instance().get_settings().general.history_limit.current
         if len(self.operations) > limit:
             self.operations = self.operations[len(self.operations) - limit:]
             self.__last_operation = limit - 1
@@ -86,3 +86,8 @@ class History:
             self.__last_operation -= 1
 
         del self.operations[-1]
+
+    def clear_history(self):
+        """ Removes all operations from the history """
+        self.operations = []
+        self.__last_operation = -1
