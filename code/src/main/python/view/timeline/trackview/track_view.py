@@ -31,6 +31,7 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
         self.name = name
+        self.button = button
         self.is_overlay = is_overlay;
         self.is_video = is_video;
 
