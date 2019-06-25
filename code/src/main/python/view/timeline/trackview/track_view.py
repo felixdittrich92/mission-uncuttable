@@ -15,7 +15,7 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, name, button, is_video, is_overlay=False,  parent=None):
+    def __init__(self, width, height, num, name, button, is_video, is_overlay=False, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -32,8 +32,8 @@ class TrackView(QGraphicsView):
         self.num = num
         self.name = name
         self.button = button
-        self.is_overlay = is_overlay;
-        self.is_video = is_video;
+        self.is_overlay = is_overlay
+        self.is_video = is_video
 
         # for drag and drop handling
         self.item_dropped = False
@@ -66,7 +66,6 @@ class TrackView(QGraphicsView):
             "is_overlay": self.is_overlay,
             "type": self.is_video,
         }
-        
 
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
@@ -260,8 +259,9 @@ class TrackView(QGraphicsView):
         elif event.mimeData().hasFormat('ubicut/file'):
             # clear data for next drag
             self.item_dropped = False
-            self.current_timeable.model.move(self.current_timeable.x_pos)
-            self.current_timeable = None
+            if self.current_timeable is not None:
+                self.current_timeable.model.move(self.current_timeable.x_pos)
+                self.current_timeable = None
             self.update()
 
         else:
