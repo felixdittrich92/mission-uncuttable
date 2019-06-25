@@ -52,7 +52,10 @@ class FilemanagerController:
             QApplication.processEvents()
             self.addFileNames(file)
 
-        Project.get_instance().changed = True
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+            self.__filemanager_view.changed.emit()
 
     def addFileNames(self, file):
         """
@@ -109,7 +112,11 @@ class FilemanagerController:
             path = self.__filemanager_view.get_current_item()
             self.file_list.remove(path)
             self.__filemanager_view.remove_selected_item()
-            Project.get_instance().changed = True
+
+            project = Project.get_instance()
+            if not project.changed:
+                project.changed = True
+                self.__filemanager_view.changed.emit()
         except:
             return
 

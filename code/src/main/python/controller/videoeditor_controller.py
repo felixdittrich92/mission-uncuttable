@@ -31,6 +31,7 @@ class VideoEditorController:
         self.__timeline_controller = TimelineController.get_instance()
 
         self.__filemanager_view = FilemanagerView()
+        self.__filemanager_view.changed.connect(self.set_title_unsaved)
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
 
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
@@ -65,6 +66,7 @@ class VideoEditorController:
 
     def start(self):
         """Calls '__show_view()' of VideoEditorController"""
+        self.set_title_saved()
         self.__show_view()
 
     def stop(self):
