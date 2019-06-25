@@ -50,6 +50,8 @@ class TimelineController:
         else:
             op.do()
 
+        self.__timeline_view.changed.emit()
+
     def delete_timeable(self, view_info, model_info, hist=True):
         """
         Delete the model's representation of a timeable.
@@ -62,6 +64,8 @@ class TimelineController:
             self.__history.do_operation(op)
         else:
             op.do()
+
+        self.__timeline_view.changed.emit()
 
     def remove_timeable_view(self, id):
         """
@@ -90,12 +94,16 @@ class TimelineController:
         op = MoveOperation(id, old_pos, new_pos)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def drag_timeable(self, view_info_old, view_info_new, model_old, model_new):
         """
         Drags a timeable from one track to another track
         """
         op = DragOperation(view_info_old, view_info_new, model_old, model_new)
         self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
 
     def split_timeable(self, view_id, res_right, width, model_end, pos):
         """
@@ -113,6 +121,8 @@ class TimelineController:
         op = CutOperation(view_id, res_right, width, model_end, pos)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def resize_timeable(self, view_info_old, view_info_new):
         """
         Remove a part of the model's representation of a timeable
@@ -128,6 +138,8 @@ class TimelineController:
         """
         op = ResizeOperation(view_info_old, view_info_new)
         self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
 
     def is_overlay_track(self, track_id):
         if track_id not in self.__timeline_view.tracks:

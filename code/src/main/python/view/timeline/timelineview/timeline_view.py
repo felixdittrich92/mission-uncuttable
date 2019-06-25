@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QPushButton
 from PyQt5 import uic
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, pyqtSignal
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
@@ -17,6 +17,9 @@ class TimelineView(QFrame):
     The widget holds the TimelineScrollArea which fulfills the task of
     displaying the tracks.
     """
+
+    changed = pyqtSignal()
+
     def __init__(self, parent=None):
         """
         Create a TimelineView with a TimelineScrollArea.
@@ -35,12 +38,12 @@ class TimelineView(QFrame):
         self.audio_track_frame = self.findChild(QFrame, "audio_track_frame")
 
         self.track_frame_frame = self.findChild(QFrame, "track_frame_frame")
-        
+
         self.track_button_frame_frame = self.findChild(QFrame, "track_button_frame_frame")
 
         self.video_track_button_frame = self.findChild(QFrame, "video_track_button_frame")
         self.audio_track_button_frame = self.findChild(QFrame, "audio_track_button_frame")
-        
+
         self.timeables = dict()
         self.tracks = dict()
 
@@ -51,23 +54,23 @@ class TimelineView(QFrame):
         btn.setFixedSize(90, height)
         self.video_track_button_frame.add_button(btn, True)
 
-        track = TrackView(width, height, num, name, btn, True, is_overlay )
+        track = TrackView(width, height, num, name, btn, True, is_overlay)
         self.tracks[num] = track
 
         self.video_track_frame.add_track(track)
-        
+
         self.adjust_track_sizes()
-    
+
     def create_audio_track(self, name, width, height, num):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
         self.audio_track_button_frame.add_button(btn, False)
 
-        track = TrackView(width, height, num, name, btn, False, False)
+        track = TrackView(width, height, num, name, btn, False)
         self.tracks[num] = track
 
         self.audio_track_frame.add_track(track)
-        
+
         self.adjust_track_sizes()
 
     def adjust_track_sizes(self):
@@ -100,7 +103,7 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id )
+                                model, id, track_id)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 

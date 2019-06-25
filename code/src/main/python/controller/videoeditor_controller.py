@@ -26,7 +26,10 @@ class VideoEditorController:
     def __init__(self, view):
         self.__video_editor_view = view
         self.__video_editor_view.save_project.connect(self.__start_save)
+        self.__video_editor_view.timeline_view.changed.connect(self.set_title_unsaved)
+
         self.__timeline_controller = TimelineController.get_instance()
+
         self.__filemanager_view = FilemanagerView()
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
 
@@ -36,7 +39,10 @@ class VideoEditorController:
         self.__settings_controller = SettingsController(None)
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
-        self.__projectsettings_controller = ProjectSettingsController(None)
+        self.projectsettings_view = ProjectSettingsView()
+        self.projectsettings_view.changed.connect(self.set_title_unsaved)
+        self.__projectsettings_controller = ProjectSettingsController(
+            self.projectsettings_view)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
         self.__video_editor_view.actionUndo.triggered.connect(
@@ -86,9 +92,6 @@ class VideoEditorController:
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
         if self.__projectsettings_controller.checkIfClosed():
-            projectsettings_view = ProjectSettingsView()
-            projectsettings_view.changed.connect(self.set_title_unsaved)
-            self.__projectsettings_controller = ProjectSettingsController(projectsettings_view)
             self.__projectsettings_controller.start()
         else:
             self.__projectsettings_controller.focus()

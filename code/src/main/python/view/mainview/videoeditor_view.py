@@ -22,10 +22,12 @@ class VideoEditorView(QMainWindow):
 
         self.set_texts()
 
+        self.timeline_view = TimelineView()
         self.load_timeline_widget()
 
         self.needle = self.findChild(QWidget, "needle_top")
 
+        self.previewview = PreviewView.get_instance()
         self.load_preview()
 
         self.splittersizes = []
@@ -88,14 +90,11 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QObject, 'horizontalSplitter')
         bottom_frame = self.findChild(QObject, 'bottomFrame')
         i = splitter.indexOf(bottom_frame)
-        timeline_view = TimelineView()
-        TimelineController(timeline_view)
-        splitter.replaceWidget(i, timeline_view)
-        timeline_view.show()
+        TimelineController(self.timeline_view)
+        splitter.replaceWidget(i, self.timeline_view)
+        self.timeline_view.show()
 
     def load_preview(self):
-        self.previewview = PreviewView.get_instance()
-
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, self.previewview)
         self.previewview.show()
