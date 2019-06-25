@@ -185,6 +185,7 @@ class VideoEditorController:
 
     def __start_open(self):
         """ Open a project """
+        self.__video_editor_view.previewview.stop()
         filetypes = Settings.get_instance().get_dict_settings()[
             "Invisible"]["project_formats"]
         path, _ = QFileDialog.getOpenFileName(self.__video_editor_view,
