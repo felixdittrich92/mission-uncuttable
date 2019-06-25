@@ -63,6 +63,8 @@ class ExportView(QDialog):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
 
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
         timeline_instance = TimelineModel.get_instance()
 
         for name in ["filename", "folder", "format", "resolution", "quality"]:
@@ -78,6 +80,7 @@ class ExportView(QDialog):
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
         self.export_button = QPushButton('Exportieren')
+        self.export_button.setObjectName("export_button")
         self.export_button.clicked.connect(self.accept)
         self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
 
