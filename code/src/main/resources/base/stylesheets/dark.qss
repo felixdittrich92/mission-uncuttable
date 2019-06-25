@@ -55,6 +55,11 @@ QPushButton:pressed {
     color: rgb(214, 214, 214);
 }
 
+QPushButton:disabled{
+    border: 1px solid #364156;
+    background: transparent;
+}
+
 /* BLUE BUTTONS */
 
 #new_project_button,
@@ -85,6 +90,16 @@ QPushButton:pressed {
 #export_button:pressed{
     border: 1px solid #4E637F;
     background: #34698c;
+}
+
+#new_project_button:disabled,
+#saveButton:disabled,
+#pushButton_2:disabled,
+#auto_cut_button:disabled,
+#ok_button:disabled,
+#export_button:disabled{
+    border: 1px solid #364156;
+    background: transparent;
 }
 
 /* MENU */
