@@ -48,7 +48,7 @@ class TimelineView(QFrame):
 
     def create_video_track(self, name, width, height, num, is_overlay=False):
         btn = QPushButton(name)
-        btn.setFixedSize(80, 50)
+        btn.setFixedSize(90, height)
         self.video_track_button_frame.add_button(btn, True)
 
         track = TrackView(width, height, num, name, btn, True, is_overlay )
@@ -60,7 +60,7 @@ class TimelineView(QFrame):
     
     def create_audio_track(self, name, width, height, num):
         btn = QPushButton(name)
-        btn.setFixedSize(80, 50)
+        btn.setFixedSize(90, height)
         self.audio_track_button_frame.add_button(btn, False)
 
         track = TrackView(width, height, num, name, btn, False, False)

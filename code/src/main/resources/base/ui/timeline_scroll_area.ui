@@ -14,7 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <property name="spacing">
@@ -23,7 +32,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="time_label">
      <property name="text">
-      <string>00:00:00</string>
+      <string>00:00:00:00</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -112,27 +121,10 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="2" rowspan="2">
+   <item row="0" column="2" rowspan="3">
     <widget class="QScrollBar" name="vertical_scroll_bar">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="time_label">
-     <property name="text">
-      <string>00:00:00:00</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QScrollBar" name="horizontal_scroll_bar">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
