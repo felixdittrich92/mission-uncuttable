@@ -101,10 +101,16 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>120</height>
+         <height>300</height>
         </size>
        </property>
        <property name="styleSheet">
@@ -127,7 +133,7 @@
      <x>0</x>
      <y>0</y>
      <width>1111</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProgramm">
@@ -158,7 +164,6 @@
    <addaction name="menuProjekt"/>
    <addaction name="menuEdit"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="action_settings">
    <property name="text">
     <string>Einstellungen</string>
