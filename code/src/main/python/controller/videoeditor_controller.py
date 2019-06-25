@@ -66,6 +66,14 @@ class VideoEditorController:
         self.__video_editor_view.close()
         sys.exit(0)
 
+    def set_title_unsaved(self):
+        """ shows a star in the window title to indicate that there are unsaved changes """
+        self.__video_editor_view.setWindowTitle("UbiCut*")
+
+    def set_title_saved(self):
+        """ shows UbiCut in the windowtitle """
+        self.__video_editor_view.setWindowTitle("UbiCut")
+
     def __start_settings_controller(self):
         """Opens the settings window"""
         if self.__settings_controller.checkIfClosed():
@@ -78,8 +86,9 @@ class VideoEditorController:
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
         if self.__projectsettings_controller.checkIfClosed():
-            self.projectsettings_view = ProjectSettingsView()
-            self.__projectsettings_controller = ProjectSettingsController(self.projectsettings_view)
+            projectsettings_view = ProjectSettingsView()
+            projectsettings_view.changed.connect(self.set_title_unsaved)
+            self.__projectsettings_controller = ProjectSettingsController(projectsettings_view)
             self.__projectsettings_controller.start()
         else:
             self.__projectsettings_controller.focus()
@@ -167,6 +176,7 @@ class VideoEditorController:
             json.dump(project_data, f, ensure_ascii=False)
 
         Project.get_instance().changed = False
+        self.set_title_saved()
 
     def __start_open(self):
         """ Open a project """

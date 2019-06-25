@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidget,
                              QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
                              QCheckBox, QPlainTextEdit)
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import uic
 from PyQt5 import QtGui
 from config import Resources, Language
@@ -11,6 +11,9 @@ from model.project import Project
 
 class ProjectSettingsView(QMainWindow):
     """A class used as the View for the projectsettings window."""
+
+    changed = pyqtSignal()
+
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(ProjectSettingsView, self).__init__()
@@ -38,7 +41,6 @@ class ProjectSettingsView(QMainWindow):
         cancelButton = self.findChild(QPushButton, "cancelButton")
         cancelButton.setText(str(Language.current.settings.cancel))
         cancelButton.clicked.connect(lambda: self.close())
-
 
     def addProjectsettings(self, projectsettings):
         """
@@ -122,7 +124,10 @@ class ProjectSettingsView(QMainWindow):
 
         self.close()
 
-        Project.get_instance().changed = True
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+            self.changed.emit()
 
     def saveProjectsetting(self, type, widget, x, y):
         """
