@@ -145,17 +145,16 @@ class TimelineScrollArea(QFrame):
 
         self.__time_bar.link_to_width(self.__track_frame_frame)
 
-        self.__track_scroll_area \
-            .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
+        self.__track_scroll_area\
+            .connect_scrollbar(self.__horizontal_scroll_bar, Qt.Horizontal)
+        self.__track_scroll_area\
+            .connect_scrollbar(self.__vertical_scroll_bar, Qt.Vertical)
+        self.__track_button_scroll_area\
+            .connect_scrollbar(self.__vertical_scroll_bar, Qt.Vertical)
+        self.__time_bar_scroll_area\
+            .connect_scrollbar(self.__horizontal_scroll_bar, Qt.Horizontal)
 
-        self.__track_scroll_area \
-            .connect_vertical_scrollbar(self.__vertical_scroll_bar)
 
-        self.__track_button_scroll_area \
-            .connect_vertical_scrollbar(self.__vertical_scroll_bar)
-        
-        self.__time_bar_scroll_area \
-            .connect_horizontal_scrollbar(self.__horizontal_scroll_bar)
         self.__track_button_scroll_area.set_adjusting_to_width(True)
         
         self.__time_bar_scroll_area.set_adjusting_to_height(True)

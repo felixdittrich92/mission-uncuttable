@@ -15,7 +15,7 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, name, button, is_overlay=False, is_video=True, parent=None):
+    def __init__(self, width, height, num, name, button, is_video, is_overlay=False,  parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -31,6 +31,8 @@ class TrackView(QGraphicsView):
         self.height = height
         self.num = num
         self.name = name
+        self.is_overlay = is_overlay;
+        self.is_video = is_video;
 
         # for drag and drop handling
         self.item_dropped = False
@@ -61,8 +63,9 @@ class TrackView(QGraphicsView):
             "num": self.num,
             "name": self.name,
             "is_overlay": self.is_overlay,
-            "type": self.isvideo,
+            "type": self.is_video,
         }
+        
 
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
@@ -266,4 +269,5 @@ class TrackView(QGraphicsView):
         self.update_player()
 
     def update_player(self):
-        self.parent().parent().parent().parent().parent().parent().parent().parent().connect_update()
+        # self.parent().parent().parent().parent().parent().parent().parent().parent().connect_update()
+        pass

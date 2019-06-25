@@ -135,9 +135,9 @@ class TimelineController:
 
         return self.__timeline_view.tracks[track_id].is_overlay
 
-    def create_video_track(self, name, width, height, num):
+    def create_video_track(self, name, width, height, num, is_overlay=False):
         """ Creates a new track in the timeline """
-        self.__timeline_view.create_video_track(name, width, height, num)
+        self.__timeline_view.create_video_track(name, width, height, num, is_overlay)
 
     def create_audio_track(self, name, width, height, num):
         """ Creates a new track in the timeline """
@@ -193,11 +193,11 @@ class TimelineController:
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_track("Overlay", 2000, 50, 3, is_overlay=True)
-        self.create_track("Tafel", 2000, 50, 2)
-        self.create_track("Visualizer", 2000, 50, 1)
-        self.create_track("Folien", 2000, 50, 0)
-        self.create_track("Audio", 2000, 50, -1)
+        self.create_video_track("Overlay", 2000, 50, 3, True)
+        self.create_video_track("Tafel", 2000, 50, 2)
+        self.create_video_track("Visualizer", 2000, 50, 1)
+        self.create_video_track("Folien", 2000, 50, 0)
+        self.create_audio_track("Audio", 2000, 50, -1)
 
     def create_autocut_timeables(self, file_path, track, data):
         """
