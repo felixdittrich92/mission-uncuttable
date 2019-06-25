@@ -224,20 +224,29 @@ QScrollArea, #timeline_toolbar {
     border: 1px solid #364156;
 }
 
-#track_scroll_area {
+    /* scroll areas */
+
+#track_scroll_area{
     margin-bottom: 10px;
     margin-right: 10px;
     border-left: none;
     border-top: none;
 }
 
-#track_button_scroll_area {
+#track_button_scroll_area{
     margin-bottom: 10px;
     margin-right: -1px;
     margin-top: -1px;
 }
+    /* track frames */
 
-QScrollArea #track_frame QFrame{
+#track_frame_frame {
+    background: #11151C;
+    margin-left: -1px;
+    margin-top: -1px;
+}
+
+#audio_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
     margin-left: -1px;
@@ -245,7 +254,22 @@ QScrollArea #track_frame QFrame{
     padding-left: 5px;
 }
 
-#track_button, #track_button_light {
+#audio_track_frame{
+    margin-top: 10px;
+    border: 1px solid #364156;
+}
+
+#video_track_frame QFrame{
+    background: #212D40;
+    border: 1px solid #364156;
+    margin-left: -1px;
+    margin-top: -1px;
+    padding-left: 5px;
+}
+
+    /* track buttons */
+
+#track_button, #track_button_light, #track_button_audio {
     background: #7D4E57;
     border: 1px solid #364156;
     color: #F5F5F5;
@@ -255,6 +279,27 @@ QScrollArea #track_frame QFrame{
 #track_button_light {
     background: #955F69;
 }
+
+#track_button_audio {
+    background: #4586B1;
+    border: 1px solid #364156;
+}
+
+    /* track button frames */
+
+#track_button_frame_frame {
+    background:#11151C;
+}
+
+#video_track_button_frame, #audio_track_button_frame{
+    background: #212D40;
+}
+
+#audio_track_button_frame{
+    margin-top: 10px;
+}
+
+    /* time bar */
 
 #time_bar_scroll_area {
     margin-right: 10px;

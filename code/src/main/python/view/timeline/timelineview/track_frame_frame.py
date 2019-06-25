@@ -3,7 +3,7 @@ from .size_linkable_frame import SizeLinkableFrame
 from .time_needle import TimeNeedle
 
 
-class TrackFrame(SizeLinkableFrame):
+class TrackFrameFrame(SizeLinkableFrame):
     """
     Extends SizeLinkableFrame to a frame which is mainly intended to
     show TrackViews.
@@ -18,7 +18,7 @@ class TrackFrame(SizeLinkableFrame):
 
         :param parent: the parent component
         """
-        super(TrackFrame, self).__init__(parent)
+        super(TrackFrameFrame, self).__init__(parent)
         vbox_layout = QVBoxLayout()
         vbox_layout.setSpacing(0)
         vbox_layout.setContentsMargins(0, 0, 0, 0)
@@ -26,14 +26,24 @@ class TrackFrame(SizeLinkableFrame):
 
 
 
-    def add_track(self, track):
+    def add_track_frame(self, track_frame):
         """
         Adds a TrackView to the TrackFrame
 
         :param track: the Track to add
         """
-        self.layout().addWidget(track)
+        self.layout().addWidget(track_frame)
         needle = self.findChild(QWidget, "needle_bottom")
-        track.stackUnder(needle)
+        track_frame.stackUnder(needle)
         self.adjustSize()
-        self.parent().adjustSize()
+
+    def add_track(self, track_frame):
+        """
+        Adds a TrackView to the TrackFrame
+
+        :param track: the Track to add
+        """
+        self.layout().addWidget(track_frame)
+        needle = self.findChild(QWidget, "needle_bottom")
+        track_frame.stackUnder(needle)
+        self.adjustSize()
