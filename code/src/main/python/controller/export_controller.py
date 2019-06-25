@@ -13,7 +13,7 @@ class ExportController:
     def __init__(self, view):
         self.view = view
 
-        # self.view.pick_folder_button.clicked.connect(self.pick_folder)
+        self.view.pick_folder_button.clicked.connect(self.pick_folder)
         self.view.export_button.clicked.connect(self.export_video)
 
     def start(self):
@@ -22,7 +22,7 @@ class ExportController:
 
     def pick_folder(self):
         """ Open a filemanager to pick a foldeer for the exported file """
-        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        file = str(QFileDialog.getExistingDirectory(self.view, "Select Directory"))
         self.view.folder_edit.setText(file)
 
     def export_video(self):

@@ -81,7 +81,7 @@ class ExportView(QDialog):
         self.folder_edit = self.findChild(QLineEdit, "folder_edit")
         self.folder_edit.setText(os.path.expanduser('~'))
 
-        # self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
+        self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
 
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
