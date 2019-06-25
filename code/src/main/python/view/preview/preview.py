@@ -11,9 +11,11 @@ from threading import Thread
 import openshot
 import sip
 import time
+from ..view import View
+from util.classmaker import classmaker
 
+class PreviewView(classmaker(QWidget, View)):
 
-class PreviewView(QWidget):
     """
     QWidget for Previewplayer
     """
@@ -257,3 +259,6 @@ class PreviewView(QWidget):
         self.update_player()
         self.update_progress_bar()
         self.update_time_label()
+
+    def refresh(self):
+        pass

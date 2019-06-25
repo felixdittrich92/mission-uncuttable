@@ -1,5 +1,6 @@
 import abc
-from util import Observable, Observer
+from util.observable import Observable
+from util.observer import Observer
 
 class View(Observer, Observable):
     __metaclass__ = abc.ABCMeta

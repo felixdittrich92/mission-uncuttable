@@ -3,7 +3,6 @@ import os
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
                              QComboBox, QSpinBox, QLabel)
 from PyQt5 import uic
-
 from config import Resources, Language
 from controller.export_controller import ExportController
 from model.data import TimelineModel
@@ -58,10 +57,12 @@ SIZE_OPTIONS = {
 
 
 class ExportView(QDialog):
+
     """A Class used as the View for export window"""
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         timeline_instance = TimelineModel.get_instance()
 
@@ -149,3 +150,4 @@ class ExportView(QDialog):
             }
 
             ExportController.start_export(data)
+        

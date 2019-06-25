@@ -5,11 +5,11 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QListWidgetItem, QListView
 from PyQt5.QtCore import QObject, QSize
 from config import Resources, Language
-
+from ..view import View
+from util.classmaker import classmaker
 from view.mainview import FileListView
 
-
-class FilemanagerView(QWidget):
+class FilemanagerView(classmaker(QWidget, View)):
 
     def __init__(self, parent=None):
         super(FilemanagerView, self).__init__(parent)
@@ -50,3 +50,6 @@ class FilemanagerView(QWidget):
         item.setIcon(icon)
         item.setToolTip(file)
         item.setStatusTip(file)
+    
+    def refresh(self):
+        self.update()

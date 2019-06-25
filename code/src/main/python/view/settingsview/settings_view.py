@@ -16,9 +16,9 @@ class SettingsView(QMainWindow):
     If you want to add a setting go to the "config.py" file and simply
     add the desired setting to the dictionary that you'll find there.
     """
-    def __init__(self):
+    def __init__(self, parent=None):
         """Loads the UI-file and the shortcuts."""
-        super(SettingsView, self).__init__()
+        super(SettingsView, self).__init__(parent)
         uic.loadUi(Resources.files.settingsview, self)
 
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
@@ -129,6 +129,7 @@ class SettingsView(QMainWindow):
 
         self.settingsInstance.save_settings(self.settings)
         self.close()
+        self.update_view()
 
     def saveSetting(self, type, widget, x, y):
         """
@@ -167,3 +168,6 @@ class SettingsView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def update_view(self):
+        self.parent().update_window()

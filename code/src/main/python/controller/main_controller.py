@@ -61,12 +61,16 @@ class MainController:
         """
 
         self.__start_view.close()
-        video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
         timeline_controller.create_default_tracks()
-        self.__video_editor_controller = VideoEditorController(video_editor_view)
+        self.init_video_editor()
         self.__video_editor_controller.start()
         self.__video_editor_controller.new_project(filepath)
+    
+    def init_video_editor(self):
+        self.__video_editor_controller = VideoEditorController()
+        video_editor_view = VideoEditorView(self.__video_editor_controller)
+        self.__video_editor_controller.init_2(video_editor_view)
 
     def __start_autocut_controller(self, path, project_name, filename):
         """
@@ -92,8 +96,8 @@ class MainController:
 
         # check if file exists
         if os.path.isfile(path):
-            video_editor_view = VideoEditorView()
-            self.__video_editor_controller = VideoEditorController(video_editor_view)
+             
+            self.init_video_editor()
 
             with open(path, 'r') as f:
                 project_data = json.load(f)

@@ -22,10 +22,14 @@ class VideoEditorController:
 
     Manages starting and stopping of the video-editor window.
     """
-    def __init__(self, view):
+    def __init__(self):
+        None
+
+    def init_2(self, view):
         self.__video_editor_view = view
         self.__timeline_controller = TimelineController.get_instance()
-        self.__filemanager_view = FilemanagerView()
+        self.__filemanager_view = FilemanagerView(self.__video_editor_view)
+
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
 
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
@@ -67,7 +71,7 @@ class VideoEditorController:
     def __start_settings_controller(self):
         """Opens the settings window"""
         if self.__settings_controller.checkIfClosed():
-            self.settings_view = SettingsView()
+            self.settings_view = SettingsView(self.__video_editor_view)
             self.__settings_controller = SettingsController(self.settings_view)
             self.__settings_controller.start()
         else:
@@ -194,3 +198,5 @@ class VideoEditorController:
         # set project path
         project = Project.get_instance()
         project.path = path
+
+    

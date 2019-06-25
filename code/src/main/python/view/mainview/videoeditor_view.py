@@ -10,9 +10,9 @@ from controller import TimelineController
 
 class VideoEditorView(QMainWindow):
     """A class used as the View for the video-editor window."""
-    def __init__(self):
+    def __init__(self, parent=None):
         """Loads the UI-file and the shortcuts."""
-        super(VideoEditorView, self).__init__()
+        super(VideoEditorView, self).__init__(parent)
         uic.loadUi(Resources.files.mainview, self)
 
         self.set_texts()
@@ -83,10 +83,10 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QObject, 'horizontalSplitter')
         bottom_frame = self.findChild(QObject, 'bottomFrame')
         i = splitter.indexOf(bottom_frame)
-        timeline_view = TimelineView()
-        TimelineController(timeline_view)
-        splitter.replaceWidget(i, timeline_view)
-        timeline_view.show()
+        self.timeline_view = TimelineView(self)
+        TimelineController(self.timeline_view)
+        splitter.replaceWidget(i, self.timeline_view)
+        self.timeline_view.show()
 
     def load_preview(self):
         self.previewview = PreviewView.get_instance()
@@ -94,7 +94,6 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, self.previewview)
         self.previewview.show()
-        # self.needle.needle_moved.connect(self.test)
         self.previewview.maximize_button.clicked.connect(self.maxim)
 
     def show(self):
@@ -103,8 +102,9 @@ class VideoEditorView(QMainWindow):
 
     def set_filemanager_view(self, filemanager_view):
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, filemanager_view)
-        filemanager_view.show()
+        self.filemanager_view = filemanager_view
+        splitter.replaceWidget(0, self.filemanager_view)
+        self.filemanager_view.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
@@ -119,28 +119,20 @@ class VideoEditorView(QMainWindow):
         QMainWindow.closeEvent(self, event)
 
     def maxim(self):
-        v_splitter = self.findChild(QObject, 'verticalSplitter')
-        h_splitter = self.findChild(QObject, 'horizontalSplitter')
-
-        if(self.fullscreen == False):
-
-            self.v_sizes = v_splitter.sizes()
-            self.h_sizes = h_splitter.sizes()
-
-            self.splittersizes = (self.v_sizes, self.h_sizes)
-
-            width = self.frameGeometry().width()
-            height = self.frameGeometry().height()
-            v_splitter.setSizes([0, width])
-            h_splitter.setSizes([height, 0])
-
+        """ Sets Preview Fullscreen """
+        if(self.fullscreen == False):   
+            self.timeline_view.hide()
+            self.filemanager_view.hide()
             self.fullscreen = True
 
         else:
-            v_splitter.setSizes(self.splittersizes[0])
-            h_splitter.setSizes(self.splittersizes[1])
-
+            self.timeline_view.show()
+            self.filemanager_view.show()
             self.fullscreen = False
     
     def connect_update(self):
         PreviewView.get_instance().update_information()
+
+    def update_window(self):
+        self.update()
+    
