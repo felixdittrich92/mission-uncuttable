@@ -61,6 +61,7 @@ class ExportView(QDialog):
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         self.setup_ui()
 
@@ -80,11 +81,12 @@ class ExportView(QDialog):
         self.folder_edit = self.findChild(QLineEdit, "folder_edit")
         self.folder_edit.setText(os.path.expanduser('~'))
 
-        self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
+        # self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
 
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
         self.export_button = QPushButton(str(Language.current.export.export))
+        self.export_button.setObjectName("export_button")
         self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
 
         self.cancel_button = QPushButton(str(Language.current.export.cancel))

@@ -13,7 +13,7 @@ class ExportController:
     def __init__(self, view):
         self.view = view
 
-        self.view.pick_folder_button.clicked.connect(self.pick_folder)
+        # self.view.pick_folder_button.clicked.connect(self.pick_folder)
         self.view.export_button.clicked.connect(self.export_video)
 
     def start(self):

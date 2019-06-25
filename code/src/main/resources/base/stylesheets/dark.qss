@@ -1,15 +1,10 @@
-QMainWindow, QMenuBar {
+QMainWindow, QMenuBar, QDialog {
     background-color: #11151C;
 
 }
 
 * {
     font-size: 14px;
-}
-
-QDialog {
-    background-color: #212D40;
-    color: rgb(214, 214, 214);
 }
 
 #current_volume {
@@ -60,13 +55,20 @@ QPushButton:pressed {
     color: rgb(214, 214, 214);
 }
 
+QPushButton:disabled{
+    border: 1px solid #364156;
+    background: transparent;
+    color: #364156;
+}
+
 /* BLUE BUTTONS */
 
 #new_project_button,
 #saveButton,
 #pushButton_2,
 #auto_cut_button,
-#ok_button {
+#ok_button,
+#export_button{
     background: #4586B1;
     border: 1px solid #364156;
 }
@@ -75,7 +77,8 @@ QPushButton:pressed {
 #saveButton:hover,
 #pushButton_2:hover,
 #auto_cut_button:hover,
-#ok_button:hover {
+#ok_button:hover,
+#export_button:hover{
     border-width: 2px;
     border-color: #88ABDB;
 }
@@ -84,9 +87,21 @@ QPushButton:pressed {
 #saveButton:pressed,
 #pushButton_2:pressed,
 #auto_cut_button:pressed,
-#ok_button:pressed{
+#ok_button:pressed,
+#export_button:pressed{
     border: 1px solid #4E637F;
     background: #34698c;
+}
+
+#new_project_button:disabled,
+#saveButton:disabled,
+#pushButton_2:disabled,
+#auto_cut_button:disabled,
+#ok_button:disabled,
+#export_button:disabled{
+    border: 1px solid #364156;
+    background: transparent;
+    color: #364156;
 }
 
 /* MENU */
@@ -452,4 +467,15 @@ QProgressBar {
 QProgressBar::chunk {
     background-color: #D66853;
     width: 1px;
+}
+
+/* EXPORT */
+
+#export_frame {
+    background-color: #212D40;
+    border: 1px solid #364156;
+}
+
+#export_frame QLabel {
+    color: #F5F5F5;
 }
