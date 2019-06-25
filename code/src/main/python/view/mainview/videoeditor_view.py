@@ -115,6 +115,8 @@ class VideoEditorView(QMainWindow):
 
     def closeEvent(self, event):
         """ Closes all open Windows """
+        self.previewview.stop()
+
         QApplication.closeAllWindows()
         QMainWindow.closeEvent(self, event)
 
@@ -141,6 +143,6 @@ class VideoEditorView(QMainWindow):
             h_splitter.setSizes(self.splittersizes[1])
 
             self.fullscreen = False
-    
+
     def connect_update(self):
         PreviewView.get_instance().update_information()
