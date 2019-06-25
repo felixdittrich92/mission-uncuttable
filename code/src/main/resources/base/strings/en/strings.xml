@@ -62,7 +62,9 @@
         <label>Current Volume:</label>
     </timeablesettings>
     <export>
+        <windowtitle>Export Video</windowtitle>
         <filename>Filename</filename>
+        <untitled>untitled</untitled>
         <folder>Folder</folder>
         <format>Format</format>
         <resolution>Resolution</resolution>
@@ -70,6 +72,8 @@
         <high>high</high>
         <medium>medium</medium>
         <low>low</low>
+        <export>export</export>
+        <cancel>cancel</cancel>
     </export>
     <errors>
         <export>

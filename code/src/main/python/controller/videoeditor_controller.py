@@ -14,6 +14,7 @@ from view.filemanagerview import FilemanagerView
 from .filemanager_controller import FilemanagerController
 from projectconfig import Projectsettings
 from config import Settings
+from .export_controller import ExportController
 
 
 class VideoEditorController:
@@ -85,8 +86,10 @@ class VideoEditorController:
 
     def __start_export_controller(self):
         """shows the export view"""
+        self.__video_editor_view.previewview.stop()
         export_view = ExportView()
-        export_view.start()
+        export_controller = ExportController(export_view)
+        export_controller.start()
 
     def __start_undo(self):
         """ Undo last action """

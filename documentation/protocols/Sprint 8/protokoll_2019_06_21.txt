@@ -1,0 +1,39 @@
+Datum
+21.06.2019
+
+Name Protokollant
+Valentin ackva
+
+Art des Treffens 
+Review
+
+Sprint Nummer
+Sprint 8
+
+Fehlende Personen
+-
+
+Review
+
+	Welche Task abgeschlossen wurde?
+    projekt ordner/ file
+    gui erweiterung für autocut:
+	einblendung sprecher: 
+	3x logo task fertig
+	MU-248
+	Filemnger
+	MU-223/232 Projekt ordner
+	autocuat design
+	speichern der projekteinstellungen
+	vorhndenes projekt bei strta
+	geöffnetes settingsfenster schließt nicht
+	MU-279
+	timeline änderungen mit pler 
+	MU-286
+	utomtische erkennung
+	audio einstellen
+
+
+	Ist das Ziel erreicht wurden?
+	Ziel wurde teilweise erreicht
+

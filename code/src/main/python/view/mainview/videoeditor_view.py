@@ -120,6 +120,7 @@ class VideoEditorView(QMainWindow):
 
     def closeEvent(self, event):
         """ Closes all open Windows """
+        self.previewview.stop()
         if Project.get_instance().changed:
             msgbox = QMessageBox()
             res = msgbox.question(self, str(Language.current.errors.unsaved.msgboxtitle),
@@ -136,7 +137,6 @@ class VideoEditorView(QMainWindow):
                 event.ignore()
         else:
             QApplication.closeAllWindows()
-
             QMainWindow.closeEvent(self, event)
 
     def maxim(self):

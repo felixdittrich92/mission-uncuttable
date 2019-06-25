@@ -31,24 +31,43 @@ class TimelineView(QFrame):
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())
         timeline_scroll_area.deleteLater()
 
-        self.track_frame = self.findChild(QFrame, "track_frame")
-        self.track_button_frame = self.findChild(QFrame, "track_button_frame")
+        self.video_track_frame = self.findChild(QFrame, "video_track_frame")
+        self.audio_track_frame = self.findChild(QFrame, "audio_track_frame")
 
+        self.track_frame_frame = self.findChild(QFrame, "track_frame_frame")
+        
+        self.track_button_frame_frame = self.findChild(QFrame, "track_button_frame_frame")
+
+        self.video_track_button_frame = self.findChild(QFrame, "video_track_button_frame")
+        self.audio_track_button_frame = self.findChild(QFrame, "audio_track_button_frame")
+        
         self.timeables = dict()
         self.tracks = dict()
 
         self.__show_debug_info_on_gui()
 
-    def create_track(self, name, width, height, num, is_overlay):
-        """ Creates a new trackView and adds it to the track_frame """
+    def create_video_track(self, name, width, height, num, is_overlay=False):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
-        self.track_button_frame.add_button(btn)
-        track = TrackView(width, height, num, name, btn, is_overlay=is_overlay)
+        self.video_track_button_frame.add_button(btn, True)
+
+        track = TrackView(width, height, num, name, btn, True, is_overlay )
         self.tracks[num] = track
 
-        self.track_frame.add_track(track)
+        self.video_track_frame.add_track(track)
+        
+        self.adjust_track_sizes()
+    
+    def create_audio_track(self, name, width, height, num):
+        btn = QPushButton(name)
+        btn.setFixedSize(90, height)
+        self.audio_track_button_frame.add_button(btn, False)
 
+        track = TrackView(width, height, num, name, btn, False, False)
+        self.tracks[num] = track
+
+        self.audio_track_frame.add_track(track)
+        
         self.adjust_track_sizes()
 
     def adjust_track_sizes(self):
