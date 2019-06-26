@@ -405,9 +405,6 @@ QComboBox::drop-down {
     border: none;
 }
 
-QComboBox::down-arrow {
-}
-
 /* START VIEW */
 
 #start_frame, #start_frame_2, #new_project_frame, #projects_list_view{
@@ -477,5 +474,11 @@ QProgressBar::chunk {
 }
 
 #export_frame QLabel {
+    color: #F5F5F5;
+}
+
+#export_frame QComboBox QAbstractItemView{
+    border: 2px solid #364156;
+    background: #2A3649;
     color: #F5F5F5;
 }
