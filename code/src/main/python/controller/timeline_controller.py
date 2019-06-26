@@ -178,7 +178,8 @@ class TimelineController:
         """
         for t in data["tracks"]:
             if t["type"]:
-                self.create_video_track(t["name"], t["width"], t["height"], t["num"])
+                self.create_video_track(t["name"], t["width"], t["height"], t["num"],
+                                        is_overlay=t["is_overlay"])
             else:
                 self.create_audio_track(t["name"], t["width"], t["height"], t["num"])
 
