@@ -1,7 +1,12 @@
 class Folder:
 
-    def __init__(self):
+    def __init__(self, name):
+        self.__name = name
         self.__content = []
 
     def get_content(self):
         return self.__content
+
+    def get_name(self):
+        return self.__name
+

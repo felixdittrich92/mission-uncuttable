@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 
 from config import Resources
 from config import Settings
+from model.folder import Folder
 from model.project import Project
 
 RESOLUTION = 250
@@ -75,17 +76,17 @@ class FilemanagerController:
             print("The file exist")
             return
 
-        if file.upper().endswith(('.JPG', '.PNG')):
+        if file is not None and file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
-        #elif file.upper().endswith(('.PDF')):
+        # elif file.upper().endswith(('.PDF')):
         #    presentation = Presentation(file)
         #    self.pictures = presentation.convert_pdf(self.project_path,
         #                                                 os.path.join(self.project_name, "files"),
         #                                                 RESOLUTION)
         #    for pic in self.pictures:
         #        filemanager.addFileNames(pic)
-        elif file.upper().endswith(('.MP4')):
+        elif file is not None and file.upper().endswith('.MP4'):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
 
@@ -103,12 +104,17 @@ class FilemanagerController:
             cv2.destroyAllWindows()
             QApplication.processEvents()
 
-        elif file.upper().endswith(('.MP3', '*.WAV')):
+        elif file is not None and file.upper().endswith(('.MP3', '*.WAV')):
             path = Resources.images.media_symbols
             filename = "mp3.png"
             path_to_file = os.path.join(path, filename)
             pixmap = QPixmap(path_to_file)
             QApplication.processEvents()
+
+        elif file is None:
+            image = Resources.images.folder_icon
+            pixmap = QPixmap(image)
+            file = Folder("Testordner")
 
         else:
             print("The datatype is not supported")
@@ -159,5 +165,5 @@ class FilemanagerController:
             self.addFileNames(f)
         Project.get_instance().changed = False
 
-    def new__folder(self):
+    def new_folder(self):
         self.addFileNames(None)
