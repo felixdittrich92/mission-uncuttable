@@ -2,7 +2,7 @@ import os
 import cv2
 
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog
+from PyQt5.QtWidgets import QApplication, QFileDialog, QInputDialog
 
 from config import Resources
 from config import Settings
@@ -26,6 +26,8 @@ class FilemanagerController:
         self.__filemanager_view = view
 
         self.__filemanager_view.new_folder_button.clicked.connect(self.new_folder)
+        self.__filemanager_view.listWidget.itemDoubleClicked.connect(self.handle_double_click)
+
 
         """Set the functionality to the Widgets"""
         self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
@@ -114,7 +116,12 @@ class FilemanagerController:
         elif file is None:
             image = Resources.images.folder_icon
             pixmap = QPixmap(image)
-            file = Folder("Testordner")
+
+            name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog', 'Bitte einen Namen eingeben:')
+            if result is True:
+                file = Folder(name)
+            else:
+                return
 
         else:
             print("The datatype is not supported")
@@ -167,3 +174,12 @@ class FilemanagerController:
 
     def new_folder(self):
         self.addFileNames(None)
+
+    def handle_double_click(self, item):
+        for file in self.file_list:
+            if isinstance(file, Folder):
+                if file.get_name() == item.text():
+                    self.open_folder(file)
+
+    def open_folder(self, file):
+        file.get_content()
