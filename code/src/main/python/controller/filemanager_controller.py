@@ -23,8 +23,6 @@ class FilemanagerController:
 
     def __init__(self, view):
         self.__filemanager_view = view
-        path = Settings.get_instance().get_dict_settings()["Invisible"]["projects_path"]
-        print(path)
 
         """Set the functionality to the Widgets"""
         self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
