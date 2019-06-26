@@ -530,5 +530,5 @@ QProgressBar::chunk {
 
 /* UNSAVED CHANGES WARNING */
 QMessageBox::question QLabel {
-    color: #FFFFFF;
+    color: #F5F5F5;
 }
