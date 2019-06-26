@@ -17,10 +17,16 @@ class FilemanagerView(QWidget):
         super(FilemanagerView, self).__init__(parent)
         """Loads the UI file"""
         uic.loadUi(Resources.files.filemanager, self)
-        self.deleteButton = self.findChild(QObject, 'pushButton_1')
-        self.deleteButton.setText(str(Language.current.filemanager.deleteButtonName))
-        self.pickButton = self.findChild(QObject, 'pushButton_2')
-        self.pickButton.setText(str(Language.current.filemanager.pushButtonName))
+
+        self.delete_button = self.findChild(QWidget, 'delete_button')
+        self.delete_button.setText(str(Language.current.filemanager.deleteButtonName))
+
+        self.pick_button = self.findChild(QWidget, 'pick_files_button')
+        self.pick_button.setText(str(Language.current.filemanager.pushButtonName))
+
+        self.new_folder_button = self.findChild(QWidget, 'new_folder_button')
+        self.new_folder_button.setText(str(Language.current.filemanager.newFolderButton))
+
         self.listWidget = FileListView()
         self.listWidget.setObjectName("list_widget")
         old_list_widget = self.findChild(QObject, 'listWidget')
@@ -32,10 +38,10 @@ class FilemanagerView(QWidget):
         self.listWidget.setIconSize(QSize(115, 115))
 
     def set_delete_action(self, action):
-        self.deleteButton.clicked.connect(action)
+        self.delete_button.clicked.connect(action)
 
     def set_pick_action(self, action):
-        self.pickButton.clicked.connect(action)
+        self.pick_button.clicked.connect(action)
 
     def set_selected_action(self, action):
         self.listWidget.itemSelectionChanged.connect(action)

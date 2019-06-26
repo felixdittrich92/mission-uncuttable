@@ -24,6 +24,8 @@ class FilemanagerController:
     def __init__(self, view):
         self.__filemanager_view = view
 
+        self.__filemanager_view.new_folder_button.clicked.connect(self.new_folder)
+
         """Set the functionality to the Widgets"""
         self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
         self.__filemanager_view.set_delete_action(lambda: self.remove())
@@ -156,3 +158,6 @@ class FilemanagerController:
         for f in files:
             self.addFileNames(f)
         Project.get_instance().changed = False
+
+    def new__folder(self):
+        self.addFileNames(None)

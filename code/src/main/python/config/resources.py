@@ -24,6 +24,7 @@ images = {
     "forward_button": "images/buttons/step_forward.png",
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
+    "folder_icon": "images/folder.svg",
     "cross": "images/cross.svg",
     "tick": "images/tick.svg",
     "logo_with_name": "images/artwork/logo neu_mit Schrift_blau.png"
