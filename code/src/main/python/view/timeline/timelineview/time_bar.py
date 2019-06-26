@@ -2,7 +2,9 @@ from PyQt5.QtGui import QPen, QColor, QPainter
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt, QPoint
 
+from model.data import TimelineModel
 from .size_linkable_frame import SizeLinkableFrame
+from util.timeline_utils import get_px_per_second
 
 LINE_WIDTH = 1
 COLOR = "#F5F5F5"
@@ -45,6 +47,7 @@ class TimeBar(SizeLinkableFrame):
 
         self.__qp.setPen(__pen)
 
+
         x = 5
         counter = 0
         width = self.width()
@@ -52,7 +55,7 @@ class TimeBar(SizeLinkableFrame):
 
             self.draw_line(x, counter % 2 == 0)
             counter += 1
-            x += 10
+            x += get_px_per_second()
             width -= 10
 
         self.__qp.end()

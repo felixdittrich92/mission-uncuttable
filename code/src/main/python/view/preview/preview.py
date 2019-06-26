@@ -146,7 +146,6 @@ class PreviewView(QWidget):
         self.update_progress_bar()
         self.update_time_label()
 
-
     def get_last_frame(self):
         last_frame = 0
         for c in self.timeline.Clips():
