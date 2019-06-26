@@ -527,3 +527,8 @@ QProgressBar::chunk {
     background: #2A3649;
     color: #F5F5F5;
 }
+
+/* UNSAVED CHANGES WARNING */
+QMessageBox::question QLabel {
+    color: #FFFFFF;
+}

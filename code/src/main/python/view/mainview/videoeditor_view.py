@@ -122,6 +122,7 @@ class VideoEditorView(QMainWindow):
         self.previewview.stop()
         if Project.get_instance().changed:
             msgbox = QMessageBox()
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
             res = msgbox.question(self, str(Language.current.errors.unsaved.msgboxtitle),
                                   str(Language.current.errors.unsaved.msgboxtext),
                                   QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
