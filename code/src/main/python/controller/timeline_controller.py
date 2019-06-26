@@ -253,7 +253,9 @@ class TimelineController:
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()
-        self.__timeline_view.track_frame.adjustSize()
+        self.__timeline_view.audio_track_frame.adjustSize()
+        self.__timeline_view.video_track_frame.adjustSize()
+        self.__timeline_view.track_frame_frame.adjustSize()
 
     def get_timeable_by_id(self, id):
         """
