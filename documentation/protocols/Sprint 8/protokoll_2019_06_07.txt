@@ -2,40 +2,17 @@ Datum
 07.06.2019
 
 Name Protokollant
-Alexander Bonin, Valentin Ackva
+Valentin Ackva
 
 Art des Treffens 
 Review / Sprintplanung
 
 Sprint Nummer
-Sprint 6 / Sprint 8
+Sprint 8
 
 Fehlende Personen
 Max, Julian, Johannes
 
-
-Review
-
-	Welche Task abgeschlossen wurde?
-        
-	MU-225 Speichern der Timeline
-        MU-226 Speichern der Filemanager MediaFiles in uc.
-        MU-229 Laden des Projektes
-        MU-251 Spuren Füllen
-        MU-121 Fullscreen Button
-        MU-209 Slider
-        MU-247
-        MU-262
-        MU-76
-        MU-227
-        MU-136
-        MU-216
-        MU-211
-        
-	
-	Ist das Ziel erreicht wurden?
-        joa glaub schon
-	
 Sprintplanung
 
         MU-44  Speichern und Laden           Schätzung: 13

@@ -62,14 +62,18 @@
         <label>Aktuelle Lautstärke:</label>
     </timeablesettings>
     <export>
+        <windowtitle>Video exportieren</windowtitle>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>
+        <untitled>unbenannt</untitled>
         <format>Format</format>
         <resolution>Auflösung</resolution>
         <quality>Qualität</quality>
         <high>hoch</high>
         <medium>mittel</medium>
         <low>niedrig</low>
+        <export>Exportieren</export>
+        <cancel>Abbrechen</cancel>
     </export>
     <errors>
         <export>
@@ -91,6 +95,10 @@
             <msgboxtext>Der Ordner konnte bei dem angegebenen Pfad nicht erstellt werden.</msgboxtext>
             <msgboxinfotext>Bitte versuche einen anderen.</msgboxinfotext>
         </writeerror>
+        <unsaved>
+            <msgboxtitle>Es gibt ungespeicherte Änderungen</msgboxtitle>
+            <msgboxtext>Soll das Projekt gespeichert werden?</msgboxtext>
+        </unsaved>
     </errors>
     <autocut>
         <cancel>Abbrechen</cancel>
