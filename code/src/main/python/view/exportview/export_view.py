@@ -1,11 +1,10 @@
 import os
 
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
-                             QComboBox, QSpinBox, QLabel)
+                             QComboBox, QSpinBox, QLabel, QProgressBar)
 from PyQt5 import uic
 
 from config import Resources, Language
-from controller.export_controller import ExportController
 from model.data import TimelineModel
 
 FORMAT_OPTIONS = {
@@ -62,31 +61,38 @@ class ExportView(QDialog):
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
-
         self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
-        timeline_instance = TimelineModel.get_instance()
+        self.setup_ui()
+
+        self.canceled = False
+
+    def setup_ui(self):
+        self.setWindowTitle(str(Language.current.export.windowtitle))
 
         for name in ["filename", "folder", "format", "resolution", "quality"]:
             text = str(getattr(Language.current.export, name))
             self.findChild(QLabel, name + "_label").setText(text)
 
         self.filename_edit = self.findChild(QLineEdit, "filename_edit")
+        self.filename_edit.setText(str(Language.current.export.untitled))
 
         # set default folder to home folder
         self.folder_edit = self.findChild(QLineEdit, "folder_edit")
         self.folder_edit.setText(os.path.expanduser('~'))
 
+        self.pick_folder_button = self.findChild(QPushButton, "pick_folder_button")
+
         self.export_as_cb = self.findChild(QComboBox, "export_as_cb")
 
-        self.export_button = QPushButton('Exportieren')
+        self.export_button = QPushButton(str(Language.current.export.export))
         self.export_button.setObjectName("export_button")
-        self.export_button.clicked.connect(self.accept)
         self.buttonBox.addButton(self.export_button, QDialogButtonBox.AcceptRole)
 
-        self.cancel_button = QPushButton('Abbrechen')
-        self.cancel_button.clicked.connect(self.reject)
-        self.buttonBox.addButton(self.cancel_button, QDialogButtonBox.RejectRole)
+        self.cancel_button = QPushButton(str(Language.current.export.cancel))
+        self.cancel_button.clicked.connect(self.cancel)
+        self.buttonBox.addButton(
+            self.cancel_button, QDialogButtonBox.RejectRole)
 
         self.format_cb = self.findChild(QComboBox, "format_cb")
         for k in FORMAT_OPTIONS.keys():
@@ -101,7 +107,7 @@ class ExportView(QDialog):
         for k in SIZE_OPTIONS.keys():
             self.size_cb.addItem(k)
 
-        last_frame = timeline_instance.get_last_frame()
+        last_frame = TimelineModel.get_instance().get_last_frame()
 
         self.start_frame_sb = self.findChild(QSpinBox, "start_sb")
         self.start_frame_sb.setRange(1, last_frame)
@@ -111,44 +117,50 @@ class ExportView(QDialog):
         self.end_frame_sb.setRange(1, last_frame)
         self.end_frame_sb.setValue(last_frame)
 
-        # TODO translate text in values
+        self.export_progress = self.findChild(QProgressBar, "export_progress")
 
-    def start(self):
-        if self.exec_():
-            format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
-            quality_index = self.quality_cb.currentIndex()
-            audio_codec = format_selected["audiocodec"]
-            video_codec = format_selected["videocodec"]
-            if quality_index == 0:
-                audio_bitrate = format_selected["bitrate"]["audio"]["high"]
-                video_bitrate = format_selected["bitrate"]["video"]["high"]
-            elif quality_index == 1:
-                audio_bitrate = format_selected["bitrate"]["audio"]["medium"]
-                video_bitrate = format_selected["bitrate"]["video"]["medium"]
-            else:
-                audio_bitrate = format_selected["bitrate"]["audio"]["low"]
-                video_bitrate = format_selected["bitrate"]["video"]["low"]
+    def get_data(self):
+        """ Return dict with selected values """
+        format_selected = FORMAT_OPTIONS[self.format_cb.currentText()]
+        quality_index = self.quality_cb.currentIndex()
+        audio_codec = format_selected["audiocodec"]
+        video_codec = format_selected["videocodec"]
+        if quality_index == 0:
+            audio_bitrate = format_selected["bitrate"]["audio"]["high"]
+            video_bitrate = format_selected["bitrate"]["video"]["high"]
+        elif quality_index == 1:
+            audio_bitrate = format_selected["bitrate"]["audio"]["medium"]
+            video_bitrate = format_selected["bitrate"]["video"]["medium"]
+        else:
+            audio_bitrate = format_selected["bitrate"]["audio"]["low"]
+            video_bitrate = format_selected["bitrate"]["video"]["low"]
 
-            video_format = format_selected["videoformat"]
+        video_format = format_selected["videoformat"]
 
-            size_selected = SIZE_OPTIONS[self.size_cb.currentText()]
-            width = size_selected["width"]
-            height = size_selected["height"]
+        size_selected = SIZE_OPTIONS[self.size_cb.currentText()]
+        width = size_selected["width"]
+        height = size_selected["height"]
 
-            data = {
-                "path": os.path.join(self.folder_edit.text(),
-                                     self.filename_edit.text()),
-                "has_audio": True,
-                "has_video": True,
-                "video_format": video_format,
-                "audio_codec": audio_codec,
-                "audio_bitrate": audio_bitrate,
-                "video_codec": video_codec,
-                "video_bitrate": video_bitrate,
-                "width": width,
-                "height": height,
-                "start_frame": self.start_frame_sb.value(),
-                "end_frame": self.end_frame_sb.value()
-            }
+        data = {
+            "path": os.path.join(self.folder_edit.text(),
+                                 self.filename_edit.text()),
+            "has_audio": True,
+            "has_video": True,
+            "video_format": video_format,
+            "audio_codec": audio_codec,
+            "audio_bitrate": audio_bitrate,
+            "video_codec": video_codec,
+            "video_bitrate": video_bitrate,
+            "width": width,
+            "height": height,
+            "start_frame": self.start_frame_sb.value(),
+            "end_frame": self.end_frame_sb.value()
+        }
 
-            ExportController.start_export(data)
+        return data
+
+    def cancel(self):
+        """ Cancel the export and close the view """
+        self.canceled = True
+
+        self.reject()

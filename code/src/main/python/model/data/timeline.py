@@ -1,6 +1,9 @@
 import json
-import openshot
 
+import openshot
+from PyQt5.QtWidgets import QApplication
+
+from model.project import Project
 
 TIMELINE_DEFAULT_SETTINGS = {
     "fps": {
@@ -83,6 +86,10 @@ class TimelineModel:
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
 
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+
     def get_last_frame(self):
         """ returns the number of the last frame in the timeline """
         last_frame = 0
@@ -95,8 +102,11 @@ class TimelineModel:
 
         return last_frame
 
-    def export(self, filename, audio_options, video_options, start_frame, last_frame):
+    def export(self, filename, audio_options, video_options, start_frame,
+               last_frame, view):
         """
+        Writes the video to the disk.
+
         @param filename: name of the file in which the video is saved
         @param audio_options: list of audio options
         @param video_options: list of video options
@@ -113,9 +123,21 @@ class TimelineModel:
 
         w.Open()
 
+        bar = view.export_progress
+
+        step = int((last_frame - start_frame) / 100)
+
         # export video
         for frame_number in range(start_frame, last_frame):
+            if view.canceled:
+                break
+
+            QApplication.processEvents()
             w.WriteFrame(self.timeline.GetFrame(frame_number))
+            if frame_number % step == 0:
+                bar.setValue(bar.value() + 1)
+
+        print("finished export")
 
         w.Close()
 

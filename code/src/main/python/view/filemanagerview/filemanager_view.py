@@ -3,13 +3,15 @@ import os
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QListWidgetItem, QListView
-from PyQt5.QtCore import QObject, QSize
+from PyQt5.QtCore import QObject, QSize, pyqtSignal
 from config import Resources, Language
 
 from view.mainview import FileListView
 
 
 class FilemanagerView(QWidget):
+
+    changed = pyqtSignal()
 
     def __init__(self, parent=None):
         super(FilemanagerView, self).__init__(parent)
