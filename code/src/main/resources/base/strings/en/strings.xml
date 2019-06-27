@@ -2,18 +2,108 @@
     <application>
         <name>UbiCut</name>
     </application>
+    <startview>
+        <last_projects>last projects</last_projects>
+        <newproject>new project</newproject>
+        <load_project>load project</load_project>
+        <back>back</back>
+        <namelabel>Project name:</namelabel>
+        <folderlabel>Project directory:</folderlabel>
+    </startview>
+    <menubar>
+        <program>Program</program>
+        <settings>Settings</settings>
+        <project>Project</project>
+        <new>New</new>
+        <open>Open</open>
+        <save>Save</save>
+        <saveas>Save As</saveas>
+        <projectsettings>Projectsettings</projectsettings>
+        <export>Export</export>
+        <edit>Edit</edit>
+        <undo>Undo</undo>
+        <redo>Redo</redo>
+    </menubar>
+    <settings>
+        <general>General</general>
+        <language>Language</language>
+        <history_limit>History Limit</history_limit>
+        <design>Design</design>
+        <color_theme>Color Theme</color_theme>
+        <shortcuts>Shortcuts</shortcuts>
+        <starter>Starter</starter>
+        <undo>Undo</undo>
+        <redo>Redo</redo>
+        <export>Export</export>
+        <saveas>Save As</saveas>
+        <save>Save</save>
+        <cancel>Cancel</cancel>
+    </settings>
+    <projectsettings>
+        <general>General</general>
+        <framerate>Framerate</framerate>
+        <resolution>Resolution</resolution>
+        <projectname>Project Name</projectname>
+        <projectlocation>Project Location</projectlocation>
+        <accept>Accept</accept>
+    </projectsettings>
     <filemanager>
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
     </filemanager>
+    <timeable>
+        <delete>delete</delete>
+        <cut>cut</cut>
+        <settings>settings</settings>
+    </timeable>
+    <timeablesettings>
+        <save>Save</save>
+        <cancel>Cancel</cancel>
+        <label>Current Volume:</label>
+    </timeablesettings>
+    <export>
+        <windowtitle>Export Video</windowtitle>
+        <filename>Filename</filename>
+        <untitled>untitled</untitled>
+        <folder>Folder</folder>
+        <format>Format</format>
+        <resolution>Resolution</resolution>
+        <quality>Quality</quality>
+        <high>high</high>
+        <medium>medium</medium>
+        <low>low</low>
+        <export>export</export>
+        <cancel>cancel</cancel>
+    </export>
     <errors>
         <export>
             <windowtitle>Exporterror</windowtitle>
             <errormessage>There was an Error while exporting.\nPlease try different export settings.</errormessage>
         </export>
+        <incomplete>
+            <msgboxtitle>Error - New Project</msgboxtitle>
+            <msgboxtext>Please fill in all textfields.</msgboxtext>
+            <msgboxinfotext>There are still information missing.</msgboxinfotext>
+        </incomplete>
+        <projectexists>
+            <msgboxtitle>Error - Project already exists</msgboxtitle>
+            <msgboxtext>There is already a project with this name existing.</msgboxtext>
+            <msgboxinfotext>Please fill in another name.</msgboxinfotext>
+        </projectexists>
+        <writeerror>
+            <msgboxtitle>Error - Creating Directory</msgboxtitle>
+            <msgboxtext>The directory could not be created.</msgboxtext>
+            <msgboxinfotext>Please try another path.</msgboxinfotext>
+        </writeerror>
+        <unsaved>
+            <msgboxtitle>There are unsaved changes</msgboxtitle>
+            <msgboxtext>Do you want to save the project?</msgboxtext>
+        </unsaved>
     </errors>
     <autocut>
+        <cancel>cancel</cancel>
         <starttext>Please choose a video and optionally a pdf.</starttext>
+        <addvideotext>Please add a video file to continue</addvideotext>
         <ready>Ready to continue.</ready>
         <inprogress>started autocutting</inprogress>
         <slidesprogressing>calculating slides...</slidesprogressing>

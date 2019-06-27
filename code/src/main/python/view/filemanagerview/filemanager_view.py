@@ -1,22 +1,26 @@
 import os
 
 from PyQt5 import uic
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView, QListWidget
-from PyQt5.QtCore import QObject, QSize
-from PyQt5 import uic
-from config import Resources
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QListWidgetItem, QListView
+from PyQt5.QtCore import QObject, QSize, pyqtSignal
+from config import Resources, Language
 
 from view.mainview import FileListView
 
+
 class FilemanagerView(QWidget):
-    
+
+    changed = pyqtSignal()
+
     def __init__(self, parent=None):
         super(FilemanagerView, self).__init__(parent)
         """Loads the UI file"""
         uic.loadUi(Resources.files.filemanager, self)
         self.deleteButton = self.findChild(QObject, 'pushButton_1')
+        self.deleteButton.setText(str(Language.current.filemanager.deleteButtonName))
         self.pickButton = self.findChild(QObject, 'pushButton_2')
+        self.pickButton.setText(str(Language.current.filemanager.pushButtonName))
         self.listWidget = FileListView()
         self.listWidget.setObjectName("list_widget")
         old_list_widget = self.findChild(QObject, 'listWidget')

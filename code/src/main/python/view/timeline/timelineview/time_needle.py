@@ -125,7 +125,6 @@ class TimeNeedle(QWidget):
         half_width = self.width()/2
         parent_width = self.parent().parent().parent().parent().findChild(QWidget, "track_frame_frame").width()
         new_x = self.x() + delta_x
-
         if new_x >= half_width and new_x < parent_width - half_width:
             self.move(new_x, 0)
 
@@ -149,7 +148,9 @@ class TimeNeedle(QWidget):
 
     def update_player(self, x):
         """ Updates Player when needle dragged."""
-        fps = TimelineModel.get_instance().timeline.info.fps.num
+        fps = TimelineModel.get_instance().get_fps()
         pixels_per_second = get_px_per_second()
         self.preview.player.Seek(int((x / pixels_per_second) * fps))
-        self.preview.current_frame_label.setText(str(self.preview.player.Position()))
+        self.preview.update_time_label()
+        self.preview.update_progress_bar()
+        

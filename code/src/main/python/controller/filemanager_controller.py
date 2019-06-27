@@ -1,12 +1,14 @@
 import os
 import cv2
 
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QListWidgetItem, QListView
-from PyQt5.QtCore import QObject, QSize
+from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QApplication, QFileDialog
 
 from config import Resources
 from config import Settings
+from model.project import Project
+
+RESOLUTION = 250
 
 
 class FilemanagerController:
@@ -28,6 +30,7 @@ class FilemanagerController:
         self.__filemanager_view.set_selected_action(lambda: self.selected())
 
         self.file_list = []
+        self.pictures = []
 
     def pickFileNames(self):
         """
@@ -45,10 +48,17 @@ class FilemanagerController:
             )
         )
 
-        for file in fileNames:
+        if not fileNames:
+            return
 
+        for file in fileNames:
             QApplication.processEvents()
             self.addFileNames(file)
+
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+            self.__filemanager_view.changed.emit()
 
     def addFileNames(self, file):
         """
@@ -66,6 +76,13 @@ class FilemanagerController:
         if file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
+        #elif file.upper().endswith(('.PDF')):
+        #    presentation = Presentation(file)
+        #    self.pictures = presentation.convert_pdf(self.project_path,
+        #                                                 os.path.join(self.project_name, "files"),
+        #                                                 RESOLUTION)
+        #    for pic in self.pictures:
+        #        filemanager.addFileNames(pic)
         elif file.upper().endswith(('.MP4')):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
@@ -105,6 +122,11 @@ class FilemanagerController:
             path = self.__filemanager_view.get_current_item()
             self.file_list.remove(path)
             self.__filemanager_view.remove_selected_item()
+
+            project = Project.get_instance()
+            if not project.changed:
+                project.changed = True
+                self.__filemanager_view.changed.emit()
         except:
             return
 
@@ -116,6 +138,10 @@ class FilemanagerController:
             selected_files.append(path)
         except:
             return
+
+    def clear(self):
+        """ Removes all entries from the filemanager """
+        self.__filemanager_view.listWidget.clear()
 
     def get_project_filemanager(self):
         """ Returns a list with all the files in the filemanager. """
@@ -129,4 +155,4 @@ class FilemanagerController:
         """
         for f in files:
             self.addFileNames(f)
-            
+        Project.get_instance().changed = False

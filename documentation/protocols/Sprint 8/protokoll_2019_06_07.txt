@@ -1,0 +1,60 @@
+Datum
+07.06.2019
+
+Name Protokollant
+Valentin Ackva
+
+Art des Treffens 
+Review / Sprintplanung
+
+Sprint Nummer
+Sprint 8
+
+Fehlende Personen
+Max, Julian, Johannes
+
+Sprintplanung
+
+        MU-44  Speichern und Laden           Schätzung: 13
+        MU-36  Verschiedene Modi für Video   Schätzung: 3
+        MU-115 Sprintdokumentation          Schätzung: 5
+        MU-39  Einblendung Sprecher          Schätzung: 8
+        MU-38  Zoom auf Sprecher             Schätzung: 8
+        MU-67  Farbdesign                    Schätzung: 8
+        MU-256 MVC Refactoring              Schätzung: 8
+        MU-201 Audiopegel                   Schätzung: 8
+        MU-238 Logo                         Schätzung: 2
+        MU-221 Projektordner                Schätzung: 3
+        MU-156 Gruppierung von Elementen    Schätzung: 13
+        MU-242 Spur entfernen/hinzufüchen   Schätzung: 5
+        MU-42  Gliederungspunkte anzeigen   Schätzung: 13
+        MU-32  Audiospur                    Schätzung: 8
+        MU-157 Programm Design              Schätzung: 13
+
+        Sprintziel:
+
+        Die Modi ordentlich in der Timeline zu implementieren. 
+        Clean up, Refactoring, kleine Tickets abschließen.
+
+	Zeitraum:
+
+        07.06.19 - 21.06.19
+
+
+        Personelle Zuständigkeiten:
+
+        Markus:
+        - Timeline soll mit Frames arbeiten anstatt mit Pixel(im Verhältnis zur Zeitlänge) 
+        Clemens:
+        - Gruppieren von Elementen in der Timeline
+        Felix:
+        - Automatischer Zoom auf Sprecher
+        - Text einfügen
+        - Filemanger überarbeiten
+        alex:
+        - Audiospur
+        Valentin
+        - Refactoring
+        - Timeline mit Player connecten
+        - Audiopegel anzeigen und einstellen
+        - Logo 

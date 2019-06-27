@@ -10,6 +10,7 @@ class SettingsController:
     def start(self):
         """Calls '__show_view()' of SettingsController"""
         self.__settings_view.show()
+
     def focus(self):
         self.__settings_view.activateWindow()
 

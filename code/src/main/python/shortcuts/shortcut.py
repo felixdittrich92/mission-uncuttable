@@ -24,6 +24,8 @@ class Shortcut:
 
         self.__history = Project.get_instance().get_history()
 
+        self.video_editor_view = window
+
     def __execute(self, operation):
         """
         This function executes the operations.
@@ -31,15 +33,12 @@ class Shortcut:
         @param operation: Name of the operation as String
         """
         if operation == "undo":
-            try:
-                self.__history.undo_last_operation()
-            except:
-                pass
+            self.video_editor_view.actionUndo.trigger()
         elif operation == "redo":
-            try:
-                self.__history.redo_last_operation()
-            except:
-                pass
+            self.video_editor_view.actionRedo.trigger()
         elif operation == "export":
-            export_view = ExportView()
-            export_view.start()
+            self.video_editor_view.actionExport.trigger()
+        elif operation == "save":
+            self.video_editor_view.actionSpeichern.trigger()
+        elif operation == "saveas":
+            self.video_editor_view.actionSpeichern_als.trigger()

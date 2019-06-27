@@ -13,70 +13,64 @@ If you want to add settings that shouldn't be accessible for the user just put t
 """
 
 default_settings = {
-    "General": {
+    "general": {
         "language": {
-            "name": "Language",
             "type": "dropdown",
             "values": ["English", "Deutsch"],
             "current": 0
         },
         "history_limit": {
-            "name": "History Limit",
             "type": "spinbox",
             "values": [1, 100],  # min and max history size
             "current": 30
         },
     },
-    "Design": {
+    "design": {
         "color_theme": {
-            "name": "Color Theme",
             "type": "dropdown",
             "values": ["dark", "light"],
             "current": 0
         },
-        "option2": {
-            "name": "Option 2",
-            "type": "checkbox",
-            "values": "",
-            "current": False
-        },
-        "option1": {
-            "name": "Option 1",
-            "type": "button",
-            "values": "",
-            "current": True
-        },
     },
-    "Shortcuts": {
+    "shortcuts": {
         "starter": {
-            "name": "Starter",
             "type": "text",
             "values": "",
             "current": "Ctrl"
         },
         "undo": {
-            "name": "Rückgängig",
             "type": "text",
             "values": "",
             "current": "z"
         },
         "redo": {
-            "name": "Wiederholen",
             "type": "text",
             "values": "",
             "current": "y"
         },
+        "save": {
+            "type": "text",
+            "values": "",
+            "current": "s"
+        },
+        "saveas": {
+            "type": "text",
+            "values": "",
+            "current": "Shift+s"
+        },
         "export": {
-            "name": "Exportieren",
             "type": "text",
             "values": "",
             "current": "e"
         }
     },
     "Invisible": {
+        "import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4);;',
+        "project_formats": 'Files ( *.uc);;',
         "filemanager_import_formats": 'Files ( *.png *.jpg *.mp3 *.wav *.mp4 *.pdf);;',
         "autocutvideo_import_formats": 'Files ( *.mp4);;',
         "autocutpdf_import_formats": 'Files ( *.pdf);;',
         "pixels_per_second": 16,
+        "projects_path": "~/ubicut",
     }
 }

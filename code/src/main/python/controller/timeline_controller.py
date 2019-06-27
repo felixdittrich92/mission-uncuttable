@@ -50,6 +50,8 @@ class TimelineController:
         else:
             op.do()
 
+        self.__timeline_view.changed.emit()
+
     def delete_timeable(self, view_info, model_info, hist=True):
         """
         Delete the model's representation of a timeable.
@@ -62,6 +64,8 @@ class TimelineController:
             self.__history.do_operation(op)
         else:
             op.do()
+
+        self.__timeline_view.changed.emit()
 
     def remove_timeable_view(self, id):
         """
@@ -90,12 +94,16 @@ class TimelineController:
         op = MoveOperation(id, old_pos, new_pos)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def drag_timeable(self, view_info_old, view_info_new, model_old, model_new):
         """
         Drags a timeable from one track to another track
         """
         op = DragOperation(view_info_old, view_info_new, model_old, model_new)
         self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
 
     def split_timeable(self, view_id, res_right, width, model_end, pos):
         """
@@ -113,6 +121,8 @@ class TimelineController:
         op = CutOperation(view_id, res_right, width, model_end, pos)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def resize_timeable(self, view_info_old, view_info_new):
         """
         Remove a part of the model's representation of a timeable
@@ -129,19 +139,17 @@ class TimelineController:
         op = ResizeOperation(view_info_old, view_info_new)
         self.__history.do_operation(op)
 
-    def select_timeable(self, id, selected=True):
-        """
-        Set the selected-state of the model's representation of a timeable.
+        self.__timeline_view.changed.emit()
 
-        @param id:       The timeable's unique ID.
-        @param selected: The selected-state.
-        @return:         Nothing.
-        """
-        pass
+    def is_overlay_track(self, track_id):
+        if track_id not in self.__timeline_view.tracks:
+            return False
 
-    def create_video_track(self, name, width, height, num):
+        return self.__timeline_view.tracks[track_id].is_overlay
+
+    def create_video_track(self, name, width, height, num, is_overlay=False):
         """ Creates a new track in the timeline """
-        self.__timeline_view.create_video_track(name, width, height, num)
+        self.__timeline_view.create_video_track(name, width, height, num, is_overlay)
 
     def create_audio_track(self, name, width, height, num):
         """ Creates a new track in the timeline """
@@ -170,7 +178,8 @@ class TimelineController:
         """
         for t in data["tracks"]:
             if t["type"]:
-                self.create_video_track(t["name"], t["width"], t["height"], t["num"])
+                self.create_video_track(t["name"], t["width"], t["height"], t["num"],
+                                        is_overlay=t["is_overlay"])
             else:
                 self.create_audio_track(t["name"], t["width"], t["height"], t["num"])
 
@@ -185,23 +194,25 @@ class TimelineController:
                                  model, t["view_id"], res_left=t["resizable_left"],
                                  res_right=t["resizable_right"], hist=False)
 
+        Project.get_instance().changed = False
+
     def create_default_tracks(self):
         """ Creates 2 default tracks when the user chooses manual cut """
-        self.create_video_track("Video 1", 2000, 50, 1)
-        self.create_video_track("Video 2", 100, 50, 2)
+        self.create_video_track("Video 1", 2000, 50, 4)
+        self.create_video_track("Video 2", 100, 50, 3)
 
-        self.create_audio_track("Audio 1", 100, 50, 3)     
-        self.create_audio_track("Audio 2", 200, 50, 4)        
-        
+        self.create_audio_track("Audio 1", 100, 50, 2)
+        self.create_audio_track("Audio 2", 200, 50, 1)
+
     def create_autocut_tracks(self):
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_track("Overlay", 2000, 50, 3)
-        self.create_track("Tafel", 2000, 50, 2)
-        self.create_track("Visualizer", 2000, 50, 1)
-        self.create_track("Folien", 2000, 50, 0)
-        self.create_track("Audio", 2000, 50, -1)
+        self.create_video_track("Overlay", 2000, 50, 3, True)
+        self.create_video_track("Tafel", 2000, 50, 2)
+        self.create_video_track("Visualizer", 2000, 50, 1)
+        self.create_video_track("Folien", 2000, 50, 0)
+        self.create_audio_track("Audio", 2000, 50, -1)
 
     def create_autocut_timeables(self, file_path, track, data):
         """
@@ -225,14 +236,27 @@ class TimelineController:
     def add_clip(self, file_path, track):
         """ Gets a path to file and a track and creates a timeable """
         model = TimeableModel(file_path, generate_id())
+
         width = seconds_to_pos(model.clip.Duration())
         self.create_timeable(track, os.path.basename(file_path),
                              width, 0, model, generate_id(), hist=False)
 
+    def clear_timeline(self):
+        """ Removes all timeline data """
+        TimelineModel.get_instance().remove_all_clips()
+
+        for t in self.__timeline_view.tracks.values():
+            t.button.deleteLater()
+            t.deleteLater()
+
+        self.__history.clear_history()
+
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()
-        self.__timeline_view.track_frame.adjustSize()
+        self.__timeline_view.audio_track_frame.adjustSize()
+        self.__timeline_view.video_track_frame.adjustSize()
+        self.__timeline_view.track_frame_frame.adjustSize()
 
     def get_timeable_by_id(self, id):
         """
@@ -249,6 +273,9 @@ class TimelineController:
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
+
+    def update_timecode(self, timecode):
+        self.__timeline_view.update_timecode(timecode)
 
 
 class CreationOperation(Operation):

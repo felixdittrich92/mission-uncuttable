@@ -1,0 +1,31 @@
+Datum
+17.06.2019
+
+Name Protokollant
+Valentin Ackva
+
+Art des Treffens 
+Reguläres Treffen
+
+Sprint Nummer
+Sprint 8
+
+Fehlende Personen
+-
+
+Zusammenfassung
+
+Reguläres Treffen
+	
+	Was jeder Gemacht hat?
+
+    Felix: Schnitt weiter automatisieren, Speaker Video wird jetzt automatisch eingefügt.
+    Max: GUI Überarbeitung: Shortcut und Autocut
+    Alex: Bug Fix, Audio Timeline
+    Valentin: Bug Fix, Logo Artwork
+    Johannes: Design für Gliederungspunkte
+    Julian: Refactoring 
+    Clemens: Gruppieren von elementen (Timeline)
+    Markus: Scroll bar überarbeitet (Timeline)
+
+	

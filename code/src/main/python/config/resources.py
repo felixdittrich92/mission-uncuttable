@@ -12,7 +12,8 @@ files = {
     "decision_widget": "ui/new_project_decision.ui",
     "select_project_widget": "ui/select_project.ui",
     "qss_dark": "stylesheets/dark.qss",
-    "qss_light": "stylesheets/light.qss"
+    "qss_light": "stylesheets/light.qss",
+    "timeable_settings": "ui/timeable_settings_view.ui"
 }
 images = {
     "play_button": "images/buttons/play.png",
@@ -24,7 +25,8 @@ images = {
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
     "cross": "images/cross.svg",
-    "tick": "images/tick.svg"
+    "tick": "images/tick.svg",
+    "logo_with_name": "images/artwork/logo neu_mit Schrift_blau.png"
 }
 strings = {
     "de": "strings/de/strings.xml",

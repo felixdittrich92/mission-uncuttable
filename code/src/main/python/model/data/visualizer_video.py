@@ -11,7 +11,7 @@ class VisualizerVideo(MediaFile):
 
     def __init__(self, file_path):
         self.__file_path = str(file_path)
-        self.subvideos = list()
+        self.visualizer_subvideos = list()
 
     def get(self):
         return self.__file_path
@@ -27,24 +27,25 @@ class VisualizerVideo(MediaFile):
 
             for frame_number in count():
                 is_ok, frame = video.read()
+
                 if frame_number % 30 == 0:
                     progress(frame_number/maxframes*100)
                 if not is_ok:
                     if times:
-                        self.subvideos.append((times[0], times[-1]))
+                        self.visualizer_subvideos.append((times[0], times[-1]))
                     break
 
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-                roi = frame[275:405, 960:1000]
+
+                roi = frame[0:40, 0:40]
                 average = cv2.mean(roi)
 
                 if average[0] > 5:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
-                    self.subvideos.append((times[0], times[-1]))
+                    self.visualizer_subvideos.append((times[0], times[-1]))
                     times.clear()
 
         finally:
             video.release()
-            cv2.destroyAllWindows()
             

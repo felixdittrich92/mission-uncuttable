@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QPushButton
 from PyQt5 import uic
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, pyqtSignal
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
@@ -14,14 +14,17 @@ class TimelineView(QFrame):
     shows the tracks and provides tools and controls to view and
     manipulate them.
 
-    The widget consists of a toolbar and a TimelineScrollArea. The
-    latter one really fulfills the task of displaying the tracks.
+    The widget holds the TimelineScrollArea which fulfills the task of
+    displaying the tracks.
     """
+
+    changed = pyqtSignal()
+
     def __init__(self, parent=None):
         """
-        Create a TimelineView with a new toolbar and TimelineScrollArea.
+        Create a TimelineView with a TimelineScrollArea.
 
-        :param parent: the parent component
+        @param parent the parent component
         """
         super(TimelineView, self).__init__(parent)
 
@@ -35,41 +38,39 @@ class TimelineView(QFrame):
         self.audio_track_frame = self.findChild(QFrame, "audio_track_frame")
 
         self.track_frame_frame = self.findChild(QFrame, "track_frame_frame")
-        
+
         self.track_button_frame_frame = self.findChild(QFrame, "track_button_frame_frame")
 
         self.video_track_button_frame = self.findChild(QFrame, "video_track_button_frame")
         self.audio_track_button_frame = self.findChild(QFrame, "audio_track_button_frame")
-        
+
         self.timeables = dict()
         self.tracks = dict()
 
-        self.controller = TimelineController(self)
-
         self.__show_debug_info_on_gui()
 
-    def create_video_track(self, name, width, height, num):
-        track = TrackView(width, height, num, name, True)
-        self.tracks[num] = track
+    def create_video_track(self, name, width, height, num, is_overlay=False):
+        btn = QPushButton(name)
+        btn.setFixedSize(90, height)
+        self.video_track_button_frame.add_button(btn, True)
 
-        btn1 = QPushButton(name)
-        btn1.setFixedSize(80, 50)
-        self.video_track_button_frame.add_button(btn1, True)
+        track = TrackView(width, height, num, name, btn, True, is_overlay)
+        self.tracks[num] = track
 
         self.video_track_frame.add_track(track)
-        
+
         self.adjust_track_sizes()
-    
+
     def create_audio_track(self, name, width, height, num):
-        track = TrackView(width, height, num, name, False)
+        btn = QPushButton(name)
+        btn.setFixedSize(90, height)
+        self.audio_track_button_frame.add_button(btn, False)
+
+        track = TrackView(width, height, num, name, btn, False)
         self.tracks[num] = track
 
-        btn2 = QPushButton(name)
-        btn2.setFixedSize(80, 50)
-        self.audio_track_button_frame.add_button(btn2, False)
-
         self.audio_track_frame.add_track(track)
-        
+
         self.adjust_track_sizes()
 
     def adjust_track_sizes(self):
@@ -159,3 +160,7 @@ class TimelineView(QFrame):
         makes it possible to say if something works properly or not.
         """
         # self.setStyleSheet('background-color: yellow')
+
+    def update_timecode(self, timecode):
+        self.time_label = self.findChild(QObject, 'time_label')
+        self.time_label.setText(timecode)
