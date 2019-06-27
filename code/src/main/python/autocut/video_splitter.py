@@ -136,7 +136,8 @@ class VideoSplitter:
         self.frame_rate = videometadata['video']['@avg_frame_rate']
         self.number_frames = int(videometadata['video']['@nb_frames'])
 
-        x, y, width, height = 220, 400, 400, 650
+        x, y, width, height = 220, 400, 300, 850
+        #x, y, width, height = 350, 350, 180, 650
         track_window = (width,x,height,y)
 
         speaker_out = skvideo.io.FFmpegWriter(speaker_filename, inputdict={
@@ -148,14 +149,15 @@ class VideoSplitter:
             is_ok, track_window = cv2.meanShift(gmask, track_window, term_crit)
             x, y, width, height = track_window
             if self.width == 1920:
-                y = 200
+                y = 100
                 speaker_out.writeFrame(frame[y:y+height, x+100:x+width])
                 self.frame += 1
                 if self.frame % 30 == 0:
                     update_progress((int)(self.frame/self.number_frames*100))
             else:   
-                y = 150
-                speaker_out.writeFrame(frame[y:y+height, x:x+width])
+                y = 250
+                #speaker_out.writeFrame(frame[y:y+height, x:x+width])
+                speaker_out.writeFrame(frame[y-100:y+height, x:x+width])
                 self.frame += 1
                 if self.frame % 30 == 0:
                     update_progress((int)(self.frame/self.number_frames*100))  
