@@ -89,27 +89,36 @@ class TimelineView(QFrame):
         for t in track_views:
             t.set_width(max_width)
 
-    def create_timeable(self, track_id, name, width, x_pos, model, id, id2,
+    def create_timeable(self, track_id, name, width, x_pos, model, id, id2=None,
                         res_left=0, res_right=0, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
+        is_empty = False
+        lastrack = None
         if track_id is not None:
+            is_empty = True
             try:
                 track = self.tracks[track_id]
             except KeyError:
                 return
         else:
-            is_empty = False
             for t in self.tracks:
-                if self.tracks[t].isvideo is False:
+                lastrack = t
+                if self.tracks[t].is_video is False:
                     is_empty = True
                     for s in self.timeables:
                         if self.timeables[s].track_id == t:
+                            print(self.timeables[s].track_id)
                             is_empty = False
                 if is_empty:      
+                    track_id = t
                     track = self.tracks[t]
                     break
-                else:
-                    print("no empty tracks")
+
+        if is_empty is not True:
+            newtracknum = lastrack+1
+            name = "Audio"+str(newtracknum)
+            self.create_audio_track(name,1000,10,newtracknum)
+            track = self.tracks[newtracknum]
 
         x_pos = x_pos - mouse_pos
         if width + x_pos > track.width:
@@ -117,10 +126,10 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, id2, track_id)
+                                model, id, track_id, id2)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
-
+   
         if is_drag:
             track.current_timeable = timeable
             track.current_timeable2 = TimelineController.get_instance().get_timeable_by_id(id2)

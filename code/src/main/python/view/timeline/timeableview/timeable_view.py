@@ -31,7 +31,7 @@ class TimeableView(QGraphicsRectItem):
     update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
-                 model, view_id, id2, track_id, parent=None):
+                 model, view_id, track_id, id2=None, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -405,7 +405,8 @@ class TimeableView(QGraphicsRectItem):
         if self.x_pos != self.mouse_press_start_pos:
             self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
                                             self.x_pos)
-            self.__controller.move_timeable(self.id2, self.mouse_press_start_pos,
+            if self.id2 is not None:
+                self.__controller.move_timeable(self.id2, self.mouse_press_start_pos,
                                             self.x_pos)
 
         # trim start or end if resize happened

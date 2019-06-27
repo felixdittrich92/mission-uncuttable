@@ -37,3 +37,4 @@ class TrackFrame(SizeLinkableFrame):
         track.stackUnder(needle)
         self.adjustSize()
         self.parent().adjustSize()
+        self.parent().parent().adjustSize()

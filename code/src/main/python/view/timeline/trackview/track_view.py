@@ -115,11 +115,11 @@ class TrackView(QGraphicsView):
             name = os.path.basename(path)
             id2 = generate_id()
             TimelineController.get_instance().create_timeable(None, name, width,
-                                                              x_pos, model, id2, clip_id,
+                                                              x_pos, model, id2, id2=clip_id,
                                                               is_drag=True)
                                                               
             TimelineController.get_instance().create_timeable(self.num, name, width,
-                                                              x_pos, model, clip_id, id2,
+                                                              x_pos, model, clip_id, id2=id2,
                                                               is_drag=True)
 
 
@@ -135,13 +135,14 @@ class TrackView(QGraphicsView):
 
         view_id = QDataStream.readString(stream).decode()
         timeable = TimelineController.get_instance().get_timeable_by_id(view_id)
-        id2 = timeable.id2
+        
 
         self.dragged_timeable_id = view_id
 
         name = timeable.name
         width = timeable.width
         pos = timeable.mouse_press_pos
+        id2 = timeable.id2
 
         # get a list of items at the position where the timeable would be added
         start_pos = drag_event.pos().x()
@@ -171,7 +172,7 @@ class TrackView(QGraphicsView):
             # add the timeable to the track
             controller = TimelineController.get_instance()
             controller.create_timeable(self.num, name, width, start_pos, model,
-                                       generate_id(), id2, res_left=res_left,
+                                       generate_id(), id2=id2, res_left=res_left,
                                        res_right=res_right, mouse_pos=pos, hist=False,
                                        is_drag=True)
             self.drag_from_track = True

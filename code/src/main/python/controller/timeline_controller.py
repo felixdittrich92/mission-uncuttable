@@ -30,7 +30,7 @@ class TimelineController:
         self.__timeline_view = timeline_view
         self.__history = Project.get_instance().get_history()
 
-    def create_timeable(self, track_id, name, width, x_pos, model, id, id2,
+    def create_timeable(self, track_id, name, width, x_pos, model, id, id2=None,
                         res_left=0, res_right=0, mouse_pos=0, hist=True, is_drag=False):
         """
         Create a new object in the timeline model to represent a new timeable.
@@ -42,8 +42,8 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
-        op = CreationOperation(track_id, name, width, x_pos, model, id, id2,
-                               res_left, res_right, mouse_pos, is_drag)
+        op = CreationOperation(track_id, name, width, x_pos, model, id,
+                               res_left, res_right, mouse_pos, is_drag, id2)
 
         if hist:
             self.__history.do_operation(op)
@@ -281,8 +281,8 @@ class TimelineController:
 class CreationOperation(Operation):
     """ Creates a new timeable """
 
-    def __init__(self, track_id, name, width, x_pos, model, id, id2,
-                 res_left, res_right, mouse_pos, is_drag):
+    def __init__(self, track_id, name, width, x_pos, model, id, 
+                 res_left, res_right, mouse_pos, is_drag, id2):
         self.track_id = track_id
         self.name = name
         self.width = width
