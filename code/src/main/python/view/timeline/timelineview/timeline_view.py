@@ -107,7 +107,6 @@ class TimelineView(QFrame):
                     is_empty = True
                     for s in self.timeables:
                         if self.timeables[s].track_id == t:
-                            print(self.timeables[s].track_id)
                             is_empty = False
                 if is_empty:      
                     track_id = t
