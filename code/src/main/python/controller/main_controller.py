@@ -97,7 +97,6 @@ class MainController:
 
             with open(path, 'r') as f:
                 project_data = json.load(f)
-
             # set up timeline
             timeline_controller = TimelineController.get_instance()
             if "timeline" in project_data:

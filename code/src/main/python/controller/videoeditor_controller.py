@@ -170,7 +170,6 @@ class VideoEditorController:
 
         # get filemanager data
         filemanager_data = self.__filemanager_controller.get_project_filemanager()
-        filemanager_data = self.__filemanager_controller.file_list_to_json(filemanager_data)
 
         project_data = {
             "timeline": timeline_data,

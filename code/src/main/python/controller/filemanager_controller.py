@@ -1,5 +1,7 @@
 import json
 import os
+from collections import namedtuple
+
 import cv2
 
 from PyQt5.QtGui import QPixmap, QImage
@@ -204,12 +206,30 @@ class FilemanagerController:
         """
         Recreates the filemanager from a config file.
 
-        @param files: list of filenames
+        :param files: list of filenames
         """
-
+        files = json.loads(files)
         for f in files:
-            self.addFileNames(f)
+            if str(f).startswith("{"):
+                folder = Folder(f["_Folder__name"])
+                self.fill_folder(folder, f["_Folder__content"])
+
+                self.file_list.append(folder)
+            else:
+                self.file_list.append(f)
+
+        self.update_file_list(self.file_list)
+
         Project.get_instance().changed = False
+
+    def fill_folder(self, folder, files):
+        for f in files:
+            if str(f).startswith("{"):
+                new_folder = Folder(f["_Folder__name"])
+                self.fill_folder(new_folder, f["_Folder__content"])
+                folder.add_to_content(new_folder)
+            else:
+                folder.add_to_content(f)
 
     def new_folder(self):
         """Starts the creation of a new folder."""
