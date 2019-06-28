@@ -200,9 +200,13 @@ class TimelineController:
             model.set_end(m["end"], is_sec=True)
             model.move(m["position"], is_sec=True)
 
+            group = None
+            if "group" in t:
+                group = t["group"]
+
             self.create_timeable(t["track_id"], t["name"], t["width"], t["x_pos"],
                                  model, t["view_id"], res_left=t["resizable_left"],
-                                 res_right=t["resizable_right"], group=t["group_id"],
+                                 res_right=t["resizable_right"], group=group,
                                  hist=False)
 
     def create_project_groups(self, data):
