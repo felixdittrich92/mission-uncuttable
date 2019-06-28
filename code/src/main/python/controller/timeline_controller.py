@@ -32,7 +32,8 @@ class TimelineController:
         self.__history = Project.get_instance().get_history()
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0, hist=True, is_drag=False):
+                        res_left=0, res_right=0, mouse_pos=0, hist=True,
+                        group=None, is_drag=False):
         """
         Create a new object in the timeline model to represent a new timeable.
 
@@ -44,15 +45,15 @@ class TimelineController:
         @return:     Nothing.
         """
         op = CreationOperation(track_id, name, width, x_pos, model, id,
-                               res_left, res_right, mouse_pos, is_drag)
+                               res_left, res_right, mouse_pos, group, is_drag)
 
         if hist:
             self.__history.do_operation(op)
         else:
             op.do()
 
-        key = list(self.__timeline_model.groups.keys())[0]
-        self.__timeline_model.groups[key].add_timeable(self.get_timeable_by_id(id))
+        # key = list(self.__timeline_model.groups.keys())[0]
+        # self.__timeline_model.groups[key].add_timeable(self.get_timeable_by_id(id))
         self.__timeline_view.changed.emit()
 
     def delete_timeable(self, view_info, model_info, hist=True):
@@ -201,9 +202,15 @@ class TimelineController:
 
             self.create_timeable(t["track_id"], t["name"], t["width"], t["x_pos"],
                                  model, t["view_id"], res_left=t["resizable_left"],
-                                 res_right=t["resizable_right"], hist=False)
+                                 res_right=t["resizable_right"], group=t["group_id"],
+                                 hist=False)
 
         Project.get_instance().changed = False
+
+    def create_project_groups(self, data):
+        """ Recreates all groups when the project is loaded """
+        for g in data:
+            self.create_group_with_id(g, data[g])
 
     def create_default_tracks(self):
         """ Creates 2 default tracks when the user chooses manual cut """
@@ -289,6 +296,11 @@ class TimelineController:
         """
         timeables = [self.get_timeable_by_id(i) for i in ids]
         self.__timeline_model.create_group(generate_id(), timeables)
+
+    def create_group_with_id(self, group_id, ids):
+        """ Create TimeableGroup with group_id and timeable ids """
+        timeables = [self.get_timeable_by_id(i) for i in ids]
+        self.__timeline_model.create_group(group_id, timeables)
 
     def get_group_by_id(self, group_id):
         """
@@ -379,7 +391,7 @@ class CreationOperation(Operation):
     """ Creates a new timeable """
 
     def __init__(self, track_id, name, width, x_pos, model, id,
-                 res_left, res_right, mouse_pos, is_drag):
+                 res_left, res_right, mouse_pos, group, is_drag):
         self.track_id = track_id
         self.name = name
         self.width = width
@@ -389,6 +401,7 @@ class CreationOperation(Operation):
         self.res_left = res_left
         self.res_right = res_right
         self.mouse_pos = mouse_pos
+        self.group = group
         self.is_drag = is_drag
 
     def do(self):
@@ -396,8 +409,8 @@ class CreationOperation(Operation):
         timeline_view = TimelineController.get_instance().get_timelineview()
         timeline_view.create_timeable(self.track_id, self.name, self.width,
                                       self.x_pos, self.model, self.id,
-                                      res_left=self.res_left, res_right=self.res_right,
-                                      mouse_pos=self.mouse_pos, is_drag=self.is_drag)
+                                      self.res_left, self.res_right, self.group,
+                                      self.mouse_pos, is_drag=self.is_drag)
 
     def undo(self):
         TimelineController.get_instance().get_timeable_by_id(self.id).delete(hist=False)
@@ -429,9 +442,8 @@ class DeleteOperation(Operation):
         controller.create_timeable(
             self.view_info["track_id"], self.view_info["name"],
             self.view_info["width"], self.view_info["x_pos"], model,
-            self.view_info["view_id"],
-            res_left=self.view_info["resizable_left"],
-            res_right=self.view_info["resizable_right"], hist=False)
+            self.view_info["view_id"], self.view_info["resizable_left"],
+            self.view_info["resizable_right"], self.view_info["group_id"], hist=False)
 
         controller.get_timeable_by_id(self.view_info["view_id"]).group_id = \
             self.view_info["group_id"]
@@ -469,8 +481,7 @@ class CutOperation(Operation):
                                    timeable_left.width - self.pos,
                                    self.pos + timeable_left.x_pos, new_model,
                                    self.new_view_id,
-                                   res_right=timeable_left.resizable_right,
-                                   hist=False)
+                                   res_right=timeable_left.resizable_right, hist=False)
 
         timeable_left.set_width(self.pos)
         timeable_left.setPos(timeable_left.x_pos, 0)
@@ -590,8 +601,9 @@ class DragOperation(Operation):
         controller.create_timeable(
             self.view_info_new["track_id"], self.view_info_new["name"],
             self.view_info_new["width"], self.view_info_new["x_pos"], self.model_new,
-            self.view_info_new["view_id"], res_left=self.view_info_new["resizable_left"],
-            res_right=self.view_info_new["resizable_right"], hist=False)
+            self.view_info_new["view_id"], self.view_info_new["resizable_left"],
+            self.view_info_new["resizable_right"], self.view_info_new["group_id"],
+            hist=False)
         controller.delete_timeable(
             self.view_info_old, self.model_old.get_info_dict(), hist=False)
 
@@ -600,8 +612,9 @@ class DragOperation(Operation):
         controller.create_timeable(
             self.view_info_old["track_id"], self.view_info_old["name"],
             self.view_info_old["width"], self.view_info_old["x_pos"], self.model_old,
-            self.view_info_old["view_id"], res_left=self.view_info_old["resizable_left"],
-            res_right=self.view_info_old["resizable_right"], hist=False)
+            self.view_info_old["view_id"], self.view_info_old["resizable_left"],
+            self.view_info_old["resizable_right"], self.view_info_old["group_id"],
+            hist=False)
         controller.delete_timeable(
             self.view_info_new, self.model_new.get_info_dict(), hist=False)
         self.was_created = False

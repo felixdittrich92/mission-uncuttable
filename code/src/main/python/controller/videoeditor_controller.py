@@ -9,6 +9,7 @@ from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
 from .timeline_controller import TimelineController
 from model.project import Project
+from model.data import TimelineModel
 from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
 from view.filemanagerview import FilemanagerView
@@ -174,7 +175,8 @@ class VideoEditorController:
         project_data = {
             "timeline": timeline_data,
             "filemanager": filemanager_data,
-            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings()
+            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings(),
+            "groups": TimelineModel.get_instance().get_group_dict()
         }
 
         # write data

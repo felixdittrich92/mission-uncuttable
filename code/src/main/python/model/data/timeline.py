@@ -58,8 +58,9 @@ class TimelineModel:
 
         self.timeline.Open()
 
-        group_id = generate_id()
-        self.groups = {group_id: TimeableGroup(group_id, [])}
+        # group_id = generate_id()
+        # self.groups = {group_id: TimeableGroup(group_id, [])}
+        self.groups = dict()
 
     def get_clip_by_id(self, clip_id):
         """
@@ -76,6 +77,13 @@ class TimelineModel:
 
     def get_fps(self):
         return self.timeline.info.fps.num / self.timeline.info.fps.den
+
+    def get_group_dict(self):
+        res = dict()
+        for g in list(self.groups.keys()):
+            res[g] = self.groups[g].get_timeable_ids()
+
+        return res
 
     def change(self, change_type, key, data):
         """

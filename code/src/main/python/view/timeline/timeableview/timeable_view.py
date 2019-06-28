@@ -1,7 +1,7 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QDialog, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 from model.data import FileType
@@ -31,7 +31,7 @@ class TimeableView(QGraphicsRectItem):
     update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
-                 model, view_id, track_id, parent=None):
+                 model, view_id, track_id, group_id=None, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -52,7 +52,7 @@ class TimeableView(QGraphicsRectItem):
 
         self.view_id = view_id
         self.track_id = track_id
-        self.group_id = None
+        self.group_id = group_id
 
         self.__controller = TimelineController.get_instance()
 

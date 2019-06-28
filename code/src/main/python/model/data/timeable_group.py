@@ -16,6 +16,9 @@ class TimeableGroup:
         for t in self.timeables:
             t.group_id = self.group_id
 
+    def get_timeable_ids(self):
+        return [i.view_id for i in self.timeables]
+
     def has_timeable(self, id):
         """
         Checks if the timeable with the given id is in this group
