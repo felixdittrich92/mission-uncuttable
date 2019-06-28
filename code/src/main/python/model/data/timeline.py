@@ -4,7 +4,6 @@ import openshot
 from PyQt5.QtWidgets import QApplication
 
 from .timeable_group import TimeableGroup
-from util.timeline_utils import generate_id
 
 from model.project import Project
 
@@ -58,8 +57,6 @@ class TimelineModel:
 
         self.timeline.Open()
 
-        # group_id = generate_id()
-        # self.groups = {group_id: TimeableGroup(group_id, [])}
         self.groups = dict()
 
     def get_clip_by_id(self, clip_id):
@@ -99,6 +96,10 @@ class TimelineModel:
 
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
+
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
 
     def create_group(self, group_id, timeables):
         """
