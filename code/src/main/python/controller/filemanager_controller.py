@@ -143,17 +143,8 @@ class FilemanagerController:
 
         if len(self.folder_stack) == 0:
             self.file_list.append(file)
-            if isinstance(file, Folder):
-                print("Added " + file.get_name() + " to folder_stack!")
-            else:
-                print("Added " + file + " to folder_stack!")
         else:
             self.folder_stack[-1].add_to_content(file) # list[-1] returns last element
-            if isinstance(file, Folder):
-                print("Added " + file.get_name() + " to " + self.folder_stack[
-                    -1].get_name())
-            else:
-                print("Added " + file + " to " + self.folder_stack[-1].get_name())
 
     def remove(self):
         """This method removes a single file in the filemanager window and in the list"""
@@ -197,13 +188,18 @@ class FilemanagerController:
         Project.get_instance().changed = False
 
     def new_folder(self):
+        """Starts the creation of a new folder."""
         self.addFileNames(None)
 
     def handle_double_click(self, item):
+        """
+        Detects a doubleclick on a folder and opens the folder.
+
+        :param item: Item of the FileList
+        """
         if len(self.folder_stack) == 0:
             file_list = self.file_list
         else:
-            print(self.folder_stack[-1].get_content())
             file_list = self.folder_stack[-1].get_content()
 
         for file in file_list:
@@ -214,6 +210,7 @@ class FilemanagerController:
                     self.print_folder_stack()
 
     def folder_up(self):
+        """Navigates one folder back."""
         if len(self.folder_stack) > 1:
             self.folder_stack.pop()
             self.update_file_list(self.folder_stack[-1].get_content())
@@ -224,6 +221,11 @@ class FilemanagerController:
         self.print_folder_stack()
 
     def update_file_list(self, list):
+        """
+        Displays all items of a given list in the ListView.
+
+        :param list: List to be displayed.
+        """
         self.__filemanager_view.listWidget.clear()
 
         for item in list:
