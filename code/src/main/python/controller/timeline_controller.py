@@ -336,6 +336,8 @@ class TimelineController:
         try:
             timeable = self.get_timeable_by_id(timeable_id)
             self.get_group_by_id(group_id).add_timeable(timeable)
+
+            self.__timeline_view.changed.emit()
         except AttributeError:
             pass
 
@@ -350,6 +352,8 @@ class TimelineController:
         try:
             timeable = self.get_timeable_by_id(timeable_id)
             self.get_group_by_id(group_id).remove_timeable(timeable)
+
+            self.__timeline_view.changed.emit()
         except AttributeError:
             pass
 
@@ -380,6 +384,8 @@ class TimelineController:
         """
         op = GroupMoveOperation(group_id, diff)
         self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
 
     def group_selected(self):
         """ Groups all selected timeables """
@@ -643,6 +649,7 @@ class GroupMoveOperation(Operation):
         for t in group.timeables:
             if not self.was_moved:
                 t.do_move(t.x_pos + self.diff)
+
             t.model.move(t.x_pos)
 
         self.was_moved = False

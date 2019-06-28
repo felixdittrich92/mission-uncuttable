@@ -161,6 +161,11 @@ class TimeableView(QGraphicsRectItem):
         menu.addAction(settings)
         settings.triggered.connect(lambda: self.settings())
 
+        if self.group_id is not None:
+            remove_from_group = QAction("remove from group")
+            menu.addAction(remove_from_group)
+            remove_from_group.triggered.connect(self.remove_from_group)
+
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def settings(self):
@@ -174,6 +179,13 @@ class TimeableView(QGraphicsRectItem):
         """ deletes the model from the timeline """
         self.__controller.delete_timeable(self.get_info_dict(),
                                           self.model.get_info_dict(), hist=hist)
+
+    def remove_from_group(self):
+        if self.group_id is None:
+            return
+
+        self.__controller.remove_timeable_from_group(self.group_id, self.view_id)
+        self.group_id = None
 
     def remove_from_scene(self):
         """ Removes the timeableview from the track """
