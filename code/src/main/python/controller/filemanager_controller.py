@@ -225,6 +225,8 @@ class FilemanagerController:
                     self.folder_stack.append(file)
                     self.print_folder_stack()
 
+        self.__filemanager_view.back_button.setEnabled(True)
+
     def folder_up(self):
         """Navigates one folder back."""
         if len(self.folder_stack) > 1:
@@ -233,6 +235,7 @@ class FilemanagerController:
         elif len(self.folder_stack) == 1:
             self.folder_stack.pop()
             self.update_file_list(self.file_list)
+            self.__filemanager_view.back_button.setEnabled(False)
 
         self.print_folder_stack()
 

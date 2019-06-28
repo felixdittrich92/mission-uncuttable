@@ -31,6 +31,7 @@ class FilemanagerView(QWidget):
 
         self.back_button = self.findChild(QWidget, 'back_button')
         self.back_button.setText(str(Language.current.filemanager.backButton))
+        self.back_button.setEnabled(False)
 
         self.breadcrumbs = self.findChild(QWidget, 'breadcrumbs_label')
         self.breadcrumbs.setText("home")
