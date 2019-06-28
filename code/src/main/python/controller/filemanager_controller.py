@@ -147,18 +147,34 @@ class FilemanagerController:
             self.folder_stack[-1].add_to_content(file) # list[-1] returns last element
 
     def remove(self):
-        """This method removes a single file in the filemanager window and in the list"""
-        try:
-            path = self.__filemanager_view.get_current_item()
-            self.file_list.remove(path)
-            self.__filemanager_view.remove_selected_item()
+        """
+        This method removes a single file or directory in the filemanager from
+        the list it is stored in.
+        """
+        item = self.__filemanager_view.listWidget.currentItem()
+        if len(self.folder_stack) == 0:
+            file_list = self.file_list
+        else:
+            file_list = self.folder_stack[-1].get_content()
 
-            project = Project.get_instance()
-            if not project.changed:
-                project.changed = True
-                self.__filemanager_view.changed.emit()
-        except:
-            return
+        is_folder = False
+        for file in file_list:
+            if isinstance(file, Folder):
+                if file.get_name() == item.text():
+                    is_folder = True
+                    item = file
+
+        if is_folder:
+            file_list.remove(item)
+        else:
+            file_list.remove(item.statusTip())
+
+        self.__filemanager_view.remove_selected_item()
+
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+            self.__filemanager_view.changed.emit()
 
     def selected(self):
         """This method saves the selected files to a list"""
