@@ -77,11 +77,13 @@ class VideoEditorController:
 
     def set_title_unsaved(self):
         """ shows a star in the window title to indicate that there are unsaved changes """
-        self.__video_editor_view.setWindowTitle("UbiCut*")
+        name = Project.get_instance().get_project_name()
+        self.__video_editor_view.setWindowTitle("UbiCut - " + name + "*")
 
     def set_title_saved(self):
         """ shows UbiCut in the windowtitle """
-        self.__video_editor_view.setWindowTitle("UbiCut")
+        name = Project.get_instance().get_project_name()
+        self.__video_editor_view.setWindowTitle("UbiCut - " + name)
 
     def __start_settings_controller(self):
         """Opens the settings window"""

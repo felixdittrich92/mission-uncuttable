@@ -1,3 +1,5 @@
+import os
+
 from .history import History
 
 
@@ -29,3 +31,10 @@ class Project:
 
     def get_history(self):
         return self.__history
+
+    def get_project_name(self):
+        name = ""
+        if self.path is not None:
+            name = os.path.splitext(os.path.basename(self.path))[0]
+
+        return name
