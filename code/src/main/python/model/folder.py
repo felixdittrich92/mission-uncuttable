@@ -10,3 +10,5 @@ class Folder:
     def get_name(self):
         return self.__name
 
+    def add_to_content(self, item):
+        self.__content.append(item)

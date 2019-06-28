@@ -26,6 +26,7 @@ class FilemanagerController:
         self.__filemanager_view = view
 
         self.__filemanager_view.new_folder_button.clicked.connect(self.new_folder)
+        self.__filemanager_view.back_button.clicked.connect(self.folder_up)
         self.__filemanager_view.listWidget.itemDoubleClicked.connect(self.handle_double_click)
 
 
@@ -36,6 +37,16 @@ class FilemanagerController:
 
         self.file_list = []
         self.pictures = []
+        self.folder_stack = []
+
+        self.print_folder_stack()
+
+    def print_folder_stack(self):
+        breadcrumbs = self.__filemanager_view.breadcrumbs
+        breadcrumbs.setText("home")
+
+        for folder in self.folder_stack:
+            breadcrumbs.setText(breadcrumbs.text() + " > " + folder.get_name())
 
     def pickFileNames(self):
         """
@@ -129,7 +140,20 @@ class FilemanagerController:
 
         QApplication.processEvents()
         self.__filemanager_view.add_item(pixmap, file)
-        self.file_list.append(file)
+
+        if len(self.folder_stack) == 0:
+            self.file_list.append(file)
+            if isinstance(file, Folder):
+                print("Added " + file.get_name() + " to folder_stack!")
+            else:
+                print("Added " + file + " to folder_stack!")
+        else:
+            self.folder_stack[-1].add_to_content(file) # list[-1] returns last element
+            if isinstance(file, Folder):
+                print("Added " + file.get_name() + " to " + self.folder_stack[
+                    -1].get_name())
+            else:
+                print("Added " + file + " to " + self.folder_stack[-1].get_name())
 
     def remove(self):
         """This method removes a single file in the filemanager window and in the list"""
@@ -176,10 +200,63 @@ class FilemanagerController:
         self.addFileNames(None)
 
     def handle_double_click(self, item):
-        for file in self.file_list:
+        if len(self.folder_stack) == 0:
+            file_list = self.file_list
+        else:
+            print(self.folder_stack[-1].get_content())
+            file_list = self.folder_stack[-1].get_content()
+
+        for file in file_list:
             if isinstance(file, Folder):
                 if file.get_name() == item.text():
-                    self.open_folder(file)
+                    self.update_file_list(file.get_content())
+                    self.folder_stack.append(file)
+                    self.print_folder_stack()
 
-    def open_folder(self, file):
-        file.get_content()
+    def folder_up(self):
+        if len(self.folder_stack) > 1:
+            self.folder_stack.pop()
+            self.update_file_list(self.folder_stack[-1].get_content())
+        elif len(self.folder_stack) == 1:
+            self.folder_stack.pop()
+            self.update_file_list(self.file_list)
+
+        self.print_folder_stack()
+
+    def update_file_list(self, list):
+        self.__filemanager_view.listWidget.clear()
+
+        for item in list:
+            if isinstance(item, Folder):
+                image = Resources.images.folder_icon
+                pixmap = QPixmap(image)
+            elif item.upper().endswith(('.JPG', '.PNG')):
+                pixmap = QPixmap(item)
+            elif item is not None and item.upper().endswith('.MP4'):
+                video_input_path = item
+                cap = cv2.VideoCapture(str(video_input_path))
+
+                ret, frame = cap.read()
+                if not ret:
+                    return
+                else:
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                    height, width, channel = frame.shape
+                    q_img = QImage(frame.data, width, height, 3 * width,
+                                   QImage.Format_RGB888)
+                    pixmap = QPixmap.fromImage(q_img)
+
+                cap.release()
+                cv2.destroyAllWindows()
+            elif item is not None and item.upper().endswith(('.MP3', '*.WAV')):
+                path = Resources.images.media_symbols
+                filename = "mp3.png"
+                path_to_file = os.path.join(path, filename)
+                pixmap = QPixmap(path_to_file)
+            elif item.upper().endswith(('.PDF')):
+                pass
+                # TODO
+
+            self.__filemanager_view.add_item(pixmap, item)
+

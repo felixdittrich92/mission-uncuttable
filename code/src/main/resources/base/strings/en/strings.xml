@@ -51,6 +51,7 @@
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
         <newFolderButton>new Folder</newFolderButton>
+        <backButton>back</backButton>
     </filemanager>
     <timeable>
         <delete>delete</delete>

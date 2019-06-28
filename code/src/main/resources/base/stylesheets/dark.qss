@@ -356,6 +356,9 @@ QScrollArea, #timeline_toolbar {
 #list_widget::item:hover {
     color: #D66853;
 }
+#breadcrumbs_label {
+    color: #F5F5F5;
+}
 
 
 /* VIDEOPLAYER */

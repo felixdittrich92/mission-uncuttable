@@ -51,6 +51,7 @@
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
         <newFolderButton>neuer Ordner</newFolderButton>
+        <backButton>zurück</backButton>
     </filemanager>
     <timeable>
         <delete>löschen</delete>
