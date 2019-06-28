@@ -168,6 +168,7 @@ class FilemanagerController:
                 if file.get_name() == item.text():
                     is_folder = True
                     item = file
+                    break
 
         if is_folder:
             file_list.remove(item)
@@ -255,7 +256,8 @@ class FilemanagerController:
                     self.folder_stack.append(file)
                     self.print_folder_stack()
 
-        self.__filemanager_view.back_button.setEnabled(True)
+                    self.__filemanager_view.back_button.setEnabled(True)
+                    break
 
     def folder_up(self):
         """Navigates one folder back."""
