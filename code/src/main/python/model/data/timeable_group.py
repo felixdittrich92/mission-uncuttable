@@ -1,3 +1,6 @@
+from model.project import Project
+
+
 class TimeableGroup:
     """
     A TimeableGroup represents one or more Timeables that will be connected together.
@@ -41,6 +44,10 @@ class TimeableGroup:
         self.timeables.append(timeable)
         timeable.group_id = self.group_id
 
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+
     def remove_timeable(self, timeable):
         """
         Removes the timeable with the given id from the group
@@ -50,6 +57,10 @@ class TimeableGroup:
         """
         while timeable in self.timeables:
             self.timeables.remove(timeable)
+
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
 
     def is_move_possible(self, diff):
         """
