@@ -205,8 +205,6 @@ class TimelineController:
                                  res_right=t["resizable_right"], group=t["group_id"],
                                  hist=False)
 
-        Project.get_instance().changed = False
-
     def create_project_groups(self, data):
         """ Recreates all groups when the project is loaded """
         for g in data:

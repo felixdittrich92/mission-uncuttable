@@ -116,6 +116,7 @@ class MainController:
             # set project path
             project = Project.get_instance()
             project.path = path
+            project.changed = False
 
             # show videoeditor
             self.__start_view.close()
