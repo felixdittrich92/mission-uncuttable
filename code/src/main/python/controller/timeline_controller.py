@@ -330,6 +330,13 @@ class TimelineController:
 
         return first_group == second_group
 
+    def add_timeable_to_group(self, group_id, timeable_id):
+        try:
+            timeable = self.get_timeable_by_id(timeable_id)
+            self.get_group_by_id(group_id).add_timeable(timeable)
+        except AttributeError:
+            pass
+
     def remove_timeable_from_group(self, group_id, timeable_id):
         """
         Removes a timeable from a group.
@@ -432,8 +439,7 @@ class DeleteOperation(Operation):
         controller.remove_timeable_view(self.view_info["view_id"])
 
     def undo(self):
-        model = TimeableModel(
-            self.model_info["file_name"], self.model_info["id"])
+        model = TimeableModel(self.model_info["file_name"], self.model_info["id"])
         model.set_start(self.model_info["start"], is_sec=True)
         model.set_end(self.model_info["end"], is_sec=True)
         model.move(self.model_info["position"], is_sec=True)
@@ -442,11 +448,12 @@ class DeleteOperation(Operation):
         controller.create_timeable(
             self.view_info["track_id"], self.view_info["name"],
             self.view_info["width"], self.view_info["x_pos"], model,
-            self.view_info["view_id"], self.view_info["resizable_left"],
-            self.view_info["resizable_right"], self.view_info["group_id"], hist=False)
+            self.view_info["view_id"], res_left=self.view_info["resizable_left"],
+            res_right=self.view_info["resizable_right"],
+            group=self.view_info["group_id"], hist=False)
 
-        controller.get_timeable_by_id(self.view_info["view_id"]).group_id = \
-            self.view_info["group_id"]
+        controller.add_timeable_to_group(self.view_info["group_id"],
+                                         self.view_info["view_id"])
 
 
 class CutOperation(Operation):
