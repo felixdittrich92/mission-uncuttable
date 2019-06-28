@@ -1,5 +1,6 @@
 import json
 import sys
+import os
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -14,6 +15,7 @@ from view.filemanagerview import FilemanagerView
 from .filemanager_controller import FilemanagerController
 from projectconfig import Projectsettings
 from config import Settings
+from .export_controller import ExportController
 
 
 class VideoEditorController:
@@ -24,8 +26,13 @@ class VideoEditorController:
     """
     def __init__(self, view):
         self.__video_editor_view = view
+        self.__video_editor_view.save_project.connect(self.__start_save)
+        self.__video_editor_view.timeline_view.changed.connect(self.set_title_unsaved)
+
         self.__timeline_controller = TimelineController.get_instance()
+
         self.__filemanager_view = FilemanagerView()
+        self.__filemanager_view.changed.connect(self.set_title_unsaved)
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
 
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
@@ -34,7 +41,10 @@ class VideoEditorController:
         self.__settings_controller = SettingsController(None)
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
-        self.__projectsettings_controller = ProjectSettingsController(None)
+        self.projectsettings_view = ProjectSettingsView()
+        self.projectsettings_view.changed.connect(self.set_title_unsaved)
+        self.__projectsettings_controller = ProjectSettingsController(
+            self.projectsettings_view)
         self.__video_editor_view.actionExport.triggered.connect(
             self.__start_export_controller)
         self.__video_editor_view.actionUndo.triggered.connect(
@@ -57,12 +67,21 @@ class VideoEditorController:
 
     def start(self):
         """Calls '__show_view()' of VideoEditorController"""
+        self.set_title_saved()
         self.__show_view()
 
     def stop(self):
         """Closes the video-editor Window."""
         self.__video_editor_view.close()
-        sys.exit(0)
+        os._exit(1)
+
+    def set_title_unsaved(self):
+        """ shows a star in the window title to indicate that there are unsaved changes """
+        self.__video_editor_view.setWindowTitle("UbiCut*")
+
+    def set_title_saved(self):
+        """ shows UbiCut in the windowtitle """
+        self.__video_editor_view.setWindowTitle("UbiCut")
 
     def __start_settings_controller(self):
         """Opens the settings window"""
@@ -76,16 +95,16 @@ class VideoEditorController:
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
         if self.__projectsettings_controller.checkIfClosed():
-            self.projectsettings_view = ProjectSettingsView()
-            self.__projectsettings_controller = ProjectSettingsController(self.projectsettings_view)
             self.__projectsettings_controller.start()
         else:
             self.__projectsettings_controller.focus()
 
     def __start_export_controller(self):
         """shows the export view"""
+        self.__video_editor_view.previewview.stop()
         export_view = ExportView()
-        export_view.start()
+        export_controller = ExportController(export_view)
+        export_controller.start()
 
     def __start_undo(self):
         """ Undo last action """
@@ -162,8 +181,12 @@ class VideoEditorController:
         with open(filename, 'w') as f:
             json.dump(project_data, f, ensure_ascii=False)
 
+        Project.get_instance().changed = False
+        self.set_title_saved()
+
     def __start_open(self):
         """ Open a project """
+        self.__video_editor_view.previewview.stop()
         filetypes = Settings.get_instance().get_dict_settings()[
             "Invisible"]["project_formats"]
         path, _ = QFileDialog.getOpenFileName(self.__video_editor_view,
@@ -194,3 +217,4 @@ class VideoEditorController:
         # set project path
         project = Project.get_instance()
         project.path = path
+        project.changed = False

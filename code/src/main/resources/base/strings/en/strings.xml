@@ -54,9 +54,17 @@
     <timeable>
         <delete>delete</delete>
         <cut>cut</cut>
+        <settings>settings</settings>
     </timeable>
+    <timeablesettings>
+        <save>Save</save>
+        <cancel>Cancel</cancel>
+        <label>Current Volume:</label>
+    </timeablesettings>
     <export>
+        <windowtitle>Export Video</windowtitle>
         <filename>Filename</filename>
+        <untitled>untitled</untitled>
         <folder>Folder</folder>
         <format>Format</format>
         <resolution>Resolution</resolution>
@@ -64,6 +72,8 @@
         <high>high</high>
         <medium>medium</medium>
         <low>low</low>
+        <export>export</export>
+        <cancel>cancel</cancel>
     </export>
     <errors>
         <export>
@@ -85,6 +95,10 @@
             <msgboxtext>The directory could not be created.</msgboxtext>
             <msgboxinfotext>Please try another path.</msgboxinfotext>
         </writeerror>
+        <unsaved>
+            <msgboxtitle>There are unsaved changes</msgboxtitle>
+            <msgboxtext>Do you want to save the project?</msgboxtext>
+        </unsaved>
     </errors>
     <autocut>
         <cancel>cancel</cancel>

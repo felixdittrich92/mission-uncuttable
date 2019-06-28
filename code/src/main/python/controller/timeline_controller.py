@@ -53,6 +53,7 @@ class TimelineController:
 
         key = list(self.__timeline_model.groups.keys())[0]
         self.__timeline_model.groups[key].add_timeable(self.get_timeable_by_id(id))
+        self.__timeline_view.changed.emit()
 
     def delete_timeable(self, view_info, model_info, hist=True):
         """
@@ -66,6 +67,8 @@ class TimelineController:
             self.__history.do_operation(op)
         else:
             op.do()
+
+        self.__timeline_view.changed.emit()
 
     def remove_timeable_view(self, id):
         """
@@ -94,12 +97,16 @@ class TimelineController:
         op = MoveOperation(id, old_pos, new_pos)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def drag_timeable(self, view_info_old, view_info_new, model_old, model_new):
         """
         Drags a timeable from one track to another track
         """
         op = DragOperation(view_info_old, view_info_new, model_old, model_new)
         self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
 
     def split_timeable(self, view_id, res_right, width, model_end, pos):
         """
@@ -117,6 +124,8 @@ class TimelineController:
         op = CutOperation(view_id, res_right, width, model_end, pos)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def resize_timeable(self, view_info_old, view_info_new):
         """
         Remove a part of the model's representation of a timeable
@@ -133,6 +142,8 @@ class TimelineController:
         op = ResizeOperation(view_info_old, view_info_new)
         self.__history.do_operation(op)
 
+        self.__timeline_view.changed.emit()
+
     def is_overlay_track(self, track_id):
         """
         Checks if the track with track_id is the overlay track.
@@ -145,9 +156,13 @@ class TimelineController:
 
         return self.__timeline_view.tracks[track_id].is_overlay
 
-    def create_track(self, name, width, height, num, is_overlay=False):
+    def create_video_track(self, name, width, height, num, is_overlay=False):
         """ Creates a new track in the timeline """
-        self.__timeline_view.create_track(name, width, height, num, is_overlay)
+        self.__timeline_view.create_video_track(name, width, height, num, is_overlay)
+
+    def create_audio_track(self, name, width, height, num):
+        """ Creates a new track in the timeline """
+        self.__timeline_view.create_audio_track(name, width, height, num)
 
     def get_project_timeline(self):
         """ Returns a dict with the data needed to recreate the timeline """
@@ -171,8 +186,11 @@ class TimelineController:
         @param data: dictionary with info of timeables
         """
         for t in data["tracks"]:
-            self.create_track(t["name"], t["width"], t["height"], t["num"],
-                              is_overlay=t["is_overlay"])
+            if t["type"]:
+                self.create_video_track(t["name"], t["width"], t["height"], t["num"],
+                                        is_overlay=t["is_overlay"])
+            else:
+                self.create_audio_track(t["name"], t["width"], t["height"], t["num"])
 
         for t in data["timeables"]:
             m = t["model"]
@@ -185,21 +203,25 @@ class TimelineController:
                                  model, t["view_id"], res_left=t["resizable_left"],
                                  res_right=t["resizable_right"], hist=False)
 
+        Project.get_instance().changed = False
+
     def create_default_tracks(self):
-        """ Creates 3 default tracks when the user chooses manual cut """
-        self.create_track("Track 1", 2000, 50, 2)
-        self.create_track("Track 2", 2000, 50, 1)
-        self.create_track("Track 3", 2000, 50, 0)
+        """ Creates 2 default tracks when the user chooses manual cut """
+        self.create_video_track("Video 1", 2000, 50, 4)
+        self.create_video_track("Video 2", 100, 50, 3)
+
+        self.create_audio_track("Audio 1", 100, 50, 2)
+        self.create_audio_track("Audio 2", 200, 50, 1)
 
     def create_autocut_tracks(self):
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_track("Overlay", 2000, 50, 3, is_overlay=True)
-        self.create_track("Tafel", 2000, 50, 2)
-        self.create_track("Visualizer", 2000, 50, 1)
-        self.create_track("Folien", 2000, 50, 0)
-        self.create_track("Audio", 2000, 50, -1)
+        self.create_video_track("Overlay", 2000, 50, 3, True)
+        self.create_video_track("Tafel", 2000, 50, 2)
+        self.create_video_track("Visualizer", 2000, 50, 1)
+        self.create_video_track("Folien", 2000, 50, 0)
+        self.create_audio_track("Audio", 2000, 50, -1)
 
     def create_autocut_timeables(self, file_path, track, data):
         """
@@ -241,7 +263,9 @@ class TimelineController:
     def adjust_tracks(self):
         """ Adjusts the track sizes so they all have the same length """
         self.__timeline_view.adjust_track_sizes()
-        self.__timeline_view.track_frame.adjustSize()
+        self.__timeline_view.audio_track_frame.adjustSize()
+        self.__timeline_view.video_track_frame.adjustSize()
+        self.__timeline_view.track_frame_frame.adjustSize()
 
     def get_timeable_by_id(self, id):
         """

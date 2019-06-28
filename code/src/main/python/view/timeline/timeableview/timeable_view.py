@@ -1,13 +1,14 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtWidgets import QMenu, QDialog, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 from model.data import FileType
 from config import Language
 from util.timeline_utils import get_pixmap_from_file
-
+from .timeable_settings_view import TimeableSettingsView
+import openshot
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
@@ -156,7 +157,18 @@ class TimeableView(QGraphicsRectItem):
         menu.addAction(cut)
         cut.triggered.connect(lambda: self.cut(event.pos().x()))
 
+        settings = QAction(str(Language.current.timeable.settings))
+        menu.addAction(settings)
+        settings.triggered.connect(lambda: self.settings())
+
         menu.exec_(event.screenPos() + QPoint(0, 5))
+
+    def settings(self):
+        volume_dialog = TimeableSettingsView()
+        current_clip_volume = self.model.clip.volume.GetValue(0)
+        volume_dialog.set_data(current_clip_volume)
+        volume_dialog.exec_()
+        self.model.clip.volume = openshot.Keyframe(volume_dialog.current_volume_value)
 
     def delete(self, hist=True):
         """ deletes the model from the timeline """
