@@ -1,3 +1,4 @@
+import json
 import os
 import cv2
 
@@ -192,21 +193,27 @@ class FilemanagerController:
         self.__filemanager_view.listWidget.clear()
 
     def get_project_filemanager(self):
-        """ Returns a list with all the files in the filemanager. """
-        return self.file_list
+        """
+        Returns the files of the filemanager in JSON format.
+
+        :return: JSON-String
+        """
+        return json.dumps(self.file_list, default=self.serialize)
 
     def create_project_filemanager(self, files):
         """
         Recreates the filemanager from a config file.
 
-        @param data: list of filenames
+        @param files: list of filenames
         """
+
         for f in files:
             self.addFileNames(f)
         Project.get_instance().changed = False
 
     def new_folder(self):
         """Starts the creation of a new folder."""
+
         self.addFileNames(None)
 
     def handle_double_click(self, item):
@@ -215,6 +222,7 @@ class FilemanagerController:
 
         :param item: Item of the FileList
         """
+
         if len(self.folder_stack) == 0:
             file_list = self.file_list
         else:
@@ -231,6 +239,7 @@ class FilemanagerController:
 
     def folder_up(self):
         """Navigates one folder back."""
+
         if len(self.folder_stack) > 1:
             self.folder_stack.pop()
             self.update_file_list(self.folder_stack[-1].get_content())
@@ -247,6 +256,7 @@ class FilemanagerController:
 
         :param list: List to be displayed.
         """
+
         self.__filemanager_view.listWidget.clear()
 
         for item in list:
@@ -288,8 +298,17 @@ class FilemanagerController:
         Toggles the enabled state of the delete button, whether an item is
         selected or not.
         """
+
         if len(self.__filemanager_view.listWidget.selectedItems()) == 0:
             self.__filemanager_view.delete_button.setEnabled(False)
         else:
             self.__filemanager_view.delete_button.setEnabled(True)
 
+    def serialize(self, obj):
+        """
+        Serializes objects as a dictionary.
+
+        :param obj: Object
+        :return: Dictionary that contains all the values of obj.
+        """
+        return obj.__dict__
