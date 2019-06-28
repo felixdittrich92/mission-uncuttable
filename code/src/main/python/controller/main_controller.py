@@ -100,7 +100,6 @@ class MainController:
             # set up timeline
             timeline_controller = TimelineController.get_instance()
             if "timeline" in project_data:
-
                 timeline_controller.create_project_timeline(project_data["timeline"])
             else:
                 timeline_controller.create_default_tracks()
@@ -110,9 +109,13 @@ class MainController:
                 filemanager = self.__video_editor_controller.get_filemanager_controller()
                 filemanager.create_project_filemanager(project_data["filemanager"])
 
+            if "groups" in project_data:
+                timeline_controller.create_project_groups(project_data["groups"])
+
             # set project path
             project = Project.get_instance()
             project.path = path
+            project.changed = False
 
             # show videoeditor
             self.__start_view.close()

@@ -37,7 +37,7 @@ class VisualizerVideo(MediaFile):
 
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
-                roi = frame[0:50, 0:50]
+                roi = frame[0:40, 0:40]
                 average = cv2.mean(roi)
 
                 if average[0] > 5:
