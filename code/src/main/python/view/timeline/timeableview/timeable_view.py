@@ -162,7 +162,7 @@ class TimeableView(QGraphicsRectItem):
         settings.triggered.connect(lambda: self.settings())
 
         if self.group_id is not None:
-            remove_from_group = QAction("remove from group")
+            remove_from_group = QAction(str(Language.current.timeable.group_remove))
             menu.addAction(remove_from_group)
             remove_from_group.triggered.connect(self.remove_from_group)
 

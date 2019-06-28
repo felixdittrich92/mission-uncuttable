@@ -55,6 +55,7 @@
         <delete>löschen</delete>
         <cut>schneiden</cut>
         <settings>Einstellungen</settings>
+        <group_remove>aus Gruppe entfernen</group_remove>
     </timeable>
     <timeablesettings>
         <save>Speichern</save>

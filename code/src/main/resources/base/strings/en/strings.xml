@@ -55,6 +55,7 @@
         <delete>delete</delete>
         <cut>cut</cut>
         <settings>settings</settings>
+        <group_remove>remove from group</group_remove>
     </timeable>
     <timeablesettings>
         <save>Save</save>
