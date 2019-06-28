@@ -22,6 +22,7 @@ class FilemanagerView(QWidget):
 
         self.delete_button = self.findChild(QWidget, 'delete_button')
         self.delete_button.setText(str(Language.current.filemanager.deleteButtonName))
+        self.delete_button.setEnabled(False)
 
         self.pick_button = self.findChild(QWidget, 'pick_files_button')
         self.pick_button.setText(str(Language.current.filemanager.pushButtonName))

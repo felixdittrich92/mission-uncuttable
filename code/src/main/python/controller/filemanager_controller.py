@@ -41,6 +41,8 @@ class FilemanagerController:
 
         self.print_folder_stack()
 
+        self.__filemanager_view.listWidget.itemSelectionChanged.connect(self.toggle_delete_button)
+
     def print_folder_stack(self):
         breadcrumbs = self.__filemanager_view.breadcrumbs
         breadcrumbs.setText("home")
@@ -280,4 +282,14 @@ class FilemanagerController:
                 # TODO
 
             self.__filemanager_view.add_item(pixmap, item)
+
+    def toggle_delete_button(self):
+        """
+        Toggles the enabled state of the delete button, whether an item is
+        selected or not.
+        """
+        if len(self.__filemanager_view.listWidget.selectedItems()) == 0:
+            self.__filemanager_view.delete_button.setEnabled(False)
+        else:
+            self.__filemanager_view.delete_button.setEnabled(True)
 
