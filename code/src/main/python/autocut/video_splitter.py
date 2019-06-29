@@ -156,7 +156,6 @@ class VideoSplitter:
                     update_progress((int)(self.frame/self.number_frames*100))
             else:   
                 y = 250
-                #speaker_out.writeFrame(frame[y:y+height, x:x+width])
                 speaker_out.writeFrame(frame[y-100:y+height, x:x+width])
                 self.frame += 1
                 if self.frame % 30 == 0:
