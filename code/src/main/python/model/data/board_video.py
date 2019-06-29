@@ -44,7 +44,7 @@ class BoardVideo(MediaFile):
                 #percentage_green = (100 * average[1]) / summe
                 #percentage_blue = (100 * average[2]) / summe
 
-                if average[0] < 190:
+                if average[0] < 192:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
                     self.board_subvideos.append((times[0], times[-1]))
