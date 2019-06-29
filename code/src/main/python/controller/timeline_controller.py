@@ -52,8 +52,6 @@ class TimelineController:
         else:
             op.do()
 
-        # key = list(self.__timeline_model.groups.keys())[0]
-        # self.__timeline_model.groups[key].add_timeable(self.get_timeable_by_id(id))
         self.__timeline_view.changed.emit()
 
     def delete_timeable(self, view_info, model_info, hist=True):
@@ -144,6 +142,15 @@ class TimelineController:
         self.__history.do_operation(op)
 
         self.__timeline_view.changed.emit()
+
+    def delete_track(self, track_id):
+        """
+        Removes a track and all the timeables in it.
+
+        @param track_id: id of the track which will be deleted
+        @return: Nothing
+        """
+        track_view = self.__timeline_view.tracks[track_id]
 
     def is_overlay_track(self, track_id):
         """

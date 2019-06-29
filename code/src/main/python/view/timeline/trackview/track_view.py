@@ -1,12 +1,13 @@
 import os
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
-from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
+from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
 from model.data import TimeableModel
 from model.project import Project
 from controller import TimelineController
 from util.timeline_utils import generate_id
+from config import Language
 
 
 class TrackView(QGraphicsView):
@@ -34,6 +35,10 @@ class TrackView(QGraphicsView):
         self.button = button
         self.is_overlay = is_overlay
         self.is_video = is_video
+
+        # set button context menu policy so you can get a rightclick menu on the button
+        self.button.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.button.customContextMenuRequested.connect(self.on_context_menu)
 
         # for drag and drop handling
         self.item_dropped = False
@@ -66,6 +71,21 @@ class TrackView(QGraphicsView):
             "is_overlay": self.is_overlay,
             "type": self.is_video,
         }
+
+    def on_context_menu(self, point):
+        """ shows a menu on rightclick """
+        button_menu = QMenu()
+
+        delete = QAction(str(Language.current.timeable.delete))
+        button_menu.addAction(delete)
+        delete.triggered.connect(self.delete)
+
+        button_menu.exec_(self.button.mapToGlobal(point))
+
+    def delete(self):
+        """ Calls the TimelineController to removes this track """
+        controller = TimelineController.get_instance()
+        controller.delete_track(self.num)
 
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
