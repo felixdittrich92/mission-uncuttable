@@ -3,6 +3,8 @@ import json
 import openshot
 from PyQt5.QtWidgets import QApplication
 
+from .timeable_group import TimeableGroup
+
 from model.project import Project
 
 TIMELINE_DEFAULT_SETTINGS = {
@@ -55,6 +57,8 @@ class TimelineModel:
 
         self.timeline.Open()
 
+        self.groups = dict()
+
     def get_clip_by_id(self, clip_id):
         """
         @param clip_id: id of the clip
@@ -71,6 +75,13 @@ class TimelineModel:
     def get_fps(self):
         return self.timeline.info.fps.num / self.timeline.info.fps.den
 
+    def get_group_dict(self):
+        res = dict()
+        for g in list(self.groups.keys()):
+            res[g] = self.groups[g].get_timeable_ids()
+
+        return res
+
     def change(self, change_type, key, data):
         """
         @param change_type: insert, delete or update
@@ -86,6 +97,19 @@ class TimelineModel:
         update_string = json.dumps([update_dict])
         self.timeline.ApplyJsonDiff(update_string)
 
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+
+    def create_group(self, group_id, timeables):
+        """
+        Create a TimeableGroup with all timeables in ids in it.
+        The group will be added to the timeline model.
+
+        @param ids: list of ids of timeable views
+        @return: Nothing
+        """
+        self.groups[group_id] = TimeableGroup(group_id, timeables)
         project = Project.get_instance()
         if not project.changed:
             project.changed = True

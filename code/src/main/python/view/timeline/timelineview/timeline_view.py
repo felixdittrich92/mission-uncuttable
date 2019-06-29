@@ -90,7 +90,7 @@ class TimelineView(QFrame):
             t.set_width(max_width)
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0, is_drag=False):
+                        res_left, res_right, group, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
         try:
             track = self.tracks[track_id]
@@ -103,7 +103,7 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id)
+                                model, id, track_id, group_id=group)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 
@@ -122,6 +122,15 @@ class TimelineView(QFrame):
 
         timeable.remove_from_scene()
         self.timeables.pop(id, None)
+
+    def get_selected_timeables(self):
+        """ Returns a list of all selected items in the timeline """
+        res = []
+
+        for t in self.tracks.values():
+            res.extend(t.scene().selectedItems())
+
+        return res
 
     def set_timeable_name(self, id, name):
         pass

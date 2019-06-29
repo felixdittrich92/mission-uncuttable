@@ -50,11 +50,14 @@
     <filemanager>
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
+        <newFolderButton>new Folder</newFolderButton>
+        <backButton>back</backButton>
     </filemanager>
     <timeable>
         <delete>delete</delete>
         <cut>cut</cut>
         <settings>settings</settings>
+        <group_remove>remove from group</group_remove>
     </timeable>
     <timeablesettings>
         <save>Save</save>

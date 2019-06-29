@@ -65,40 +65,44 @@ QPushButton:disabled{
 
 #new_project_button,
 #saveButton,
-#pushButton_2,
+#pick_files_button,
 #auto_cut_button,
 #ok_button,
-#export_button{
+#export_button,
+#new_folder_button {
     background: #4586B1;
     border: 1px solid #364156;
 }
 
 #new_project_button:hover,
 #saveButton:hover,
-#pushButton_2:hover,
+#pick_files_button:hover,
 #auto_cut_button:hover,
 #ok_button:hover,
-#export_button:hover{
+#export_button:hover,
+#new_folder_button:hover {
     border-width: 2px;
     border-color: #88ABDB;
 }
 
 #new_project_button:pressed,
 #saveButton:pressed,
-#pushButton_2:pressed,
+#pick_files_button:pressed,
 #auto_cut_button:pressed,
 #ok_button:pressed,
-#export_button:pressed{
+#export_button:pressed,
+#new_folder_button:pressed {
     border: 1px solid #4E637F;
     background: #34698c;
 }
 
 #new_project_button:disabled,
 #saveButton:disabled,
-#pushButton_2:disabled,
+#pick_files_button:disabled,
 #auto_cut_button:disabled,
 #ok_button:disabled,
-#export_button:disabled{
+#export_button:disabled,
+#new_folder_button:disabled {
     border: 1px solid #364156;
     background: transparent;
     color: #364156;
@@ -352,6 +356,9 @@ QScrollArea, #timeline_toolbar {
 #list_widget::item:hover {
     color: #D66853;
 }
+#breadcrumbs_label {
+    color: #F5F5F5;
+}
 
 
 /* VIDEOPLAYER */
@@ -525,5 +532,10 @@ QProgressBar::chunk {
 #export_frame QComboBox QAbstractItemView{
     border: 2px solid #364156;
     background: #2A3649;
+    color: #F5F5F5;
+}
+
+/* UNSAVED CHANGES WARNING */
+QMessageBox::question QLabel {
     color: #F5F5F5;
 }
