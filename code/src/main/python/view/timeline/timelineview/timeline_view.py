@@ -141,8 +141,11 @@ class TimelineView(QFrame):
 
         if track.is_video:
             self.video_track_frame.remove_track(track)
+            self.video_track_button_frame.remove_button(track.button)
+
         else:
             self.audio_track_frame.remove_track(track)
+            self.audio_track_button_frame.remove_button(track.button)
 
         self.tracks.pop(track_id, None)
 
