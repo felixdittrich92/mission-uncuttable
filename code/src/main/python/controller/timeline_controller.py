@@ -151,10 +151,10 @@ class TimelineController:
         @return: Nothing
         """
         # removes clips from timeline model
-        TimelineModel.get_instance().remove_track(track_id)
+        self.__timeline_model.remove_track(track_id)
 
         # remove track view
-        track_view = self.__timeline_view.tracks[track_id]
+        self.__timeline_view.remove_track(track_id)
 
     def is_overlay_track(self, track_id):
         """
@@ -272,7 +272,7 @@ class TimelineController:
 
     def clear_timeline(self):
         """ Removes all timeline data """
-        TimelineModel.get_instance().remove_all_clips()
+        self.__timeline_model.remove_all_clips()
 
         for t in self.__timeline_view.tracks.values():
             t.button.deleteLater()

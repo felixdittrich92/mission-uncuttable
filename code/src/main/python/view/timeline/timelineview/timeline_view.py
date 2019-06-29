@@ -132,6 +132,20 @@ class TimelineView(QFrame):
 
         return res
 
+    def remove_track(self, track_id):
+        """ Removes the TrackView with track_id """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            return
+
+        if track.is_video:
+            self.video_track_frame.remove_track(track)
+        else:
+            self.audio_track_frame.remove_track(track)
+
+        self.tracks.pop(track_id, None)
+
     def set_timeable_name(self, id, name):
         pass
 

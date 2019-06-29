@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
-from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
+from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
 
 from model.data import TimeableModel
 from model.project import Project
@@ -83,7 +83,10 @@ class TrackView(QGraphicsView):
         button_menu.exec_(self.button.mapToGlobal(point))
 
     def delete(self):
-        """ Calls the TimelineController to removes this track """
+        """
+        Calls the TimelineController to removes this track.
+        This method is only for the context menu on the track button
+        """
         controller = TimelineController.get_instance()
         controller.delete_track(self.num)
 
