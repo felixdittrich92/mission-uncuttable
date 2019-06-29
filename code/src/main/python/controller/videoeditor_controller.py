@@ -1,5 +1,4 @@
 import json
-import sys
 import os
 
 from PyQt5.QtWidgets import QFileDialog
@@ -113,15 +112,15 @@ class VideoEditorController:
         """ Undo last action """
         try:
             self.__history.undo_last_operation()
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     def __start_redo(self):
         """ Redo last action """
         try:
             self.__history.redo_last_operation()
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     def __start_save(self):
         """ Save the Project """
