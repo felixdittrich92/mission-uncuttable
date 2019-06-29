@@ -150,6 +150,10 @@ class TimelineController:
         @param track_id: id of the track which will be deleted
         @return: Nothing
         """
+        # removes clips from timeline model
+        TimelineModel.get_instance().remove_track(track_id)
+
+        # remove track view
         track_view = self.__timeline_view.tracks[track_id]
 
     def is_overlay_track(self, track_id):
