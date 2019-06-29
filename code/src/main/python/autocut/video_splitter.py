@@ -63,9 +63,9 @@ class VideoSplitter:
         for frame in reader.nextFrame():
             self.height, self.width = frame.shape[:2]
             if self.width == 1920:
-                board_out.writeFrame(frame[311:768, 18:832])
-                slide_out.writeFrame(frame[241:838, 970:1765])
-                visualizer_out.writeFrame(frame[241:838, 836:1906])
+                board_out.writeFrame(frame[330:750, 18:770])
+                slide_out.writeFrame(frame[225:855, 917:1760])
+                visualizer_out.writeFrame(frame[225:855, 775:1900])
                 self.frame += 1
                 if self.frame % 30 == 0:
                     update_progress((int)(self.frame/self.number_frames*100)) 
