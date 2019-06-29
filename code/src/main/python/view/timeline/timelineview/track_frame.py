@@ -23,13 +23,13 @@ class TrackFrame(SizeLinkableFrame):
         vbox_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(vbox_layout)
 
-    def add_track(self, track):
+    def add_track(self, track, index):
         """
         Adds a TrackView to the TrackFrame
 
         :param track: the Track to add
         """
-        self.layout().addWidget(track)
+        self.layout().insertWidget(index, track)
         needle = self.findChild(QWidget, "needle_bottom")
         track.stackUnder(needle)
         self.adjustSize()

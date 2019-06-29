@@ -173,8 +173,9 @@ class TimelineController:
 
         track_data = track.get_info_dict()
         timeables = [t.get_info_dict() for t in track.items()]
+        index = self.get_track_index(track)
 
-        op = DeleteTrackOperation(track_id, track_data, timeables, self)
+        op = DeleteTrackOperation(track_id, track_data, timeables, index, self)
         self.__history.do_operation(op)
 
         self.__timeline_view.changed.emit()
@@ -191,13 +192,21 @@ class TimelineController:
 
         return self.__timeline_view.tracks[track_id].is_overlay
 
-    def create_video_track(self, name, width, height, num, is_overlay=False):
+    def create_video_track(self, name, width, height, num, index=-1, is_overlay=False):
         """ Creates a new video track in the timeline """
-        self.__timeline_view.create_video_track(name, width, height, num, is_overlay)
+        self.__timeline_view.create_video_track(
+            name, width, height, num, index, is_overlay)
 
-    def create_audio_track(self, name, width, height, num):
+    def create_audio_track(self, name, width, height, num, index=-1):
         """ Creates a new audio track in the timeline """
-        self.__timeline_view.create_audio_track(name, width, height, num)
+        self.__timeline_view.create_audio_track(name, width, height, num, index)
+
+    def get_track_index(self, track):
+        """ Returns the index of the track in its layout """
+        if track.is_video:
+            return self.__timeline_view.video_track_frame.layout().indexOf(track)
+
+        return self.__timeline_view.audio_track_frame.layout().indexOf(track)
 
     def get_project_timeline(self):
         """ Returns a dict with the data needed to recreate the timeline """

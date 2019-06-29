@@ -286,7 +286,7 @@ class CreateTrackOperation(Operation):
 class DeleteTrackOperation(Operation):
     """ Removes a Track """
 
-    def __init__(self, track_id, track_data, timeable_data, controller):
+    def __init__(self, track_id, track_data, timeable_data, index, controller):
         """
         @param track_id: number of the track that will be removed
         @param track_data: dictionary with all the infos of the TrackView
@@ -296,6 +296,7 @@ class DeleteTrackOperation(Operation):
         self.track_id = track_id
         self.track_data = track_data
         self.timeable_data = timeable_data
+        self.index = index
         self.controller = controller
 
     def do(self):
@@ -309,12 +310,12 @@ class DeleteTrackOperation(Operation):
         if self.track_data["type"]:
             self.controller.create_video_track(
                 self.track_data["name"], self.track_data["width"],
-                self.track_data["height"], self.track_data["num"],
+                self.track_data["height"], self.track_data["num"], index=self.index,
                 is_overlay=self.track_data["is_overlay"])
         else:
             self.controller.create_audio_track(
                 self.track_data["name"], self.track_data["width"],
-                self.track_data["height"], self.track_data["num"])
+                self.track_data["height"], self.track_data["num"], index=self.index)
 
         for t in self.timeable_data:
             m = t["model"]
