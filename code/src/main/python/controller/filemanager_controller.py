@@ -221,8 +221,6 @@ class FilemanagerController:
 
         self.update_file_list(self.file_list)
 
-        Project.get_instance().changed = False
-
     def fill_folder(self, folder, files):
         for f in files:
             if str(f).startswith("{"):
