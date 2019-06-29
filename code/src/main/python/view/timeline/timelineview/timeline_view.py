@@ -47,8 +47,6 @@ class TimelineView(QFrame):
         self.timeables = dict()
         self.tracks = dict()
 
-        self.__show_debug_info_on_gui()
-
     def create_video_track(self, name, width, height, num, is_overlay=False):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
@@ -148,28 +146,6 @@ class TimelineView(QFrame):
             self.audio_track_button_frame.remove_button(track.button)
 
         self.tracks.pop(track_id, None)
-
-    def set_timeable_name(self, id, name):
-        pass
-
-    def set_timeable_start(self, id, frame):
-        pass
-
-    def set_timeable_length(self, id, frames):
-        pass
-
-    def set_timeable_selected(self, id, selected=True):
-        pass
-
-    def set_timeable_picture(self, id, picture):
-        pass
-
-    def __show_debug_info_on_gui(self):
-        """
-        Setup the component somehow so that something can be seen which
-        makes it possible to say if something works properly or not.
-        """
-        # self.setStyleSheet('background-color: yellow')
 
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')
