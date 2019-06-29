@@ -41,7 +41,7 @@ class TrackFrame(SizeLinkableFrame):
 
         @param track: the Track to remove
         """
-        track.button.deleteLater()
         self.layout().removeWidget(track)
+        track.deleteLater()
         self.adjustSize()
         self.parent().adjustSize()
