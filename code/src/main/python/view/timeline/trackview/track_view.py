@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
-from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
+from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
 from model.data import TimeableModel
 from model.project import Project
@@ -80,7 +80,7 @@ class TrackView(QGraphicsView):
         button_menu.addAction(delete)
         delete.triggered.connect(self.delete)
 
-        button_menu.exec_(self.button.mapToGlobal(point))
+        button_menu.exec_(self.button.mapToGlobal(point) + QPoint(10, 0))
 
     def delete(self):
         """
