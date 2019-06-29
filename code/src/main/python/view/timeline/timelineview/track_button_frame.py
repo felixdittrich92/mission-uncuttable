@@ -31,7 +31,7 @@ class TrackButtonFrame(SizeLinkableFrame):
         """
         Adds a new Button to the TrackButtonFrame
 
-        :param button: the button to add
+        @param button: the button to add
         """
         if type:
             self.button_counter += 1
@@ -41,7 +41,18 @@ class TrackButtonFrame(SizeLinkableFrame):
                 button.setObjectName('track_button_light')
         else:
             button.setObjectName('track_button_audio')
-            
+
         self.layout().addWidget(button)
+        self.adjustSize()
+        self.parent().adjustSize()
+
+    def remove_button(self, button):
+        """
+        Removes a button from the TrackButtonFrame
+
+        @param button: the button to remove
+        """
+        self.layout().removeWidget(button)
+        button.deleteLater()
         self.adjustSize()
         self.parent().adjustSize()
