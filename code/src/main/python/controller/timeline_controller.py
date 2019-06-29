@@ -143,6 +143,18 @@ class TimelineController:
 
         self.__timeline_view.changed.emit()
 
+    def add_track(self, track_id):
+        """
+        Creates a new Track.
+
+        @param track_id: id of the track which will be created
+        @return: Nothing
+        """
+        op = CreateTrackOperation(track_id)
+        self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
+
     def delete_track(self, track_id):
         """
         Removes a track and all the timeables in it.
@@ -150,11 +162,17 @@ class TimelineController:
         @param track_id: id of the track which will be deleted
         @return: Nothing
         """
-        # removes clips from timeline model
-        self.__timeline_model.remove_track(track_id)
+        track = self.__timeline_view.tracks[track_id]
+        if track is None:
+            return
 
-        # remove track view
-        self.__timeline_view.remove_track(track_id)
+        track_data = track.get_info_dict()
+        timeables = [t.get_info_dict() for t in track.items()]
+
+        op = DeleteTrackOperation(track_id, track_data, timeables)
+        self.__history.do_operation(op)
+
+        self.__timeline_view.changed.emit()
 
     def is_overlay_track(self, track_id):
         """
@@ -169,11 +187,11 @@ class TimelineController:
         return self.__timeline_view.tracks[track_id].is_overlay
 
     def create_video_track(self, name, width, height, num, is_overlay=False):
-        """ Creates a new track in the timeline """
+        """ Creates a new video track in the timeline """
         self.__timeline_view.create_video_track(name, width, height, num, is_overlay)
 
     def create_audio_track(self, name, width, height, num):
-        """ Creates a new track in the timeline """
+        """ Creates a new audio track in the timeline """
         self.__timeline_view.create_audio_track(name, width, height, num)
 
     def get_project_timeline(self):
@@ -286,6 +304,8 @@ class TimelineController:
         self.__timeline_view.audio_track_frame.adjustSize()
         self.__timeline_view.video_track_frame.adjustSize()
         self.__timeline_view.track_frame_frame.adjustSize()
+
+        # TODO try button frames as well
 
     def get_timeable_by_id(self, id):
         """
@@ -408,6 +428,10 @@ class TimelineController:
     def get_timelineview(self):
         """ Returns the timelineview connected with the controller """
         return self.__timeline_view
+
+    def get_timelinemodel(self):
+        """ Returns the timelinemodel connected with the controller """
+        return self.__timeline_model
 
     def update_timecode(self, timecode):
         self.__timeline_view.update_timecode(timecode)
@@ -671,3 +695,66 @@ class GroupMoveOperation(Operation):
         for t in group.timeables:
             t.do_move(t.x_pos - self.diff)
             t.model.move(t.x_pos)
+
+
+class CreateTrackOperation(Operation):
+    """ Creates a new Track """
+
+    def __init__(self, track_id):
+        self.track_id = track_id
+
+    def do(self):
+        pass
+
+    def undo(self):
+        pass
+
+
+class DeleteTrackOperation(Operation):
+    """ Removes a Track """
+
+    def __init__(self, track_id, track_data, timeable_data):
+        """
+        @param track_id: number of the track that will be removed
+        @param track_data: dictionary with all the infos of the TrackView
+        @param timeable_data: list of dictionaries with data for
+                              every Timeable on this track
+        """
+        self.track_id = track_id
+        self.track_data = track_data
+        self.timeable_data = timeable_data
+
+    def do(self):
+        controller = TimelineController.get_instance()
+
+        # removes clips from timeline model
+        controller.get_timelinemodel().remove_track(self.track_id)
+
+        # remove track view
+        controller.get_timelineview().remove_track(self.track_id)
+
+    def undo(self):
+        controller = TimelineController.get_instance()
+        if self.track_data["type"]:
+            controller.create_video_track(
+                self.track_data["name"], self.track_data["width"],
+                self.track_data["height"], self.track_data["num"],
+                is_overlay=self.track_data["is_overlay"])
+        else:
+            controller.create_audio_track(
+                self.track_data["name"], self.track_data["width"],
+                self.track_data["height"], self.track_data["num"])
+
+        for t in self.timeable_data:
+            m = t["model"]
+            model = TimeableModel(m["file_name"], m["id"])
+            model.set_start(m["start"], is_sec=True)
+            model.set_end(m["end"], is_sec=True)
+            model.move(m["position"], is_sec=True)
+
+            controller.create_timeable(
+                self.track_id, t["name"], t["width"], t["x_pos"], model, t["view_id"],
+                res_left=t["resizable_left"], res_right=t["resizable_right"],
+                group=t["group_id"], hist=False)
+
+        # controller.adjust_tracks()
