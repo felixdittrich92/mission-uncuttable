@@ -76,7 +76,7 @@ class TrackView(QGraphicsView):
         """ shows a menu on rightclick """
         button_menu = QMenu()
 
-        delete = QAction(str(Language.current.timeable.delete))
+        delete = QAction(str(Language.current.track.delete))
         button_menu.addAction(delete)
         delete.triggered.connect(self.delete)
 

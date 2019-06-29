@@ -64,6 +64,9 @@
         <cancel>Abbrechen</cancel>
         <label>Aktuelle Lautstärke:</label>
     </timeablesettings>
+    <track>
+      <delete>Spur löschen</delete>
+    </track>
     <export>
         <windowtitle>Video exportieren</windowtitle>
         <filename>Dateiname</filename>
