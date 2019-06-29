@@ -306,6 +306,8 @@ class DeleteTrackOperation(Operation):
         # remove track view
         self.controller.get_timelineview().remove_track(self.track_id)
 
+        self.controller.adjust_tracks()
+
     def undo(self):
         if self.track_data["type"]:
             self.controller.create_video_track(
@@ -329,4 +331,4 @@ class DeleteTrackOperation(Operation):
                 res_left=t["resizable_left"], res_right=t["resizable_right"],
                 group=t["group_id"], hist=False)
 
-        # controller.adjust_tracks()
+        self.controller.adjust_tracks()

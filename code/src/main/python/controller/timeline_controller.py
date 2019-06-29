@@ -318,8 +318,9 @@ class TimelineController:
         self.__timeline_view.audio_track_frame.adjustSize()
         self.__timeline_view.video_track_frame.adjustSize()
         self.__timeline_view.track_frame_frame.adjustSize()
-
-        # TODO try button frames as well
+        self.__timeline_view.audio_track_button_frame.adjustSize()
+        self.__timeline_view.video_track_button_frame.adjustSize()
+        self.__timeline_view.track_button_frame_frame.adjustSize()
 
     def get_timeable_by_id(self, id):
         """
