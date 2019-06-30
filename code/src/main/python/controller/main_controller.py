@@ -67,6 +67,7 @@ class MainController:
         self.__video_editor_controller = VideoEditorController(video_editor_view)
         self.__video_editor_controller.start()
         self.__video_editor_controller.new_project(filepath)
+        self.__video_editor_controller.set_title_saved()
 
     def __start_autocut_controller(self, path, project_name, filename):
         """
