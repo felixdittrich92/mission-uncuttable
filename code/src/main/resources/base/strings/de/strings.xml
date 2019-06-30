@@ -66,6 +66,7 @@
     </timeablesettings>
     <track>
       <delete>Spur löschen</delete>
+      <add>Spur hinzufügen</add>
     </track>
     <export>
         <windowtitle>Video exportieren</windowtitle>

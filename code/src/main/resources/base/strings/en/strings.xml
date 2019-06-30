@@ -66,6 +66,7 @@
     </timeablesettings>
     <track>
       <delete>Delete Track</delete>
+      <add>Add Track</add>
     </track>
     <export>
         <windowtitle>Export Video</windowtitle>
