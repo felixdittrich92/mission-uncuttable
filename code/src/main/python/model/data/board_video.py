@@ -13,18 +13,20 @@ class BoardVideo(MediaFile):
     def __init__(self, file_path):
         self.__file_path = str(file_path)
         self.board_subvideos = list()
+        self.speaker_subvideos = list()
 
     def get(self):
         return self.__file_path
 
     def check_board_area(self, progress):
         """
-        a method that analyse the video frame per frame and save the Clips (Board) in a list
+        a method that analyse the video frame per frame and save the Cliptimes (Board, Speaker) in a list
         """
         video = cv2.VideoCapture(self.__file_path)
         maxframes = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         try:
             times = list()
+            times_speaker = list()
             for frame_number in count():
                 if frame_number % 30 == 0:
                     progress(frame_number/maxframes*100)
@@ -33,22 +35,30 @@ class BoardVideo(MediaFile):
                 if not is_ok:
                     if times:
                         self.board_subvideos.append((times[0], times[-1]))
+                    if times_speaker:
+                        self.speaker_subvideos.append((times_speaker[0], times_speaker[-1]))
                     break
 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 (thresh, frame) = cv2.threshold(frame, 60, 255, cv2.THRESH_BINARY)
                 average = cv2.mean(frame)
 
-                #summe = average[0] + average[1] + average[2]
-                #percentage_red = (100 * average[0]) / summe
-                #percentage_green = (100 * average[1]) / summe
-                #percentage_blue = (100 * average[2]) / summe
+                if average[0] < 250:
+                    times_speaker.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
+                elif times_speaker:
+                    self.speaker_subvideos.append((times_speaker[0], times_speaker[-1]))
+                    times_speaker.clear()
+                else:
+                    pass
 
                 if average[0] > 250:
                     times.append(video.get(cv2.CAP_PROP_POS_MSEC) / 1000)
                 elif times:
                     self.board_subvideos.append((times[0], times[-1]))
                     times.clear()
+                else:
+                    pass
+
         finally:
             video.release()
 
