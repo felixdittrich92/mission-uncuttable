@@ -272,15 +272,26 @@ class GroupMoveOperation(Operation):
 class CreateTrackOperation(Operation):
     """ Creates a new Track """
 
-    def __init__(self, track_id, controller):
+    def __init__(self, track_id, name, width, height, index, is_video, controller):
         self.track_id = track_id
+        self.name = name
+        self.width = width
+        self.height = height
+        self.index = index
+        self.is_video = is_video
         self.controller = controller
 
     def do(self):
-        pass
+        if self.is_video:
+            self.controller.create_video_track(
+                self.name, self.width, self.height, self.track_id, index=self.index)
+        else:
+            self.controller.create_audio_track(
+                self.name, self.width, self.height, self.track_id, index=self.index)
 
     def undo(self):
-        pass
+        self.controller.get_timelinemodel().remove_track(self.track_id)
+        self.controller.get_timelineview().remove_track(self.track_id)
 
 
 class DeleteTrackOperation(Operation):
@@ -306,8 +317,6 @@ class DeleteTrackOperation(Operation):
         # remove track view
         self.controller.get_timelineview().remove_track(self.track_id)
 
-        self.controller.adjust_tracks()
-
     def undo(self):
         if self.track_data["type"]:
             self.controller.create_video_track(
@@ -330,5 +339,3 @@ class DeleteTrackOperation(Operation):
                 self.track_id, t["name"], t["width"], t["x_pos"], model, t["view_id"],
                 res_left=t["resizable_left"], res_right=t["resizable_right"],
                 group=t["group_id"], hist=False)
-
-        self.controller.adjust_tracks()

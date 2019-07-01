@@ -148,17 +148,19 @@ class TimelineController:
 
         self.__timeline_view.changed.emit()
 
-    def add_track(self, track_id):
+    def add_track(self, name, width, height, index, is_video):
         """
         Creates a new Track.
 
         @param track_id: id of the track which will be created
         @return: Nothing
         """
-        op = CreateTrackOperation(track_id, self)
+        track_id = max(self.__timeline_view.tracks.keys()) + 1
+        op = CreateTrackOperation(track_id, name, width, height, index, is_video, self)
         self.__history.do_operation(op)
 
         self.__timeline_view.changed.emit()
+        Project.get_instance().changed = True
 
     def delete_track(self, track_id):
         """
@@ -179,6 +181,7 @@ class TimelineController:
         self.__history.do_operation(op)
 
         self.__timeline_view.changed.emit()
+        Project.get_instance().changed = True
 
     def is_overlay_track(self, track_id):
         """
@@ -200,6 +203,13 @@ class TimelineController:
     def create_audio_track(self, name, width, height, num, index=-1):
         """ Creates a new audio track in the timeline """
         self.__timeline_view.create_audio_track(name, width, height, num, index)
+
+    def set_track_width(self, track_id, new_width):
+        try:
+            track = self.__timeline_view.tracks[track_id]
+            track.set_width(new_width)
+        except KeyError:
+            pass
 
     def get_track_index(self, track):
         """ Returns the index of the track in its layout """
@@ -269,7 +279,7 @@ class TimelineController:
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_video_track("Overlay", 2000, 50, 3, True)
+        self.create_video_track("Overlay", 2000, 50, 3, is_overlay=True)
         self.create_video_track("Tafel", 2000, 50, 2)
         self.create_video_track("Visualizer", 2000, 50, 1)
         self.create_video_track("Folien", 2000, 50, 0)
@@ -305,10 +315,7 @@ class TimelineController:
     def clear_timeline(self):
         """ Removes all timeline data """
         self.__timeline_model.remove_all_clips()
-
-        for t in self.__timeline_view.tracks.values():
-            t.button.deleteLater()
-            t.deleteLater()
+        self.__timeline_view.remove_all_tracks()
 
         self.__history.clear_history()
 
