@@ -18,9 +18,11 @@ class BoardVideo(MediaFile):
     def get(self):
         return self.__file_path
 
-    def check_board_area(self, progress):
+    def check_board_area(self, update_progress):
         """
         a method that analyse the video frame per frame and save the Cliptimes (Board, Speaker) in a list
+
+        @param update_progress: a function which handles the progressbar countprocess
         """
         video = cv2.VideoCapture(self.__file_path)
         maxframes = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -29,7 +31,7 @@ class BoardVideo(MediaFile):
             times_speaker = list()
             for frame_number in count():
                 if frame_number % 30 == 0:
-                    progress(frame_number/maxframes*100)
+                    update_progress(frame_number/maxframes*100)
                 is_ok, frame = video.read()
 
                 if not is_ok:
