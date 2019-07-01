@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QApplication
 from .size_linkable_frame import SizeLinkableFrame
 
 
@@ -33,6 +33,7 @@ class TrackFrame(SizeLinkableFrame):
         needle = self.findChild(QWidget, "needle_bottom")
         track.stackUnder(needle)
         self.adjustSize()
+        QApplication.processEvents()
         self.parent().adjustSize()
 
     def remove_track(self, track):
@@ -44,4 +45,5 @@ class TrackFrame(SizeLinkableFrame):
         self.layout().removeWidget(track)
         track.deleteLater()
         self.adjustSize()
+        QApplication.processEvents()
         self.parent().adjustSize()

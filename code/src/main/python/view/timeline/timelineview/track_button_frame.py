@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QApplication
 from .size_linkable_frame import SizeLinkableFrame
 
 
@@ -44,6 +44,7 @@ class TrackButtonFrame(SizeLinkableFrame):
 
         self.layout().insertWidget(index, button)
         self.adjustSize()
+        QApplication.processEvents()
         self.parent().adjustSize()
 
     def remove_button(self, button):
@@ -55,4 +56,5 @@ class TrackButtonFrame(SizeLinkableFrame):
         self.layout().removeWidget(button)
         button.deleteLater()
         self.adjustSize()
+        QApplication.processEvents()
         self.parent().adjustSize()
