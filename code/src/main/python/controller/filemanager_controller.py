@@ -11,6 +11,7 @@ from config import Resources
 from config import Settings
 from model.folder import Folder
 from model.project import Project
+from autocut import Presentation
 
 RESOLUTION = 250
 
@@ -89,6 +90,13 @@ class FilemanagerController:
         @param file: the current file from the fileNames list
         @return: Nothing
         """
+        self.full_path = Project.get_instance().path
+        self.directory_strings = self.full_path.split('/')
+        self.project_name = self.directory_strings[-2]
+        self.directory_strings.pop(-1)
+        self.directory_strings.pop(-1)
+        self.project_path = os.path.join('/' , *self.directory_strings) #* takes every element of the list as single argument
+
 
         if file in self.file_list:
             print("The file exist")
@@ -97,13 +105,17 @@ class FilemanagerController:
         if file is not None and file.upper().endswith(('.JPG', '.PNG')):
             pixmap = QPixmap(file)
             QApplication.processEvents()
-        # elif file.upper().endswith(('.PDF')):
-        #    presentation = Presentation(file)
-        #    self.pictures = presentation.convert_pdf(self.project_path,
-        #                                                 os.path.join(self.project_name, "files"),
-        #                                                 RESOLUTION)
-        #    for pic in self.pictures:
-        #        filemanager.addFileNames(pic)
+        elif file is not None and file.upper().endswith(('.PDF')):
+            presentation = Presentation(file)
+
+            self.pictures = presentation.convert_pdf(self.project_path,
+                                                         os.path.join(self.project_name, "files"),
+                                                         RESOLUTION)
+
+            for pic in self.pictures:
+                pixmap = QPixmap(file)
+                self.addFileNames(pic)
+
         elif file is not None and file.upper().endswith('.MP4'):
             video_input_path = file
             cap = cv2.VideoCapture(str(video_input_path))
@@ -119,7 +131,6 @@ class FilemanagerController:
                 pixmap = QPixmap.fromImage(q_img)
 
             cap.release()
-            cv2.destroyAllWindows()
             QApplication.processEvents()
 
         elif file is not None and file.upper().endswith(('.MP3', '*.WAV')):
@@ -144,7 +155,10 @@ class FilemanagerController:
             return
 
         QApplication.processEvents()
-        self.__filemanager_view.add_item(pixmap, file)
+        if file.upper().endswith(('.PDF')):
+            pass
+        else:
+            self.__filemanager_view.add_item(pixmap, file)
 
         if len(self.folder_stack) == 0:
             self.file_list.append(file)
