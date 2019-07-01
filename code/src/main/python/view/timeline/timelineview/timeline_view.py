@@ -130,6 +130,16 @@ class TimelineView(QFrame):
 
         return res
 
+    def remove_all_tracks(self):
+        for track in self.tracks.values():
+            if track.is_video:
+                self.video_track_frame.remove_track(track)
+                self.video_track_button_frame.remove_button(track.button)
+
+            else:
+                self.audio_track_frame.remove_track(track)
+                self.audio_track_button_frame.remove_button(track.button)
+
     def remove_track(self, track_id):
         """ Removes the TrackView with track_id """
         try:
