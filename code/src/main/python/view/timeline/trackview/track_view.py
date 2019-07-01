@@ -3,10 +3,10 @@ import os
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
-# from .add_track_view import AddTrackView
+from .add_track_view import AddTrackView
 from model.data import TimeableModel
 from model.project import Project
-from controller import TimelineController
+from controller import TimelineController, AddTrackController
 from util.timeline_utils import generate_id
 from config import Language
 
@@ -95,8 +95,8 @@ class TrackView(QGraphicsView):
         Calls the TimelineController to add a track
         This method is only for the context menu on the track button
         """
-        # view = AddTrackView()
-        self.__controller.add_track("new track", self.width, self.height, 0, True)
+        view = AddTrackView()
+        AddTrackController(self.__controller, view).start()
 
     def delete(self):
         """
