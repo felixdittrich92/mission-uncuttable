@@ -59,6 +59,12 @@ class FilemanagerController:
         This method saves the selected files in a list and add this to the filemanager window
         This method ensures that only supported files are displayed and can be used.
         """
+        self.full_path = Project.get_instance().path
+        self.directory_strings = self.full_path.split('/')
+        self.project_name = self.directory_strings[-2]
+        self.directory_strings.pop(-1)
+        self.directory_strings.pop(-1)
+        self.project_path = os.path.join('/' , *self.directory_strings) #* takes every element of the list as single argument
 
         supported_filetypes = Settings.get_instance().get_dict_settings()["Invisible"]["filemanager_import_formats"]
         fileNames, _ = QFileDialog.getOpenFileNames(
@@ -90,13 +96,6 @@ class FilemanagerController:
         @param file: the current file from the fileNames list
         @return: Nothing
         """
-        self.full_path = Project.get_instance().path
-        self.directory_strings = self.full_path.split('/')
-        self.project_name = self.directory_strings[-2]
-        self.directory_strings.pop(-1)
-        self.directory_strings.pop(-1)
-        self.project_path = os.path.join('/' , *self.directory_strings) #* takes every element of the list as single argument
-
 
         if file in self.file_list:
             print("The file exist")
