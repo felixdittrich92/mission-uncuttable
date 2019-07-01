@@ -1,15 +1,20 @@
-from PyQt5.QtCore import QObject, QFileSystemWatcher
-from PyQt5.QtWidgets import QMainWindow, QWidget, QSplitter, QApplication, QMenu, QAction
+from PyQt5.QtCore import QObject, QFileSystemWatcher, pyqtSignal
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QSplitter, QApplication, QMenu, QAction,
+                             QMessageBox)
 from PyQt5 import uic
 
 from config import Resources, Language
 from view.preview.preview import PreviewView
 from view.timeline.timelineview import TimelineView
 from controller import TimelineController
+from model.project import Project
 
 
 class VideoEditorView(QMainWindow):
     """A class used as the View for the video-editor window."""
+
+    save_project = pyqtSignal()
+
     def __init__(self):
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__()
@@ -17,10 +22,12 @@ class VideoEditorView(QMainWindow):
 
         self.set_texts()
 
+        self.timeline_view = TimelineView()
         self.load_timeline_widget()
 
         self.needle = self.findChild(QWidget, "needle_top")
 
+        self.previewview = PreviewView.get_instance()
         self.load_preview()
 
         self.splittersizes = []
@@ -83,14 +90,11 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QObject, 'horizontalSplitter')
         bottom_frame = self.findChild(QObject, 'bottomFrame')
         i = splitter.indexOf(bottom_frame)
-        timeline_view = TimelineView()
-        TimelineController(timeline_view)
-        splitter.replaceWidget(i, timeline_view)
-        timeline_view.show()
+        TimelineController(self.timeline_view)
+        splitter.replaceWidget(i, self.timeline_view)
+        self.timeline_view.show()
 
     def load_preview(self):
-        self.previewview = PreviewView.get_instance()
-
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, self.previewview)
         self.previewview.show()
@@ -115,8 +119,25 @@ class VideoEditorView(QMainWindow):
 
     def closeEvent(self, event):
         """ Closes all open Windows """
-        QApplication.closeAllWindows()
-        QMainWindow.closeEvent(self, event)
+        self.previewview.stop()
+        if Project.get_instance().changed:
+            msgbox = QMessageBox()
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+            res = msgbox.question(self, str(Language.current.errors.unsaved.msgboxtitle),
+                                  str(Language.current.errors.unsaved.msgboxtext),
+                                  QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+
+            if res == QMessageBox.Yes:
+                self.save_project.emit()
+                QApplication.closeAllWindows()
+
+                QMainWindow.closeEvent(self, event)
+
+            elif res == QMessageBox.Cancel:
+                event.ignore()
+        else:
+            QApplication.closeAllWindows()
+            QMainWindow.closeEvent(self, event)
 
     def maxim(self):
         v_splitter = self.findChild(QObject, 'verticalSplitter')
@@ -141,6 +162,6 @@ class VideoEditorView(QMainWindow):
             h_splitter.setSizes(self.splittersizes[1])
 
             self.fullscreen = False
-    
+
     def connect_update(self):
         PreviewView.get_instance().update_information()

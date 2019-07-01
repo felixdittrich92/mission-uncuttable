@@ -128,6 +128,10 @@ class PreviewView(QWidget):
             self.play_button.setIcon(QIcon(self.iconpause))
             playing_thread.start()
 
+    def stop(self):
+        if self.video_running:
+            self.play_pause()
+
     def first_frame(self):
         self.update_player()
         self.player.Seek(1)
@@ -145,7 +149,6 @@ class PreviewView(QWidget):
         self.frame_changed.emit(QPoint(new_position, 0))
         self.update_progress_bar()
         self.update_time_label()
-
 
     def get_last_frame(self):
         last_frame = 0
@@ -224,7 +227,7 @@ class PreviewView(QWidget):
 
     def update_progress_bar(self):
         self.progress_slider.setValue(self.player.Position())
-    
+
     def update_time_label(self):
         current_frame = (self.player.Position() - 1)
         num_of_frames = (self.get_last_frame() - 1)
@@ -243,7 +246,7 @@ class PreviewView(QWidget):
         timecode = (current_time + ":" + frame_second + " | " + num_of_time + ":" + global_frame_seconds)
         timecode_timeline = (current_time + ":" + frame_second)
         self.current_time_label.setText(timecode)
-        TimelineController.get_instance().update_timecode(timecode_timeline) 
+        TimelineController.get_instance().update_timecode(timecode_timeline)
 
     def update_player(self):
         if self.video_running:
