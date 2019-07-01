@@ -154,7 +154,7 @@ class FilemanagerController:
             return
 
         QApplication.processEvents()
-        if file.upper().endswith(('.PDF')):
+        if not isinstance(file,Folder) and file.upper().endswith(('.PDF')):
             pass
         else:
             self.__filemanager_view.add_item(pixmap, file)
