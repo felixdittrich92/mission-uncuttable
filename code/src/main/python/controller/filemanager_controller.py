@@ -46,6 +46,9 @@ class FilemanagerController:
 
         self.__filemanager_view.listWidget.itemSelectionChanged.connect(self.toggle_delete_button)
 
+
+        print(Project.get_instance().path)
+
     def print_folder_stack(self):
         breadcrumbs = self.__filemanager_view.breadcrumbs
         breadcrumbs.setText("home")

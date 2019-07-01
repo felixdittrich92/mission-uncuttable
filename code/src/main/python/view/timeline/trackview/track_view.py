@@ -71,6 +71,16 @@ class TrackView(QGraphicsView):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
         pass
 
+    def keyPressEvent(self, event):
+        """
+        Overrides wheelEvent from QGraphicsView to prevent scrolling in a
+        track. If a keyPressEvent should occur it needs to be explicitly
+        handled here.
+
+        :param event: Event
+        """
+        pass
+
     def resize(self):
         """ sets the size of the trackview to self.width and self.height """
         self.scene().setSceneRect(0, 0, self.width, self.height)

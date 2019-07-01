@@ -57,8 +57,8 @@ QPushButton:pressed {
 
 QPushButton:disabled{
     border: 1px solid #364156;
-    background: transparent;
-    color: #364156;
+    background: #2c3546;
+    color: #838392;
 }
 
 /* BLUE BUTTONS */
@@ -104,8 +104,6 @@ QPushButton:disabled{
 #export_button:disabled,
 #new_folder_button:disabled {
     border: 1px solid #364156;
-    background: transparent;
-    color: #364156;
 }
 
 /* MENU */
@@ -254,19 +252,18 @@ QScrollArea, #timeline_toolbar {
     background: #212D40;
     border: 1px solid #364156;
     margin-left: -1px;
-    margin-top: -1px;
     padding-left: 5px;
 }
 
 #audio_track_frame{
-    margin-top: 10px;
     border: 1px solid #364156;
+    border-top: 3px solid #364156;
+
 }
 
 #video_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
-    margin-left: -1px;
     margin-top: -1px;
     padding-left: 5px;
 }
@@ -300,7 +297,8 @@ QScrollArea, #timeline_toolbar {
 }
 
 #audio_track_button_frame{
-    margin-top: 10px;
+    border-top: 3px solid #364156;
+
 }
 
     /* time bar */
@@ -308,7 +306,6 @@ QScrollArea, #timeline_toolbar {
 #time_bar_scroll_area {
     margin-right: 10px;
     border-left: none;
-    margin-left: -1px;
 }
 
 #time_bar {
@@ -326,10 +323,11 @@ QScrollArea, #timeline_toolbar {
 
 #time_label {
     color: #F5F5F5;
+    font-size: 12px;
     background: #212D40;
     border: 2px solid #364156;
+    border-right-width: 1px;
     border-bottom: none;
-    border-right: none;
 }
 
 /* FILEMANAGER */
@@ -337,6 +335,11 @@ QScrollArea, #timeline_toolbar {
     background-color: #212D40;
     border: 1px solid #364156;
 }
+
+#filemanager_frame {
+    margin-bottom: -1px;
+}
+
 #list_widget {
     border-top: none;
     show-decoration-selected: 1;
