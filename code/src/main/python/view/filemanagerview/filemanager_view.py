@@ -4,7 +4,7 @@ import os
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QListWidgetItem, QListView
-from PyQt5.QtCore import QObject, QSize, pyqtSignal
+from PyQt5.QtCore import QObject, QSize, pyqtSignal, Qt
 from config import Resources, Language
 from model.folder import Folder
 
@@ -63,11 +63,11 @@ class FilemanagerView(QWidget):
         self.listWidget.takeItem(self.listWidget.currentRow())
 
     def add_item(self, pixmap, file):
+        icon = QIcon(pixmap.scaled(QSize(275, 50), Qt.KeepAspectRatio, transformMode = 1))
+
         if isinstance(file, Folder):
-            icon = QIcon(pixmap.scaled(QSize(275, 200)))
             item = QListWidgetItem(file.get_name(), self.listWidget)
         else:
-            icon = QIcon(pixmap.scaled(QSize(275, 200)))
             item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
             item.setToolTip(file)
             item.setStatusTip(file)

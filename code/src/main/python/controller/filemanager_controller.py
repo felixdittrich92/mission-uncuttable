@@ -325,9 +325,6 @@ class FilemanagerController:
                 filename = "mp3.png"
                 path_to_file = os.path.join(path, filename)
                 pixmap = QPixmap(path_to_file)
-            elif item.upper().endswith(('.PDF')):
-                pass
-                # TODO
 
             self.__filemanager_view.add_item(pixmap, item)
 

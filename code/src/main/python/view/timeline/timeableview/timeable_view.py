@@ -132,7 +132,7 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio)
+            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
         else:
             self.pixmap = None
 
