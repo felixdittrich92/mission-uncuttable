@@ -67,7 +67,6 @@ class VideoEditorController:
 
     def start(self):
         """Calls '__show_view()' of VideoEditorController"""
-        self.set_title_saved()
         self.__show_view()
 
     def stop(self):
@@ -76,7 +75,9 @@ class VideoEditorController:
         os._exit(1)
 
     def set_title_unsaved(self):
-        """ shows a star in the window title to indicate that there are unsaved changes """
+        """
+        Shows a star in the window title to indicate that there are unsaved changes.
+        """
         name = Project.get_instance().get_project_name()
         self.__video_editor_view.setWindowTitle("UbiCut - " + name + "*")
 
@@ -161,6 +162,8 @@ class VideoEditorController:
         project.path = path
 
         Projectsettings.add_project(path)
+
+        self.set_title_saved()
 
     def get_filemanager_controller(self):
         return self.__filemanager_controller
