@@ -67,6 +67,7 @@ class VideoEditorController:
 
     def start(self):
         """Calls '__show_view()' of VideoEditorController"""
+        self.set_title_saved()
         self.__show_view()
 
     def stop(self):
@@ -162,8 +163,6 @@ class VideoEditorController:
         project.path = path
 
         Projectsettings.add_project(path)
-
-        self.set_title_saved()
 
     def get_filemanager_controller(self):
         return self.__filemanager_controller
