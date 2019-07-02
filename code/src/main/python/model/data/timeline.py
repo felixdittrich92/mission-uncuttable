@@ -165,6 +165,16 @@ class TimelineModel:
 
         w.Close()
 
+    def remove_track(self, number):
+        """
+        Removes all Clips with the same layer as numer.
+
+        @param number: the Layer of the clips that will be removed
+        """
+        for c in self.timeline.Clips():
+            if c.Layer() == number:
+                self.change("delete", ["clips", {"id": c.Id()}], {})
+
     def remove_all_clips(self):
         """ Deletes all clips in the timeline (but not the views!!!) """
         for c in self.timeline.Clips():

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QApplication
 from .size_linkable_frame import SizeLinkableFrame
 
 
@@ -25,11 +25,11 @@ class TrackButtonFrame(SizeLinkableFrame):
         box_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(box_layout)
 
-    def add_button(self, button, type):
+    def add_button(self, button, type, index):
         """
         Adds a new Button to the TrackButtonFrame
 
-        :param button: the button to add
+        @param button: the button to add
         """
         if type:
             self.button_counter += 1
@@ -40,6 +40,19 @@ class TrackButtonFrame(SizeLinkableFrame):
         else:
             button.setObjectName('track_button_audio')
 
-        self.layout().addWidget(button)
+        self.layout().insertWidget(index, button)
         self.adjustSize()
+        QApplication.processEvents()
+        self.parent().adjustSize()
+
+    def remove_button(self, button):
+        """
+        Removes a button from the TrackButtonFrame
+
+        @param button: the button to remove
+        """
+        self.layout().removeWidget(button)
+        button.deleteLater()
+        self.adjustSize()
+        QApplication.processEvents()
         self.parent().adjustSize()
