@@ -347,6 +347,7 @@ QScrollArea, #timeline_toolbar {
 }
 #list_widget::item {
     color: white;
+    width: 100px;
     padding: 5px;
     border: 1px solid transparent;
 }

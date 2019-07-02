@@ -35,7 +35,7 @@ class FileListView(QListWidget):
         QDataStream.writeInt(data_stream, width)
 
         mime_data = QMimeData()
-        mime_data.setData('ubicut/file', item_data)
+        mime_data.setData('ubicut/file', item_data)x
 
         # set first frame as pixmap
         pixmap = get_pixmap_from_file(path, 1)
