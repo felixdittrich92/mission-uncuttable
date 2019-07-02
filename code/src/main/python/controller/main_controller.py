@@ -90,7 +90,7 @@ class MainController:
         if project_list.currentItem() is None:
             return
 
-        path = project_list.currentItem().text()
+        path = project_list.currentItem().statusTip()
 
         # check if file exists
         if os.path.isfile(path):

@@ -1,7 +1,8 @@
 import os
 
 from PyQt5.QtCore import QFileSystemWatcher, Qt
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QStackedLayout, QLabel
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, \
+    QStackedLayout, QLabel, QListWidgetItem
 from PyQt5 import uic, QtGui, QtSvg
 from PyQt5.QtGui import QPixmap
 from config import Settings, Resources, Language
@@ -93,10 +94,12 @@ class SelectProjectWidget(QWidget):
         self.projects_list_view = self.findChild(QWidget, "projects_list_view")
 
         for p in Projectsettings.get_projects():
-            p = os.path.split(p)
-            p = p[-1]
-            p = p[:-3]
-            self.projects_list_view.addItem(p)
+            name = os.path.split(p)
+            name = name[-1]
+            name = name[:-3]
+            item = QListWidgetItem(name)
+            item.setStatusTip(p)
+            self.projects_list_view.addItem(item)
 
 
 class DecisionWidget(QWidget):
