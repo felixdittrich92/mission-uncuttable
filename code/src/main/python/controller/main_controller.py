@@ -3,7 +3,7 @@ import json
 
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
 
-from config import Settings
+from config import Settings, Resources
 from controller import VideoEditorController, AutocutController, TimelineController
 from view import VideoEditorView
 from model.project import Project
@@ -183,6 +183,8 @@ class MainController:
         :param info: String - More text for the message box to provide further information
         """
         message_box = QMessageBox()
+        message_box.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
         message_box.setWindowTitle(title)
         message_box.setIcon(icon)
         message_box.setText(text)
