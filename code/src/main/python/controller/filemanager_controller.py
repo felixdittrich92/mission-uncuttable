@@ -123,14 +123,14 @@ class FilemanagerController:
             folder = Folder(filename)
 
             presentation = Presentation(file)
-            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files')):
+            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files', filename)):
                 try:
-                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files'))
+                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files', filename))
                 except OSError:
                     pass
 
             self.pictures = presentation.convert_pdf(self.project_path,
-                                                         os.path.join(self.project_name, "files"),
+                                                         os.path.join(self.project_name, "files", filename),
                                                          RESOLUTION)
             for pic in self.pictures:
                 folder.add_to_content(pic)
