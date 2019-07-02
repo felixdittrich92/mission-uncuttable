@@ -137,7 +137,6 @@ class VideoSplitter:
         self.number_frames = int(videometadata['video']['@nb_frames'])
 
         x, y, width, height = 220, 400, 300, 850
-        #x, y, width, height = 350, 350, 180, 650
         track_window = (width,x,height,y)
 
         speaker_out = skvideo.io.FFmpegWriter(speaker_filename, inputdict={
