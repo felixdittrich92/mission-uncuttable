@@ -117,7 +117,6 @@ class FilemanagerController:
             pixmap = QPixmap(file)
             QApplication.processEvents()
         elif file is not None and file.upper().endswith(('.PDF')):
-            print(file)
             filename = os.path.split(file)
             filename = filename[-1]
             filename = filename[:-4]
@@ -180,6 +179,8 @@ class FilemanagerController:
             self.file_list.append(file)
         else:
             self.folder_stack[-1].add_to_content(file) # list[-1] returns last element
+
+        self.update_file_list(self.get_current_file_list())
 
     def remove(self):
         """
