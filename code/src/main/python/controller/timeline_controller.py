@@ -225,7 +225,7 @@ class TimelineController:
             "timeables": []
         }
 
-        for tr in self.__timeline_view.tracks.values():
+        for _, tr in sorted(self.__timeline_view.tracks.items(), reverse=True):
             data["tracks"].append(tr.get_info_dict())
 
         for ti in self.__timeline_view.timeables.values():
