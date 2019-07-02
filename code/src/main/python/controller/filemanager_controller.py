@@ -57,6 +57,15 @@ class FilemanagerController:
         for folder in self.folder_stack:
             breadcrumbs.setText(breadcrumbs.text() + " > " + folder.get_name())
 
+    def get_current_file_list(self):
+        """Returns either the content of the filemanager """
+        if len(self.folder_stack) == 0:
+            file_list = self.file_list
+        else:
+            file_list = self.folder_stack[-1].get_content()
+
+        return file_list
+
     def pickFileNames(self):
         """
         This method saves the selected files in a list and add this to the filemanager window
@@ -100,7 +109,7 @@ class FilemanagerController:
         @return: Nothing
         """
 
-        if file in self.file_list:
+        if file in self.get_current_file_list():
             print("The file exist")
             return
 
@@ -108,20 +117,27 @@ class FilemanagerController:
             pixmap = QPixmap(file)
             QApplication.processEvents()
         elif file is not None and file.upper().endswith(('.PDF')):
+            filename = os.path.split(file)
+            filename = filename[-1]
+            filename = filename[:-4]
+            folder = Folder(filename)
+
             presentation = Presentation(file)
-            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files')):
+            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files', filename)):
                 try:
-                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files'))
+                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files', filename))
                 except OSError:
                     pass
 
             self.pictures = presentation.convert_pdf(self.project_path,
-                                                         os.path.join(self.project_name, "files"),
+                                                         os.path.join(self.project_name, "files", filename),
                                                          RESOLUTION)
-
             for pic in self.pictures:
-                pixmap = QPixmap(file)
-                self.addFileNames(pic)
+                folder.add_to_content(pic)
+
+            self.file_list.append(folder)
+            self.update_file_list(self.get_current_file_list())
+            return
 
         elif file is not None and file.upper().endswith('.MP4'):
             video_input_path = file
@@ -138,14 +154,12 @@ class FilemanagerController:
                 pixmap = QPixmap.fromImage(q_img)
 
             cap.release()
-            QApplication.processEvents()
 
         elif file is not None and file.upper().endswith(('.MP3', '*.WAV')):
             path = Resources.images.media_symbols
             filename = "mp3.png"
             path_to_file = os.path.join(path, filename)
             pixmap = QPixmap(path_to_file)
-            QApplication.processEvents()
 
         elif file is None:
             image = Resources.images.folder_icon
@@ -161,16 +175,12 @@ class FilemanagerController:
             print("The datatype is not supported")
             return
 
-        QApplication.processEvents()
-        if not isinstance(file,Folder) and file.upper().endswith(('.PDF')):
-            pass
-        else:
-            self.__filemanager_view.add_item(pixmap, file)
-
         if len(self.folder_stack) == 0:
             self.file_list.append(file)
         else:
             self.folder_stack[-1].add_to_content(file) # list[-1] returns last element
+
+        self.update_file_list(self.get_current_file_list())
 
     def remove(self):
         """
@@ -178,10 +188,7 @@ class FilemanagerController:
         the list it is stored in.
         """
         item = self.__filemanager_view.listWidget.currentItem()
-        if len(self.folder_stack) == 0:
-            file_list = self.file_list
-        else:
-            file_list = self.folder_stack[-1].get_content()
+        file_list = self.get_current_file_list()
 
         is_folder = False
         for file in file_list:
@@ -263,10 +270,7 @@ class FilemanagerController:
         :param item: Item of the FileList
         """
 
-        if len(self.folder_stack) == 0:
-            file_list = self.file_list
-        else:
-            file_list = self.folder_stack[-1].get_content()
+        file_list = self.get_current_file_list()
 
         for file in file_list:
             if isinstance(file, Folder):
