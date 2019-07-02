@@ -57,8 +57,8 @@ QPushButton:pressed {
 
 QPushButton:disabled{
     border: 1px solid #364156;
-    background: transparent;
-    color: #364156;
+    background: #2c3546;
+    color: #838392;
 }
 
 /* BLUE BUTTONS */
@@ -104,8 +104,6 @@ QPushButton:disabled{
 #export_button:disabled,
 #new_folder_button:disabled {
     border: 1px solid #364156;
-    background: transparent;
-    color: #364156;
 }
 
 /* MENU */
@@ -245,29 +243,26 @@ QScrollArea, #timeline_toolbar {
     /* track frames */
 
 #track_frame_frame {
-    background: #11151C;
-    margin-left: -1px;
-    margin-top: -1px;
+    background: #364156;
 }
 
 #audio_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
     margin-left: -1px;
-    margin-top: -1px;
     padding-left: 5px;
 }
 
 #audio_track_frame{
-    margin-top: 10px;
     border: 1px solid #364156;
+    border-top-width: 3px;
+
 }
 
 #video_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
-    margin-left: -1px;
-    margin-top: -1px;
+    border-right: none;
     padding-left: 5px;
 }
 
@@ -285,8 +280,9 @@ QScrollArea, #timeline_toolbar {
 }
 
 #track_button_audio {
+    border-top: none;
+    border-bottom-width: 2px;
     background: #4586B1;
-    border: 1px solid #364156;
 }
 
     /* track button frames */
@@ -295,12 +291,13 @@ QScrollArea, #timeline_toolbar {
     background:#11151C;
 }
 
-#video_track_button_frame, #audio_track_button_frame{
+#video_track_button_frame,
+#audio_track_button_frame{
     background: #212D40;
 }
 
 #audio_track_button_frame{
-    margin-top: 10px;
+    border-top: 4px solid #364156;
 }
 
     /* time bar */
@@ -308,13 +305,14 @@ QScrollArea, #timeline_toolbar {
 #time_bar_scroll_area {
     margin-right: 10px;
     border-left: none;
-    margin-left: -1px;
 }
 
 #time_bar {
     background: #212D40;
     border: 1px solid #364156;
+    border-right-width: 2px;
     border-bottom: none;
+    margin-bottom: -1px;
 }
 
 #time_bar QPushButton {
@@ -326,10 +324,11 @@ QScrollArea, #timeline_toolbar {
 
 #time_label {
     color: #F5F5F5;
+    font-size: 12px;
     background: #212D40;
     border: 2px solid #364156;
-    border-bottom: none;
-    border-right: none;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
 }
 
 /* FILEMANAGER */
@@ -337,12 +336,18 @@ QScrollArea, #timeline_toolbar {
     background-color: #212D40;
     border: 1px solid #364156;
 }
+
+#filemanager_frame {
+    margin-bottom: -1px;
+}
+
 #list_widget {
     border-top: none;
     show-decoration-selected: 1;
 }
 #list_widget::item {
     color: white;
+    width: 100px;
     padding: 5px;
     border: 1px solid transparent;
 }

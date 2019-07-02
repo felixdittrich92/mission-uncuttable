@@ -41,12 +41,14 @@ class TimeBar(SizeLinkableFrame):
         needle.update_player(pos.x())
 
     def paintEvent(self, e):
+        """
+        Overrides the paint event and draws lines on the time_bar.
+
+        :param e: EventHandler
+        """
         self.__qp.begin(self)
-
         __pen = QPen(self.__color, LINE_WIDTH, Qt.SolidLine)
-
         self.__qp.setPen(__pen)
-
 
         x = 5
         counter = 0
@@ -61,6 +63,12 @@ class TimeBar(SizeLinkableFrame):
         self.__qp.end()
 
     def draw_line(self, x, long_line):
+        """
+        Draws a line on the time_bar, depending on its length type.
+
+        :param x: Integer - x coordinate for placement
+        :param long_line: Boolean - True or False, whether it is a long line or not.
+        """
         if long_line:
             starting_point = QPoint(x, int((self.height() / 3)))
         else:

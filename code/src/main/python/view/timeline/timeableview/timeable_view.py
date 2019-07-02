@@ -13,6 +13,7 @@ import openshot
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
 TIMEABLE_COLOR = "#AE6759"
+TIMEABLE_BORDER_COLOR = "#2F2F2F"
 
 HANDLE_LEFT = 1
 HANDLE_RIGHT = 2
@@ -86,12 +87,13 @@ class TimeableView(QGraphicsRectItem):
         Overwritten Qt Function that defines the outer bounds
         of the item as a rectangle.
         """
-        return QRectF(QRectF(0, 0, self.width, self.height))
+        return QRectF(QRectF(0, 0, self.width, self.height - 3.0))
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
         brush = QBrush(QColor(TIMEABLE_COLOR))
         painter.setBrush(brush)
+        painter.setPen(QColor(TIMEABLE_BORDER_COLOR))
         painter.drawRect(self.rect())
 
         # show thumbnail if there is enough space
@@ -130,7 +132,7 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(QSize(100, self.height), Qt.KeepAspectRatio)
+            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
         else:
             self.pixmap = None
 
