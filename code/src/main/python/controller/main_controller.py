@@ -41,6 +41,9 @@ class MainController:
 
         self.name_line_edit = self.__start_view.findChild(QWidget, "name_line_edit")
 
+        listview = self.__start_view.findChild(QWidget, "projects_list_view")
+        listview.doubleClicked.connect(self.__load_project)
+
     def start(self):
         """Calls show() of StartView"""
         self.__start_view.show()
