@@ -181,5 +181,5 @@ class AutocutController:
             filemanager.addFileNames(pic)
 
         self.__autocut_view.close()
-        video_editor_controller.start()
         video_editor_controller.new_project(os.path.join(self.project_path, self.project_name, self.filename))
+        video_editor_controller.start()
