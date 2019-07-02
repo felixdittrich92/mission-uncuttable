@@ -59,14 +59,13 @@ class MainController:
 
         :param filepath: String: Path to the project file
         """
-
-        self.__start_view.close()
         video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
         timeline_controller.create_default_tracks()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
-        self.__video_editor_controller.start()
         self.__video_editor_controller.new_project(filepath)
+        self.__start_view.close()
+        self.__video_editor_controller.start()
 
     def __start_autocut_controller(self, path, project_name, filename):
         """

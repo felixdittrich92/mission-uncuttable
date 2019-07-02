@@ -313,12 +313,18 @@ class TimeableView(QGraphicsRectItem):
         r = QRectF(pos, 0, self.width, self.height)
         colliding = self.scene().items(r)
         if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])) \
-                and not self.__controller.is_same_group(self, colliding[0]):
+                and not self.__controller.is_same_group(self.group_id,
+                                                        colliding[0].group_id):
             return False
 
         # move only if the new position is still inside the track
-        if pos < 0 or pos + self.width > self.scene().width():
+        if pos < 0:
             return False
+
+        # make track longer when new width is bigger than width
+        if pos + self.width > self.scene().width():
+            self.__controller.set_track_width(self.track_id, self.width + pos)
+            self.__controller.adjust_tracks()
 
         return True
 
