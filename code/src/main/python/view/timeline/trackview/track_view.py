@@ -136,7 +136,11 @@ class TrackView(QGraphicsView):
 
     def add_timeable(self, timeable):
         """ Adds a TimeableView to the GraphicsScene """
-        timeable.model.set_layer(self.num)
+        if self.is_video:
+            timeable.model.set_layer(self.num)
+        else:
+            timeable.model.set_layer(0)
+
         self.scene().addItem(timeable)
         self.update_player()
 
