@@ -109,6 +109,11 @@ class FilemanagerController:
             QApplication.processEvents()
         elif file is not None and file.upper().endswith(('.PDF')):
             presentation = Presentation(file)
+            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files')):
+                try:
+                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files'))
+                except OSError:
+                    pass
 
             self.pictures = presentation.convert_pdf(self.project_path,
                                                          os.path.join(self.project_name, "files"),
