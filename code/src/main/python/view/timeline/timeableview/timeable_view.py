@@ -1,6 +1,6 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
-from PyQt5.QtGui import QBrush, QColor, QDrag
+from PyQt5.QtGui import QBrush, QColor, QDrag, QPixmap
 from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
@@ -9,6 +9,7 @@ from config import Language, Resources
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
 import openshot
+import os
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
@@ -43,7 +44,7 @@ class TimeableView(QGraphicsRectItem):
         """
         super(TimeableView, self).__init__(parent)
 
-        self.model = model
+        self.model = model 
         self.model.add_to_timeline()
 
         self.name = name
@@ -132,7 +133,12 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+            if self.model.is_video or (self.model.is_video is None):
+                
+                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+            else:
+                px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
+                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)   
         else:
             self.pixmap = None
 
@@ -378,6 +384,10 @@ class TimeableView(QGraphicsRectItem):
 
         mimeData = QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
+        if self.model.is_video:
+            mimeData.setText("is_video")
+        else:
+            mimeData.setText("is_audio")
 
         # set first frame as pixmap
         frame = self.model.get_first_frame()

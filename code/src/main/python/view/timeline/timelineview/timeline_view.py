@@ -114,7 +114,7 @@ class TimelineView(QFrame):
         if is_empty is not True:
             newtracknum = lastrack+1
             name = "Audio"+str(newtracknum)
-            self.create_audio_track(name,1000,50,newtracknum)
+            self.create_audio_track(name,1000,50,newtracknum, 1)
             track = self.tracks[newtracknum]
 
         x_pos = x_pos - mouse_pos
@@ -129,7 +129,6 @@ class TimelineView(QFrame):
    
         if is_drag:
             track.current_timeable = timeable
-            track.current_timeable2 = TimelineController.get_instance().get_timeable_by_id(id2)
         
 
         # add timeable to dict
