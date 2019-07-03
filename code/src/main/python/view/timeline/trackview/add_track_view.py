@@ -2,7 +2,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import (QDialog, QPushButton, QDialogButtonBox, QRadioButton,
                              QLineEdit)
 
-from config import Resources
+from config import Resources, Language
 
 
 class AddTrackView(QDialog):
@@ -24,3 +24,5 @@ class AddTrackView(QDialog):
         self.audio_button = self.findChild(QRadioButton, "audio_button")
 
         self.name_edit = self.findChild(QLineEdit, "name_edit")
+
+        self.setWindowTitle(str(Language.current.track.add))
