@@ -12,8 +12,8 @@ TIMELINE_DEFAULT_SETTINGS = {
         "num": 25,
         "den": 1
     },
-    "width": 1920,
-    "height": 1080,
+    "width": 1280,
+    "height": 720,
     "sample_rate": 48000,
     "channels": 2,
     "channel_layout": 3
@@ -100,6 +100,10 @@ class TimelineModel:
         project = Project.get_instance()
         if not project.changed:
             project.changed = True
+
+    def update_duration(self):
+        new_duration = self.get_last_frame() / self.get_fps()
+        self.change("update", ["duration"], new_duration)
 
     def create_group(self, group_id, timeables):
         """
