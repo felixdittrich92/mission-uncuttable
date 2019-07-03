@@ -11,9 +11,10 @@ class AddTrackView(QDialog):
     def __init__(self, parent=None):
         super(AddTrackView, self).__init__(parent)
         uic.loadUi(Resources.files.add_track_view, self)
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         self.add_button = QPushButton("Ok")
-        # self.add_button.setObjectName("add_button")
+        self.add_button.setObjectName("ok_button")
         self.button_box.addButton(self.add_button, QDialogButtonBox.AcceptRole)
 
         self.cancel_button = QPushButton("Cancel")

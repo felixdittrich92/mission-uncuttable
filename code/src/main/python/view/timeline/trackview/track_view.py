@@ -8,7 +8,7 @@ from model.data import TimeableModel
 from model.project import Project
 from controller import TimelineController, AddTrackController
 from util.timeline_utils import generate_id
-from config import Language
+from config import Language, Resources
 
 
 class TrackView(QGraphicsView):
@@ -79,6 +79,7 @@ class TrackView(QGraphicsView):
     def on_context_menu(self, point):
         """ shows a menu on rightclick """
         button_menu = QMenu()
+        button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         delete = QAction(str(Language.current.track.delete))
         button_menu.addAction(delete)

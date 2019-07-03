@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphi
 
 from controller import TimelineController
 from model.data import FileType
-from config import Language
+from config import Language, Resources
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
 import openshot
@@ -150,6 +150,8 @@ class TimeableView(QGraphicsRectItem):
         event.accept()
 
         menu = QMenu()
+        menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
 
         delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
