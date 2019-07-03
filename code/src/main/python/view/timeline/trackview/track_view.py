@@ -1,6 +1,6 @@
 import os
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu, QApplication
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
 from .add_track_view import AddTrackView
@@ -118,6 +118,8 @@ class TrackView(QGraphicsView):
         """ Toggles the Overlay state of this Track. """
         self.is_overlay = not self.is_overlay
         self.__controller.set_track_overlay(self.num, self.is_overlay)
+
+        QApplication.processEvents()
 
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
