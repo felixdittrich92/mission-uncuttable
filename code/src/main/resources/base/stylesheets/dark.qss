@@ -559,3 +559,12 @@ QDialog QRadioButton::indicator {
     width: 13px;
     height: 13px;
 }
+
+QRadioButton::indicator::checked{
+    border: 3px solid;
+    border-color: white;
+    border-radius: 6px;
+    background-color: #000000;
+    width: 7px;
+    height: 7px;
+}
