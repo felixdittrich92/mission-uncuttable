@@ -223,10 +223,14 @@ class TimeableView(QGraphicsRectItem):
 
         pos = needle.x()
 
+        if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
+            return
+
         # do nothing if the Timeneedle is not on this Timeable
         if not self.scene().itemAt(QPoint(pos, 0), QTransform()) is self:
             return
 
+        pos -= self.x_pos
         self.__controller.split_timeable(self.view_id, self.resizable_right,
                                          self.width, self.model.clip.End(), pos)
 
