@@ -154,17 +154,17 @@ class TimeableView(QGraphicsRectItem):
         menu = QMenu()
         menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
-        delete = QAction(str(Language.current.timeable.delete))
-        menu.addAction(delete)
-        delete.triggered.connect(lambda: self.delete(hist=True))
+        cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
+        menu.addAction(cut_timeneedle)
+        cut_timeneedle.triggered.connect(self.cut_timeneedle)
 
         cut_here = QAction(str(Language.current.timeable.cut_here))
         menu.addAction(cut_here)
         cut_here.triggered.connect(lambda: self.cut_here(event.pos().x()))
 
-        cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
-        menu.addAction(cut_timeneedle)
-        cut_timeneedle.triggered.connect(self.cut_timeneedle)
+        delete = QAction(str(Language.current.timeable.delete))
+        menu.addAction(delete)
+        delete.triggered.connect(lambda: self.delete(hist=True))
 
         settings = QAction(str(Language.current.timeable.settings))
         menu.addAction(settings)
