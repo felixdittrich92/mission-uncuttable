@@ -55,7 +55,8 @@
     </filemanager>
     <timeable>
         <delete>delete</delete>
-        <cut>cut</cut>
+        <cut_here>cut here</cut_here>
+        <cut_timeneedle>cut at timeneedle</cut_timeneedle>
         <settings>settings</settings>
         <group_remove>remove from group</group_remove>
     </timeable>
