@@ -1,6 +1,5 @@
 import json
 import os
-from collections import namedtuple
 
 import cv2
 
@@ -113,10 +112,18 @@ class FilemanagerController:
             print("The file exist")
             return
 
-        if file is not None and file.upper().endswith(('.JPG', '.PNG')):
-            pixmap = QPixmap(file)
-            QApplication.processEvents()
-        elif file is not None and file.upper().endswith(('.PDF')):
+        if file is None:
+            name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog',
+                                                'Bitte einen Namen eingeben:')
+            if result is True:
+                file = Folder(name)
+            else:
+                return
+
+        elif file.upper().endswith(('.JPG', '.PNG', 'MP4', '.MP3', '.WAV')):
+            pass
+
+        elif file.upper().endswith(('.PDF')):
             filename = os.path.split(file)
             filename = filename[-1]
             filename = filename[:-4]
@@ -138,38 +145,6 @@ class FilemanagerController:
             self.file_list.append(folder)
             self.update_file_list(self.get_current_file_list())
             return
-
-        elif file is not None and file.upper().endswith('.MP4'):
-            video_input_path = file
-            cap = cv2.VideoCapture(str(video_input_path))
-
-            ret, frame = cap.read()
-            if not ret:
-                return
-            else:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-                height, width, channel = frame.shape
-                q_img = QImage(frame.data, width, height, 3 * width, QImage.Format_RGB888)
-                pixmap = QPixmap.fromImage(q_img)
-
-            cap.release()
-
-        elif file is not None and file.upper().endswith(('.MP3', '*.WAV')):
-            path = Resources.images.media_symbols
-            filename = "mp3.png"
-            path_to_file = os.path.join(path, filename)
-            pixmap = QPixmap(path_to_file)
-
-        elif file is None:
-            image = Resources.images.folder_icon
-            pixmap = QPixmap(image)
-
-            name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog', 'Bitte einen Namen eingeben:')
-            if result is True:
-                file = Folder(name)
-            else:
-                return
 
         else:
             print("The datatype is not supported")
