@@ -263,6 +263,11 @@ class FilemanagerController:
 
         self.addFileNames(None)
 
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+            self.__filemanager_view.changed.emit()
+
     def handle_double_click(self, item):
         """
         Detects a doubleclick on a folder and opens the folder.
