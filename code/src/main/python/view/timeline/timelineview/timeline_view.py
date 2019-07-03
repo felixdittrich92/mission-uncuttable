@@ -116,7 +116,7 @@ class TimelineView(QFrame):
         if is_empty is not True:
             newtracknum = lastrack+1
             name = "Audio"+str(newtracknum)
-            self.create_audio_track(name,1000,10,newtracknum)
+            self.create_audio_track(name,1000,50,newtracknum)
             track = self.tracks[newtracknum]
 
         x_pos = x_pos - mouse_pos
