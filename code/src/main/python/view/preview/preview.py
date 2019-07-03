@@ -39,7 +39,7 @@ class PreviewView(classmaker(QWidget, View)):
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
         uic.loadUi(Resources.files.preview_view, self)
-
+        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         self.video_running = False
 
         #get timelinemlodel, timeline
@@ -97,8 +97,6 @@ class PreviewView(classmaker(QWidget, View)):
         self.forward_button.released.connect(self.stop_loop)
         self.progress_slider.sliderMoved.connect(self.change_progress_bar)
         self.looprunning = False
-
-        # self.update_time_label()
 
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
@@ -261,4 +259,5 @@ class PreviewView(classmaker(QWidget, View)):
         self.update_time_label()
 
     def refresh(self):
-        pass
+        self.update()
+        print('refresh preview')

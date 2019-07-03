@@ -53,3 +53,4 @@ class FilemanagerView(classmaker(QWidget, View)):
     
     def refresh(self):
         self.update()
+        print('refresh filemanager')

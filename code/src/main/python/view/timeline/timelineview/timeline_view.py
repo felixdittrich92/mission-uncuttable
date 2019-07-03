@@ -130,3 +130,4 @@ class TimelineView(classmaker(QFrame, View)):
 
     def refresh(self):
         pass
+        print('refresh timeline')

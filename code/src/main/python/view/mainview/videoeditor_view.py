@@ -6,9 +6,10 @@ from config import Resources, Language
 from view.preview.preview import PreviewView
 from view.timeline.timelineview import TimelineView
 from controller import TimelineController
+from ..view import View
+from util.classmaker import classmaker
 
-
-class VideoEditorView(QMainWindow):
+class VideoEditorView(classmaker(QMainWindow, View)):
     """A class used as the View for the video-editor window."""
     def __init__(self, parent=None):
         """Loads the UI-file and the shortcuts."""
@@ -129,10 +130,22 @@ class VideoEditorView(QMainWindow):
             self.timeline_view.show()
             self.filemanager_view.show()
             self.fullscreen = False
-    
+
+        self.refresh()
+
     def connect_update(self):
         PreviewView.get_instance().update_information()
 
     def update_window(self):
         self.update()
     
+    def refresh(self):
+        pass
+        '''refresh Videoeditor_View'''
+        
+        '''Timeline refresh'''
+        self.timeline_view.refresh()
+        '''Preview refresh'''
+        self.previewview.refresh()
+        '''Filemanager refresh'''
+        self.filemanager_view.refresh()
