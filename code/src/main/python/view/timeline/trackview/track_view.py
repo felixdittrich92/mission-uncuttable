@@ -89,13 +89,14 @@ class TrackView(QGraphicsView):
         button_menu.addAction(add)
         add.triggered.connect(self.add)
 
-        overlay = QAction(str(Language.current.track.overlay))
-        overlay.setCheckable(True)
-        if self.is_overlay:
-            overlay.setChecked(True)
+        if self.is_video:
+            overlay = QAction(str(Language.current.track.overlay))
+            overlay.setCheckable(True)
+            if self.is_overlay:
+                overlay.setChecked(True)
 
-        button_menu.addAction(overlay)
-        overlay.changed.connect(self.overlay_toggle)
+            button_menu.addAction(overlay)
+            overlay.changed.connect(self.overlay_toggle)
 
         button_menu.exec_(self.button.mapToGlobal(point) + QPoint(10, 0))
 
