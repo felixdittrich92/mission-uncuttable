@@ -210,6 +210,7 @@ class TrackView(QGraphicsView):
             res_left = timeable.resizable_left
             res_right = timeable.resizable_right
             file_name = timeable.model.file_name
+            old_pos = timeable.x_pos
 
 
 
@@ -232,6 +233,9 @@ class TrackView(QGraphicsView):
             self.drag_from_track = True
 
             if group_id is not None:
+                new_pos = -(old_pos - (start_pos - pos))
+                self.__controller.remove_timeable_from_group(group_id, view_id)
+                self.__controller.try_group_move(group_id,new_pos)
                 self.__controller.add_timeable_to_group(group_id, new_id)
 
             # set item_dropped to True because the timeable was succesfully created
@@ -243,7 +247,6 @@ class TrackView(QGraphicsView):
         self.current_timeable.move_on_track(pos)
 
     def dragEnterEvent(self, event):
-
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
             if self.is_video:

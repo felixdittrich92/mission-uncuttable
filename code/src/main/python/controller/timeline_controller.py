@@ -416,6 +416,7 @@ class TimelineController:
         @param diff: the difference between the old and new position of the timeables
         @return: Nothing
         """
+
         try:
             group = self.get_group_by_id(group_id)
             if group.is_move_possible(diff):
