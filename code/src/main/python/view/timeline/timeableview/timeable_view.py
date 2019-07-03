@@ -354,7 +354,6 @@ class TimeableView(QGraphicsRectItem):
         # make track longer when new width is bigger than width
         if pos + self.width > self.scene().width():
             self.__controller.set_track_width(self.track_id, self.width + pos)
-            self.__controller.adjust_tracks()
 
         return True
 

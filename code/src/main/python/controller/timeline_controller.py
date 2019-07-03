@@ -208,6 +208,7 @@ class TimelineController:
         try:
             track = self.__timeline_view.tracks[track_id]
             track.set_width(new_width)
+            self.adjust_tracks()
         except KeyError:
             pass
 
