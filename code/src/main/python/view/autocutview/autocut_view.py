@@ -13,6 +13,7 @@ class AutocutView(QMainWindow):
         uic.loadUi(Resources.files.autocut_view, self)
 
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+        self.setFixedSize(self.size())
 
         self.setStyleSheet(
             open(Resources.files.qss_dark, "r").read())

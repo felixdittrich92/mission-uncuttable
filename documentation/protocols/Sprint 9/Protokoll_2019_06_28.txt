@@ -1,0 +1,64 @@
+Datum
+28.06.2019
+
+Maximilian Fornacon
+
+Art des Treffens 
+Reguläres Treffen + Retrospektive (auch vom vorherigen Sprint)
+
+Sprint Nummer
+Sprint 9
+
+Fehlende Personen
+Valentin, Tim, Julian
+
+Zusammenfassung
+Besprechung Organisatorisches für die Messe
+
+
+
+
+Reguläres Treffen
+	
+	Was jeder Gemacht hat?
+	Clemens: - ungespeicherter Fortschritt wird angezeigt
+		- Progressbar im Export Fenster
+		- Bugfixes
+
+	Markus: - Timelinezoom begonnen
+		- Dokumentation
+
+	Johannes: - Textoverlay begonnn
+	
+	Alex: -	Fortschritt Audiospur UI und Funktion
+	
+	Max: - Messeplakat
+		- Timebarskala
+		- Exportfenster styling
+		- inactive state für buttons
+		- Begonnen: Ordner im Filemanager
+
+	Felix: - Benutzerhandbuch
+		- Entwicklerdokumentation für AutoCut
+		- Autocut neue Werte
+		- 
+	
+	Woran er noch weiter arbeiten will?
+	Clemens: - Gruppierung von Timeables in der Timeline
+	Markus: - Timelinezoom
+	Johannes: - Textoverlay
+	Alex: - Audiospur abteilen
+	Max: Ordner
+	Felix: Weiter Autocutanpassung
+	
+Retro
+
+	Was ist gut gelaufen?
+	
+	Jeder ist ein Experte in seinem Gebiet und daher kommen gute Fortschritte
+			
+	Was ist schlecht gelaufen?
+	zu wenig Kommunikation
+
+	Wie können wir es besser machen / To-Do-Liste?
+	Mehr Programmiertreffen

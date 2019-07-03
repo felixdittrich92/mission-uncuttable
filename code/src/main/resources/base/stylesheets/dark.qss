@@ -57,51 +57,53 @@ QPushButton:pressed {
 
 QPushButton:disabled{
     border: 1px solid #364156;
-    background: transparent;
-    color: #364156;
+    background: #2c3546;
+    color: #838392;
 }
 
 /* BLUE BUTTONS */
 
 #new_project_button,
 #saveButton,
-#pushButton_2,
+#pick_files_button,
 #auto_cut_button,
 #ok_button,
-#export_button{
+#export_button,
+#new_folder_button {
     background: #4586B1;
     border: 1px solid #364156;
 }
 
 #new_project_button:hover,
 #saveButton:hover,
-#pushButton_2:hover,
+#pick_files_button:hover,
 #auto_cut_button:hover,
 #ok_button:hover,
-#export_button:hover{
+#export_button:hover,
+#new_folder_button:hover {
     border-width: 2px;
     border-color: #88ABDB;
 }
 
 #new_project_button:pressed,
 #saveButton:pressed,
-#pushButton_2:pressed,
+#pick_files_button:pressed,
 #auto_cut_button:pressed,
 #ok_button:pressed,
-#export_button:pressed{
+#export_button:pressed,
+#new_folder_button:pressed {
     border: 1px solid #4E637F;
     background: #34698c;
 }
 
 #new_project_button:disabled,
 #saveButton:disabled,
-#pushButton_2:disabled,
+#pick_files_button:disabled,
 #auto_cut_button:disabled,
 #ok_button:disabled,
-#export_button:disabled{
+#export_button:disabled,
+#new_folder_button:disabled {
     border: 1px solid #364156;
-    background: transparent;
-    color: #364156;
 }
 
 /* MENU */
@@ -241,29 +243,26 @@ QScrollArea, #timeline_toolbar {
     /* track frames */
 
 #track_frame_frame {
-    background: #11151C;
-    margin-left: -1px;
-    margin-top: -1px;
+    background: #364156;
 }
 
 #audio_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
     margin-left: -1px;
-    margin-top: -1px;
     padding-left: 5px;
 }
 
 #audio_track_frame{
-    margin-top: 10px;
     border: 1px solid #364156;
+    border-top-width: 3px;
+
 }
 
 #video_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
-    margin-left: -1px;
-    margin-top: -1px;
+    border-right: none;
     padding-left: 5px;
 }
 
@@ -281,8 +280,9 @@ QScrollArea, #timeline_toolbar {
 }
 
 #track_button_audio {
+    border-top: none;
+    border-bottom-width: 2px;
     background: #4586B1;
-    border: 1px solid #364156;
 }
 
     /* track button frames */
@@ -291,12 +291,13 @@ QScrollArea, #timeline_toolbar {
     background:#11151C;
 }
 
-#video_track_button_frame, #audio_track_button_frame{
+#video_track_button_frame,
+#audio_track_button_frame{
     background: #212D40;
 }
 
 #audio_track_button_frame{
-    margin-top: 10px;
+    border-top: 4px solid #364156;
 }
 
     /* time bar */
@@ -304,13 +305,14 @@ QScrollArea, #timeline_toolbar {
 #time_bar_scroll_area {
     margin-right: 10px;
     border-left: none;
-    margin-left: -1px;
 }
 
 #time_bar {
     background: #212D40;
     border: 1px solid #364156;
+    border-right-width: 2px;
     border-bottom: none;
+    margin-bottom: -1px;
 }
 
 #time_bar QPushButton {
@@ -322,10 +324,11 @@ QScrollArea, #timeline_toolbar {
 
 #time_label {
     color: #F5F5F5;
+    font-size: 12px;
     background: #212D40;
     border: 2px solid #364156;
-    border-bottom: none;
-    border-right: none;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
 }
 
 /* FILEMANAGER */
@@ -333,12 +336,18 @@ QScrollArea, #timeline_toolbar {
     background-color: #212D40;
     border: 1px solid #364156;
 }
+
+#filemanager_frame {
+    margin-bottom: -1px;
+}
+
 #list_widget {
     border-top: none;
     show-decoration-selected: 1;
 }
 #list_widget::item {
     color: white;
+    width: 100px;
     padding: 5px;
     border: 1px solid transparent;
 }
@@ -351,6 +360,9 @@ QScrollArea, #timeline_toolbar {
 
 #list_widget::item:hover {
     color: #D66853;
+}
+#breadcrumbs_label {
+    color: #F5F5F5;
 }
 
 
@@ -513,6 +525,10 @@ QProgressBar::chunk {
 
 /* EXPORT */
 
+#export_dialog {
+    background-color: #11151C;
+}
+
 #export_frame {
     background-color: #212D40;
     border: 1px solid #364156;
@@ -528,7 +544,18 @@ QProgressBar::chunk {
     color: #F5F5F5;
 }
 
-/* UNSAVED CHANGES WARNING */
-QMessageBox::question QLabel {
+/* Dialogs and Messageboxes */
+
+QMessageBox, QDialog {
+    background-color: #212D40;
+}
+
+QMessageBox::question QLabel, QDialog QLabel, QDialog QRadioButton{
     color: #F5F5F5;
+}
+
+QDialog QRadioButton::indicator {
+    color: #1f1e1e;
+    width: 13px;
+    height: 13px;
 }

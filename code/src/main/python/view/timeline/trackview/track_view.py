@@ -1,12 +1,14 @@
 import os
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
-from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
+from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
+from .add_track_view import AddTrackView
 from model.data import TimeableModel
 from model.project import Project
-from controller import TimelineController
+from controller import TimelineController, AddTrackController
 from util.timeline_utils import generate_id
+from config import Language, Resources
 
 
 class TrackView(QGraphicsView):
@@ -15,7 +17,8 @@ class TrackView(QGraphicsView):
     with other TrackViews. The TrackView can hold Timeables.
     """
 
-    def __init__(self, width, height, num, name, button, is_video, is_overlay=False, parent=None):
+    def __init__(self, width, height, num, name, button, is_video,
+                 is_overlay=False, parent=None):
         """
         Creates TrackView with fixed width and height. The width and height should be
         the same for all TrackViews.
@@ -35,12 +38,18 @@ class TrackView(QGraphicsView):
         self.is_overlay = is_overlay
         self.is_video = is_video
 
+        # set button context menu policy so you can get a rightclick menu on the button
+        self.button.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.button.customContextMenuRequested.connect(self.on_context_menu)
+
         # for drag and drop handling
         self.item_dropped = False
         self.current_timeable = None
         self.current_timeable2 = None
         self.drag_from_track = False
         self.dragged_timeable_id = None
+
+        self.__controller = TimelineController.get_instance()
 
         self.setAcceptDrops(True)
 
@@ -68,8 +77,48 @@ class TrackView(QGraphicsView):
             "type": self.is_video,
         }
 
+    def on_context_menu(self, point):
+        """ shows a menu on rightclick """
+        button_menu = QMenu()
+        button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
+        delete = QAction(str(Language.current.track.delete))
+        button_menu.addAction(delete)
+        delete.triggered.connect(self.delete)
+
+        add = QAction(str(Language.current.track.add))
+        button_menu.addAction(add)
+        add.triggered.connect(self.add)
+
+        button_menu.exec_(self.button.mapToGlobal(point) + QPoint(10, 0))
+
+    def add(self):
+        """
+        Calls the TimelineController to add a track
+        This method is only for the context menu on the track button
+        """
+        view = AddTrackView()
+        AddTrackController(self.__controller, view).start()
+
+    def delete(self):
+        """
+        Calls the TimelineController to removes this track.
+        This method is only for the context menu on the track button
+        """
+        self.__controller.delete_track(self.num)
+
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
+        pass
+
+    def keyPressEvent(self, event):
+        """
+        Overrides wheelEvent from QGraphicsView to prevent scrolling in a
+        track. If a keyPressEvent should occur it needs to be explicitly
+        handled here.
+
+        :param event: Event
+        """
         pass
 
     def resize(self):
@@ -89,7 +138,11 @@ class TrackView(QGraphicsView):
 
     def add_timeable(self, timeable):
         """ Adds a TimeableView to the GraphicsScene """
-        timeable.model.set_layer(self.num)
+        if self.is_video:
+            timeable.model.set_layer(self.num)
+        else:
+            timeable.model.set_layer(0)
+
         self.scene().addItem(timeable)
         self.update_player()
 
@@ -113,17 +166,8 @@ class TrackView(QGraphicsView):
             model.set_end(width)
             clip_id = generate_id()
             name = os.path.basename(path)
-            id2 = generate_id()
-            TimelineController.get_instance().create_timeable(None, name, width,
-                                                              x_pos, model, id2, id2=clip_id,
-                                                              is_drag=True)
-                                                              
-            TimelineController.get_instance().create_timeable(self.num, name, width,
-                                                              x_pos, model, clip_id, id2=id2,
-                                                              is_drag=True)
-
-
-                                                              
+            self.__controller.create_timeable(self.num, name, width, x_pos,
+                                              model, generate_id(), is_drag=True)
             self.item_dropped = True
 
 
@@ -134,8 +178,7 @@ class TrackView(QGraphicsView):
         stream = QDataStream(item_data, QIODevice.ReadOnly)
 
         view_id = QDataStream.readString(stream).decode()
-        timeable = TimelineController.get_instance().get_timeable_by_id(view_id)
-        
+        timeable = self.__controller.get_timeable_by_id(view_id)
 
         self.dragged_timeable_id = view_id
 
@@ -170,11 +213,9 @@ class TrackView(QGraphicsView):
             model.move(start_pos - pos)
 
             # add the timeable to the track
-            controller = TimelineController.get_instance()
-            controller.create_timeable(self.num, name, width, start_pos, model,
-                                       generate_id(), id2=id2, res_left=res_left,
-                                       res_right=res_right, mouse_pos=pos, hist=False,
-                                       is_drag=True)
+            self.__controller.create_timeable(
+                self.num, name, width, start_pos, model, generate_id(), res_left=res_left,
+                res_right=res_right, mouse_pos=pos, hist=False, is_drag=True)
             self.drag_from_track = True
 
             # set item_dropped to True because the timeable was succesfully created

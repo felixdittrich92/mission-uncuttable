@@ -8,6 +8,7 @@ files = {
     "export_view": "ui/export.ui",
     "timeline_scrollarea_view": "ui/timeline_scroll_area.ui",
     "timeline_view": "ui/timeline_view.ui",
+    "add_track_view": "ui/add_track.ui",
     "autocut_view": "ui/autocut.ui",
     "decision_widget": "ui/new_project_decision.ui",
     "select_project_widget": "ui/select_project.ui",
@@ -24,6 +25,7 @@ images = {
     "forward_button": "images/buttons/step_forward.png",
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
+    "folder_icon": "images/folder.svg",
     "cross": "images/cross.svg",
     "tick": "images/tick.svg",
     "logo_with_name": "images/artwork/logo neu_mit Schrift_blau.png"

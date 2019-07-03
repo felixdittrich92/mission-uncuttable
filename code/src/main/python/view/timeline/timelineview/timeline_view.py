@@ -47,29 +47,27 @@ class TimelineView(QFrame):
         self.timeables = dict()
         self.tracks = dict()
 
-        self.__show_debug_info_on_gui()
-
-    def create_video_track(self, name, width, height, num, is_overlay=False):
+    def create_video_track(self, name, width, height, num, index, is_overlay):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
-        self.video_track_button_frame.add_button(btn, True)
+        self.video_track_button_frame.add_button(btn, True, index)
 
         track = TrackView(width, height, num, name, btn, True, is_overlay)
         self.tracks[num] = track
 
-        self.video_track_frame.add_track(track)
+        self.video_track_frame.add_track(track, index)
 
         self.adjust_track_sizes()
 
-    def create_audio_track(self, name, width, height, num):
+    def create_audio_track(self, name, width, height, num, index):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
-        self.audio_track_button_frame.add_button(btn, False)
+        self.audio_track_button_frame.add_button(btn, False, index)
 
         track = TrackView(width, height, num, name, btn, False)
         self.tracks[num] = track
 
-        self.audio_track_frame.add_track(track)
+        self.audio_track_frame.add_track(track, index)
 
         self.adjust_track_sizes()
 
@@ -89,8 +87,8 @@ class TimelineView(QFrame):
         for t in track_views:
             t.set_width(max_width)
 
-    def create_timeable(self, track_id, name, width, x_pos, model, id, id2=None,
-                        res_left=0, res_right=0, mouse_pos=0, is_drag=False):
+    def create_timeable(self, track_id, name, width, x_pos, model, id,
+                        res_left, res_right, group, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
         is_empty = False
         lastrack = None
@@ -125,7 +123,7 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id, id2)
+                                model, id, track_id, group_id=group)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
    
@@ -147,27 +145,41 @@ class TimelineView(QFrame):
         timeable.remove_from_scene()
         self.timeables.pop(id, None)
 
-    def set_timeable_name(self, id, name):
-        pass
+    def get_selected_timeables(self):
+        """ Returns a list of all selected items in the timeline """
+        res = []
 
-    def set_timeable_start(self, id, frame):
-        pass
+        for t in self.tracks.values():
+            res.extend(t.scene().selectedItems())
 
-    def set_timeable_length(self, id, frames):
-        pass
+        return res
 
-    def set_timeable_selected(self, id, selected=True):
-        pass
+    def remove_all_tracks(self):
+        for track in self.tracks.values():
+            if track.is_video:
+                self.video_track_frame.remove_track(track)
+                self.video_track_button_frame.remove_button(track.button)
 
-    def set_timeable_picture(self, id, picture):
-        pass
+            else:
+                self.audio_track_frame.remove_track(track)
+                self.audio_track_button_frame.remove_button(track.button)
 
-    def __show_debug_info_on_gui(self):
-        """
-        Setup the component somehow so that something can be seen which
-        makes it possible to say if something works properly or not.
-        """
-        # self.setStyleSheet('background-color: yellow')
+    def remove_track(self, track_id):
+        """ Removes the TrackView with track_id """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            return
+
+        if track.is_video:
+            self.video_track_frame.remove_track(track)
+            self.video_track_button_frame.remove_button(track.button)
+
+        else:
+            self.audio_track_frame.remove_track(track)
+            self.audio_track_button_frame.remove_button(track.button)
+
+        self.tracks.pop(track_id, None)
 
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')

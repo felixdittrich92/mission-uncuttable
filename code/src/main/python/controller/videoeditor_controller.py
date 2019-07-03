@@ -1,5 +1,4 @@
 import json
-import sys
 import os
 
 from PyQt5.QtWidgets import QFileDialog
@@ -9,6 +8,7 @@ from .settings_controller import SettingsController
 from .projectsettings_controller import ProjectSettingsController
 from .timeline_controller import TimelineController
 from model.project import Project
+from model.data import TimelineModel
 from view.settingsview import SettingsView, ProjectSettingsView
 from view.exportview import ExportView
 from view.filemanagerview import FilemanagerView
@@ -76,12 +76,16 @@ class VideoEditorController:
         os._exit(1)
 
     def set_title_unsaved(self):
-        """ shows a star in the window title to indicate that there are unsaved changes """
-        self.__video_editor_view.setWindowTitle("UbiCut*")
+        """
+        Shows a star in the window title to indicate that there are unsaved changes.
+        """
+        name = Project.get_instance().get_project_name()
+        self.__video_editor_view.setWindowTitle("UbiCut - " + name + "*")
 
     def set_title_saved(self):
         """ shows UbiCut in the windowtitle """
-        self.__video_editor_view.setWindowTitle("UbiCut")
+        name = Project.get_instance().get_project_name()
+        self.__video_editor_view.setWindowTitle("UbiCut - " + name)
 
     def __start_settings_controller(self):
         """Opens the settings window"""
@@ -110,15 +114,15 @@ class VideoEditorController:
         """ Undo last action """
         try:
             self.__history.undo_last_operation()
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     def __start_redo(self):
         """ Redo last action """
         try:
             self.__history.redo_last_operation()
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     def __start_save(self):
         """ Save the Project """
@@ -174,7 +178,8 @@ class VideoEditorController:
         project_data = {
             "timeline": timeline_data,
             "filemanager": filemanager_data,
-            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings()
+            "projectsettings": Projectsettings.get_instance().get_dict_projectsettings(),
+            "groups": TimelineModel.get_instance().get_group_dict()
         }
 
         # write data

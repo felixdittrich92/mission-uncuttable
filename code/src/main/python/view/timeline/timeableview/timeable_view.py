@@ -1,11 +1,11 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QDialog, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
 from model.data import FileType
-from config import Language
+from config import Language, Resources
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
 import openshot
@@ -13,6 +13,7 @@ import openshot
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
 TIMEABLE_COLOR = "#AE6759"
+TIMEABLE_BORDER_COLOR = "#2F2F2F"
 
 HANDLE_LEFT = 1
 HANDLE_RIGHT = 2
@@ -31,7 +32,7 @@ class TimeableView(QGraphicsRectItem):
     update_previewplayer = pyqtSignal()
 
     def __init__(self, name, width, height, x_pos, res_left, res_right,
-                 model, view_id, track_id, id2=None, parent=None):
+                 model, view_id, track_id, group_id=None, parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -46,12 +47,13 @@ class TimeableView(QGraphicsRectItem):
         self.model.add_to_timeline()
 
         self.name = name
-        self.view_id = view_id
-        self.id2 = id2
-        self.track_id = track_id
         self.width = width
         self.height = height
         self.x_pos = x_pos
+
+        self.view_id = view_id
+        self.track_id = track_id
+        self.group_id = group_id
 
         self.__controller = TimelineController.get_instance()
 
@@ -85,12 +87,13 @@ class TimeableView(QGraphicsRectItem):
         Overwritten Qt Function that defines the outer bounds
         of the item as a rectangle.
         """
-        return QRectF(QRectF(0, 0, self.width, self.height))
+        return QRectF(QRectF(0, 0, self.width, self.height - 3.0))
 
     def paint(self, painter, option, widget):
         """overwritten Qt function that paints the item."""
         brush = QBrush(QColor(TIMEABLE_COLOR))
         painter.setBrush(brush)
+        painter.setPen(QColor(TIMEABLE_BORDER_COLOR))
         painter.drawRect(self.rect())
 
         # show thumbnail if there is enough space
@@ -117,6 +120,7 @@ class TimeableView(QGraphicsRectItem):
             "x_pos": self.x_pos,
             "view_id": self.view_id,
             "track_id": self.track_id,
+            "group_id": self.group_id,
             "model": self.model.get_info_dict()
         }
 
@@ -128,7 +132,7 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(QSize(100, self.height), Qt.KeepAspectRatio)
+            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
         else:
             self.pixmap = None
 
@@ -146,6 +150,8 @@ class TimeableView(QGraphicsRectItem):
         event.accept()
 
         menu = QMenu()
+        menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
 
         delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
@@ -158,6 +164,11 @@ class TimeableView(QGraphicsRectItem):
         settings = QAction(str(Language.current.timeable.settings))
         menu.addAction(settings)
         settings.triggered.connect(lambda: self.settings())
+
+        if self.group_id is not None:
+            remove_from_group = QAction(str(Language.current.timeable.group_remove))
+            menu.addAction(remove_from_group)
+            remove_from_group.triggered.connect(self.remove_from_group)
 
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
@@ -172,6 +183,13 @@ class TimeableView(QGraphicsRectItem):
         """ deletes the model from the timeline """
         self.__controller.delete_timeable(self.get_info_dict(),
                                           self.model.get_info_dict(), hist=hist)
+
+    def remove_from_group(self):
+        if self.group_id is None:
+            return
+
+        self.__controller.remove_timeable_from_group(self.group_id, self.view_id)
+        self.group_id = None
 
     def remove_from_scene(self):
         """ Removes the timeableview from the track """
@@ -275,6 +293,54 @@ class TimeableView(QGraphicsRectItem):
         self.setRect(self.boundingRect())
         self.update_handles_pos()
 
+    def is_move_possible_diff(self, diff):
+        """
+        Checks if timeable can be moved by value in diff.
+
+        @param diff: the difference between the x_pos before and after move.
+        @return: True if move is possible, False otherwhise.
+        """
+        pos = self.x_pos + diff
+
+        return self.is_move_possible_position(pos)
+
+    def is_move_possible_position(self, pos):
+        """
+        Checks if move to pos is possible.
+
+        @param pos: the position to which the timeable wants to be moved.
+        @return: True if move is possible, False otherwhise.
+        """
+        # check if theres another Timeable at the given position
+        r = QRectF(pos, 0, self.width, self.height)
+        colliding = self.scene().items(r)
+        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])) \
+                and not self.__controller.is_same_group(self.group_id,
+                                                        colliding[0].group_id):
+            return False
+
+        # move only if the new position is still inside the track
+        if pos < 0:
+            return False
+
+        # make track longer when new width is bigger than width
+        if pos + self.width > self.scene().width():
+            self.__controller.set_track_width(self.track_id, self.width + pos)
+            self.__controller.adjust_tracks()
+
+        return True
+
+    def do_move(self, pos):
+        """
+        Changes the position of the timeables view.
+
+        @param pos: the new x_pos.
+        @return: Nothing.
+        """
+        # self.x_pos = 0 if pos < 5 else pos
+        self.x_pos = pos
+        self.setPos(self.x_pos, 0)
+
     def move_on_track(self, pos):
         """
         called from mouseMoveEvent() when middle handle is selected
@@ -285,17 +351,13 @@ class TimeableView(QGraphicsRectItem):
 
         @param pos: the new x_pos of the timeable
         """
-        # check if theres another Timeable at the given position
-        r = QRectF(pos, 0, self.width, self.height)
-        colliding = self.scene().items(r)
-        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])):
-            return
+        if self.group_id is not None:
+            diff = pos - self.x_pos
+            self.__controller.try_group_move(self.group_id, diff)
 
-        # move only if the new position is still inside the track
-        if pos >= 0 and pos + self.width <= self.scene().width():
-            self.x_pos = 0 if pos < 5 else pos
-
-            self.setPos(self.x_pos, 0)
+        # make move if its possible
+        elif self.is_move_possible_position(pos):
+            self.do_move(pos)
 
         # model gets changed on mouseReleaseEvent
 
@@ -403,11 +465,12 @@ class TimeableView(QGraphicsRectItem):
 
         # update clip position if changed
         if self.x_pos != self.mouse_press_start_pos:
-            self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
-                                            self.x_pos)
-            if self.id2 is not None:
-                self.__controller.move_timeable(self.id2, self.mouse_press_start_pos,
-                                            self.x_pos)
+            if self.group_id is None:
+                self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
+                                                self.x_pos)
+            else:
+                diff = self.x_pos - self.mouse_press_start_pos
+                self.__controller.group_move_operation(self.group_id, diff)
 
         # trim start or end if resize happened
         if (self.resizable_right != self.infos_on_click["resizable_right"]
