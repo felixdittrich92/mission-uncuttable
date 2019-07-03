@@ -68,6 +68,7 @@
     <track>
       <delete>Delete Track</delete>
       <add>Add Track</add>
+      <overlay>Overlay Track</overlay>
     </track>
     <export>
         <windowtitle>Export Video</windowtitle>
