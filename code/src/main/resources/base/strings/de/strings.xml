@@ -50,26 +50,38 @@
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
+        <newFolderButton>neuer Ordner</newFolderButton>
+        <backButton>zurück</backButton>
     </filemanager>
     <timeable>
         <delete>löschen</delete>
-        <cut>schneiden</cut>
+        <cut_here>hier schneiden</cut_here>
+        <cut_timeneedle>bei Zeitnadel schneiden</cut_timeneedle>
         <settings>Einstellungen</settings>
+        <group_remove>aus Gruppe entfernen</group_remove>
     </timeable>
     <timeablesettings>
         <save>Speichern</save>
         <cancel>Abbrechen</cancel>
         <label>Aktuelle Lautstärke:</label>
     </timeablesettings>
+    <track>
+      <delete>Spur löschen</delete>
+      <add>Spur hinzufügen</add>
+    </track>
     <export>
+        <windowtitle>Video exportieren</windowtitle>
         <filename>Dateiname</filename>
         <folder>Ordner</folder>
+        <untitled>unbenannt</untitled>
         <format>Format</format>
         <resolution>Auflösung</resolution>
         <quality>Qualität</quality>
         <high>hoch</high>
         <medium>mittel</medium>
         <low>niedrig</low>
+        <export>Exportieren</export>
+        <cancel>Abbrechen</cancel>
     </export>
     <errors>
         <export>
@@ -91,6 +103,10 @@
             <msgboxtext>Der Ordner konnte bei dem angegebenen Pfad nicht erstellt werden.</msgboxtext>
             <msgboxinfotext>Bitte versuche einen anderen.</msgboxinfotext>
         </writeerror>
+        <unsaved>
+            <msgboxtitle>Es gibt ungespeicherte Änderungen</msgboxtitle>
+            <msgboxtext>Soll das Projekt gespeichert werden?</msgboxtext>
+        </unsaved>
     </errors>
     <autocut>
         <cancel>Abbrechen</cancel>

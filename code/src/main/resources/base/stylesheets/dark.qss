@@ -1,15 +1,10 @@
-QMainWindow, QMenuBar {
+QMainWindow, QMenuBar, QDialog {
     background-color: #11151C;
 
 }
 
 * {
     font-size: 14px;
-}
-
-QDialog {
-    background-color: #212D40;
-    color: rgb(214, 214, 214);
 }
 
 #current_volume {
@@ -60,33 +55,55 @@ QPushButton:pressed {
     color: rgb(214, 214, 214);
 }
 
+QPushButton:disabled{
+    border: 1px solid #364156;
+    background: #2c3546;
+    color: #838392;
+}
+
 /* BLUE BUTTONS */
 
 #new_project_button,
 #saveButton,
-#pushButton_2,
+#pick_files_button,
 #auto_cut_button,
-#ok_button {
+#ok_button,
+#export_button,
+#new_folder_button {
     background: #4586B1;
     border: 1px solid #364156;
 }
 
 #new_project_button:hover,
 #saveButton:hover,
-#pushButton_2:hover,
+#pick_files_button:hover,
 #auto_cut_button:hover,
-#ok_button:hover {
+#ok_button:hover,
+#export_button:hover,
+#new_folder_button:hover {
     border-width: 2px;
     border-color: #88ABDB;
 }
 
 #new_project_button:pressed,
 #saveButton:pressed,
-#pushButton_2:pressed,
+#pick_files_button:pressed,
 #auto_cut_button:pressed,
-#ok_button:pressed{
+#ok_button:pressed,
+#export_button:pressed,
+#new_folder_button:pressed {
     border: 1px solid #4E637F;
     background: #34698c;
+}
+
+#new_project_button:disabled,
+#saveButton:disabled,
+#pick_files_button:disabled,
+#auto_cut_button:disabled,
+#ok_button:disabled,
+#export_button:disabled,
+#new_folder_button:disabled {
+    border: 1px solid #364156;
 }
 
 /* MENU */
@@ -209,28 +226,49 @@ QScrollArea, #timeline_toolbar {
     border: 1px solid #364156;
 }
 
-#track_scroll_area {
+    /* scroll areas */
+
+#track_scroll_area{
     margin-bottom: 10px;
     margin-right: 10px;
     border-left: none;
     border-top: none;
 }
 
-#track_button_scroll_area {
+#track_button_scroll_area{
     margin-bottom: 10px;
     margin-right: -1px;
     margin-top: -1px;
 }
+    /* track frames */
 
-QScrollArea #track_frame QFrame{
+#track_frame_frame {
+    background: #364156;
+}
+
+#audio_track_frame QFrame{
     background: #212D40;
     border: 1px solid #364156;
     margin-left: -1px;
-    margin-top: -1px;
     padding-left: 5px;
 }
 
-#track_button, #track_button_light {
+#audio_track_frame{
+    border: 1px solid #364156;
+    border-top-width: 3px;
+
+}
+
+#video_track_frame QFrame{
+    background: #212D40;
+    border: 1px solid #364156;
+    border-right: none;
+    padding-left: 5px;
+}
+
+    /* track buttons */
+
+#track_button, #track_button_light, #track_button_audio {
     background: #7D4E57;
     border: 1px solid #364156;
     color: #F5F5F5;
@@ -241,16 +279,40 @@ QScrollArea #track_frame QFrame{
     background: #955F69;
 }
 
+#track_button_audio {
+    border-top: none;
+    border-bottom-width: 2px;
+    background: #4586B1;
+}
+
+    /* track button frames */
+
+#track_button_frame_frame {
+    background:#11151C;
+}
+
+#video_track_button_frame,
+#audio_track_button_frame{
+    background: #212D40;
+}
+
+#audio_track_button_frame{
+    border-top: 4px solid #364156;
+}
+
+    /* time bar */
+
 #time_bar_scroll_area {
     margin-right: 10px;
     border-left: none;
-    margin-left: -1px;
 }
 
 #time_bar {
     background: #212D40;
     border: 1px solid #364156;
+    border-right-width: 2px;
     border-bottom: none;
+    margin-bottom: -1px;
 }
 
 #time_bar QPushButton {
@@ -262,10 +324,11 @@ QScrollArea #track_frame QFrame{
 
 #time_label {
     color: #F5F5F5;
+    font-size: 12px;
     background: #212D40;
     border: 2px solid #364156;
-    border-bottom: none;
-    border-right: none;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
 }
 
 /* FILEMANAGER */
@@ -273,12 +336,18 @@ QScrollArea #track_frame QFrame{
     background-color: #212D40;
     border: 1px solid #364156;
 }
+
+#filemanager_frame {
+    margin-bottom: -1px;
+}
+
 #list_widget {
     border-top: none;
     show-decoration-selected: 1;
 }
 #list_widget::item {
     color: white;
+    width: 100px;
     padding: 5px;
     border: 1px solid transparent;
 }
@@ -291,6 +360,9 @@ QScrollArea #track_frame QFrame{
 
 #list_widget::item:hover {
     color: #D66853;
+}
+#breadcrumbs_label {
+    color: #F5F5F5;
 }
 
 
@@ -390,9 +462,6 @@ QComboBox::drop-down {
     border: none;
 }
 
-QComboBox::down-arrow {
-}
-
 /* START VIEW */
 
 #start_frame, #start_frame_2, #new_project_frame, #projects_list_view{
@@ -452,4 +521,50 @@ QProgressBar {
 QProgressBar::chunk {
     background-color: #D66853;
     width: 1px;
+}
+
+/* EXPORT */
+
+#export_dialog {
+    background-color: #11151C;
+}
+
+#export_frame {
+    background-color: #212D40;
+    border: 1px solid #364156;
+}
+
+#export_frame QLabel {
+    color: #F5F5F5;
+}
+
+#export_frame QComboBox QAbstractItemView{
+    border: 2px solid #364156;
+    background: #2A3649;
+    color: #F5F5F5;
+}
+
+/* Dialogs and Messageboxes */
+
+QMessageBox, QDialog {
+    background-color: #212D40;
+}
+
+QMessageBox::question QLabel, QDialog QLabel, QDialog QRadioButton{
+    color: #F5F5F5;
+}
+
+QDialog QRadioButton::indicator {
+    color: #1f1e1e;
+    width: 13px;
+    height: 13px;
+}
+
+QRadioButton::indicator::checked{
+    border: 3px solid;
+    border-color: white;
+    border-radius: 6px;
+    background-color: #000000;
+    width: 7px;
+    height: 7px;
 }

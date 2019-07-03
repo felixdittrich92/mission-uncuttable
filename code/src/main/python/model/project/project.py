@@ -1,3 +1,5 @@
+import os
+
 from .history import History
 
 
@@ -24,10 +26,15 @@ class Project:
         Project.__instance = self
 
         self.path = None
+        self.changed = False
         self.__history = History()
 
     def get_history(self):
         return self.__history
 
-    def save(self, filename, path):
-        pass
+    def get_project_name(self):
+        name = ""
+        if self.path is not None:
+            name = os.path.splitext(os.path.basename(self.path))[0]
+
+        return name

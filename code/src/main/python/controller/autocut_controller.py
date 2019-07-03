@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from autocut import VideoSplitter
 from autocut import Presentation
 from controller import VideoEditorController, TimelineController
+from model.folder import Folder
 from view import VideoEditorView
 from config import Settings
 from config import Language
@@ -104,13 +105,37 @@ class AutocutController:
         self.cancel_button.setEnabled(False)
         self.ok_button.setEnabled(False)
         QApplication.processEvents()
+
+        video_editor_view = VideoEditorView()
+        video_editor_controller = VideoEditorController(video_editor_view)
+        filemanager = video_editor_controller.get_filemanager_controller()
+
         try:
             if self.filename_pdf is not None:
+                filename = os.path.split(self.filename_pdf)
+                filename = filename[-1]
+                filename = filename[:-4]
+                folder = Folder(filename)
+
+                if not os.path.isdir(
+                        os.path.join(self.project_path, self.project_name,
+                                     'files', filename)):
+                    try:
+                        os.mkdir(
+                            os.path.join(self.project_path, self.project_name,
+                                         'files', filename))
+                    except OSError:
+                        pass
+
                 presentation = Presentation(self.filename_pdf)
                 self.textlabel.setText(str(Language.current.autocut.slidesprogressing))
                 self.pictures = presentation.convert_pdf(self.project_path,
-                                                         os.path.join(self.project_name, "files"),
+                                                         os.path.join(self.project_name, "files", filename),
                                                          RESOLUTION)
+                for pic in self.pictures:
+                    folder.add_to_content(pic)
+
+                filemanager.file_list.append(folder)
         except:
             print("pdf error")
             pass
@@ -129,12 +154,10 @@ class AutocutController:
                 self.textlabel.setText(str(Language.current.autocut.splittingprogress))
                 update_progress = lambda progress: self.progressbar.setValue(int(progress*0.4))
                 video_splitter.cut_video(update_progress)
-                update_progress2 = lambda progress: self.progressbar.setValue(int(40+progress*0.1))
+                update_progress2 = lambda progress: self.progressbar.setValue(int(40+progress*0.2))
                 video_splitter.cut_zoom_video(update_progress2)
-                speaker_video = video_splitter.get_speaker_video()
-                update_progress3 = lambda progress: self.progressbar.setValue(int(50+progress*0.1))
-                speaker_video.check_speaker(update_progress3)
                 QApplication.processEvents()
+                speaker_video = video_splitter.get_speaker_video()
                 slide_video = video_splitter.get_slide_video()
 
                 self.textlabel.setText(str(Language.current.autocut.videoanalysis))
@@ -156,14 +179,13 @@ class AutocutController:
             return
 
         self.progressbar.setValue(100)
-        video_editor_view = VideoEditorView()
         timeline_controller = TimelineController.get_instance()
-        video_editor_controller = VideoEditorController(video_editor_view)
+
         self.__main_controller.__video_editor_controller = video_editor_controller
         timeline_controller.create_autocut_tracks()
 
         timeline_controller.create_autocut_timeables(speaker_video.get(), 3,
-                                                     speaker_video.speaker_subvideos)
+                                                     board_video.speaker_subvideos)
         timeline_controller.create_autocut_timeables(board_video.get(), 2,
                                                      board_video.board_subvideos)
         timeline_controller.create_autocut_timeables(visualizer_video.get(), 1,
@@ -171,7 +193,6 @@ class AutocutController:
         timeline_controller.add_clip(slide_video.get(), 0)
         timeline_controller.add_clip(audio.get(), -1)
 
-        filemanager = video_editor_controller.get_filemanager_controller()
         filemanager.addFileNames(self.filename_video)
         filemanager.addFileNames(board_video.get())
         filemanager.addFileNames(visualizer_video.get())
@@ -179,9 +200,6 @@ class AutocutController:
         filemanager.addFileNames(speaker_video.get())
         filemanager.addFileNames(audio.get())
 
-        for pic in self.pictures:
-            filemanager.addFileNames(pic)
-
         self.__autocut_view.close()
-        video_editor_controller.start()
         video_editor_controller.new_project(os.path.join(self.project_path, self.project_name, self.filename))
+        video_editor_controller.start()
