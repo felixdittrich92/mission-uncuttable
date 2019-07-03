@@ -195,6 +195,19 @@ class TimelineController:
 
         return self.__timeline_view.tracks[track_id].is_overlay
 
+    def set_track_overlay(self, track_id, val):
+        """
+        Makes the Track with track_id an Overlay Track if val = True, and makes
+        it a non Overlay Track if val = False.
+        """
+        if track_id not in self.__timeline_view.tracks:
+            return
+
+        track = self.__timeline_view.tracks[track_id]
+
+        for t in track.items():
+            t.model.corner(val)
+
     def create_video_track(self, name, width, height, num, index=-1, is_overlay=False):
         """ Creates a new video track in the timeline """
         self.__timeline_view.create_video_track(
