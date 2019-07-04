@@ -1,13 +1,10 @@
 from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidget,
                              QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
                              QCheckBox, QLineEdit, QSpinBox)
-from PyQt5.QtCore import Qt, QFileSystemWatcher
+from PyQt5.QtCore import Qt, QFileSystemWatcher, pyqtSignal
 from PyQt5 import uic
 
-from config import Resources, Language
-from config import Settings
-
-
+from config import Resources, Language, Settings
 
 class SettingsView(QMainWindow):
     """
@@ -17,18 +14,20 @@ class SettingsView(QMainWindow):
     If you want to add a setting go to the "config.py" file and simply
     add the desired setting to the dictionary that you'll find there.
     """
-    def __init__(self):
+
+    saved = pyqtSignal()
+
+    def __init__(self, parent=None):
         """Loads the UI-file and the shortcuts."""
-        super(SettingsView, self).__init__()
+
+        super(SettingsView, self).__init__(parent)
         uic.loadUi(Resources.files.settingsview, self)
 
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
-        self.__qss_watcher.fileChanged.connect(self.update_qss)
-
 
         """ centering the window """
         rectangle = self.frameGeometry()
@@ -39,13 +38,23 @@ class SettingsView(QMainWindow):
         self.saveButton = self.findChild(QPushButton,"saveButton")
         self.cancelButton = self.findChild(QPushButton, "cancelButton")
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+
     def show(self):
         """Starts the settings window maximized."""
         self.showNormal()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
+
+    def update_view(self):
+        self.parent().update_window()
