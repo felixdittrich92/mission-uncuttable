@@ -338,6 +338,10 @@ class FilemanagerController:
         file_list = self.get_current_file_list()
         for file in file_list:
             if isinstance(file, Folder) and file.get_name() == item.text():
+                # check if file already exists in folder
+                if path in file.get_content():
+                    return
+
                 # remove old file
                 file_list.remove(source_item.statusTip())
                 list_widget.removeItemWidget(source_item)
