@@ -35,6 +35,8 @@ class CreationOperation(Operation):
                                       self.res_left, self.res_right, self.group,
                                       self.mouse_pos, is_drag=self.is_drag)
 
+        self.controller.get_timelinemodel().update_duration()
+
     def undo(self):
         self.controller.get_timeable_by_id(self.id).delete(hist=False)
 
@@ -53,6 +55,7 @@ class DeleteOperation(Operation):
         self.controller.get_timelinemodel().change(
             "delete", ["clips", {"id": self.model_info["id"]}], {})
         self.controller.remove_timeable_view(self.view_info["view_id"])
+        self.controller.get_timelinemodel().update_duration()
 
     def undo(self):
         model = make_timeable_model(self.model_info["file_name"], self.model_info["id"])

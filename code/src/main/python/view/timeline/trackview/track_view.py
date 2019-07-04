@@ -1,6 +1,6 @@
 import os
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu, QApplication
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
 from .add_track_view import AddTrackView
@@ -89,6 +89,15 @@ class TrackView(QGraphicsView):
         button_menu.addAction(add)
         add.triggered.connect(self.add)
 
+        if self.is_video:
+            overlay = QAction(str(Language.current.track.overlay))
+            overlay.setCheckable(True)
+            if self.is_overlay:
+                overlay.setChecked(True)
+
+            button_menu.addAction(overlay)
+            overlay.changed.connect(self.overlay_toggle)
+
         button_menu.exec_(self.button.mapToGlobal(point) + QPoint(10, 0))
 
     def add(self):
@@ -105,6 +114,13 @@ class TrackView(QGraphicsView):
         This method is only for the context menu on the track button
         """
         self.__controller.delete_track(self.num)
+
+    def overlay_toggle(self):
+        """ Toggles the Overlay state of this Track. """
+        self.is_overlay = not self.is_overlay
+        self.__controller.set_track_overlay(self.num, self.is_overlay)
+
+        QApplication.processEvents()
 
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """
