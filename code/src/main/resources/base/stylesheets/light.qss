@@ -1,5 +1,5 @@
 QMainWindow, QMenuBar, QDialog {
-    background-color: #F1F3F2;
+    background-color: #ffffff;
 
 }
 
@@ -12,22 +12,22 @@ QMainWindow, QMenuBar, QDialog {
 }
 
 QSplitter::handle:horizontal {
-    background: #C2D3DA;
+    background: #ffffff;
     width: 2px;
 }
 QSplitter::handle:vertical {
-    background: #C2D3DA;
+    background: #ffffff;
     height: 2px;
 }
 
 #videoplayer_frame {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     border: 1px solid #272424;
 }
 
 /* LINE EDIT*/
 QLineEdit {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     color: #272424;
     border: 1px solid #272424;
     padding: 2px;
@@ -39,7 +39,7 @@ QPushButton {
     background: #955F69;
     border: 1px solid #7D4E57;
     padding: 8px;
-    color: #C2D3DA;
+    color: #ffffff;
 }
 
 
@@ -121,18 +121,18 @@ QMenuBar::item::selected {
 }
 
 QMenuBar::item::pressed, QMenu {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
 }
 
 QMenu::item::selected {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
 }
 
 /* SCROLLBARS */
 
 QScrollBar:horizontal, QScrollBar:vertical {
     /* border: 2px solid #272424; */
-    background: #C2D3DA;
+    background: #ffffff;
 
 }
 QScrollBar:horizontal {
@@ -173,34 +173,34 @@ QScrollBar::sub-line:vertical {
 QScrollBar::add-line:horizontal {
     width: 15px;
     subcontrol-position: right;
-    /* border-top: 1px solid #C2D3DA;
-    border-right: 1px solid #C2D3DA;
-    border-bottom: 1px solid #C2D3DA; */
+    /* border-top: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff; */
     margin-right: 10px;
 }
 QScrollBar::add-line:vertical {
     height: 15px;
     subcontrol-position: bottom;
 
-    /* border-right: 1px solid #C2D3DA;
-    border-left: 1px solid #C2D3DA;
-    border-bottom: 1px solid #C2D3DA; */
+    /* border-right: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff; */
     margin-bottom: 10px;
 }
 QScrollBar::sub-line:horizontal {
     width: 15px;
     subcontrol-position: left;
-    /* border-top: 1px solid #C2D3DA;
-    border-left: 1px solid #C2D3DA;
-    border-bottom: 1px solid #C2D3DA; */
+    /* border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff; */
 }
 
 QScrollBar::sub-line:vertical {
     height: 15px;
     subcontrol-position: top;
-    /* border-top: 1px solid #C2D3DA;
-    border-left: 1px solid #C2D3DA;
-    border-right: 1px solid #C2D3DA; */
+    /* border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #ffffff; */
 }
 
 QScrollBar:left-arrow:horizontal,
@@ -209,7 +209,7 @@ QScrollBar:up-arrow:vertical,
 QScrollBar::down-arrow:vertical {
     width: 5px;
     height: 5px;
-    background: #C2D3DA;
+    background: #ffffff;
 }
 
 QScrollBar::add-page:horizontal,
@@ -222,7 +222,7 @@ QScrollBar::sub-page:vertical {
 /* TIMELINE */
 
 QScrollArea, #timeline_toolbar {
-    background: #C2D3DA;
+    background: #ffffff;
     /* border: 1px solid #272424; */
 }
 
@@ -247,7 +247,7 @@ QScrollArea, #timeline_toolbar {
 }
 
 #audio_track_frame QFrame{
-    background: #C2D3DA;
+    background: #ffffff;
     border: 1px solid #272424;
     margin-left: -1px;
     padding-left: 5px;
@@ -260,7 +260,7 @@ QScrollArea, #timeline_toolbar {
 }
 
 #video_track_frame QFrame{
-    background: #C2D3DA;
+    background: #ffffff;
     border: 1px solid #272424;
     border-right: none;
     padding-left: 5px;
@@ -271,7 +271,7 @@ QScrollArea, #timeline_toolbar {
 #track_button, #track_button_light, #track_button_audio {
     background: #7D4E57;
     border: 1px solid #272424;
-    color: #C2D3DA;
+    color: #ffffff;
     margin: 0;
 }
 
@@ -288,12 +288,12 @@ QScrollArea, #timeline_toolbar {
     /* track button frames */
 
 #track_button_frame_frame {
-    background:#C2D3DA;
+    background:#ffffff;
 }
 
 #video_track_button_frame,
 #audio_track_button_frame{
-    background: #C2D3DA;
+    background: #ffffff;
 }
 
 #audio_track_button_frame{
@@ -308,7 +308,7 @@ QScrollArea, #timeline_toolbar {
 }
 
 #time_bar {
-    background: #C2D3DA;
+    background: #ffffff;
     border: 1px solid #272424;
     border-right-width: 2px;
     border-bottom: none;
@@ -316,7 +316,7 @@ QScrollArea, #timeline_toolbar {
 }
 
 #time_bar QPushButton {
-    background: #C2D3DA;
+    background: #ffffff;
     border: none;
     color: #272424;
 
@@ -325,7 +325,7 @@ QScrollArea, #timeline_toolbar {
 #time_label {
     color: #272424;
     font-size: 12px;
-    background: #C2D3DA;
+    background: #ffffff;
     border: 2px solid #272424;
     border-right-width: 1px;
     border-bottom-width: 1px;
@@ -333,7 +333,7 @@ QScrollArea, #timeline_toolbar {
 
 /* FILEMANAGER */
 #filemanager_frame, #list_widget{
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     border: 1px solid #272424;
 }
 
@@ -353,7 +353,7 @@ QScrollArea, #timeline_toolbar {
 }
 
 #list_widget::item:selected {
-    background: #C2D3DA;
+    background: #ffffff;
     border: 1px solid #272424;
     color: #272424;
 }
@@ -362,7 +362,7 @@ QScrollArea, #timeline_toolbar {
     color: rgb(100, 49, 38);
 }
 #breadcrumbs_label {
-    color: #C2D3DA;
+    color: #ffffff;
 }
 
 
@@ -379,8 +379,9 @@ QScrollArea, #timeline_toolbar {
     padding: 0px;
 }
 
-#current_time_label QLabel {
+#current_time_label{
     color: #272424;
+    background: #272424;
 }
 
 #first_frame_button {
@@ -421,16 +422,16 @@ QSlider::sub-page:horizontal {
 QTabWidget::tab-bar {
 }
 QTabWidget::pane {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     border: 2px solid #272424;
 }
 QTabWidget::pane QFrame {
-    background: #C2D3DA;
+    background: #ffffff;
     color: #272424;
 }
 
 QTabBar::tab {
-    background: #C2D3DA;
+    background: #ffffff;
     margin-left: 5px;
     padding: 5px;
     border-radius: 0;
@@ -440,7 +441,7 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    background: #C2D3DA;
+    background: #ffffff;
     border-bottom: 2px solid #272424;
     margin-bottom: -2px;
 }
@@ -453,7 +454,7 @@ QTabBar::tab:!selected {
 
 QComboBox {
     border: 2px solid #272424;
-    background: #C2D3DA;
+    background: #ffffff;
     color: #272424;
 }
 
@@ -469,7 +470,7 @@ QComboBox::drop-down {
 /* START VIEW */
 
 #start_frame, #start_frame_2, #new_project_frame, #projects_list_view{
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     border: 1px solid #272424;
 }
 
@@ -478,7 +479,7 @@ QComboBox::drop-down {
     font-size: 25px;
 }
 #name_label, #folder_label {
-    color: #C2D3DA;
+    color: #ffffff;
 
 }
 #projects_list_view {
@@ -492,7 +493,7 @@ QComboBox::drop-down {
     color: #272424;
 }
 #projects_list_view::item:selected:active {
-    background: #C2D3DA;
+    background: #ffffff;
     border: 1px solid #272424;
 }
 
@@ -504,7 +505,7 @@ QComboBox::drop-down {
 /* AUTOCUT VIEW */
 
 #autocut_frame {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     border: 1px solid #272424;
     margin: 9px;
 }
@@ -534,7 +535,7 @@ QProgressBar::chunk {
 }
 
 #export_frame {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     border: 1px solid #272424;
 }
 
@@ -544,14 +545,14 @@ QProgressBar::chunk {
 
 #export_frame QComboBox QAbstractItemView{
     border: 2px solid #272424;
-    background: #C2D3DA;
+    background: #ffffff;
     color: #272424;
 }
 
 /* Dialogs and Messageboxes */
 
 QMessageBox, QDialog {
-    background-color: #C2D3DA;
+    background-color: #ffffff;
 }
 
 QMessageBox::question QLabel, QDialog QLabel, QDialog QRadioButton{
@@ -568,7 +569,7 @@ QRadioButton::indicator::checked{
     border: 3px solid;
     border-color: #272424;
     border-radius: 6px;
-    background-color: #C2D3DA;
+    background-color: #ffffff;
     width: 7px;
     height: 7px;
 }

@@ -170,4 +170,6 @@ class VideoEditorView(classmaker(QMainWindow, View)):
     def refresh(self):
         self.init_stylesheet()
         self.set_texts()
+        self.timeline_view.hide()
+        self.timeline_view.show()
         self.filemanager_view.refresh()

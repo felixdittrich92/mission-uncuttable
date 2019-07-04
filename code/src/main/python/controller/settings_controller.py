@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt, QFileSystemWatcher
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from PyQt5 import uic
+import time
 
 from config import Resources, Language
 from config import Settings
@@ -130,6 +131,7 @@ class SettingsController:
         self.update_language()
         self.__settings_view.saved.emit()
         self.__settings_view.close()
+
 
     def update_language(self):
         lang = Settings.get_instance().get_settings().general.language.current

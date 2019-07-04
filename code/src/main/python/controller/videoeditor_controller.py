@@ -108,6 +108,9 @@ class VideoEditorController:
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
         if self.__projectsettings_controller.checkIfClosed():
+            self.projectsettings_view = ProjectSettingsView()
+            self.__projectsettings_controller = ProjectSettingsController(
+            self.projectsettings_view)
             self.__projectsettings_controller.start()
         else:
             self.__projectsettings_controller.focus()

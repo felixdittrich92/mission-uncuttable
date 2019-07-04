@@ -226,7 +226,6 @@ class PreviewView(classmaker(QWidget, View)):
 
     def set_player_to_frame(self, frame):
         self.player.Seek(frame)
-        print(frame)
 
     def change_progress_bar(self):
         self.player.Seek(self.progress_slider.value())

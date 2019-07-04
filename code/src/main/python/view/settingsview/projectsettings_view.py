@@ -7,9 +7,10 @@ from PyQt5 import QtGui
 from config import Resources, Language, Settings
 from projectconfig import Projectsettings
 from model.project import Project
+from util.classmaker import classmaker
+from ..view import View
 
-
-class ProjectSettingsView(QMainWindow):
+class ProjectSettingsView(classmaker(QMainWindow, View)):
     """A class used as the View for the projectsettings window."""
 
     changed = pyqtSignal()
@@ -33,17 +34,20 @@ class ProjectSettingsView(QMainWindow):
         self.addProjectsettings(self.projectsettings)
 
         """saveprojectsettings button"""
-        saveButton = self.findChild(QPushButton, "saveButton")
-        saveButton.setText(str(Language.current.projectsettings.accept))
-        saveButton.clicked.connect(lambda: self.saveProjectsettings())
+        self.saveButton = self.findChild(QPushButton, "saveButton")
+        self.saveButton.clicked.connect(lambda: self.saveProjectsettings())
 
-        cancelButton = self.findChild(QPushButton, "cancelButton")
-        cancelButton.setText(str(Language.current.settings.cancel))
-        cancelButton.clicked.connect(lambda: self.close())
+        self.cancelButton = self.findChild(QPushButton, "cancelButton")
+        self.cancelButton.clicked.connect(lambda: self.close())
 
+        self.init_text()
+
+    def init_text(self):
+        self.saveButton.setText(str(Language.current.projectsettings.save))
+        self.cancelButton.setText(str(Language.current.settings.cancel))
+    
     def init_stylesheet(self):
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
-        print(current_stylesheet)
         if current_stylesheet == 0:
             self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
         elif current_stylesheet == 1:
@@ -163,3 +167,8 @@ class ProjectSettingsView(QMainWindow):
     def show(self):
         """Starts the projectsettings window maximized."""
         self.showNormal()
+
+    def refresh(self):
+        self.init_stylesheet()
+        self.init_text()
+
