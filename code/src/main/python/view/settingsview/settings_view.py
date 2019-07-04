@@ -37,7 +37,6 @@ class SettingsView(QMainWindow):
         self.move(rectangle.topLeft())
 
         self.saveButton = self.findChild(QPushButton,"saveButton")
-
         self.cancelButton = self.findChild(QPushButton, "cancelButton")
 
     def show(self):
