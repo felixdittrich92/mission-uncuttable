@@ -194,6 +194,8 @@ class FilemanagerController:
 
     def clear(self):
         """ Removes all entries from the filemanager """
+        self.file_list = []
+        self.update_file_list(self.get_current_file_list())
         self.__filemanager_view.listWidget.clear()
 
     def get_project_filemanager(self):
