@@ -25,7 +25,11 @@ images = {
     "forward_button": "images/buttons/step_forward.png",
     "maximize_button": "images/buttons/maximize.png",
     "media_symbols": "images/filemanagerIcons",
-    "folder_icon": "images/folder.svg",
+    "folder_icon": "images/filemanagerIcons/folder.svg",
+    "back_icon": "images/filemanagerIcons/arrow_left.svg",
+    "plus_icon": "images/filemanagerIcons/plus.svg",
+    "trash_icon": "images/filemanagerIcons/trash.svg",
+    "new_folder_icon": "images/filemanagerIcons/folder_icon.svg",
     "cross": "images/cross.svg",
     "tick": "images/tick.svg",
     "logo_with_name": "images/artwork/logo neu_mit Schrift_blau.png"
