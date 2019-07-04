@@ -169,16 +169,5 @@ class VideoEditorView(classmaker(QMainWindow, View)):
     
     def refresh(self):
         self.init_stylesheet()
-<<<<<<< Updated upstream
-        '''Timeline refresh'''
-        self.timeline_view.refresh()
-        '''Preview refresh'''
-        self.previewview.close()
-        self.previewview.show()
-        print("changed")
-        '''Filemanager refresh'''
-=======
-        current_language = Settings.get_instance().get_settings().general.language.current
->>>>>>> Stashed changes
-        self.filemanager_view.refresh()
         self.set_texts()
+        self.filemanager_view.refresh()
