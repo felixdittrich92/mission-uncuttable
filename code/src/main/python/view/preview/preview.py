@@ -12,6 +12,7 @@ import openshot
 import sip
 import time
 from ..view import View
+from config import Settings
 from util.classmaker import classmaker
 
 class PreviewView(classmaker(QWidget, View)):
@@ -39,7 +40,8 @@ class PreviewView(classmaker(QWidget, View)):
         #init qwidget, resources, ui file
         super(PreviewView, self).__init__()
         uic.loadUi(Resources.files.preview_view, self)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
+        # self.init_stylesheet()
         self.video_running = False
 
         #get timelinemlodel, timeline
@@ -69,6 +71,16 @@ class PreviewView(classmaker(QWidget, View)):
         #init GUI
         self.initGUI()
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        print(current_stylesheet)
+        '''black stylesheet'''
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+            
+    
     def initGUI(self):
         #load icons
         self.iconplay = QtGui.QPixmap(Resources.images.play_button)

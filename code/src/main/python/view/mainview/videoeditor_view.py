@@ -8,13 +8,17 @@ from view.preview.preview import PreviewView
 from view.timeline.timelineview import TimelineView
 from controller import TimelineController
 from model.project import Project
+from config import Settings
 from ..view import View
 from util.classmaker import classmaker
 
 class VideoEditorView(classmaker(QMainWindow, View)):
     """A class used as the View for the video-editor window."""
-    def __init__(self, parent=None):
+    
     save_project = pyqtSignal()
+    
+    def __init__(self, parent=None):
+
         """Loads the UI-file and the shortcuts."""
         super(VideoEditorView, self).__init__(parent)
         uic.loadUi(Resources.files.mainview, self)
@@ -32,13 +36,23 @@ class VideoEditorView(classmaker(QMainWindow, View)):
         self.splittersizes = []
         self.fullscreen = False
 
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        print(current_stylesheet)
+        '''black stylesheet'''
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+            
+    
     def testmethod(self):
         PreviewView.get_instance().testprint()
 
@@ -158,12 +172,13 @@ class VideoEditorView(classmaker(QMainWindow, View)):
         self.update()
     
     def refresh(self):
-        pass
         '''refresh Videoeditor_View'''
-        
+        self.init_stylesheet()
         '''Timeline refresh'''
         self.timeline_view.refresh()
         '''Preview refresh'''
-        self.previewview.refresh()
+        self.previewview.close()
+        self.previewview.show()
+        
         '''Filemanager refresh'''
         self.filemanager_view.refresh()

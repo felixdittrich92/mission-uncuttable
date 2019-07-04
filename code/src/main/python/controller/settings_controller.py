@@ -123,7 +123,15 @@ class SettingsController:
                     self.saveSetting(self.settings[x][y].get("type"),widget,x,y)
 
         self.settingsInstance.save_settings(self.settings)
+        self.update_language()
         self.__settings_view.close()
+
+    def update_language(self):
+        lang = Settings.get_instance().get_settings().general.language.current
+        if lang == 0:
+            Language.set_language('en')
+        elif lang == 1:
+            Language.set_language('de')
 
     def saveSetting(self, type, widget, x, y):
         """

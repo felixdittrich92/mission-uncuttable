@@ -24,8 +24,8 @@ class VideoEditorController:
 
     Manages starting and stopping of the video-editor window.
     """
-    def __init__(self):
-        None
+    def __init__(self, view):
+        self.init_2(view)
 
     def init_2(self, view):
         self.__video_editor_view = view
@@ -33,8 +33,8 @@ class VideoEditorController:
         self.__video_editor_view.timeline_view.changed.connect(self.set_title_unsaved)
 
         self.__timeline_controller = TimelineController.get_instance()
-        self.__filemanager_view.changed.connect(self.set_title_unsaved)
         self.__filemanager_view = FilemanagerView(self.__video_editor_view)
+        self.__filemanager_view.changed.connect(self.set_title_unsaved)
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
 
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
