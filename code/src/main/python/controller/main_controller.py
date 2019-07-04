@@ -73,7 +73,6 @@ class MainController:
     def init_video_editor(self):
         video_editor_view = VideoEditorView()
         self.__video_editor_controller = VideoEditorController(video_editor_view)
-        self.__video_editor_controller.init_2(video_editor_view)
 
     def __start_autocut_controller(self, path, project_name, filename):
         """

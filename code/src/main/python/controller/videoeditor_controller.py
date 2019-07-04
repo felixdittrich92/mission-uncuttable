@@ -25,9 +25,6 @@ class VideoEditorController:
     Manages starting and stopping of the video-editor window.
     """
     def __init__(self, view):
-        self.init_2(view)
-
-    def init_2(self, view):
         self.__video_editor_view = view
         self.__video_editor_view.save_project.connect(self.__start_save)
         self.__video_editor_view.timeline_view.changed.connect(self.set_title_unsaved)
