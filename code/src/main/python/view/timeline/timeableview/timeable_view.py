@@ -154,17 +154,17 @@ class TimeableView(QGraphicsRectItem):
         menu = QMenu()
         menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
-        delete = QAction(str(Language.current.timeable.delete))
-        menu.addAction(delete)
-        delete.triggered.connect(lambda: self.delete(hist=True))
+        cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
+        menu.addAction(cut_timeneedle)
+        cut_timeneedle.triggered.connect(self.cut_timeneedle)
 
         cut_here = QAction(str(Language.current.timeable.cut_here))
         menu.addAction(cut_here)
         cut_here.triggered.connect(lambda: self.cut_here(event.pos().x()))
 
-        cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
-        menu.addAction(cut_timeneedle)
-        cut_timeneedle.triggered.connect(self.cut_timeneedle)
+        delete = QAction(str(Language.current.timeable.delete))
+        menu.addAction(delete)
+        delete.triggered.connect(lambda: self.delete(hist=True))
 
         settings = QAction(str(Language.current.timeable.settings))
         menu.addAction(settings)
@@ -354,7 +354,6 @@ class TimeableView(QGraphicsRectItem):
         # make track longer when new width is bigger than width
         if pos + self.width > self.scene().width():
             self.__controller.set_track_width(self.track_id, self.width + pos)
-            self.__controller.adjust_tracks()
 
         return True
 

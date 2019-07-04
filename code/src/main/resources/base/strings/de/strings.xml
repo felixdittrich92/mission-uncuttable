@@ -68,6 +68,7 @@
     <track>
       <delete>Spur löschen</delete>
       <add>Spur hinzufügen</add>
+      <overlay>Overlay Spur</overlay>
     </track>
     <export>
         <windowtitle>Video exportieren</windowtitle>

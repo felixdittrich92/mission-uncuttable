@@ -20,7 +20,6 @@ class SettingsController:
         """imports settings instance and applies it"""
         self.settingsInstance = Settings.get_instance()
         self.settings = self.settingsInstance.get_dict_settings()
-        self.addSettings(self.settings)
 
         self.__settings_view.saveButton.setText(str(Language.current.settings.save))
         self.__settings_view.saveButton.clicked.connect(lambda: self.saveSettings())
@@ -30,7 +29,9 @@ class SettingsController:
 
     def start(self):
         """Calls '__show_view()' of SettingsController"""
+        self.addSettings(self.settings)
         self.__settings_view.show()
+
 
     def focus(self):
         self.__settings_view.activateWindow()

@@ -93,6 +93,7 @@ class VideoEditorController:
     def __start_settings_controller(self):
         """Opens the settings window"""
         if self.__settings_controller.checkIfClosed():
+            self.settings_view = SettingsView()
             self.__settings_controller = SettingsController(self.settings_view)
             self.__settings_controller.start()
         else:
