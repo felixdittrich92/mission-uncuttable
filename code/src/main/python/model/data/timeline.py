@@ -12,8 +12,8 @@ TIMELINE_DEFAULT_SETTINGS = {
         "num": 25,
         "den": 1
     },
-    "width": 1920,
-    "height": 1080,
+    "width": 1280,
+    "height": 720,
     "sample_rate": 48000,
     "channels": 2,
     "channel_layout": 3
@@ -101,6 +101,10 @@ class TimelineModel:
         if not project.changed:
             project.changed = True
 
+    def update_duration(self):
+        new_duration = self.get_last_frame() / self.get_fps()
+        self.change("update", ["duration"], new_duration)
+
     def create_group(self, group_id, timeables):
         """
         Create a TimeableGroup with all timeables in ids in it.
@@ -164,6 +168,16 @@ class TimelineModel:
         print("finished export")
 
         w.Close()
+
+    def remove_track(self, number):
+        """
+        Removes all Clips with the same layer as numer.
+
+        @param number: the Layer of the clips that will be removed
+        """
+        for c in self.timeline.Clips():
+            if c.Layer() == number:
+                self.change("delete", ["clips", {"id": c.Id()}], {})
 
     def remove_all_clips(self):
         """ Deletes all clips in the timeline (but not the views!!!) """

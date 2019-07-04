@@ -1,3 +1,4 @@
+from .add_track_controller import AddTrackController
 from .timeline_controller import TimelineController
 from .videoeditor_controller import VideoEditorController
 from .autocut_controller import AutocutController

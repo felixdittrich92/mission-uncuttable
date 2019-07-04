@@ -55,7 +55,8 @@
     </filemanager>
     <timeable>
         <delete>delete</delete>
-        <cut>cut</cut>
+        <cut_here>cut here</cut_here>
+        <cut_timeneedle>cut at timeneedle</cut_timeneedle>
         <settings>settings</settings>
         <group_remove>remove from group</group_remove>
     </timeable>
@@ -64,6 +65,11 @@
         <cancel>Cancel</cancel>
         <label>Current Volume:</label>
     </timeablesettings>
+    <track>
+      <delete>Delete Track</delete>
+      <add>Add Track</add>
+      <overlay>Overlay Track</overlay>
+    </track>
     <export>
         <windowtitle>Export Video</windowtitle>
         <filename>Filename</filename>

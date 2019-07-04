@@ -47,27 +47,27 @@ class TimelineView(QFrame):
         self.timeables = dict()
         self.tracks = dict()
 
-    def create_video_track(self, name, width, height, num, is_overlay=False):
+    def create_video_track(self, name, width, height, num, index, is_overlay):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
-        self.video_track_button_frame.add_button(btn, True)
+        self.video_track_button_frame.add_button(btn, True, index)
 
         track = TrackView(width, height, num, name, btn, True, is_overlay)
         self.tracks[num] = track
 
-        self.video_track_frame.add_track(track)
+        self.video_track_frame.add_track(track, index)
 
         self.adjust_track_sizes()
 
-    def create_audio_track(self, name, width, height, num):
+    def create_audio_track(self, name, width, height, num, index):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
-        self.audio_track_button_frame.add_button(btn, False)
+        self.audio_track_button_frame.add_button(btn, False, index)
 
         track = TrackView(width, height, num, name, btn, False)
         self.tracks[num] = track
 
-        self.audio_track_frame.add_track(track)
+        self.audio_track_frame.add_track(track, index)
 
         self.adjust_track_sizes()
 
@@ -130,20 +130,32 @@ class TimelineView(QFrame):
 
         return res
 
-    def set_timeable_name(self, id, name):
-        pass
+    def remove_all_tracks(self):
+        for track in self.tracks.values():
+            if track.is_video:
+                self.video_track_frame.remove_track(track)
+                self.video_track_button_frame.remove_button(track.button)
 
-    def set_timeable_start(self, id, frame):
-        pass
+            else:
+                self.audio_track_frame.remove_track(track)
+                self.audio_track_button_frame.remove_button(track.button)
 
-    def set_timeable_length(self, id, frames):
-        pass
+    def remove_track(self, track_id):
+        """ Removes the TrackView with track_id """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            return
 
-    def set_timeable_selected(self, id, selected=True):
-        pass
+        if track.is_video:
+            self.video_track_frame.remove_track(track)
+            self.video_track_button_frame.remove_button(track.button)
 
-    def set_timeable_picture(self, id, picture):
-        pass
+        else:
+            self.audio_track_frame.remove_track(track)
+            self.audio_track_button_frame.remove_button(track.button)
+
+        self.tracks.pop(track_id, None)
 
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')

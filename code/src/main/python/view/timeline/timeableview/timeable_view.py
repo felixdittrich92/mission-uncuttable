@@ -1,11 +1,12 @@
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
-from PyQt5.QtGui import QBrush, QColor, QDrag
-from PyQt5.QtWidgets import QMenu, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
+from PyQt5.QtGui import QBrush, QColor, QDrag, QTransform
+from PyQt5.QtWidgets import (QMenu, QAction, QApplication, QGraphicsItem,
+                             QGraphicsRectItem, QWidget)
 
 from controller import TimelineController
 from model.data import FileType
-from config import Language
+from config import Language, Resources
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
 import openshot
@@ -132,7 +133,8 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio,
+                                    transformMode=1)
         else:
             self.pixmap = None
 
@@ -150,18 +152,23 @@ class TimeableView(QGraphicsRectItem):
         event.accept()
 
         menu = QMenu()
+        menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+
+        cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
+        menu.addAction(cut_timeneedle)
+        cut_timeneedle.triggered.connect(self.cut_timeneedle)
+
+        cut_here = QAction(str(Language.current.timeable.cut_here))
+        menu.addAction(cut_here)
+        cut_here.triggered.connect(lambda: self.cut_here(event.pos().x()))
 
         delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
         delete.triggered.connect(lambda: self.delete(hist=True))
 
-        cut = QAction(str(Language.current.timeable.cut))
-        menu.addAction(cut)
-        cut.triggered.connect(lambda: self.cut(event.pos().x()))
-
         settings = QAction(str(Language.current.timeable.settings))
         menu.addAction(settings)
-        settings.triggered.connect(lambda: self.settings())
+        settings.triggered.connect(self.settings)
 
         if self.group_id is not None:
             remove_from_group = QAction(str(Language.current.timeable.group_remove))
@@ -193,12 +200,35 @@ class TimeableView(QGraphicsRectItem):
         """ Removes the timeableview from the track """
         self.scene().removeItem(self)
 
-    def cut(self, pos):
+    def cut_here(self, pos):
         """
         cuts the timeable in two parts
 
         @param pos: x position on the timeable where it's cut
         """
+        if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
+            return
+
+        self.__controller.split_timeable(self.view_id, self.resizable_right,
+                                         self.width, self.model.clip.End(), pos)
+
+    def cut_timeneedle(self):
+        """
+        Cuts the Timeable at the position of the Timeneedle, but only if the
+        Timeneedle is on this Timeable.
+        """
+        # get the Timeneedle object
+        needle = self.__controller.get_timelineview().track_frame_frame.findChild(
+            QWidget, "needle_bottom")
+
+        pos = needle.x()
+
+        # do nothing if the Timeneedle is not on this Timeable
+        if not self.scene().itemAt(QPoint(pos, 0), QTransform()) is self:
+            return
+
+        pos -= self.x_pos
+
         if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
             return
 
@@ -313,12 +343,17 @@ class TimeableView(QGraphicsRectItem):
         r = QRectF(pos, 0, self.width, self.height)
         colliding = self.scene().items(r)
         if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])) \
-                and not self.__controller.is_same_group(self, colliding[0]):
+                and not self.__controller.is_same_group(self.group_id,
+                                                        colliding[0].group_id):
             return False
 
         # move only if the new position is still inside the track
-        if pos < 0 or pos + self.width > self.scene().width():
+        if pos < 0:
             return False
+
+        # make track longer when new width is bigger than width
+        if pos + self.width > self.scene().width():
+            self.__controller.set_track_width(self.track_id, self.width + pos)
 
         return True
 

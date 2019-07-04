@@ -55,7 +55,8 @@
     </filemanager>
     <timeable>
         <delete>löschen</delete>
-        <cut>schneiden</cut>
+        <cut_here>hier schneiden</cut_here>
+        <cut_timeneedle>bei Zeitnadel schneiden</cut_timeneedle>
         <settings>Einstellungen</settings>
         <group_remove>aus Gruppe entfernen</group_remove>
     </timeable>
@@ -64,6 +65,11 @@
         <cancel>Abbrechen</cancel>
         <label>Aktuelle Lautstärke:</label>
     </timeablesettings>
+    <track>
+      <delete>Spur löschen</delete>
+      <add>Spur hinzufügen</add>
+      <overlay>Overlay Spur</overlay>
+    </track>
     <export>
         <windowtitle>Video exportieren</windowtitle>
         <filename>Dateiname</filename>

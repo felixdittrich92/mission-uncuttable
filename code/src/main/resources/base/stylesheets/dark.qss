@@ -525,6 +525,10 @@ QProgressBar::chunk {
 
 /* EXPORT */
 
+#export_dialog {
+    background-color: #11151C;
+}
+
 #export_frame {
     background-color: #212D40;
     border: 1px solid #364156;
@@ -540,7 +544,27 @@ QProgressBar::chunk {
     color: #F5F5F5;
 }
 
-/* UNSAVED CHANGES WARNING */
-QMessageBox::question QLabel {
+/* Dialogs and Messageboxes */
+
+QMessageBox, QDialog {
+    background-color: #212D40;
+}
+
+QMessageBox::question QLabel, QDialog QLabel, QDialog QRadioButton{
     color: #F5F5F5;
+}
+
+QDialog QRadioButton::indicator {
+    color: #1f1e1e;
+    width: 13px;
+    height: 13px;
+}
+
+QRadioButton::indicator::checked{
+    border: 3px solid;
+    border-color: white;
+    border-radius: 6px;
+    background-color: #000000;
+    width: 7px;
+    height: 7px;
 }

@@ -45,13 +45,13 @@ FORMAT_OPTIONS = {
 }
 
 SIZE_OPTIONS = {
-    "1920x1080": {
-        "width": 1920,
-        "height": 1080
-    },
     "1280x720": {
         "width": 1280,
         "height": 720
+    },
+    "1920x1080": {
+        "width": 1920,
+        "height": 1080
     }
 }
 

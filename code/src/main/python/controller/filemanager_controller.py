@@ -1,6 +1,5 @@
 import json
 import os
-from collections import namedtuple
 
 import cv2
 
@@ -57,6 +56,15 @@ class FilemanagerController:
         for folder in self.folder_stack:
             breadcrumbs.setText(breadcrumbs.text() + " > " + folder.get_name())
 
+    def get_current_file_list(self):
+        """Returns either the content of the filemanager """
+        if len(self.folder_stack) == 0:
+            file_list = self.file_list
+        else:
+            file_list = self.folder_stack[-1].get_content()
+
+        return file_list
+
     def pickFileNames(self):
         """
         This method saves the selected files in a list and add this to the filemanager window
@@ -100,77 +108,54 @@ class FilemanagerController:
         @return: Nothing
         """
 
-        if file in self.file_list:
+        if file in self.get_current_file_list():
             print("The file exist")
             return
 
-        if file is not None and file.upper().endswith(('.JPG', '.PNG')):
-            pixmap = QPixmap(file)
-            QApplication.processEvents()
-        elif file is not None and file.upper().endswith(('.PDF')):
-            presentation = Presentation(file)
-            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files')):
-                try:
-                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files'))
-                except OSError:
-                    pass
-
-            self.pictures = presentation.convert_pdf(self.project_path,
-                                                         os.path.join(self.project_name, "files"),
-                                                         RESOLUTION)
-
-            for pic in self.pictures:
-                pixmap = QPixmap(file)
-                self.addFileNames(pic)
-
-        elif file is not None and file.upper().endswith('.MP4'):
-            video_input_path = file
-            cap = cv2.VideoCapture(str(video_input_path))
-
-            ret, frame = cap.read()
-            if not ret:
-                return
-            else:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-                height, width, channel = frame.shape
-                q_img = QImage(frame.data, width, height, 3 * width, QImage.Format_RGB888)
-                pixmap = QPixmap.fromImage(q_img)
-
-            cap.release()
-            QApplication.processEvents()
-
-        elif file is not None and file.upper().endswith(('.MP3', '*.WAV')):
-            path = Resources.images.media_symbols
-            filename = "mp3.png"
-            path_to_file = os.path.join(path, filename)
-            pixmap = QPixmap(path_to_file)
-            QApplication.processEvents()
-
-        elif file is None:
-            image = Resources.images.folder_icon
-            pixmap = QPixmap(image)
-
-            name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog', 'Bitte einen Namen eingeben:')
+        if file is None:
+            name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog',
+                                                'Bitte einen Namen eingeben:')
             if result is True:
                 file = Folder(name)
             else:
                 return
 
+        elif file.upper().endswith(('.JPG', '.PNG', 'MP4', '.MP3', '.WAV')):
+            pass
+
+        elif file.upper().endswith(('.PDF')):
+            filename = os.path.split(file)
+            filename = filename[-1]
+            filename = filename[:-4]
+            folder = Folder(filename)
+
+            presentation = Presentation(file)
+            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files', filename)):
+                try:
+                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files', filename))
+                except OSError:
+                    pass
+
+            self.pictures = presentation.convert_pdf(self.project_path,
+                                                         os.path.join(self.project_name, "files", filename),
+                                                         RESOLUTION)
+            for pic in self.pictures:
+                folder.add_to_content(pic)
+
+            self.file_list.append(folder)
+            self.update_file_list(self.get_current_file_list())
+            return
+
         else:
             print("The datatype is not supported")
             return
-
-        QApplication.processEvents()
-        if not isinstance(file,Folder) and file.upper().endswith(('.PDF')):
-            pass
-        else:
-            self.__filemanager_view.add_item(pixmap, file)
 
         if len(self.folder_stack) == 0:
             self.file_list.append(file)
         else:
             self.folder_stack[-1].add_to_content(file) # list[-1] returns last element
+
+        self.update_file_list(self.get_current_file_list())
 
     def remove(self):
         """
@@ -178,10 +163,7 @@ class FilemanagerController:
         the list it is stored in.
         """
         item = self.__filemanager_view.listWidget.currentItem()
-        if len(self.folder_stack) == 0:
-            file_list = self.file_list
-        else:
-            file_list = self.folder_stack[-1].get_content()
+        file_list = self.get_current_file_list()
 
         is_folder = False
         for file in file_list:
@@ -242,8 +224,6 @@ class FilemanagerController:
 
         self.update_file_list(self.file_list)
 
-        Project.get_instance().changed = False
-
     def fill_folder(self, folder, files):
         for f in files:
             if str(f).startswith("{"):
@@ -258,6 +238,11 @@ class FilemanagerController:
 
         self.addFileNames(None)
 
+        project = Project.get_instance()
+        if not project.changed:
+            project.changed = True
+            self.__filemanager_view.changed.emit()
+
     def handle_double_click(self, item):
         """
         Detects a doubleclick on a folder and opens the folder.
@@ -265,10 +250,7 @@ class FilemanagerController:
         :param item: Item of the FileList
         """
 
-        if len(self.folder_stack) == 0:
-            file_list = self.file_list
-        else:
-            file_list = self.folder_stack[-1].get_content()
+        file_list = self.get_current_file_list()
 
         for file in file_list:
             if isinstance(file, Folder):
