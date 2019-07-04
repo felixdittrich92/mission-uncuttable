@@ -26,19 +26,23 @@ class FilemanagerView(QWidget):
         self.delete_button.setText("")
         self.delete_button.setIcon(QIcon(Resources.images.trash_icon))
         self.delete_button.setEnabled(False)
+        self.delete_button.setCursor(Qt.PointingHandCursor)
 
         self.pick_button = self.findChild(QWidget, 'pick_files_button')
         self.pick_button.setText("")
         self.pick_button.setIcon(QIcon(Resources.images.plus_icon))
+        self.pick_button.setCursor(Qt.PointingHandCursor)
 
         self.new_folder_button = self.findChild(QWidget, 'new_folder_button')
         self.new_folder_button.setText("")
         self.new_folder_button.setIcon(QIcon(Resources.images.new_folder_icon))
+        self.new_folder_button.setCursor(Qt.PointingHandCursor)
 
         self.back_button = self.findChild(QWidget, 'back_button')
         self.back_button.setText("")
         self.back_button.setEnabled(False)
         self.back_button.setIcon(QIcon(Resources.images.back_icon))
+        self.back_button.setCursor(Qt.PointingHandCursor)
 
         self.breadcrumbs = self.findChild(QWidget, 'breadcrumbs_label')
         self.breadcrumbs.setText("home")
