@@ -46,6 +46,9 @@ class Settings:
             raise Exception("This class is a singleton!")
         else:
             Settings.__instance = self
+            self.load_settings()
+
+    def load_settings(self):
             home = os.path.expanduser('~')
             user_config = os.path.join(home, '.config', 'ubicut', 'userconfig.json')
             if os.path.exists(user_config):
@@ -82,8 +85,8 @@ class Settings:
         """
         return self.dict
 
-    @staticmethod
-    def save_settings(new_settings):
+    # @staticmethod
+    def save_settings(self, new_settings):
         """
         Method that saves the custom user settings to a file.
 
@@ -107,3 +110,4 @@ class Settings:
 
         with open(file, 'w') as outfile:        # writes json to file
             json.dump(new_settings, outfile, ensure_ascii=False)
+        self.load_settings()

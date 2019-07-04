@@ -3,16 +3,17 @@ import os
 import platform
 
 import projectconfig
+from model.project import Project
 
 from collections import namedtuple
 
 
 class Projectsettings:
     """
-    A Class, using the singleton pattern, that loads the settings file
+    A Class, using the singleton pattern, that loads the projectsettings file
 
-    By default the config.py is loaded. When a 'userconfig.json' exists, the
-    settings saved in 'userconfig.json' override those, the 'config.py'
+    By default the projectconfig.py is loaded. When a 'projectconfig.uc' exists, the
+    settings saved in 'projectconfig.uc' override those, the 'projectconfig.py'
     contains.
     """
     __instance = None
@@ -34,8 +35,8 @@ class Projectsettings:
         """
         Virtually private constructor.
 
-        Loads the settings file (projectconfig.py) for default settings and the users
-        custom settings. If 'projectconfig.uc" contains values that are
+        Loads the settings file (projectconfig.py) for default settings and saved projectsettings.
+        If 'projectconfig.uc" contains values that are
         different from the values in 'projectconfig.py', this values will be
         overwritten.
         Then the JSON gets converted into an object, where the settings can
@@ -46,11 +47,10 @@ class Projectsettings:
             raise Exception("This class is a singleton!")
         else:
             Projectsettings.__instance = self
-            home = os.path.expanduser('~')
-            project_config = os.path.join(home, '.config', 'ubicut', 'projectconfig.uc')
-            if os.path.exists(project_config):
+            project_config = Project.get_instance().path
+            if project_config is not None and os.path.exists(project_config):
                 with open(project_config, 'r') as read_file:
-                    self.project_config_data = json.load(read_file)
+                    self.project_config_data = json.load(read_file)["projectsettings"]
                     projectconfig.default_settings.update(self.project_config_data)
                     self.parsed_data = projectconfig.default_settings
 
@@ -74,7 +74,7 @@ class Projectsettings:
         """
         return self.projectsettings
 
-    def get_dict_settings(self):
+    def get_dict_projectsettings(self):
         """
         Getter that returns all settings as a dictionary.
 
@@ -83,29 +83,54 @@ class Projectsettings:
         return self.dict
 
     @staticmethod
-    def save_settings(new_projectsettings):
-        """
-        Method that saves the custom user settings to a file.
-
-        Depending on the platform, the program is running on, a directory,
-        containing the json file is created.
-
-        @type   new_projectsettings: Dictionary
-        @param  new_projectsettings: Settings to be saved
-        """
+    def get_config_dir():
+        """ Returns the directory where the config will be saved """
         home = os.path.expanduser('~')
-        location = ""
+        config_location = ""
         if platform.system() == 'Linux':
-            location = os.path.join(home, '.config', 'ubicut')
+            config_location = os.path.join(home, '.config', 'ubicut')
         elif platform.system() == 'Windows':
-            location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
+            config_location = os.path.join(home, 'AppData', 'Roaming', 'ubicut')
 
-        if not os.path.exists(location):
-            os.makedirs(location)
+        return config_location
 
-        file = os.path.join(location, 'projectconfig.uc')
+    @staticmethod
+    def get_projects():
+        """ Returns a list a known projects """
+        location = Projectsettings.get_config_dir()
+        project_file = os.path.join(location, 'projects.txt')
 
-        with open(file, 'w') as outfile:        # writes json to file
-            json.dump(new_projectsettings, outfile, ensure_ascii=False)
+        if not os.path.isfile(project_file):
+            return []
 
+        res = []
+        changed = False
+        with open(project_file, 'r') as f:
+            for file in f.read().splitlines():
+                if os.path.isfile(file):
+                    res.append(file)
+                else:
+                    changed = True
 
+        res = list(set(res))
+
+        if not changed:
+            return res
+
+        with open(project_file, 'w') as f:
+            for project in res:
+                f.write(project + '\n')
+
+        return res
+
+    @staticmethod
+    def add_project(filename):
+        """ Adds a project to the projects file """
+        location = Projectsettings.get_config_dir()
+        project_file = os.path.join(location, 'projects.txt')
+        if not os.path.isfile(project_file):
+            with open(project_file, 'w') as f:
+                f.write(filename + '\n')
+        else:
+            with open(project_file, 'a') as f:
+                f.write(filename + '\n')

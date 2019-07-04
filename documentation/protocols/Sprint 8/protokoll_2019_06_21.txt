@@ -1,0 +1,36 @@
+Datum
+21.06.2019
+
+Name Protokollant
+Valentin ackva
+
+Art des Treffens 
+Review
+
+Sprint Nummer
+Sprint 8
+
+Fehlende Personen
+-
+
+Review
+
+	Welche Task abgeschlossen wurde?
+
+    MU-222	Projektordner erstellen
+	MU-254	Eingabe Feld Projektname
+	MU-39   Einblendung Sprecher
+	MU-248	Overlayspur
+    MU-239	Logo als Vektorgrafik
+	MU-240  Logo an Farbdesign anpassen
+	MU-241	Logo in Projekt einbinden
+	MU-222	Projektordner erstellen
+    MU-112  Projekteinstellungen
+	MU-142	Vorhandenes Projekt bei Start auswählen
+	MU-286
+    MU-252	Audiopegel einstellen
+
+
+	Ist das Ziel erreicht wurden?
+	Ziel wurde teilweise erreicht
+

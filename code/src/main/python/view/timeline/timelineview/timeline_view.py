@@ -1,50 +1,74 @@
 from PyQt5.QtWidgets import QFrame, QPushButton
 from PyQt5 import uic
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, pyqtSignal
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
 from view.timeline.timeableview import TimeableView
 from controller import TimelineController
+from ...view import View
+from util.classmaker import classmaker
 
-
-class TimelineView(QFrame):
+class TimelineView(classmaker(QFrame, View)):
     """
     Extends QFrame to the toplevel widget of the timeline view which
     shows the tracks and provides tools and controls to view and
     manipulate them.
 
-    The widget consists of a toolbar and a TimelineScrollArea. The
-    latter one really fulfills the task of displaying the tracks.
+    The widget holds the TimelineScrollArea which fulfills the task of
+    displaying the tracks.
     """
+
+    changed = pyqtSignal()
+
     def __init__(self, parent=None):
         """
-        Create a TimelineView with a new toolbar and TimelineScrollArea.
+        Create a TimelineView with a TimelineScrollArea.
 
-        :param parent: the parent component
+        @param parent the parent component
         """
         super(TimelineView, self).__init__(parent)
 
-        uic.loadUi(Resources.get_instance().files.timeline_view, self)
+        uic.loadUi(Resources.files.timeline_view, self)
 
         timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
         self.layout().replaceWidget(timeline_scroll_area, TimelineScrollArea())
         timeline_scroll_area.deleteLater()
 
-        self.track_frame = self.findChild(QFrame, "track_frame")
-        self.track_button_frame = self.findChild(QFrame, "track_button_frame")
+        self.video_track_frame = self.findChild(QFrame, "video_track_frame")
+        self.audio_track_frame = self.findChild(QFrame, "audio_track_frame")
+
+        self.track_frame_frame = self.findChild(QFrame, "track_frame_frame")
+
+        self.track_button_frame_frame = self.findChild(QFrame, "track_button_frame_frame")
+
+        self.video_track_button_frame = self.findChild(QFrame, "video_track_button_frame")
+        self.audio_track_button_frame = self.findChild(QFrame, "audio_track_button_frame")
 
         self.timeables = dict()
         self.tracks = dict()
 
-        self.controller = TimelineController(self)
+    def create_video_track(self, name, width, height, num, index, is_overlay):
+        btn = QPushButton(name)
+        btn.setFixedSize(90, height)
+        self.video_track_button_frame.add_button(btn, True, index)
 
-        self.__show_tracks()
-        self.__show_debug_info_on_gui()
+        track = TrackView(width, height, num, name, btn, True, is_overlay)
+        self.tracks[num] = track
 
-    def add_track(self, track):
-        self.tracks[track.id] = track
-        self.track_frame.add_track(track)
+        self.video_track_frame.add_track(track, index)
+
+        self.adjust_track_sizes()
+
+    def create_audio_track(self, name, width, height, num, index):
+        btn = QPushButton(name)
+        btn.setFixedSize(90, height)
+        self.audio_track_button_frame.add_button(btn, False, index)
+
+        track = TrackView(width, height, num, name, btn, False)
+        self.tracks[num] = track
+
+        self.audio_track_frame.add_track(track, index)
 
         self.adjust_track_sizes()
 
@@ -65,7 +89,7 @@ class TimelineView(QFrame):
             t.set_width(max_width)
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0):
+                        res_left, res_right, group, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
         try:
             track = self.tracks[track_id]
@@ -78,11 +102,12 @@ class TimelineView(QFrame):
             TimelineController.get_instance().adjust_tracks()
 
         timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id)
+                                model, id, track_id, group_id=group)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
 
-        track.current_timeable = timeable
+        if is_drag:
+            track.current_timeable = timeable
 
         # add timeable to dict
         self.timeables[id] = timeable
@@ -97,39 +122,45 @@ class TimelineView(QFrame):
         timeable.remove_from_scene()
         self.timeables.pop(id, None)
 
-    def set_timeable_name(self, id, name):
-        pass
+    def get_selected_timeables(self):
+        """ Returns a list of all selected items in the timeline """
+        res = []
 
-    def set_timeable_start(self, id, frame):
-        pass
+        for t in self.tracks.values():
+            res.extend(t.scene().selectedItems())
 
-    def set_timeable_length(self, id, frames):
-        pass
+        return res
 
-    def set_timeable_selected(self, id, selected=True):
-        pass
+    def remove_all_tracks(self):
+        for track in self.tracks.values():
+            if track.is_video:
+                self.video_track_frame.remove_track(track)
+                self.video_track_button_frame.remove_button(track.button)
 
-    def set_timeable_picture(self, id, picture):
-        pass
+            else:
+                self.audio_track_frame.remove_track(track)
+                self.audio_track_button_frame.remove_button(track.button)
 
-    def __show_tracks(self):
-        """shows some tracks with timeables to see if everything works"""
+    def remove_track(self, track_id):
+        """ Removes the TrackView with track_id """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            return
 
-        tr1 = TrackView(5000, 50, 3)
-        self.add_track(tr1)
-        btn1 = QPushButton("Track 1")
-        btn1.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn1)
+        if track.is_video:
+            self.video_track_frame.remove_track(track)
+            self.video_track_button_frame.remove_button(track.button)
 
-        tr2 = TrackView(2000, 50, 2)
-        self.add_track(tr2)
-        btn2 = QPushButton("Track 2")
-        btn2.setFixedSize(80, 50)
-        self.track_button_frame.add_button(btn2)
+        else:
+            self.audio_track_frame.remove_track(track)
+            self.audio_track_button_frame.remove_button(track.button)
 
-    def __show_debug_info_on_gui(self):
-        """
-        Setup the component somehow so that something can be seen which
-        makes it possible to say if something works properly or not.
-        """
-        # self.setStyleSheet('background-color: yellow')
+        self.tracks.pop(track_id, None)
+
+    def update_timecode(self, timecode):
+        self.time_label = self.findChild(QObject, 'time_label')
+        self.time_label.setText(timecode)
+
+    def refresh(self):
+        self.update()

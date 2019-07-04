@@ -66,6 +66,7 @@ sudo dpkg -i target/UbiCut.deb
 ## UbiCut auf Debian/Ubuntu deinstallieren
 ```
 sudo dpkg --purge UbiCut
+sudo rm -r ~/.config/ubicut
 ```
 
 ## Vor einem Commit

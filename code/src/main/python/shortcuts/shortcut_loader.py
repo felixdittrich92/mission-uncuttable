@@ -1,27 +1,28 @@
+from config import Settings
 from shortcuts import Shortcut
 
 
 class ShortcutLoader:
     """A class that creates shortcuts."""
-    starter = "Ctrl+"
-    key_combinations = {
-        "O": "Operation 'O'",
-        "E": "Operation 'E'"
-    }
 
     def __init__(self, window):
         """
         Creates the shortcuts.
 
-        Queries all entries of the 'key_combination' dictionary and creates a
-        shortcut for the given starter key(s) and the execution keys from the
-        dictionary and assigns a symbolic operation.
+        Queries all entries of the Shortcuts section in the config file.
+        For every entry a new shortcut is going to be created.
 
         @type  window: QMainWindow
         @param window: The Window, the shortcut gets assigned to.
         """
+        shortcuts = Settings.get_instance().get_dict_settings()["shortcuts"]
+
         self.loaded_shortcuts = []
-        for key in self.key_combinations:
-            key_sequence = self.starter + key
-            shortcut = Shortcut(window, key_sequence, self.key_combinations[key])
-            self.loaded_shortcuts.append(shortcut)
+        for operation in shortcuts:
+            if operation == "starter":
+                self.starter = shortcuts[operation]["current"]
+            else:
+                key = shortcuts[operation]["current"]
+                key_sequence = self.starter + "+" + key
+                shortcut = Shortcut(window, key_sequence, operation)
+                self.loaded_shortcuts.append(shortcut)

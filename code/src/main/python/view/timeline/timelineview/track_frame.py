@@ -1,6 +1,5 @@
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QApplication
 from .size_linkable_frame import SizeLinkableFrame
-from .time_needle import TimeNeedle
 
 
 class TrackFrame(SizeLinkableFrame):
@@ -24,15 +23,27 @@ class TrackFrame(SizeLinkableFrame):
         vbox_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(vbox_layout)
 
-
-
-    def add_track(self, track):
+    def add_track(self, track, index):
         """
         Adds a TrackView to the TrackFrame
 
         :param track: the Track to add
         """
-        self.layout().addWidget(track)
+        self.layout().insertWidget(index, track)
         needle = self.findChild(QWidget, "needle_bottom")
         track.stackUnder(needle)
         self.adjustSize()
+        QApplication.processEvents()
+        self.parent().adjustSize()
+
+    def remove_track(self, track):
+        """
+        Removes a TrackView from the TrackFrame.
+
+        @param track: the Track to remove
+        """
+        self.layout().removeWidget(track)
+        track.deleteLater()
+        self.adjustSize()
+        QApplication.processEvents()
+        self.parent().adjustSize()
