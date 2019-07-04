@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidge
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import uic
 from PyQt5 import QtGui
-from config import Resources, Language
+from config import Resources, Language, Settings
 from projectconfig import Projectsettings
 from model.project import Project
 
@@ -18,9 +18,8 @@ class ProjectSettingsView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(ProjectSettingsView, self).__init__()
         uic.loadUi(Resources.files.projectsettings_view, self)
-
+        self.init_stylesheet()
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         """ centering the window """
         rectangle = self.frameGeometry()
@@ -42,6 +41,14 @@ class ProjectSettingsView(QMainWindow):
         cancelButton.setText(str(Language.current.settings.cancel))
         cancelButton.clicked.connect(lambda: self.close())
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        print(current_stylesheet)
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+    
     def addProjectsettings(self, projectsettings):
         """
         this method goes through the projectsettings dictionary and

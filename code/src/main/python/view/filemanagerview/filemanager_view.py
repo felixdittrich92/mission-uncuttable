@@ -21,21 +21,20 @@ class FilemanagerView(classmaker(QWidget, View)):
         uic.loadUi(Resources.files.filemanager, self)
 
         self.delete_button = self.findChild(QWidget, 'delete_button')
-        self.delete_button.setText(str(Language.current.filemanager.deleteButtonName))
         self.delete_button.setEnabled(False)
 
         self.pick_button = self.findChild(QWidget, 'pick_files_button')
-        self.pick_button.setText(str(Language.current.filemanager.pushButtonName))
 
         self.new_folder_button = self.findChild(QWidget, 'new_folder_button')
-        self.new_folder_button.setText(str(Language.current.filemanager.newFolderButton))
 
         self.back_button = self.findChild(QWidget, 'back_button')
-        self.back_button.setText(str(Language.current.filemanager.backButton))
+
         self.back_button.setEnabled(False)
 
         self.breadcrumbs = self.findChild(QWidget, 'breadcrumbs_label')
         self.breadcrumbs.setText("home")
+
+        self.init_text_labels()
 
         self.listWidget = FileListView()
         old_list_widget = self.findChild(QObject, 'listWidget')
@@ -46,6 +45,12 @@ class FilemanagerView(classmaker(QWidget, View)):
         self.listWidget.setViewMode(QListView.IconMode)
         self.listWidget.setIconSize(QSize(90, 90))
         self.listWidget.setObjectName("list_widget")
+
+    def init_text_labels(self):
+        self.delete_button.setText(str(Language.current.filemanager.deleteButtonName))
+        self.pick_button.setText(str(Language.current.filemanager.pushButtonName))
+        self.new_folder_button.setText(str(Language.current.filemanager.newFolderButton))
+        self.back_button.setText(str(Language.current.filemanager.backButton))
 
     def set_delete_action(self, action):
         self.delete_button.clicked.connect(action)
@@ -74,7 +79,6 @@ class FilemanagerView(classmaker(QWidget, View)):
 
         item.setIcon(icon)
 
-
     def refresh(self):
         self.update()
-        print('refresh filemanager')
+        self.init_text_labels()

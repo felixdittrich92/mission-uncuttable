@@ -188,8 +188,12 @@ class MainController:
         :param info: String - More text for the message box to provide further information
         """
         message_box = QMessageBox()
-        message_box.setStyleSheet(open(Resources.files.qss_dark, "r").read())
-
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            message_box.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            message_box.setStyleSheet(open(Resources.files.qss_light, "r").read())
+            
         message_box.setWindowTitle(title)
         message_box.setIcon(icon)
         message_box.setText(text)

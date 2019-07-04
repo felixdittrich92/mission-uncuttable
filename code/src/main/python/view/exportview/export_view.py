@@ -3,7 +3,7 @@ import os
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QPushButton, QDialogButtonBox,
                              QComboBox, QSpinBox, QLabel, QProgressBar)
 from PyQt5 import uic
-from config import Resources, Language
+from config import Resources, Language, Settings
 from model.data import TimelineModel
 
 FORMAT_OPTIONS = {
@@ -61,11 +61,17 @@ class ExportView(QDialog):
     def __init__(self, parent=None):
         super(ExportView, self).__init__(parent)
         uic.loadUi(Resources.files.export_view, self)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
-
+        self.init_stylesheet()
         self.setup_ui()
 
         self.canceled = False
+
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
     def setup_ui(self):
         self.setWindowTitle(str(Language.current.export.windowtitle))

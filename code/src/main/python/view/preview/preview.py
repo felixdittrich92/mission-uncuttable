@@ -73,8 +73,6 @@ class PreviewView(classmaker(QWidget, View)):
 
     def init_stylesheet(self):
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
-        print(current_stylesheet)
-        '''black stylesheet'''
         if current_stylesheet == 0:
             self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
         elif current_stylesheet == 1:
@@ -275,4 +273,3 @@ class PreviewView(classmaker(QWidget, View)):
 
     def refresh(self):
         self.update()
-        print('refresh preview')

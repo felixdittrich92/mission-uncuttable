@@ -163,5 +163,4 @@ class TimelineView(classmaker(QFrame, View)):
         self.time_label.setText(timecode)
 
     def refresh(self):
-        pass
-        print('refresh timeline')
+        self.update()

@@ -45,8 +45,6 @@ class VideoEditorView(classmaker(QMainWindow, View)):
 
     def init_stylesheet(self):
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
-        print(current_stylesheet)
-        '''black stylesheet'''
         if current_stylesheet == 0:
             self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
         elif current_stylesheet == 1:
@@ -125,7 +123,7 @@ class VideoEditorView(classmaker(QMainWindow, View)):
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
@@ -170,8 +168,8 @@ class VideoEditorView(classmaker(QMainWindow, View)):
         self.update()
     
     def refresh(self):
-        '''refresh Videoeditor_View'''
         self.init_stylesheet()
+<<<<<<< Updated upstream
         '''Timeline refresh'''
         self.timeline_view.refresh()
         '''Preview refresh'''
@@ -179,4 +177,8 @@ class VideoEditorView(classmaker(QMainWindow, View)):
         self.previewview.show()
         print("changed")
         '''Filemanager refresh'''
+=======
+        current_language = Settings.get_instance().get_settings().general.language.current
+>>>>>>> Stashed changes
         self.filemanager_view.refresh()
+        self.set_texts()

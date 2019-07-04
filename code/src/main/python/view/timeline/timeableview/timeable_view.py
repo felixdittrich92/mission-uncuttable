@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (QMenu, QAction, QApplication, QGraphicsItem,
 
 from controller import TimelineController
 from model.data import FileType
-from config import Language, Resources
+from config import Language, Resources, Settings
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
 import openshot
@@ -152,7 +152,11 @@ class TimeableView(QGraphicsRectItem):
         event.accept()
 
         menu = QMenu()
-        menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
         cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
         menu.addAction(cut_timeneedle)
