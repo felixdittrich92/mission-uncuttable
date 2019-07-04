@@ -52,6 +52,7 @@
         <deleteButtonName>remove</deleteButtonName>
         <newFolderButton>new Folder</newFolderButton>
         <backButton>back</backButton>
+        <new_folder>Please enter a name:</new_folder>
     </filemanager>
     <timeable>
         <delete>delete</delete>
