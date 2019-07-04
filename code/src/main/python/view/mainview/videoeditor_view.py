@@ -1,10 +1,11 @@
 from PyQt5.QtCore import QObject, QFileSystemWatcher, pyqtSignal
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QSplitter, QApplication, QMenu, QAction,
                              QMessageBox)
 from PyQt5 import uic
 
 from config import Resources, Language
-from view.preview.preview import PreviewView, QIcon
+from view.preview.preview import PreviewView
 from view.timeline.timelineview import TimelineView
 from controller import TimelineController
 from model.project import Project
@@ -140,8 +141,7 @@ class VideoEditorView(QMainWindow):
         h_splitter = self.findChild(QObject, 'horizontalSplitter')
 
         if(self.fullscreen == False):
-            self.previewview.maximize_button.setIcon(
-                QIcon(Resources.images.minimize_button))
+            self.previewview.maximize_button.setIcon(QIcon(Resources.images.minimize_button))
 
             self.v_sizes = v_splitter.sizes()
             self.h_sizes = h_splitter.sizes()
@@ -156,8 +156,7 @@ class VideoEditorView(QMainWindow):
             self.fullscreen = True
 
         else:
-            self.previewview.maximize_button.setIcon(
-                QIcon(Resources.images.maximize_button))
+            self.previewview.maximize_button.setIcon(QIcon(Resources.images.maximize_button))
 
             v_splitter.setSizes(self.splittersizes[0])
             h_splitter.setSizes(self.splittersizes[1])
