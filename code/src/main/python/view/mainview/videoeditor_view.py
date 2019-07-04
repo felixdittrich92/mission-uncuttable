@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QSplitter, QApplication, QMen
 from PyQt5 import uic
 
 from config import Resources, Language
-from view.preview.preview import PreviewView
+from view.preview.preview import PreviewView, QIcon
 from view.timeline.timelineview import TimelineView
 from controller import TimelineController
 from model.project import Project
@@ -39,9 +39,6 @@ class VideoEditorView(QMainWindow):
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
-
-    def testmethod(self):
-        PreviewView.get_instance().testprint()
 
     def set_texts(self):
         """ Loads the text for the menu from the language files """
@@ -143,6 +140,8 @@ class VideoEditorView(QMainWindow):
         h_splitter = self.findChild(QObject, 'horizontalSplitter')
 
         if(self.fullscreen == False):
+            self.previewview.maximize_button.setIcon(
+                QIcon(Resources.images.minimize_button))
 
             self.v_sizes = v_splitter.sizes()
             self.h_sizes = h_splitter.sizes()
@@ -157,6 +156,9 @@ class VideoEditorView(QMainWindow):
             self.fullscreen = True
 
         else:
+            self.previewview.maximize_button.setIcon(
+                QIcon(Resources.images.maximize_button))
+
             v_splitter.setSizes(self.splittersizes[0])
             h_splitter.setSizes(self.splittersizes[1])
 

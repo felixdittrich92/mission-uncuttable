@@ -24,6 +24,7 @@ images = {
     "back_button": "images/buttons/step_back.png",
     "forward_button": "images/buttons/step_forward.png",
     "maximize_button": "images/buttons/maximize.png",
+    "minimize_button": "images/buttons/minimize.png",
     "media_symbols": "images/filemanagerIcons",
     "folder_icon": "images/filemanagerIcons/folder.svg",
     "back_icon": "images/filemanagerIcons/arrow_left.svg",
