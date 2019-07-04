@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidge
                              QCheckBox, QLineEdit, QSpinBox)
                              
 from PyQt5.QtCore import Qt, QFileSystemWatcher
+from PyQt5.QtCore import QObject, pyqtSignal
+
 from PyQt5 import uic
 
 from config import Resources, Language
@@ -14,6 +16,8 @@ class SettingsController:
 
     Manages starting and stopping of the settings window.
     """
+
+
     def __init__(self, view):
         self.__settings_view = view
 
@@ -124,6 +128,7 @@ class SettingsController:
 
         self.settingsInstance.save_settings(self.settings)
         self.update_language()
+        self.__settings_view.saved.emit()
         self.__settings_view.close()
 
     def update_language(self):
@@ -132,6 +137,7 @@ class SettingsController:
             Language.set_language('en')
         elif lang == 1:
             Language.set_language('de')
+        self.__settings_view.saved.emit()
 
     def saveSetting(self, type, widget, x, y):
         """

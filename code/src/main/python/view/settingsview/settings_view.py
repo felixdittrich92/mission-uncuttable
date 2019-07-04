@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidget,
                              QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
                              QCheckBox, QLineEdit, QSpinBox)
-from PyQt5.QtCore import Qt, QFileSystemWatcher
+from PyQt5.QtCore import Qt, QFileSystemWatcher, pyqtSignal
 from PyQt5 import uic
 
 from config import Resources, Language
@@ -17,8 +17,12 @@ class SettingsView(QMainWindow):
     If you want to add a setting go to the "config.py" file and simply
     add the desired setting to the dictionary that you'll find there.
     """
+
+    saved = pyqtSignal()
+
     def __init__(self, parent=None):
         """Loads the UI-file and the shortcuts."""
+
         super(SettingsView, self).__init__(parent)
         uic.loadUi(Resources.files.settingsview, self)
 
@@ -27,8 +31,6 @@ class SettingsView(QMainWindow):
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
-        self.__qss_watcher.fileChanged.connect(self.update_qss)
-
 
         """ centering the window """
         rectangle = self.frameGeometry()

@@ -163,8 +163,6 @@ class VideoEditorView(classmaker(QMainWindow, View)):
             self.filemanager_view.show()
             self.fullscreen = False
 
-        self.refresh()
-
     def connect_update(self):
         PreviewView.get_instance().update_information()
 
@@ -179,6 +177,6 @@ class VideoEditorView(classmaker(QMainWindow, View)):
         '''Preview refresh'''
         self.previewview.close()
         self.previewview.show()
-        
+        print("changed")
         '''Filemanager refresh'''
         self.filemanager_view.refresh()

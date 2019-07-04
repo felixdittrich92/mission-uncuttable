@@ -40,8 +40,10 @@ class VideoEditorController:
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
+
         self.settings_view = SettingsView()
         self.__settings_controller = SettingsController(self.settings_view)
+
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
         self.projectsettings_view = ProjectSettingsView()
@@ -94,11 +96,15 @@ class VideoEditorController:
         """Opens the settings window"""
         if self.__settings_controller.checkIfClosed():
             self.settings_view = SettingsView()
+            self.settings_view.saved.connect(self.update_views)
             self.__settings_controller = SettingsController(self.settings_view)
             self.__settings_controller.start()
         else:
             self.__settings_controller.focus()
 
+    def update_views(self):
+        self.__video_editor_view.refresh()
+        
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
         if self.__projectsettings_controller.checkIfClosed():
