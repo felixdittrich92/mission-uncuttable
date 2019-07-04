@@ -45,7 +45,7 @@
         <resolution>Auflösung</resolution>
         <projectname>Projektname</projectname>
         <projectlocation>Projektpfad</projectlocation>
-        <accept>Akzeptieren</accept>
+        <save>Speichern</save>
     </projectsettings>
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>

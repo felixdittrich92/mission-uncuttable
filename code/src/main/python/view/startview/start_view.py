@@ -31,8 +31,7 @@ class StartView(QMainWindow):
 
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
 
-        self.setStyleSheet(
-            open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
@@ -60,6 +59,13 @@ class StartView(QMainWindow):
         rectangle.moveCenter(center_point)
         self.move(rectangle.topLeft())
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())    
+    
     def show(self):
         """Starts the start-window normal (not maximized)."""
         self.showNormal()
@@ -77,7 +83,7 @@ class StartView(QMainWindow):
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
