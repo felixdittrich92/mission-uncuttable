@@ -232,5 +232,4 @@ class VideoEditorController:
         project = Project.get_instance()
         project.path = path
         project.changed = False
-
-    
+        self.set_title_saved()
