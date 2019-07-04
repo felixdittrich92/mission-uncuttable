@@ -6,8 +6,7 @@ import cv2
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QInputDialog
 
-from config import Resources
-from config import Settings
+from config import Resources, Settings, Language
 from model.folder import Folder
 from model.project import Project
 from autocut import Presentation
@@ -45,9 +44,7 @@ class FilemanagerController:
         self.print_folder_stack()
 
         self.__filemanager_view.listWidget.itemSelectionChanged.connect(self.toggle_delete_button)
-
-
-        print(Project.get_instance().path)
+        self.__filemanager_view.listWidget.drop.connect(self.handle_drop)
 
     def print_folder_stack(self):
         breadcrumbs = self.__filemanager_view.breadcrumbs
@@ -114,8 +111,9 @@ class FilemanagerController:
 
         if file is None:
             name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog',
-                                                'Bitte einen Namen eingeben:')
-            if result is True:
+                                                str(Language.current.filemanager.new_folder))
+            if result is True and name not in [
+                    f.get_name() for f in self.file_list if isinstance(f, Folder)]:
                 file = Folder(name)
             else:
                 return
@@ -325,6 +323,34 @@ class FilemanagerController:
             self.__filemanager_view.delete_button.setEnabled(False)
         else:
             self.__filemanager_view.delete_button.setEnabled(True)
+
+    def handle_drop(self, item, path):
+        file_list = self.get_current_file_list()
+
+        list_widget = self.__filemanager_view.listWidget
+        source_item = None
+        for i in range(list_widget.count()):
+            if list_widget.item(i).statusTip() == path:
+                source_item =  list_widget.item(i)
+
+        if source_item is None:
+            return
+
+        for file in file_list:
+            if isinstance(file, Folder) and file.get_name() == item.text():
+                self.get_current_file_list().remove(source_item.statusTip())
+                list_widget.removeItemWidget(source_item)
+
+                self.update_file_list(self.get_current_file_list())
+
+                file.add_to_content(path)
+
+                project = Project.get_instance()
+                if not project.changed:
+                    project.changed = True
+                    self.__filemanager_view.changed.emit()
+
+                return
 
     def serialize(self, obj):
         """
