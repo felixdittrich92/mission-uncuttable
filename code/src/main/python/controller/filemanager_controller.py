@@ -5,6 +5,7 @@ import cv2
 
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QInputDialog
+from PyQt5.QtCore import Qt
 
 from config import Resources, Settings, Language
 from model.folder import Folder
@@ -30,7 +31,6 @@ class FilemanagerController:
         self.__filemanager_view.new_folder_button.clicked.connect(self.new_folder)
         self.__filemanager_view.back_button.clicked.connect(self.folder_up)
         self.__filemanager_view.listWidget.itemDoubleClicked.connect(self.handle_double_click)
-
 
         """Set the functionality to the Widgets"""
         self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
@@ -325,24 +325,25 @@ class FilemanagerController:
             self.__filemanager_view.delete_button.setEnabled(True)
 
     def handle_drop(self, item, path):
-        file_list = self.get_current_file_list()
-
         list_widget = self.__filemanager_view.listWidget
-        source_item = None
-        for i in range(list_widget.count()):
-            if list_widget.item(i).statusTip() == path:
-                source_item =  list_widget.item(i)
 
-        if source_item is None:
+        # get the source item
+        item_list = list_widget.findItems(os.path.basename(path), Qt.MatchExactly)
+        if not item_list:
             return
 
+        source_item = item_list[0]
+
+        # find folder
+        file_list = self.get_current_file_list()
         for file in file_list:
             if isinstance(file, Folder) and file.get_name() == item.text():
-                self.get_current_file_list().remove(source_item.statusTip())
+                # remove old file
+                file_list.remove(source_item.statusTip())
                 list_widget.removeItemWidget(source_item)
-
                 self.update_file_list(self.get_current_file_list())
 
+                # add to foldeer
                 file.add_to_content(path)
 
                 project = Project.get_instance()

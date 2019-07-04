@@ -68,7 +68,7 @@ class FilemanagerView(QWidget):
         if isinstance(file, Folder):
             item = QListWidgetItem(file.get_name(), self.listWidget)
         else:
-            item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
+            item = QListWidgetItem(os.path.basename(file), self.listWidget)
             item.setToolTip(file)
             item.setStatusTip(file)
 
