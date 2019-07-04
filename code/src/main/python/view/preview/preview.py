@@ -11,9 +11,12 @@ from threading import Thread
 import openshot
 import sip
 import time
+from ..view import View
+from config import Settings
+from util.classmaker import classmaker
 
+class PreviewView(classmaker(QWidget, View)):
 
-class PreviewView(QWidget):
     """
     QWidget for Previewplayer
     """
@@ -38,6 +41,7 @@ class PreviewView(QWidget):
         super(PreviewView, self).__init__()
         uic.loadUi(Resources.files.preview_view, self)
 
+        # self.init_stylesheet()
         self.video_running = False
 
         #get timelinemlodel, timeline
@@ -67,6 +71,14 @@ class PreviewView(QWidget):
         #init GUI
         self.initGUI()
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+            
+    
     def initGUI(self):
         #load icons
         self.iconplay = QtGui.QPixmap(Resources.images.play_button)
@@ -104,8 +116,6 @@ class PreviewView(QWidget):
         self.forward_button.released.connect(self.stop_loop)
         self.progress_slider.sliderMoved.connect(self.change_progress_bar)
         self.looprunning = False
-
-        # self.update_time_label()
 
         #set Widget into Layout
         self.video_layout.layout().insertWidget(0, self.videoWidget)
@@ -225,7 +235,6 @@ class PreviewView(QWidget):
 
     def set_player_to_frame(self, frame):
         self.player.Seek(frame)
-        print(frame)
 
     def change_progress_bar(self):
         self.player.Seek(self.progress_slider.value())
@@ -269,3 +278,6 @@ class PreviewView(QWidget):
         self.update_player()
         self.update_progress_bar()
         self.update_time_label()
+
+    def refresh(self):
+        self.update()

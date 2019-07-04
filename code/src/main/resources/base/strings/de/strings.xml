@@ -45,17 +45,19 @@
         <resolution>Auflösung</resolution>
         <projectname>Projektname</projectname>
         <projectlocation>Projektpfad</projectlocation>
-        <accept>Akzeptieren</accept>
+        <save>Speichern</save>
     </projectsettings>
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
         <newFolderButton>neuer Ordner</newFolderButton>
         <backButton>zurück</backButton>
+        <new_folder>Bitte einen Namen eingeben:</new_folder>
     </filemanager>
     <timeable>
         <delete>löschen</delete>
-        <cut>schneiden</cut>
+        <cut_here>hier schneiden</cut_here>
+        <cut_timeneedle>bei Zeitnadel schneiden</cut_timeneedle>
         <settings>Einstellungen</settings>
         <group_remove>aus Gruppe entfernen</group_remove>
     </timeable>
@@ -67,6 +69,7 @@
     <track>
       <delete>Spur löschen</delete>
       <add>Spur hinzufügen</add>
+      <overlay>Overlay Spur</overlay>
     </track>
     <export>
         <windowtitle>Video exportieren</windowtitle>

@@ -1,6 +1,6 @@
 import os
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAction, QMenu, QApplication
 from PyQt5.QtCore import QDataStream, Qt, QIODevice, QRectF, QPoint
 
 from .add_track_view import AddTrackView
@@ -8,7 +8,7 @@ from model.data import TimeableModel
 from model.project import Project
 from controller import TimelineController, AddTrackController
 from util.timeline_utils import generate_id
-from config import Language, Resources
+from config import Language, Resources, Settings
 
 
 class TrackView(QGraphicsView):
@@ -79,7 +79,11 @@ class TrackView(QGraphicsView):
     def on_context_menu(self, point):
         """ shows a menu on rightclick """
         button_menu = QMenu()
-        button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            button_menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
         delete = QAction(str(Language.current.track.delete))
         button_menu.addAction(delete)
@@ -88,6 +92,15 @@ class TrackView(QGraphicsView):
         add = QAction(str(Language.current.track.add))
         button_menu.addAction(add)
         add.triggered.connect(self.add)
+
+        if self.is_video:
+            overlay = QAction(str(Language.current.track.overlay))
+            overlay.setCheckable(True)
+            if self.is_overlay:
+                overlay.setChecked(True)
+
+            button_menu.addAction(overlay)
+            overlay.changed.connect(self.overlay_toggle)
 
         button_menu.exec_(self.button.mapToGlobal(point) + QPoint(10, 0))
 
@@ -105,6 +118,13 @@ class TrackView(QGraphicsView):
         This method is only for the context menu on the track button
         """
         self.__controller.delete_track(self.num)
+
+    def overlay_toggle(self):
+        """ Toggles the Overlay state of this Track. """
+        self.is_overlay = not self.is_overlay
+        self.__controller.set_track_overlay(self.num, self.is_overlay)
+
+        QApplication.processEvents()
 
     def wheelEvent(self, event):
         """ Overrides wheelEvent from QGraphicsView to prevent scrolling in a track """

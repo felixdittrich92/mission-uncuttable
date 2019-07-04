@@ -10,19 +10,21 @@ from PyQt5.QtCore import QObject, QSize, pyqtSignal, Qt
 from config import Resources, Language
 from model.folder import Folder
 
+from ..view import View
+from util.classmaker import classmaker
 from view.mainview import FileListView
 
 
-class FilemanagerView(QWidget):
+class FilemanagerView(classmaker(QWidget, View)):
 
     changed = pyqtSignal()
-
     def __init__(self, parent=None):
         super(FilemanagerView, self).__init__(parent)
         """Loads the UI file"""
         uic.loadUi(Resources.files.filemanager, self)
 
         self.delete_button = self.findChild(QWidget, 'delete_button')
+
         self.delete_button.setText("")
         self.delete_button.setIcon(QIcon(Resources.images.trash_icon))
         self.delete_button.setEnabled(False)
@@ -78,9 +80,12 @@ class FilemanagerView(QWidget):
         if isinstance(file, Folder):
             item = QListWidgetItem(file.get_name(), self.listWidget)
         else:
-            item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
+            item = QListWidgetItem(os.path.basename(file), self.listWidget)
             item.setToolTip(file)
             item.setStatusTip(file)
 
         item.setIcon(icon)
 
+    def refresh(self):
+        self.update()
+        self.init_text_labels()

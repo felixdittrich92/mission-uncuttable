@@ -16,9 +16,8 @@ class TimeableSettingsView(QDialog):
         super(TimeableSettingsView, self).__init__()
 
         uic.loadUi(Resources.files.timeable_settings, self)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         self.__qss_watcher = QFileSystemWatcher()
-        self.__qss_watcher.addPath(Resources.files.qss_dark)
+        self.init_stylesheet()
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
         self.setFixedSize(351, 120)
@@ -34,9 +33,16 @@ class TimeableSettingsView(QDialog):
         self.current_volume_value = None
         self.old_value = None
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
