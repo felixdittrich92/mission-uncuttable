@@ -181,6 +181,7 @@ class TrackView(QGraphicsView):
         # add the timeable when there are no colliding items
         if not colliding:
             model = TimeableModel(path, generate_id(), is_video=True)
+            model_withoutgroup = TimeableModel(path, generate_id())
             model_audio = TimeableModel(path, generate_id(), is_video=False)
             model.move(x_pos)
             model.set_end(width) 
@@ -189,13 +190,18 @@ class TrackView(QGraphicsView):
             clip_id = generate_id()
             clip_id_audio = generate_id()
 
-            self.__controller.create_timeable(self.num, name, width, x_pos,
+            
+
+            if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
+                self.__controller.create_timeable(self.num, name, width, x_pos,
                                               model, clip_id, is_drag=True)
+                self.__controller.create_timeable(None, name, width, x_pos,
+                                                model_audio, clip_id_audio, is_drag=True)
+                self.__controller.create_group([clip_id, clip_id_audio])
+            else:
+                self.__controller.create_timeable(self.num, name, width, x_pos,
+                                              model_withoutgroup, clip_id, is_drag=True)
 
-            self.__controller.create_timeable(None, name, width, x_pos,
-                                              model_audio, clip_id_audio, is_drag=True)
-
-            self.__controller.create_group([clip_id, clip_id_audio])
 
             self.item_dropped = True
 
@@ -231,8 +237,6 @@ class TrackView(QGraphicsView):
             res_right = timeable.resizable_right
             file_name = timeable.model.file_name
             old_pos = timeable.x_pos
-
-
 
             # create new timeable
             model = TimeableModel(file_name, generate_id(), is_video=timeable.model.is_video)

@@ -414,7 +414,7 @@ class TimeableView(QGraphicsRectItem):
 
         mimeData = QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
-        if self.model.is_video:
+        if self.model.is_video or (self.model.is_video is None):
             mimeData.setText("is_video")
         else:
             mimeData.setText("is_audio")
