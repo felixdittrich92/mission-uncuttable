@@ -4,6 +4,7 @@ from PyQt5.QtGui import QBrush, QColor, QDrag
 from PyQt5.QtWidgets import QMenu, QDialog, QAction, QApplication, QGraphicsItem, QGraphicsRectItem
 
 from controller import TimelineController
+from view.timeline.util.timelineview_utils import *
 from model.data import FileType
 from config import Language
 from util.timeline_utils import get_pixmap_from_file
@@ -217,14 +218,14 @@ class TimeableView(QGraphicsRectItem):
         Refresh the width depending on the length and the zoom factor of
         the timeable.
         """
-        self.__set_width(round(self.__zoom_factor * self.__length))
+        self.__set_width(frames_to_pixels(self.__length, self.__zoom_factor))
 
     def __refresh_x_pos(self):
         """
         Refresh the x position of the timeable depending on the start
         and the zoom factor of the timeable.
         """
-        self.__set_x_pos(round(self.__zoom_factor * self.__start))
+        self.__set_x_pos(frames_to_pixels(self.__start, self.__zoom_factor))
 
     def __refresh_geometry(self):
         """
