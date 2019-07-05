@@ -88,4 +88,3 @@ class FilemanagerView(classmaker(QWidget, View)):
 
     def refresh(self):
         self.update()
-        self.init_text_labels()
