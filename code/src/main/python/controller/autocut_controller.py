@@ -117,17 +117,13 @@ class AutocutController:
                 filename = filename[:-4]
                 folder = Folder(filename)
 
-                if not os.path.isdir(
-                        os.path.join(self.project_path, self.project_name,
-                                     'files', filename)):
+                presentation = Presentation(self.filename_pdf)
+                if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files', filename)):
                     try:
-                        os.mkdir(
-                            os.path.join(self.project_path, self.project_name,
-                                         'files', filename))
+                        os.mkdir(os.path.join(self.project_path, self.project_name, 'files', filename))
                     except OSError:
                         pass
 
-                presentation = Presentation(self.filename_pdf)
                 self.textlabel.setText(str(Language.current.autocut.slidesprogressing))
                 self.pictures = presentation.convert_pdf(self.project_path,
                                                          os.path.join(self.project_name, "files", filename),
