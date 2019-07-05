@@ -3,12 +3,13 @@ import locale
 import openshot
 
 from .timeline import TimelineModel
-from util.timeline_utils import get_file_type, pos_to_seconds
+from util.timeline_utils import get_file_type, pos_to_seconds, frames_to_seconds
+from projectconfig.projectsettings import Projectsettings
 
 
 class TimeableModel:
     def __init__(self, file_name, clip_id):
-        # otherwhise there is a json parse error
+        # otherwhise there is a js on parse error
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
@@ -17,7 +18,8 @@ class TimeableModel:
         self.file_name = file_name
         self.file_type = get_file_type(self.file_name)
 
-        self.timeline_instance = TimelineModel.get_instance()
+        self.__project_settings = Projectsettings.get_instance()
+        self.timeline_model = TimelineModel.get_instance()
 
         # if the timeline has no clips, set some timeline data to the data of this clip
         if self.is_first_vid():
@@ -37,14 +39,14 @@ class TimeableModel:
 
     def add_to_timeline(self):
         """ Adds the clip to the openshot timeline """
-        self.timeline_instance.timeline.AddClip(self.clip)
+        self.timeline_model.timeline.AddClip(self.clip)
 
     def is_first_vid(self):
         """ Returns True if this is the first video in the timeline, False otherwhise """
         if not self.clip.Reader().info.has_video:
             return False
 
-        for c in list(self.timeline_instance.timeline.Clips()):
+        for c in list(self.timeline_model.timeline.Clips()):
             if c.Reader().info.has_video:
                 return False
 
@@ -56,11 +58,11 @@ class TimeableModel:
             "num": self.clip.Reader().info.fps.num,
             "den": self.clip.Reader().info.fps.den
         }
-        self.timeline_instance.change("update", ["fps", ""], fps_data)
+        self.timeline_model.change("update", ["fps", ""], fps_data)
 
-        self.timeline_instance.change(
+        self.timeline_model.change(
             "update", ["width"], self.clip.Reader().info.width)
-        self.timeline_instance.change(
+        self.timeline_model.change(
             "update", ["height"], self.clip.Reader().info.height)
 
     def get_first_frame(self):
@@ -71,64 +73,101 @@ class TimeableModel:
         """ Sets the layer of the clip """
         self.clip.Layer(layer)
         data = {"layer": layer}
-        self.timeline_instance.change(
+        self.timeline_model.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
 
-    def trim_start(self, pos):
-        """ start = start + sec(pos) """
-        new_start = self.clip.Start() + pos_to_seconds(pos)
-        self.clip.Start(new_start)
+    def trim_start(self, trim_frames):
+        """
+        Trim the timeable's start by a number of frames.
 
-        data = {"start": new_start}
-        self.timeline_instance.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        @param trim_frames: The number of frames to remove.
+        @return:            Nothing
+        """
+        fps = self.timeline_model.get_fps()
+        trim_seconds = frames_to_seconds(trim_frames, fps)
+        start_seconds = self.clip.Start() + trim_seconds
+        self.set_start(start_seconds, is_sec=True)
 
-    def set_start(self, pos, is_sec=False):
-        """ Sets the start of the clip """
-        new_start = pos
+    def set_start(self, start, is_sec=False):
+        """
+        Set the start time of the timeable in frames or seconds.
+
+        @param start:  The new start time in frames or seconds
+        @param is_sec: Specifies if the start is given in frames or in
+                       seconds. False means frames and True means
+                       seconds.
+        @return:       Nothing
+        """
         if is_sec:
-            self.clip.Start(pos)
+            start_seconds = start
         else:
-            new_start = pos_to_seconds(pos)
-            self.clip.Start(new_start)
+            fps = self.timeline_model.get_fps()
+            start_seconds = frames_to_seconds(start, fps)
+        self.clip.Start(start_seconds)
 
-        data = {"start": new_start}
-        self.timeline_instance.change(
+        data = {"start": start_seconds}
+        self.timeline_model.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
 
-    def trim_end(self, pos):
-        """ end = end + sec(pos) """
-        new_end = self.clip.End() + pos_to_seconds(pos)
-        self.clip.End(new_end)
+    # Todo: Invert the frames attribute. Currently it has to be
+    #  negative to remove frames but it would be more intuitive if a
+    #  trim function always _removes_ a number of frames. There should
+    #  be no case in which one wanted to add frames at the end and
+    #  therefore every call would use a negative argument.
+    def trim_end(self, trim_frames):
+        """
+        Trim the timeable's end by a number of frames. To remove frames
+        the frame number must be negative.
 
-        data = {"end": new_end}
-        self.timeline_instance.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        @param trim_frames: The number of frames to add. To remove
+                            frames, use a negative number.
+        @return:            Nothing
+        """
+        fps = self.timeline_model.get_fps()
+        trim_seconds = frames_to_seconds(trim_frames, fps)
+        end_seconds = self.clip.End() + trim_seconds
+        self.set_end(end_seconds, is_sec=True)
 
-    def set_end(self, pos, is_sec=False):
-        """ Sets the end of the clip """
-        new_end = pos
+    def set_end(self, end, is_sec=False):
+        """
+        Set the end of the timeable in frames or seconds.
+
+        @param end:    The new end of the timeable in frames or seconds.
+        @param is_sec: Specifies if the end is given in frames or in
+                       seconds. False means frames and True means
+                       seconds.
+        @return:       Nothing.
+        """
         if is_sec:
-            self.clip.End(pos)
+            end_seconds = end
         else:
-            new_end = pos_to_seconds(pos)
-            self.clip.End(new_end)
+            fps = self.timeline_model.get_fps()
+            end_seconds = frames_to_seconds(end, fps)
+        self.clip.End(end_seconds)
 
-        data = {"end": new_end}
-        self.timeline_instance.change(
+        data = {"end": end_seconds}
+        self.timeline_model.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
 
-    def move(self, pos, is_sec=False):
-        """ Sets the position of the clip """
-        new_position = pos
-        if is_sec:
-            self.clip.Position(new_position)
-        else:
-            new_position = pos_to_seconds(pos)
-            self.clip.Position(new_position)
+    def move(self, start, is_sec=False):
+        """
+        Move the timeable to a new start time in frames or seconds.
 
-        data = {"position": new_position}
-        self.timeline_instance.change(
+        @param start:  The new start time in frames or seconds.
+        @param is_sec: Specifies if the end is given in frames or in
+                       seconds. False means frames and True means
+                       seconds.
+        @return:       Nothing.
+        """
+        if is_sec:
+            start_seconds = start
+        else:
+            fps = self.timeline_model.get_fps()
+            start_seconds = frames_to_seconds(start, fps)
+        self.clip.Position(start_seconds)
+
+        data = {"position": start_seconds}
+        self.timeline_model.change(
             "update", ["clips", {"id": self.clip.Id()}], data)
 
     def corner(self, val):

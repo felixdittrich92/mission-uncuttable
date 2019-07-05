@@ -113,20 +113,25 @@ class TimelineController:
         op = CutOperation(view_id, res_right, width, model_end, pos)
         self.__history.do_operation(op)
 
-    def resize_timeable(self, view_info_old, view_info_new):
+    # Todo: Split up resize_timeable into to methods for either left or
+    #  right trimming of timeables. To make it really clear what this
+    #  method does the new methods should be named trim_left and
+    #  trim_right. If they tend to contain to much redundant code merge
+    #  them with a side parameter.
+    # (The current implementation was only done because of time
+    # pressure. It's assumed that this won't have a huge effect on the
+    # complexity of solving the above to-do in the future.
+    def resize_timeable(self, timeable_id, delta_length, side):
         """
-        Remove a part of the model's representation of a timeable
-        between a start and an end time relative to the start of the
-        timeable.
+        Resize a timeable on one side.
 
-        The removed part includes the frames specified by start and end.
-
-        @param id:    The timeable's unique ID.
-        @param start: The number of the first frame removed.
-        @param end:   The number of the last frame removed.
-        @return:      Nothing.
+        @param timeable_id  The id of the timeable.
+        @param delta_length The number of frames by which the timeable
+                            should be resized
+        @param side         Specifies left or right. False means left
+                            and True means right.
         """
-        op = ResizeOperation(view_info_old, view_info_new)
+        op = ResizeOperation(timeable_id, delta_length, side)
         self.__history.do_operation(op)
 
     def is_overlay_track(self, track_id):
@@ -272,10 +277,9 @@ class CreationOperation(Operation):
     def do(self):
         self.model.move(self.x_pos)
         timeline_view = TimelineController.get_instance().get_timelineview()
-        timeline_view.create_timeable(self.track_id, self.name, self.width,
-                                      self.x_pos, self.model, self.id,
-                                      res_left=self.res_left, res_right=self.res_right,
-                                      mouse_pos=self.mouse_pos, is_drag=self.is_drag)
+        timeline_view.create_timeable(self.track_id, self.name, self.x_pos, self.width, self.model, self.id,
+                                      res_left=self.res_left, res_right=self.res_right, mouse_pos=self.mouse_pos,
+                                      is_drag=self.is_drag)
 
     def undo(self):
         TimelineController.get_instance().get_timeable_by_id(self.id).delete(hist=False)
@@ -301,12 +305,11 @@ class DeleteOperation(Operation):
         model.set_end(self.model_info["end"], is_sec=True)
         model.move(self.model_info["position"], is_sec=True)
 
-        TimelineController.get_instance().create_timeable(
-            self.view_info["track_id"], self.view_info["name"],
-            self.view_info["width"], self.view_info["x_pos"], model,
-            self.view_info["view_id"],
-            res_left=self.view_info["resizable_left"],
-            res_right=self.view_info["resizable_right"], hist=False)
+        TimelineController.get_instance().create_timeable(self.view_info["track_id"], self.view_info["name"],
+                                                          self.view_info["x_pos"], self.view_info["width"], model,
+                                                          self.view_info["view_id"],
+                                                          res_left=self.view_info["resizable_left"],
+                                                          res_right=self.view_info["resizable_right"])
 
 
 class CutOperation(Operation):
@@ -337,14 +340,11 @@ class CutOperation(Operation):
                        is_sec=True)
         new_model.set_layer(timeable_left.model.clip.Layer())
 
-        controller.create_timeable(timeable_left.track_id, timeable_left.name,
-                                   timeable_left.width - self.pos,
-                                   self.pos + timeable_left.x_pos, new_model,
-                                   self.new_view_id,
-                                   res_right=timeable_left.resizable_right,
-                                   hist=False)
+        controller.create_timeable(timeable_left.track_id, timeable_left.name, self.pos + timeable_left.x_pos,
+                                   timeable_left.width - self.pos, new_model, self.new_view_id,
+                                   res_right=timeable_left.resizable_right)
 
-        timeable_left.set_width(self.pos)
+        timeable_left.__set_width(self.pos)
         timeable_left.setPos(timeable_left.x_pos, 0)
         timeable_left.update_handles_pos()
 
@@ -356,7 +356,7 @@ class CutOperation(Operation):
 
         timeable_left = controller.get_timeable_by_id(self.view_id)
         timeable_left.resizable_right = self.res_right
-        timeable_left.set_width(self.width)
+        timeable_left.__set_width(self.width)
         timeable_left.setPos(timeable_left.x_pos, 0)
         timeable_left.update_handles_pos()
         timeable_left.model.set_end(self.model_end, is_sec=True)
@@ -389,41 +389,63 @@ class MoveOperation(Operation):
         timeable.model.move(self.old_pos)
 
 
+# Todo: Split up ResizeOperation into two classes for either left or
+#  right trimming of timeables. To make it really clear what these
+#  classes are for they should be named TrimLeftOperation and
+#  TrimRightOperation. If they tend to contain to much redundant code
+#  merge them with a side parameter.
+# (The current implementation was only done because of time
+# pressure. It's assumed that this won't have a huge effect on the
+# complexity of solving the above to-do in the future.
 class ResizeOperation(Operation):
     """ Resizes a timeable """
 
-    def __init__(self, view_info_old, view_info_new):
-        self.view_id = view_info_old["view_id"]
-        self.view_info_old = view_info_old
-        self.view_info_new = view_info_new
+    def __init__(self, timeable_id, delta_length, side):
+        """
+        Create a resize operation which resizes a timeable on one side.
 
-        if self.view_info_old["resizable_left"] != self.view_info_new["resizable_left"]:
-            self.diff = (self.view_info_old["resizable_left"]
-                         - self.view_info_new["resizable_left"])
-            self.start = True
-        else:
-            self.diff = (self.view_info_old["resizable_right"]
-                         - self.view_info_new["resizable_right"])
-            self.start = False
+        @param timeable_id  The id of the timeable.
+        @param delta_length The number of frames by which the timeable
+                            should be resized
+        @param side         Specifies left or right. False means left
+                            and True means right.
+        """
+        self.__timeable_id = timeable_id
+        self.__delta_length = delta_length
+        self.__side = side
 
     def do(self):
-        timeable = TimelineController.get_instance().get_timeable_by_id(self.view_id)
+        timeable = TimelineController.get_instance()\
+            .get_timeable_by_id(self.__timeable_id)
 
-        timeable.resizable_left = self.view_info_new["resizable_left"]
-        timeable.resizable_right = self.view_info_new["resizable_right"]
+        # Todo:
+        #  Missing code?
+        #  Before implementing length handling in frames there was code
+        #  at this place which updated the timeables size. So now, cause
+        #  this code was removed (purpose: not conform to the
+        #  model-view-pattern) there is some functionality missing.
+        #   -> Cause a size change of the timeable
+        #      * Better do proper model-view-pattern implementation and
+        #        do it through the model and the controller
 
-        timeable.prepareGeometryChange()
-        timeable.width = self.view_info_new["width"]
+        # Todo: Position change
+        #  When a timeable gets trimmed at the start it has to be moved
+        #  according to the length loss at the front. This code was here
+        #  before to do that:
+        # if self.start:
+        #     timeable.x_pos = self.view_info_new["x_pos"]
+        #     timeable.setPos(timeable.x_pos, 0)
+        #     timeable.model.trim_start(self.diff)
+        #     timeable.model.move(timeable.x_pos)
+        # else:
+        #     timeable.model.trim_end(self.diff)
 
-        if self.start:
-            timeable.x_pos = self.view_info_new["x_pos"]
-            timeable.setPos(timeable.x_pos, 0)
-            timeable.model.trim_start(self.diff)
-            timeable.model.move(timeable.x_pos)
-        else:
-            timeable.model.trim_end(self.diff)
+        # This was here before but it is not conform to the model view
+        # pattern. Look at the to-do above.
+        # timeable.setRect(timeable.boundingRect())
 
-        timeable.setRect(timeable.boundingRect())
+        # Temporary code for testing, if refactoring was successful:
+
 
     def undo(self):
         timeable = TimelineController.get_instance().get_timeable_by_id(self.view_id)
@@ -461,21 +483,19 @@ class DragOperation(Operation):
             return
 
         controller = TimelineController.get_instance()
-        controller.create_timeable(
-            self.view_info_new["track_id"], self.view_info_new["name"],
-            self.view_info_new["width"], self.view_info_new["x_pos"], self.model_new,
-            self.view_info_new["view_id"], res_left=self.view_info_new["resizable_left"],
-            res_right=self.view_info_new["resizable_right"], hist=False)
+        controller.create_timeable(self.view_info_new["track_id"], self.view_info_new["name"],
+                                   self.view_info_new["x_pos"], self.view_info_new["width"], self.model_new,
+                                   self.view_info_new["view_id"], res_left=self.view_info_new["resizable_left"],
+                                   res_right=self.view_info_new["resizable_right"])
         controller.delete_timeable(
             self.view_info_old, self.model_old.get_info_dict(), hist=False)
 
     def undo(self):
         controller = TimelineController.get_instance()
-        controller.create_timeable(
-            self.view_info_old["track_id"], self.view_info_old["name"],
-            self.view_info_old["width"], self.view_info_old["x_pos"], self.model_old,
-            self.view_info_old["view_id"], res_left=self.view_info_old["resizable_left"],
-            res_right=self.view_info_old["resizable_right"], hist=False)
+        controller.create_timeable(self.view_info_old["track_id"], self.view_info_old["name"],
+                                   self.view_info_old["x_pos"], self.view_info_old["width"], self.model_old,
+                                   self.view_info_old["view_id"], res_left=self.view_info_old["resizable_left"],
+                                   res_right=self.view_info_old["resizable_right"])
         controller.delete_timeable(
             self.view_info_new, self.model_new.get_info_dict(), hist=False)
         self.was_created = False

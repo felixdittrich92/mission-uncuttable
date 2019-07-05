@@ -85,6 +85,14 @@ def get_px_per_second():
     return int(s.Invisible.pixels_per_second)
 
 
+def frames_to_seconds(frames, fps):
+    return frames / fps
+
+
+def seconds_to_frames(seconds, fps):
+    return seconds * fps
+
+
 def pos_to_seconds(pos):
     return pos / get_px_per_second()
 
