@@ -28,6 +28,7 @@
         <general>Allgemein</general>
         <language>Sprache</language>
         <history_limit>Anzahl gespeicherte Operationen</history_limit>
+        <autoaudio>Audio Clip automatisch hinzufügen</autoaudio>
         <design>Design</design>
         <color_theme>Farbschema</color_theme>
         <shortcuts>Shortcuts</shortcuts>
