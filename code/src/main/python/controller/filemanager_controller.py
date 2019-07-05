@@ -128,6 +128,11 @@ class FilemanagerController:
             folder = Folder(filename)
 
             presentation = Presentation(file)
+            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files')):
+                try:
+                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files'))
+                except OSError:
+                    pass
             if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files', filename)):
                 try:
                     os.mkdir(os.path.join(self.project_path, self.project_name, 'files', filename))
