@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import *
 from config import Resources
-from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint
+from PyQt5.QtCore import QObject, QCoreApplication, pyqtSignal, QPoint, Qt
 from model.data import TimelineModel
 from controller import TimelineController
 from .videoWidget import VideoWidget
@@ -96,6 +96,15 @@ class PreviewView(classmaker(QWidget, View)):
         self.back_button.setIcon(QIcon(iconback))
         self.forward_button.setIcon(QIcon(iconforward))
         self.maximize_button.setIcon(QIcon(iconmax))
+
+        # set cursor to buttons
+        self.play_button.setCursor(Qt.PointingHandCursor)
+        self.first_frame_button.setCursor(Qt.PointingHandCursor)
+        self.last_frame_button.setCursor(Qt.PointingHandCursor)
+        self.back_button.setCursor(Qt.PointingHandCursor)
+        self.forward_button.setCursor(Qt.PointingHandCursor)
+        self.maximize_button.setCursor(Qt.PointingHandCursor)
+        self.progress_slider.setCursor(Qt.PointingHandCursor)
 
         #connect events
         self.play_button.clicked.connect(self.play_pause)

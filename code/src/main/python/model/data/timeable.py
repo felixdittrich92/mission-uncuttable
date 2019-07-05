@@ -137,9 +137,9 @@ class TimeableModel:
         k2 = openshot.Keyframe()
         k3 = openshot.Keyframe()
         if val:
-            k1.AddPoint(0, 0.2)
-            k2.AddPoint(0, 0.4)
-            k3.AddPoint(0, 0.4)
+            k1.AddPoint(0, 0.25)
+            k2.AddPoint(0, 0.375)
+            k3.AddPoint(0, 0.375)
         else:
             k1.AddPoint(0, 1.0)
             k2.AddPoint(0, 0.0)

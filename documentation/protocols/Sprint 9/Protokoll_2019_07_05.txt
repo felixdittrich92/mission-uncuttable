@@ -1,0 +1,68 @@
+Datum
+20.10.1995
+
+Maximilian Fornacon
+
+Art des Treffens 
+Review
+
+Sprint Nummer
+Sprint 9
+
+Fehlende Personen
+Valentin
+
+Zusammenfassung
+diverse Organisatorische Dinge wie zum Beispiel Meetingzeiten oder Doodleumfragen
+
+
+Review
+
+	Welche Task abgeschlossen wurde?
+	MU-320 Anwendungs Handbuch
+	321 Benutzerhandbuch
+	271 Refresh Methode in Views
+	260 Logik Settingsview
+	231 Ordner Klasse erstellen
+	232 Button Ordner erstellen hinzufügen
+	233 Deteien Drag&Drop
+	234 Zurückbutton
+	344 Ordner und deren Inhalt speichern und laden
+	205 Audiospur UI
+	252 Audiopegel einstellen
+	159 Wechseln des Designs über Einstellungen
+	188 Timeline
+	291 Buttons Inactive State
+	332 Playerbuttons
+	341 Kontextmenü
+	347 Filemanager überarbeiten
+	310 Autor-Annotationen vereinheitlichen
+	313 Bindestriche durch Gedankenstriche ersetzen
+	314 Korrektur der Tabellenlabels und -tags
+	339 Autocut nicht mit neusten GUI-veränderungen
+	340 Spuren der Timeline vergrößwern sich nicht mehr
+	325 Zahlen über Timeline sinnvoll ersetzen
+	327 Progressbar Exportfenster
+	242 Spur entfernen/hinzufügen
+	330 Toolbar aus TimelineView entfernen
+	299 Testen des Autocuts
+	306 Messeplakat Layout
+	333 Anderes Projekt öffnen wenn Programm läuft
+	267 Bilder verzerrt in Filemanager
+	337 Spuren haben falsche Reihenfolge
+	307 ungespeicherte Änderungen nicht sichtbar
+	312 Abspielen der Preview beim Schließen lässt Programm nicht schließen
+	322 Size Projektauswahlfenster
+	323 Autocut Fenster während des Ladens ordentlich updaten
+	342 Overlay funktioniert nicht mehr wenn Projekt neu geladen wird
+	349 Operationen in eigene Datei verschieben
+	346 Pixelfehler in der Timeline	
+	
+
+	
+	Ist das Ziel erreicht wurden?
+	Timelinezoom und Textoverlay nicht beendet, eventuell weitermachen?
+	Ansonsten noch kleine Bugs fixen und das Projekt für die Messe abschließen
+
+	
+

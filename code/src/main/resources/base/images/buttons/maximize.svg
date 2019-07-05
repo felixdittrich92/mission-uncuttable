@@ -1,3 +1,177 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0.4890000000000001 0.30299999999999994 35.723000000000006 35.722" width="31.72" height="31.72"><defs><path d="M24.87 12.41L27.08 10.2L29.29 7.99L29.39 7.89L32.91 11.41L33.21 1.3L23.1 1.61L26.62 5.13L26.53 5.23L24.32 7.44L22.11 9.65L19.9 11.86L19.56 12.19L22.32 14.95L22.66 14.62L24.87 12.41Z" id="bzbOjgMnl"></path><path d="M10.39 7.44L8.18 5.23L8.08 5.13L11.6 1.61L1.49 1.3L1.8 11.41L5.32 7.89L5.41 7.99L7.62 10.2L9.83 12.41L12.04 14.62L12.38 14.95L15.14 12.19L14.81 11.86L12.6 9.65L10.39 7.44Z" id="h2gq5mcXT"></path><path d="M29.29 26.34L27.08 24.13L24.87 21.92L22.66 19.71L22.32 19.38L19.56 22.14L19.9 22.47L22.11 24.68L24.32 26.89L26.53 29.1L26.62 29.2L23.1 32.72L33.21 33.03L32.91 22.92L29.39 26.44L29.29 26.34Z" id="c1rmfzmKPK"></path><path d="M9.83 21.92L7.62 24.13L5.41 26.34L5.32 26.44L1.8 22.92L1.49 33.03L11.6 32.72L8.08 29.2L8.18 29.1L10.39 26.89L12.6 24.68L14.81 22.47L15.14 22.14L12.38 19.38L12.04 19.71L9.83 21.92Z" id="f3IXEJCxod"></path></defs><g><g><use xlink:href="#bzbOjgMnl" opacity="1" fill="#ffffff" fill-opacity="1"></use><g><use xlink:href="#bzbOjgMnl" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="0"></use></g></g><g><use xlink:href="#h2gq5mcXT" opacity="1" fill="#ffffff" fill-opacity="1"></use><g><use xlink:href="#h2gq5mcXT" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="0"></use></g></g><g><use xlink:href="#c1rmfzmKPK" opacity="1" fill="#ffffff" fill-opacity="1"></use><g><use xlink:href="#c1rmfzmKPK" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="0"></use></g></g><g><use xlink:href="#f3IXEJCxod" opacity="1" fill="#ffffff" fill-opacity="1"></use><g><use xlink:href="#f3IXEJCxod" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="0"></use></g></g></g></svg>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="0.4890000000000001 0.30299999999999994 35.723000000000006 35.722"
+   width="31.72"
+   height="31.72"
+   id="svg42"
+   sodipodi:docname="maximize.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata46">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="857"
+     inkscape:window-height="480"
+     id="namedview44"
+     showgrid="false"
+     inkscape:zoom="7.440101"
+     inkscape:cx="15.86"
+     inkscape:cy="16.606451"
+     inkscape:window-x="1642"
+     inkscape:window-y="248"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g40" />
+  <defs
+     id="defs6">
+    <path
+       d="M24.87 12.41L27.08 10.2L29.29 7.99L29.39 7.89L32.91 11.41L33.21 1.3L23.1 1.61L26.62 5.13L26.53 5.23L24.32 7.44L22.11 9.65L19.9 11.86L19.56 12.19L22.32 14.95L22.66 14.62L24.87 12.41Z"
+       id="bzbOjgMnl" />
+    <path
+       d="M10.39 7.44L8.18 5.23L8.08 5.13L11.6 1.61L1.49 1.3L1.8 11.41L5.32 7.89L5.41 7.99L7.62 10.2L9.83 12.41L12.04 14.62L12.38 14.95L15.14 12.19L14.81 11.86L12.6 9.65L10.39 7.44Z"
+       id="h2gq5mcXT" />
+    <path
+       d="M29.29 26.34L27.08 24.13L24.87 21.92L22.66 19.71L22.32 19.38L19.56 22.14L19.9 22.47L22.11 24.68L24.32 26.89L26.53 29.1L26.62 29.2L23.1 32.72L33.21 33.03L32.91 22.92L29.39 26.44L29.29 26.34Z"
+       id="c1rmfzmKPK" />
+    <path
+       d="M9.83 21.92L7.62 24.13L5.41 26.34L5.32 26.44L1.8 22.92L1.49 33.03L11.6 32.72L8.08 29.2L8.18 29.1L10.39 26.89L12.6 24.68L14.81 22.47L15.14 22.14L12.38 19.38L12.04 19.71L9.83 21.92Z"
+       id="f3IXEJCxod" />
+  </defs>
+  <g
+     id="g40"
+     style="fill:#000000">
+    <g
+       id="g14"
+       style="fill:#000000"
+       transform="rotate(-180,26.286555,8.2179133)"
+       inkscape:export-xdpi="95.900002"
+       inkscape:export-ydpi="95.900002">
+      <use
+         xlink:href="#bzbOjgMnl"
+         id="use8"
+         style="opacity:1;fill:#d66853;fill-opacity:1"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <g
+         id="g12"
+         style="fill:#000000">
+        <use
+           xlink:href="#bzbOjgMnl"
+           id="use10"
+           style="opacity:1;fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-opacity:0"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+    <g
+       id="g22"
+       style="fill:#d66853;fill-opacity:1"
+       transform="rotate(180,8.410524,8.2179052)"
+       inkscape:export-xdpi="95.900002"
+       inkscape:export-ydpi="95.900002">
+      <use
+         xlink:href="#h2gq5mcXT"
+         id="use16"
+         style="opacity:1;fill:#d66853;fill-opacity:1"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <g
+         id="g20"
+         style="fill:#d66853;fill-opacity:1">
+        <use
+           xlink:href="#h2gq5mcXT"
+           id="use18"
+           style="opacity:1;fill:#d66853;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-opacity:0"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+    <g
+       id="g30"
+       style="fill:#d66853;fill-opacity:1"
+       transform="rotate(180,26.286555,26.112087)">
+      <use
+         xlink:href="#c1rmfzmKPK"
+         id="use24"
+         style="opacity:1;fill:#d66853;fill-opacity:1"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <g
+         id="g28"
+         style="fill:#d66853;fill-opacity:1">
+        <use
+           xlink:href="#c1rmfzmKPK"
+           id="use26"
+           style="opacity:1;fill:#d66853;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-opacity:0"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%"
+           inkscape:export-xdpi="95.900002"
+           inkscape:export-ydpi="95.900002" />
+      </g>
+    </g>
+    <g
+       id="g38"
+       style="fill:#d66853;fill-opacity:1"
+       transform="rotate(180,8.410524,26.112095)"
+       inkscape:export-xdpi="95.900002"
+       inkscape:export-ydpi="95.900002">
+      <use
+         xlink:href="#f3IXEJCxod"
+         id="use32"
+         style="opacity:1;fill:#d66853;fill-opacity:1"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <g
+         id="g36"
+         style="fill:#d66853;fill-opacity:1">
+        <use
+           xlink:href="#f3IXEJCxod"
+           id="use34"
+           style="opacity:1;fill:#d66853;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-opacity:0"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
+</svg>

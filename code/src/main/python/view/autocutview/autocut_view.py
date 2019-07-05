@@ -2,7 +2,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QLabel
 from PyQt5.QtCore import QFileSystemWatcher, Qt
 from PyQt5 import uic
-from config import Resources
+from config import Resources, Settings
 
 
 class AutocutView(QMainWindow):

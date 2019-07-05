@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QObject, QFileSystemWatcher, pyqtSignal
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QSplitter, QApplication, QMenu, QAction,
                              QMessageBox)
 from PyQt5 import uic
@@ -49,10 +50,6 @@ class VideoEditorView(classmaker(QMainWindow, View)):
             self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
         elif current_stylesheet == 1:
             self.setStyleSheet(open(Resources.files.qss_light, "r").read())
-            
-    
-    def testmethod(self):
-        PreviewView.get_instance().testprint()
 
     def set_texts(self):
         """ Loads the text for the menu from the language files """
@@ -151,12 +148,16 @@ class VideoEditorView(classmaker(QMainWindow, View)):
 
     def maxim(self):
         """ Sets Preview Fullscreen """
-        if(self.fullscreen == False):   
+        if(self.fullscreen == False):
+            self.previewview.maximize_button.setIcon(QIcon(Resources.images.minimize_button))
+
             self.timeline_view.hide()
             self.filemanager_view.hide()
             self.fullscreen = True
 
         else:
+            self.previewview.maximize_button.setIcon(QIcon(Resources.images.maximize_button))
+
             self.timeline_view.show()
             self.filemanager_view.show()
             self.fullscreen = False
