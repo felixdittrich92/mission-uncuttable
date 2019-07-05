@@ -18,5 +18,5 @@ class Language:
 
     @staticmethod
     def set_language(lang):
-        if Language.hasattr(lang) and lang in Language.languages:
+        # if Language.hasattr(lang) and lang in Language.languages:
             Language.current = getattr(Language, lang)

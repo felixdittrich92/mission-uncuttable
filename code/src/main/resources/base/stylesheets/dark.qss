@@ -43,6 +43,7 @@ QPushButton {
 }
 
 
+
 QPushButton:hover {
     border-width: 2px;
     border-color: #AD7882;
@@ -105,6 +106,37 @@ QPushButton:disabled{
 #new_folder_button:disabled {
     border: 1px solid #364156;
 }
+
+/* ICON BUTTONS */
+
+
+#new_folder_button,
+#filemanager_frame #back_button,
+#delete_button,
+#pick_files_button {
+    padding: 2px;
+    icon-size: 25px;
+    background: #2c3546;
+    border-width: 1px;
+    border-color: transparent;
+}
+#new_folder_button:hover,
+#filemanager_frame #back_button:hover,
+#delete_button:hover,
+#pick_files_button:hover {
+    border-width: 1px;
+    border-color: #364156;
+}
+
+#new_folder_button:pressed,
+#filemanager_frame #back_button:pressed,
+#delete_button:pressed,
+#pick_files_button:pressed {
+    border-width: 1px;
+    border-color: #364156;
+    background-color: #4E637F;
+}
+
 
 /* MENU */
 QMenuBar, QMenu {
@@ -558,4 +590,13 @@ QDialog QRadioButton::indicator {
     color: #1f1e1e;
     width: 13px;
     height: 13px;
+}
+
+QRadioButton::indicator::checked{
+    border: 3px solid;
+    border-color: white;
+    border-radius: 6px;
+    background-color: #000000;
+    width: 7px;
+    height: 7px;
 }

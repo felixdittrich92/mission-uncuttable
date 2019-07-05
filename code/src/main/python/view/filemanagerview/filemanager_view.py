@@ -2,37 +2,49 @@ import inspect
 import os
 
 from PyQt5 import uic
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QWidget, QListWidgetItem, QListView
+from PyQt5.QtGui import QIcon, QPixmap, QColor
+from PyQt5.QtWidgets import QWidget, QListWidgetItem, QListView, QStyle, \
+    QApplication
 from PyQt5.QtCore import QObject, QSize, pyqtSignal, Qt
+
 from config import Resources, Language
 from model.folder import Folder
 
+from ..view import View
+from util.classmaker import classmaker
 from view.mainview import FileListView
 
 
-class FilemanagerView(QWidget):
+class FilemanagerView(classmaker(QWidget, View)):
 
     changed = pyqtSignal()
-
     def __init__(self, parent=None):
         super(FilemanagerView, self).__init__(parent)
         """Loads the UI file"""
         uic.loadUi(Resources.files.filemanager, self)
 
         self.delete_button = self.findChild(QWidget, 'delete_button')
-        self.delete_button.setText(str(Language.current.filemanager.deleteButtonName))
+
+        self.delete_button.setText("")
+        self.delete_button.setIcon(QIcon(Resources.images.trash_icon))
         self.delete_button.setEnabled(False)
+        self.delete_button.setCursor(Qt.PointingHandCursor)
 
         self.pick_button = self.findChild(QWidget, 'pick_files_button')
-        self.pick_button.setText(str(Language.current.filemanager.pushButtonName))
+        self.pick_button.setText("")
+        self.pick_button.setIcon(QIcon(Resources.images.plus_icon))
+        self.pick_button.setCursor(Qt.PointingHandCursor)
 
         self.new_folder_button = self.findChild(QWidget, 'new_folder_button')
-        self.new_folder_button.setText(str(Language.current.filemanager.newFolderButton))
+        self.new_folder_button.setText("")
+        self.new_folder_button.setIcon(QIcon(Resources.images.new_folder_icon))
+        self.new_folder_button.setCursor(Qt.PointingHandCursor)
 
         self.back_button = self.findChild(QWidget, 'back_button')
-        self.back_button.setText(str(Language.current.filemanager.backButton))
+        self.back_button.setText("")
         self.back_button.setEnabled(False)
+        self.back_button.setIcon(QIcon(Resources.images.back_icon))
+        self.back_button.setCursor(Qt.PointingHandCursor)
 
         self.breadcrumbs = self.findChild(QWidget, 'breadcrumbs_label')
         self.breadcrumbs.setText("home")
@@ -68,9 +80,11 @@ class FilemanagerView(QWidget):
         if isinstance(file, Folder):
             item = QListWidgetItem(file.get_name(), self.listWidget)
         else:
-            item = QListWidgetItem(os.path.basename(file)[:15], self.listWidget)
+            item = QListWidgetItem(os.path.basename(file), self.listWidget)
             item.setToolTip(file)
             item.setStatusTip(file)
 
         item.setIcon(icon)
 
+    def refresh(self):
+        self.update()

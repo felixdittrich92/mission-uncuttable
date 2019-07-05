@@ -6,9 +6,10 @@ from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
 from view.timeline.timeableview import TimeableView
 from controller import TimelineController
+from ...view import View
+from util.classmaker import classmaker
 
-
-class TimelineView(QFrame):
+class TimelineView(classmaker(QFrame, View)):
     """
     Extends QFrame to the toplevel widget of the timeline view which
     shows the tracks and provides tools and controls to view and
@@ -183,3 +184,6 @@ class TimelineView(QFrame):
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')
         self.time_label.setText(timecode)
+
+    def refresh(self):
+        self.update()

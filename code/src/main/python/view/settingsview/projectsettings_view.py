@@ -4,12 +4,13 @@ from PyQt5.QtWidgets import (QMainWindow, QDesktopWidget, QPushButton, QTabWidge
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import uic
 from PyQt5 import QtGui
-from config import Resources, Language
+from config import Resources, Language, Settings
 from projectconfig import Projectsettings
 from model.project import Project
+from util.classmaker import classmaker
+from ..view import View
 
-
-class ProjectSettingsView(QMainWindow):
+class ProjectSettingsView(classmaker(QMainWindow, View)):
     """A class used as the View for the projectsettings window."""
 
     changed = pyqtSignal()
@@ -18,9 +19,8 @@ class ProjectSettingsView(QMainWindow):
         """Loads the UI-file and the shortcuts."""
         super(ProjectSettingsView, self).__init__()
         uic.loadUi(Resources.files.projectsettings_view, self)
-
+        self.init_stylesheet()
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
 
         """ centering the window """
         rectangle = self.frameGeometry()
@@ -34,14 +34,25 @@ class ProjectSettingsView(QMainWindow):
         self.addProjectsettings(self.projectsettings)
 
         """saveprojectsettings button"""
-        saveButton = self.findChild(QPushButton, "saveButton")
-        saveButton.setText(str(Language.current.projectsettings.accept))
-        saveButton.clicked.connect(lambda: self.saveProjectsettings())
+        self.saveButton = self.findChild(QPushButton, "saveButton")
+        self.saveButton.clicked.connect(lambda: self.saveProjectsettings())
 
-        cancelButton = self.findChild(QPushButton, "cancelButton")
-        cancelButton.setText(str(Language.current.settings.cancel))
-        cancelButton.clicked.connect(lambda: self.close())
+        self.cancelButton = self.findChild(QPushButton, "cancelButton")
+        self.cancelButton.clicked.connect(lambda: self.close())
 
+        self.init_text()
+
+    def init_text(self):
+        self.saveButton.setText(str(Language.current.projectsettings.save))
+        self.cancelButton.setText(str(Language.current.settings.cancel))
+    
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+    
     def addProjectsettings(self, projectsettings):
         """
         this method goes through the projectsettings dictionary and
@@ -156,3 +167,8 @@ class ProjectSettingsView(QMainWindow):
     def show(self):
         """Starts the projectsettings window maximized."""
         self.showNormal()
+
+    def refresh(self):
+        self.init_stylesheet()
+        self.init_text()
+

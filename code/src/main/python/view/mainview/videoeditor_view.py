@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QObject, QFileSystemWatcher, pyqtSignal
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QSplitter, QApplication, QMenu, QAction,
                              QMessageBox)
 from PyQt5 import uic
@@ -8,16 +9,19 @@ from view.preview.preview import PreviewView
 from view.timeline.timelineview import TimelineView
 from controller import TimelineController
 from model.project import Project
+from config import Settings
+from ..view import View
+from util.classmaker import classmaker
 
-
-class VideoEditorView(QMainWindow):
+class VideoEditorView(classmaker(QMainWindow, View)):
     """A class used as the View for the video-editor window."""
-
+    
     save_project = pyqtSignal()
+    
+    def __init__(self, parent=None):
 
-    def __init__(self):
         """Loads the UI-file and the shortcuts."""
-        super(VideoEditorView, self).__init__()
+        super(VideoEditorView, self).__init__(parent)
         uic.loadUi(Resources.files.mainview, self)
 
         self.set_texts()
@@ -33,15 +37,19 @@ class VideoEditorView(QMainWindow):
         self.splittersizes = []
         self.fullscreen = False
 
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
 
-    def testmethod(self):
-        PreviewView.get_instance().testprint()
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
     def set_texts(self):
         """ Loads the text for the menu from the language files """
@@ -98,7 +106,6 @@ class VideoEditorView(QMainWindow):
         splitter = self.findChild(QSplitter, "verticalSplitter")
         splitter.replaceWidget(1, self.previewview)
         self.previewview.show()
-        # self.needle.needle_moved.connect(self.test)
         self.previewview.maximize_button.clicked.connect(self.maxim)
 
     def show(self):
@@ -107,12 +114,13 @@ class VideoEditorView(QMainWindow):
 
     def set_filemanager_view(self, filemanager_view):
         splitter = self.findChild(QSplitter, 'verticalSplitter')
-        splitter.replaceWidget(0, filemanager_view)
-        filemanager_view.show()
+        self.filemanager_view = filemanager_view
+        splitter.replaceWidget(0, self.filemanager_view)
+        self.filemanager_view.show()
 
     def update_qss(self):
         """ Updates the View when stylesheet changed, can be removed in production"""
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
         self.__qss_watcher = QFileSystemWatcher()
         self.__qss_watcher.addPath(Resources.files.qss_dark)
         self.__qss_watcher.fileChanged.connect(self.update_qss)
@@ -139,28 +147,30 @@ class VideoEditorView(QMainWindow):
             QMainWindow.closeEvent(self, event)
 
     def maxim(self):
-        v_splitter = self.findChild(QObject, 'verticalSplitter')
-        h_splitter = self.findChild(QObject, 'horizontalSplitter')
-
+        """ Sets Preview Fullscreen """
         if(self.fullscreen == False):
+            self.previewview.maximize_button.setIcon(QIcon(Resources.images.minimize_button))
 
-            self.v_sizes = v_splitter.sizes()
-            self.h_sizes = h_splitter.sizes()
-
-            self.splittersizes = (self.v_sizes, self.h_sizes)
-
-            width = self.frameGeometry().width()
-            height = self.frameGeometry().height()
-            v_splitter.setSizes([0, width])
-            h_splitter.setSizes([height, 0])
-
+            self.timeline_view.hide()
+            self.filemanager_view.hide()
             self.fullscreen = True
 
         else:
-            v_splitter.setSizes(self.splittersizes[0])
-            h_splitter.setSizes(self.splittersizes[1])
+            self.previewview.maximize_button.setIcon(QIcon(Resources.images.maximize_button))
 
+            self.timeline_view.show()
+            self.filemanager_view.show()
             self.fullscreen = False
 
     def connect_update(self):
         PreviewView.get_instance().update_information()
+
+    def update_window(self):
+        self.update()
+    
+    def refresh(self):
+        self.init_stylesheet()
+        self.set_texts()
+        self.timeline_view.hide()
+        self.timeline_view.show()
+        self.filemanager_view.refresh()

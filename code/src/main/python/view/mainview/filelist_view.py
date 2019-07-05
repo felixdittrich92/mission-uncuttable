@@ -1,16 +1,21 @@
-from PyQt5.QtWidgets import QListWidget, QListView
-from PyQt5.QtCore import QByteArray, QDataStream, QMimeData, QIODevice, Qt, QSize
+from PyQt5.QtWidgets import QListWidget, QListView, QListWidgetItem
+from PyQt5.QtCore import (QByteArray, QDataStream, QMimeData, QIODevice, Qt, QSize,
+                          pyqtSignal)
 from PyQt5.QtGui import QDrag
 
 from util.timeline_utils import get_pixmap_from_file, get_width_from_file, get_file_type
 
 
 class FileListView(QListWidget):
+
+    drop = pyqtSignal(QListWidgetItem, str)
+
     def __init__(self, parent=None):
         super(FileListView, self).__init__(parent)
         self.setDragEnabled(True)
         self.setWordWrap(True)
         self.setResizeMode(QListView.Adjust)
+        self.setAcceptDrops(True)
 
     def mouseMoveEvent(self, event):
         """ Starts the drag to the timeline """
@@ -48,3 +53,29 @@ class FileListView(QListWidget):
             drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
 
         drag.exec_(Qt.MoveAction)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasFormat('ubicut/file'):
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasFormat('ubicut/file'):
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasFormat('ubicut/file'):
+            item = self.itemAt(event.pos())
+            if item is not None:
+                item_data = event.mimeData().data('ubicut/file')
+                stream = QDataStream(item_data, QIODevice.ReadOnly)
+                path = QDataStream.readString(stream).decode()
+                # width = QDataStream.readInt(stream)
+                self.drop.emit(item, path)
+
+            event.accept()
+        else:
+            event.ignore()
