@@ -53,18 +53,22 @@ class TimeableView(QGraphicsRectItem):
         Create a new C{TimeableView} with the specified start and length
         and add it to the given C{TrackView} accordingly.
 
-        @param name:   the name that is displayed in the top left corner of the timeable
+        @param name:   The name that is displayed in the top left corner
+                       of the C{TimeableView}.
         @param start:  The time point at which the first frame of the
                        timeable is positioned. This frame is the very
-                       first one which is not trimmed by res_left.
+                       first one which is not trimmed by C{res_left}.
         @type start:   int
         @param length: The length of the timeable in frames. It is
                        measured from the relative time point specified
-                       by res_left to the time point specified by
-                       res_right. The trimmed ends aren't taken into
+                       by C{res_left} to the time point specified by
+                       C{res_right}. The trimmed ends aren't taken into
                        this value.
         @type length:  int
-        @param height: timeable height, should be the same as track height
+        @param height: The physical height of the C{TimeableView}. It
+                       should be the same as the height of the
+                       C{TrackView} which the C{TimeableView} gets added
+                       to.
         """
         super(TimeableView, self).__init__(parent)
 
