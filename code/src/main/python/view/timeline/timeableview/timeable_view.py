@@ -190,7 +190,7 @@ class TimeableView(QGraphicsRectItem):
         """ Set the zoom factor.
 
         @param zoom_factor: The new zoom factor in pixels per frame.
-        @type zoom_factor: float
+        @type zoom_factor:  float
         """
         self.__zoom_factor = zoom_factor
         self.__refresh_width()
@@ -212,6 +212,15 @@ class TimeableView(QGraphicsRectItem):
         self.__width = width
         self.prepareGeometryChange()
         self.setRect(self.boundingRect())
+
+    def get_x_pos(self):
+        return self.__x_pos
+
+    def get_end_pos(self):
+        return self.__x_pos + self.__width
+
+    def get_width(self):
+        return self.__width
 
     def __refresh_width(self):
         """
