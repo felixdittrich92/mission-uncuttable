@@ -71,9 +71,44 @@ class TimelineView(QFrame):
         for t in track_views:
             t.set_width(max_width)
 
-    def create_timeable(self, track_id, name, start, length, model, timeable_id, res_left=0, res_right=0, mouse_pos=0,
-                        is_drag=False):
-        """ Creates and adds a timeable to the specified track """
+    # Todo: Add missing documentation for
+    #         - model
+    #         - res_left
+    #         - res_right
+    #         - mouse_pos
+    #       if these parameters don't get removed in the near future.
+    def create_timeable(
+            self,
+            track_id,
+            name,
+            start, length,
+            model,
+            timeable_id,
+            res_left=0, res_right=0,
+            mouse_pos=0,
+            is_drag=False):
+        """
+        Create and add a C{TimeableView} to the view of the specified
+        track.
+
+        @param track_id:    The ID of the track which the
+                            C{TimeableView} should be added to.
+        @param name:        The name which should be displayed for this
+                            timeable.
+        @param start:       The time point at which the first frame of
+                            the timeable is positioned. This frame is
+                            the very first one which is not trimmed by
+                            C{res_left}.
+        @type start:        int
+        @param length:      The length of the timeable in frames. It is
+                            measured from the relative time point
+                            specified by C{res_left} to the time point
+                            specified by C{res_right}. The trimmed ends
+                            aren't taken into this value.
+        @type length:       int
+        @param timeable_id: The unique ID by which the C{TimeableView}
+                            can be referenced.
+        """
         try:
             track = self.tracks[track_id]
         except KeyError:
@@ -136,11 +171,38 @@ class TimelineView(QFrame):
     def set_timeable_name(self, id, name):
         pass
 
-    def set_timeable_start(self, id, frame):
-        pass
+    def set_timeable_start(self, id, start):
+        """ Set the start time of the specified C{TimeableView}.
 
-    def set_timeable_length(self, id, frames):
-        pass
+        @param id:    The ID of the C{TimeableView}.
+        @param start: The new start time of the C{TimeableView} in
+                      frames.
+        @type start:  int
+        """
+        try:
+            timeable = self.timeables[id]
+        except KeyError:
+            raise KeyError(
+                "TimeableView doesn't exist: ID = %s" % id
+            )
+        finally:
+            timeable.set_start(start)
+
+    def set_timeable_length(self, id, length):
+        """ Set the length of the specified C{TimeableView}.
+
+        @param id:     The ID of the C{TimeableView}.
+        @param length: The new length of the C{TimeableView} in frames.
+        @type length:  int
+        """
+        try:
+            timeable = self.timeables[id]
+        except KeyError:
+            raise KeyError(
+                "TimeableView doesn't exist: ID = %s" % id
+            )
+        finally:
+            timeable.set_length(length)
 
     def set_timeable_selected(self, id, selected=True):
         pass
