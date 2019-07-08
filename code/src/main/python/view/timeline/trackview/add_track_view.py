@@ -2,7 +2,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import (QDialog, QPushButton, QDialogButtonBox, QRadioButton,
                              QLineEdit)
 
-from config import Resources, Language
+from config import Resources, Language, Settings
 
 
 class AddTrackView(QDialog):
@@ -11,7 +11,7 @@ class AddTrackView(QDialog):
     def __init__(self, parent=None):
         super(AddTrackView, self).__init__(parent)
         uic.loadUi(Resources.files.add_track_view, self)
-        self.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
 
         self.add_button = QPushButton("Ok")
         self.add_button.setObjectName("ok_button")
@@ -27,3 +27,10 @@ class AddTrackView(QDialog):
         self.name_edit = self.findChild(QLineEdit, "name_edit")
 
         self.setWindowTitle(str(Language.current.track.add))
+
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())

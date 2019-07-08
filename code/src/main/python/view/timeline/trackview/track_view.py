@@ -8,7 +8,7 @@ from model.data import TimeableModel
 from model.project import Project
 from controller import TimelineController, AddTrackController
 from util.timeline_utils import generate_id
-from config import Language, Resources
+from config import Language, Resources, Settings
 
 
 class TrackView(QGraphicsView):
@@ -79,7 +79,11 @@ class TrackView(QGraphicsView):
     def on_context_menu(self, point):
         """ shows a menu on rightclick """
         button_menu = QMenu()
-        button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            button_menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
         delete = QAction(str(Language.current.track.delete))
         button_menu.addAction(delete)
@@ -176,14 +180,31 @@ class TrackView(QGraphicsView):
         colliding = self.scene().items(rect)
         # add the timeable when there are no colliding items
         if not colliding:
-            model = TimeableModel(path, generate_id())
+            model = TimeableModel(path, generate_id(), is_video=True)
+            model_withoutgroup = TimeableModel(path, generate_id())
+            model_audio = TimeableModel(path, generate_id(), is_video=False)
             model.move(x_pos)
-            model.set_end(width)
-
+            model.set_end(width) 
             name = os.path.basename(path)
-            self.__controller.create_timeable(self.num, name, width, x_pos,
-                                              model, generate_id(), is_drag=True)
+
+            clip_id = generate_id()
+            clip_id_audio = generate_id()
+
+            
+
+            if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
+                self.__controller.create_timeable(self.num, name, width, x_pos,
+                                              model, clip_id, is_drag=True)
+                self.__controller.create_timeable(None, name, width, x_pos,
+                                                model_audio, clip_id_audio, is_drag=True)
+                self.__controller.create_group([clip_id, clip_id_audio])
+            else:
+                self.__controller.create_timeable(self.num, name, width, x_pos,
+                                              model_withoutgroup, clip_id, is_drag=True)
+
+
             self.item_dropped = True
+
 
     def add_from_track(self, drag_event):
         """ Adds a timeable when a drag was started from a timeable on a track """
@@ -199,6 +220,7 @@ class TrackView(QGraphicsView):
         name = timeable.name
         width = timeable.width
         pos = timeable.mouse_press_pos
+        group_id = timeable.group_id
 
         # get a list of items at the position where the timeable would be added
         start_pos = drag_event.pos().x()
@@ -214,9 +236,10 @@ class TrackView(QGraphicsView):
             res_left = timeable.resizable_left
             res_right = timeable.resizable_right
             file_name = timeable.model.file_name
+            old_pos = timeable.x_pos
 
             # create new timeable
-            model = TimeableModel(file_name, generate_id())
+            model = TimeableModel(file_name, generate_id(), is_video=timeable.model.is_video)
 
             old_clip = timeable.model.clip
 
@@ -225,11 +248,19 @@ class TrackView(QGraphicsView):
             model.set_end(old_clip.End(), is_sec=True)
             model.move(start_pos - pos)
 
+            new_id = generate_id()
+
             # add the timeable to the track
             self.__controller.create_timeable(
-                self.num, name, width, start_pos, model, generate_id(), res_left=res_left,
+                self.num, name, width, start_pos, model, new_id, res_left=res_left,
                 res_right=res_right, mouse_pos=pos, hist=False, is_drag=True)
             self.drag_from_track = True
+
+            if group_id is not None:
+                new_pos = -(old_pos - (start_pos - pos))
+                self.__controller.remove_timeable_from_group(group_id, view_id)
+                self.__controller.try_group_move(group_id,new_pos)
+                self.__controller.add_timeable_to_group(group_id, new_id)
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
@@ -242,10 +273,20 @@ class TrackView(QGraphicsView):
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
-            # try to add a timeable
-            self.add_from_track(event)
+            if self.is_video:
+                if event.mimeData().text() == "is_video":
+                    # try to add a timeable
+                    self.add_from_track(event)
+                    event.accept()
+                else:
+                    event.ignore()
+            else:
+                if event.mimeData().text() == "is_audio":
+                    self.add_from_track(event)
+                    event.accept()
+                else:
+                    event.ignore()
 
-            event.accept()
         elif event.mimeData().hasFormat('ubicut/file'):
             # try to add a timeable
             self.add_from_filemanager(event)

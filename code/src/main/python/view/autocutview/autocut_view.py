@@ -2,7 +2,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QLabel
 from PyQt5.QtCore import QFileSystemWatcher, Qt
 from PyQt5 import uic
-from config import Resources
+from config import Resources, Settings
 
 
 class AutocutView(QMainWindow):
@@ -15,8 +15,7 @@ class AutocutView(QMainWindow):
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.size())
 
-        self.setStyleSheet(
-            open(Resources.files.qss_dark, "r").read())
+        self.init_stylesheet()
 
         "QSS HOT RELOAD"
         self.__qss_watcher = QFileSystemWatcher()
@@ -37,6 +36,13 @@ class AutocutView(QMainWindow):
         self.video_image_label.setPixmap(self.cross)
         self.pdf_image_label.setPixmap(self.cross)
 
+    def init_stylesheet(self):
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            self.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            self.setStyleSheet(open(Resources.files.qss_light, "r").read())
+    
     def show(self):
         """Starts the window normal (not maximized)."""
         self.showNormal()

@@ -5,9 +5,9 @@ import cv2
 
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QFileDialog, QInputDialog
+from PyQt5.QtCore import Qt
 
-from config import Resources
-from config import Settings
+from config import Resources, Settings, Language
 from model.folder import Folder
 from model.project import Project
 from autocut import Presentation
@@ -32,7 +32,6 @@ class FilemanagerController:
         self.__filemanager_view.back_button.clicked.connect(self.folder_up)
         self.__filemanager_view.listWidget.itemDoubleClicked.connect(self.handle_double_click)
 
-
         """Set the functionality to the Widgets"""
         self.__filemanager_view.set_pick_action(lambda: self.pickFileNames())
         self.__filemanager_view.set_delete_action(lambda: self.remove())
@@ -45,9 +44,7 @@ class FilemanagerController:
         self.print_folder_stack()
 
         self.__filemanager_view.listWidget.itemSelectionChanged.connect(self.toggle_delete_button)
-
-
-        print(Project.get_instance().path)
+        self.__filemanager_view.listWidget.drop.connect(self.handle_drop)
 
     def print_folder_stack(self):
         breadcrumbs = self.__filemanager_view.breadcrumbs
@@ -114,8 +111,9 @@ class FilemanagerController:
 
         if file is None:
             name, result = QInputDialog.getText(self.__filemanager_view, 'Input Dialog',
-                                                'Bitte einen Namen eingeben:')
-            if result is True:
+                                                str(Language.current.filemanager.new_folder))
+            if result is True and name not in [
+                    f.get_name() for f in self.file_list if isinstance(f, Folder)]:
                 file = Folder(name)
             else:
                 return
@@ -130,6 +128,11 @@ class FilemanagerController:
             folder = Folder(filename)
 
             presentation = Presentation(file)
+            if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files')):
+                try:
+                    os.mkdir(os.path.join(self.project_path, self.project_name, 'files'))
+                except OSError:
+                    pass
             if not os.path.isdir(os.path.join(self.project_path, self.project_name, 'files', filename)):
                 try:
                     os.mkdir(os.path.join(self.project_path, self.project_name, 'files', filename))
@@ -196,6 +199,8 @@ class FilemanagerController:
 
     def clear(self):
         """ Removes all entries from the filemanager """
+        self.file_list = []
+        self.update_file_list(self.get_current_file_list())
         self.__filemanager_view.listWidget.clear()
 
     def get_project_filemanager(self):
@@ -325,6 +330,39 @@ class FilemanagerController:
             self.__filemanager_view.delete_button.setEnabled(False)
         else:
             self.__filemanager_view.delete_button.setEnabled(True)
+
+    def handle_drop(self, item, path):
+        list_widget = self.__filemanager_view.listWidget
+
+        # get the source item
+        item_list = list_widget.findItems(os.path.basename(path), Qt.MatchExactly)
+        if not item_list:
+            return
+
+        source_item = item_list[0]
+
+        # find folder
+        file_list = self.get_current_file_list()
+        for file in file_list:
+            if isinstance(file, Folder) and file.get_name() == item.text():
+                # check if file already exists in folder
+                if path in file.get_content():
+                    return
+
+                # remove old file
+                file_list.remove(source_item.statusTip())
+                list_widget.removeItemWidget(source_item)
+                self.update_file_list(self.get_current_file_list())
+
+                # add to foldeer
+                file.add_to_content(path)
+
+                project = Project.get_instance()
+                if not project.changed:
+                    project.changed = True
+                    self.__filemanager_view.changed.emit()
+
+                return
 
     def serialize(self, obj):
         """

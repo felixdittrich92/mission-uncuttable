@@ -70,6 +70,10 @@ class MainController:
         self.__start_view.close()
         self.__video_editor_controller.start()
 
+    def init_video_editor(self):
+        video_editor_view = VideoEditorView()
+        self.__video_editor_controller = VideoEditorController(video_editor_view)
+
     def __start_autocut_controller(self, path, project_name, filename):
         """
         Closes the start window and starts the autocut window.
@@ -94,8 +98,8 @@ class MainController:
 
         # check if file exists
         if os.path.isfile(path):
-            video_editor_view = VideoEditorView()
-            self.__video_editor_controller = VideoEditorController(video_editor_view)
+             
+            self.init_video_editor()
 
             with open(path, 'r') as f:
                 project_data = json.load(f)
@@ -183,8 +187,12 @@ class MainController:
         :param info: String - More text for the message box to provide further information
         """
         message_box = QMessageBox()
-        message_box.setStyleSheet(open(Resources.files.qss_dark, "r").read())
-
+        current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
+        if current_stylesheet == 0:
+            message_box.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+        elif current_stylesheet == 1:
+            message_box.setStyleSheet(open(Resources.files.qss_light, "r").read())
+            
         message_box.setWindowTitle(title)
         message_box.setIcon(icon)
         message_box.setText(text)

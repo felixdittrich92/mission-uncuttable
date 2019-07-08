@@ -30,15 +30,17 @@ class VideoEditorController:
         self.__video_editor_view.timeline_view.changed.connect(self.set_title_unsaved)
 
         self.__timeline_controller = TimelineController.get_instance()
-
-        self.__filemanager_view = FilemanagerView()
+        self.__filemanager_view = FilemanagerView(self.__video_editor_view)
         self.__filemanager_view.changed.connect(self.set_title_unsaved)
         self.__filemanager_controller = FilemanagerController(self.__filemanager_view)
 
         self.__video_editor_view.set_filemanager_view(self.__filemanager_view)
         self.__video_editor_view.action_settings.triggered.connect(
             self.__start_settings_controller)
-        self.__settings_controller = SettingsController(None)
+
+        self.settings_view = SettingsView()
+        self.__settings_controller = SettingsController(self.settings_view)
+
         self.__video_editor_view.action_projectsettings.triggered.connect(
             self.__start_projectsettings_controller)
         self.projectsettings_view = ProjectSettingsView()
@@ -91,14 +93,21 @@ class VideoEditorController:
         """Opens the settings window"""
         if self.__settings_controller.checkIfClosed():
             self.settings_view = SettingsView()
+            self.settings_view.saved.connect(self.update_views)
             self.__settings_controller = SettingsController(self.settings_view)
             self.__settings_controller.start()
         else:
             self.__settings_controller.focus()
 
+    def update_views(self):
+        self.__video_editor_view.refresh()
+        
     def __start_projectsettings_controller(self):
         """Opens the projectsettings window"""
         if self.__projectsettings_controller.checkIfClosed():
+            self.projectsettings_view = ProjectSettingsView()
+            self.__projectsettings_controller = ProjectSettingsController(
+            self.projectsettings_view)
             self.__projectsettings_controller.start()
         else:
             self.__projectsettings_controller.focus()
@@ -223,3 +232,4 @@ class VideoEditorController:
         project = Project.get_instance()
         project.path = path
         project.changed = False
+        self.set_title_saved()

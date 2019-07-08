@@ -28,6 +28,7 @@
         <general>Allgemein</general>
         <language>Sprache</language>
         <history_limit>Anzahl gespeicherte Operationen</history_limit>
+        <autoaudio>Audio Clip automatisch hinzufügen</autoaudio>
         <design>Design</design>
         <color_theme>Farbschema</color_theme>
         <shortcuts>Shortcuts</shortcuts>
@@ -45,13 +46,14 @@
         <resolution>Auflösung</resolution>
         <projectname>Projektname</projectname>
         <projectlocation>Projektpfad</projectlocation>
-        <accept>Akzeptieren</accept>
+        <save>Speichern</save>
     </projectsettings>
     <filemanager>
         <pushButtonName>hinzufügen</pushButtonName>
         <deleteButtonName>entfernen</deleteButtonName>
         <newFolderButton>neuer Ordner</newFolderButton>
         <backButton>zurück</backButton>
+        <new_folder>Bitte einen Namen eingeben:</new_folder>
     </filemanager>
     <timeable>
         <delete>löschen</delete>

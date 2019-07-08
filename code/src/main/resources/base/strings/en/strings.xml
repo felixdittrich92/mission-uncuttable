@@ -28,6 +28,7 @@
         <general>General</general>
         <language>Language</language>
         <history_limit>History Limit</history_limit>
+        <autoaudio>Add Audio Clip automatically</autoaudio>
         <design>Design</design>
         <color_theme>Color Theme</color_theme>
         <shortcuts>Shortcuts</shortcuts>
@@ -45,13 +46,14 @@
         <resolution>Resolution</resolution>
         <projectname>Project Name</projectname>
         <projectlocation>Project Location</projectlocation>
-        <accept>Accept</accept>
+        <save>Save</save>
     </projectsettings>
     <filemanager>
         <pushButtonName>pick files</pushButtonName>
         <deleteButtonName>remove</deleteButtonName>
         <newFolderButton>new Folder</newFolderButton>
         <backButton>back</backButton>
+        <new_folder>Please enter a name:</new_folder>
     </filemanager>
     <timeable>
         <delete>delete</delete>

@@ -6,9 +6,10 @@ from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
 from view.timeline.timeableview import TimeableView
 from controller import TimelineController
+from ...view import View
+from util.classmaker import classmaker
 
-
-class TimelineView(QFrame):
+class TimelineView(classmaker(QFrame, View)):
     """
     Extends QFrame to the toplevel widget of the timeline view which
     shows the tracks and provides tools and controls to view and
@@ -90,10 +91,32 @@ class TimelineView(QFrame):
     def create_timeable(self, track_id, name, width, x_pos, model, id,
                         res_left, res_right, group, mouse_pos=0, is_drag=False):
         """ Creates and adds a timeable to the specified track """
-        try:
-            track = self.tracks[track_id]
-        except KeyError:
-            return
+        is_empty = False
+        lastrack = None
+        if track_id is not None:
+            is_empty = True
+            try:
+                track = self.tracks[track_id]
+            except KeyError:
+                return
+        else:
+            for t in self.tracks:
+                lastrack = t
+                if self.tracks[t].is_video is False:
+                    is_empty = True
+                    for s in self.timeables:
+                        if self.timeables[s].track_id == t:
+                            is_empty = False
+                if is_empty:      
+                    track_id = t
+                    track = self.tracks[t]
+                    break
+
+        if is_empty is not True:
+            newtracknum = lastrack+1
+            name = "Audio"+str(newtracknum)
+            self.create_audio_track(name,1000,50,newtracknum, 1)
+            track = self.tracks[newtracknum]
 
         x_pos = x_pos - mouse_pos
         if width + x_pos > track.width:
@@ -104,9 +127,10 @@ class TimelineView(QFrame):
                                 model, id, track_id, group_id=group)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
-
+   
         if is_drag:
             track.current_timeable = timeable
+        
 
         # add timeable to dict
         self.timeables[id] = timeable
@@ -160,3 +184,6 @@ class TimelineView(QFrame):
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')
         self.time_label.setText(timecode)
+
+    def refresh(self):
+        self.update()
