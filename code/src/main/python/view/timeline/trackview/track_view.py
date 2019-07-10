@@ -273,6 +273,9 @@ class TrackView(QGraphicsView):
 
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
+        ct2=self.current_timeable_2
+        print("dragenter")
+        print(ct2)
         if event.mimeData().hasFormat('ubicut/timeable'):
             if self.is_video:
                 if event.mimeData().text() == "is_video":
@@ -299,12 +302,14 @@ class TrackView(QGraphicsView):
 
     def dragLeaveEvent(self, event):
         """ Gets called when something is dragged out of the track """
+        print(self.current_timeable_2)
         if self.current_timeable is not None:
             # delete dragged timeable if mouse leaves track
             self.current_timeable.delete(hist=False)
             if not self.drag_from_track:
                 Project.get_instance().get_history().remove_last_operation()
             if self.current_timeable_2 is not None:
+                print("track_view_delete_2")
                 self.current_timeable_2.delete(hist=False)
 
             # clear data
@@ -360,6 +365,7 @@ class TrackView(QGraphicsView):
                 event.acceptProposedAction()
 
                 self.current_timeable = None
+                self.current_timeable_2 = None
                 self.dragged_timeable_id = None
 
             # set item_dropped to false for next drag
@@ -373,6 +379,7 @@ class TrackView(QGraphicsView):
             if self.current_timeable is not None:
                 self.current_timeable.model.move(self.current_timeable.x_pos)
                 self.current_timeable = None
+                self.current_timeable_2 = None
             self.update()
 
         else:
