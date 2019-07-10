@@ -35,12 +35,17 @@ class TimelineController:
         self.__timeline_model = TimelineModel.get_instance()
         self.__history = Project.get_instance().get_history()
 
-    def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left=0, res_right=0, mouse_pos=0, hist=True,
-                        group=None, is_drag=False):
+    # =========================================================================
+    # == View <==> controller                                                ==
+    # =========================================================================
+
+    # Todo: Add documentation for parameters
+    def create_timeable(self, filepath, track_id, name, x_pos, res_left=0, res_right=0, hist=True, group=None):
         """
         Create a new object in the timeline model to represent a new timeable.
 
+        @param filepath: The path of the file which the timeable should
+                         use.
         @param data: The data needed to now what the timeable has to
                      contain and what track it has to be added to.
                      Important note: You may replace this parameter
@@ -48,14 +53,16 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
-        op = CreationOperation(track_id, name, width, x_pos, model, id, res_left,
-                               res_right, mouse_pos, group, is_drag, self)
+        op = CreationOperation(filepath, track_id, name, x_pos, res_left, res_right, group, False, self, None)
 
         if hist:
             self.__history.do_operation(op)
         else:
             op.do()
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
     def delete_timeable(self, view_info, model_info, hist=True):
@@ -71,6 +78,9 @@ class TimelineController:
         else:
             op.do()
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
     def remove_timeable_view(self, id):
@@ -100,6 +110,9 @@ class TimelineController:
         op = MoveOperation(id, old_pos, new_pos, self)
         self.__history.do_operation(op)
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
     def drag_timeable(self, view_info_old, view_info_new, model_old, model_new):
@@ -109,6 +122,9 @@ class TimelineController:
         op = DragOperation(view_info_old, view_info_new, model_old, model_new, self)
         self.__history.do_operation(op)
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
     def split_timeable(self, view_id, res_right, width, model_end, pos):
@@ -128,6 +144,9 @@ class TimelineController:
                           generate_id(), generate_id(), self)
         self.__history.do_operation(op)
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
     def resize_timeable(self, view_info_old, view_info_new):
@@ -146,6 +165,9 @@ class TimelineController:
         op = ResizeOperation(view_info_old, view_info_new, self)
         self.__history.do_operation(op)
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
     def add_track(self, name, width, height, index, is_video):
@@ -159,7 +181,14 @@ class TimelineController:
         op = CreateTrackOperation(track_id, name, width, height, index, is_video, self)
         self.__history.do_operation(op)
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
+
+        # Todo: Move this signal emitting to TimelineModel
+        #  The model knows the best about its changes so it should be
+        #  the one which notifies about them.
         Project.get_instance().changed = True
 
     def delete_track(self, track_id):
@@ -180,7 +209,13 @@ class TimelineController:
         op = DeleteTrackOperation(track_id, track_data, timeables, index, self)
         self.__history.do_operation(op)
 
+        # Todo: Move this signal emitting to TimelineView
+        #  The view knows the best about its changes so the view should
+        #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
+        # Todo: Move this signal emitting to TimelineModel
+        #  The model knows the best about its changes so it should be
+        #  the one which notifies about them.
         Project.get_instance().changed = True
 
     def is_overlay_track(self, track_id):
@@ -200,22 +235,51 @@ class TimelineController:
         Makes the Track with track_id an Overlay Track if val = True, and makes
         it a non Overlay Track if val = False.
         """
-        if track_id not in self.__timeline_view.tracks:
-            return
+        raise RuntimeWarning(
+            "Overlay property of the track could not be set because it"
+            "cannot be associated with an object in the model."
+        )
+        # if track_id not in self.__timeline_view.tracks:
+        #     return
+        #
+        # track = self.__timeline_view.tracks[track_id]
+        #
+        # for t in track.items():
+        #     t.model.corner(val)
 
-        track = self.__timeline_view.tracks[track_id]
+    # =========================================================================
+    # == Model <==> Controller                                               ==
+    # =========================================================================
 
-        for t in track.items():
-            t.model.corner(val)
+    # Todo: implement track_created
+    def track_added(self, track_id):
+        pass
 
-    def create_video_track(self, name, width, height, num, index=-1, is_overlay=False):
+    def video_track_created(self, name, width, height, num, index=-1, is_overlay=False):
         """ Creates a new video track in the timeline """
         self.__timeline_view.create_video_track(
             name, width, height, num, index, is_overlay)
 
-    def create_audio_track(self, name, width, height, num, index=-1):
+    def audio_track_created(self, name, width, height, num, index=-1):
         """ Creates a new audio track in the timeline """
         self.__timeline_view.create_audio_track(name, width, height, num, index)
+
+    def timeable_model_added(self, timeable_model):
+        pass
+        # self.__timeline_view.create_timeable(track_id, name, width, x_pos, model, id,
+        #                 res_left, res_right, group, mouse_pos=0, is_drag=False)
+
+    # Todo: Implement timeable_model_removed
+    def timeable_model_removed(self, timeable_id):
+        pass
+
+    # Todo: implement timeable_model_changed
+    def timeable_model_changed(self, timeable_model):
+        pass
+
+    # =========================================================================
+    # Todo: Sort these methods to one of the groups above
+    # =========================================================================
 
     def set_track_width(self, track_id, new_width):
         try:
@@ -227,6 +291,14 @@ class TimelineController:
 
     def get_track_index(self, track):
         """ Returns the index of the track in its layout """
+
+        # Todo: Move the track index information to the model
+        #  The track index information is currently taken from the index
+        #  of the TrackView in the layout it's the child of. This means
+        #  that the view stores information about the order of the
+        #  tracks. This is not conform to the MVC pattern.
+        #  The order of the tracks should be stored explicitly inside
+        #  the model.
         if track.is_video:
             return self.__timeline_view.video_track_frame.layout().indexOf(track)
 
@@ -234,6 +306,10 @@ class TimelineController:
 
     def get_project_timeline(self):
         """ Returns a dict with the data needed to recreate the timeline """
+
+        # Todo: Move the information gathering to the model
+        #  Currently, the view gives the information about the timeline.
+        #  But all data should be stored in the model.
         data = {
             "tracks": [],
             "timeables": []
@@ -255,10 +331,10 @@ class TimelineController:
         """
         for t in data["tracks"]:
             if t["type"]:
-                self.create_video_track(t["name"], t["width"], t["height"], t["num"],
-                                        is_overlay=t["is_overlay"])
+                self.video_track_created(t["name"], t["width"], t["height"], t["num"],
+                                         is_overlay=t["is_overlay"])
             else:
-                self.create_audio_track(t["name"], t["width"], t["height"], t["num"])
+                self.audio_track_created(t["name"], t["width"], t["height"], t["num"])
 
         for t in data["timeables"]:
             m = t["model"]
@@ -271,10 +347,8 @@ class TimelineController:
             if "group" in t:
                 group = t["group"]
 
-            self.create_timeable(t["track_id"], t["name"], t["width"], t["x_pos"],
-                                 model, t["view_id"], res_left=t["resizable_left"],
-                                 res_right=t["resizable_right"], group=group,
-                                 hist=False)
+            self.create_timeable(None, t["track_id"], t["name"], t["x_pos"], res_left=t["resizable_left"],
+                                 res_right=t["resizable_right"], hist=False, group=group)
 
     def create_project_groups(self, data):
         """ Recreates all groups when the project is loaded """
@@ -283,21 +357,21 @@ class TimelineController:
 
     def create_default_tracks(self):
         """ Creates 2 video and 2 audio tracks when the user chooses manual cut """
-        self.create_video_track("Video 1", 2000, 50, 4)
-        self.create_video_track("Video 2", 100, 50, 3)
+        self.video_track_created("Video 1", 2000, 50, 4)
+        self.video_track_created("Video 2", 100, 50, 3)
 
-        self.create_audio_track("Audio 1", 100, 50, 2)
-        self.create_audio_track("Audio 2", 200, 50, 1)
+        self.audio_track_created("Audio 1", 100, 50, 2)
+        self.audio_track_created("Audio 2", 200, 50, 1)
 
     def create_autocut_tracks(self):
         """
         Creates tracks for overlay, board, visualizer, audio when user chooses autocut
         """
-        self.create_video_track("Overlay", 2000, 50, 3, is_overlay=True)
-        self.create_video_track("Tafel", 2000, 50, 2)
-        self.create_video_track("Visualizer", 2000, 50, 1)
-        self.create_video_track("Folien", 2000, 50, 0)
-        self.create_audio_track("Audio", 2000, 50, -1)
+        self.video_track_created("Overlay", 2000, 50, 3, is_overlay=True)
+        self.video_track_created("Tafel", 2000, 50, 2)
+        self.video_track_created("Visualizer", 2000, 50, 1)
+        self.video_track_created("Folien", 2000, 50, 0)
+        self.audio_track_created("Audio", 2000, 50, -1)
 
     def create_autocut_timeables(self, file_path, track, data):
         """
@@ -315,20 +389,18 @@ class TimelineController:
 
             width = seconds_to_pos(model.clip.Duration())
             x_pos = seconds_to_pos(start)
-            self.create_timeable(track, os.path.basename(file_path),
-                                 width, x_pos, model, generate_id(), hist=False)
+            self.create_timeable(None, track, os.path.basename(file_path), x_pos, hist=False)
 
     def add_clip(self, file_path, track):
         """ Gets a path to file and a track and creates a timeable """
         model = TimeableModel(file_path, generate_id())
 
         width = seconds_to_pos(model.clip.Duration())
-        self.create_timeable(track, os.path.basename(file_path),
-                             width, 0, model, generate_id(), hist=False)
+        self.create_timeable(None, track, os.path.basename(file_path), 0, hist=False)
 
     def clear_timeline(self):
         """ Removes all timeline data """
-        self.__timeline_model.remove_all_clips()
+        self.__timeline_model.remove_all_timeables()
         self.__timeline_view.remove_all_tracks()
 
         self.__history.clear_history()

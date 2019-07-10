@@ -56,7 +56,7 @@ class TimelineView(classmaker(QFrame, View)):
         track = TrackView(width, height, num, name, btn, True, is_overlay)
         self.tracks[num] = track
 
-        self.video_track_frame.add_track(track, index)
+        self.video_track_frame.add_track(None, index)
 
         self.adjust_track_sizes()
 
@@ -68,7 +68,7 @@ class TimelineView(classmaker(QFrame, View)):
         track = TrackView(width, height, num, name, btn, False)
         self.tracks[num] = track
 
-        self.audio_track_frame.add_track(track, index)
+        self.audio_track_frame.add_track(None, index)
 
         self.adjust_track_sizes()
 
@@ -123,8 +123,7 @@ class TimelineView(classmaker(QFrame, View)):
             track.set_width(width + x_pos)
             TimelineController.get_instance().adjust_tracks()
 
-        timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right,
-                                model, id, track_id, group_id=group)
+        timeable = TimeableView(name, width, track.height, x_pos, res_left, res_right, id, track_id, group_id=group)
         timeable.mouse_press_pos = mouse_pos
         track.add_timeable(timeable)
    
@@ -157,11 +156,11 @@ class TimelineView(classmaker(QFrame, View)):
     def remove_all_tracks(self):
         for track in self.tracks.values():
             if track.is_video:
-                self.video_track_frame.remove_track(track)
+                self.video_track_frame.remove_track(None)
                 self.video_track_button_frame.remove_button(track.button)
 
             else:
-                self.audio_track_frame.remove_track(track)
+                self.audio_track_frame.remove_track(None)
                 self.audio_track_button_frame.remove_button(track.button)
 
     def remove_track(self, track_id):
@@ -172,11 +171,11 @@ class TimelineView(classmaker(QFrame, View)):
             return
 
         if track.is_video:
-            self.video_track_frame.remove_track(track)
+            self.video_track_frame.remove_track(None)
             self.video_track_button_frame.remove_button(track.button)
 
         else:
-            self.audio_track_frame.remove_track(track)
+            self.audio_track_frame.remove_track(None)
             self.audio_track_button_frame.remove_button(track.button)
 
         self.tracks.pop(track_id, None)

@@ -17,6 +17,6 @@ class AddTrackController:
         if self.view.audio_button.isChecked():
             is_video = False
 
-        self.timeline_controller.add_track(name, 1, 50, 0, is_video)
+        self.timeline_controller.add_track(None, 1)
 
         self.view.accept()

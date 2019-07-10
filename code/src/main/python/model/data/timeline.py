@@ -44,6 +44,8 @@ class TimelineModel:
 
         TimelineModel.__instance = self
 
+        self.__controller = None
+
         fps = timeline_data["fps"]
         width = timeline_data["width"]
         height = timeline_data["height"]
@@ -57,7 +59,25 @@ class TimelineModel:
 
         self.timeline.Open()
 
+        self.timeables = dict()
+        self.tracks = dict()  # {track_id: layer}
         self.groups = dict()
+
+    def set_controller(self, controller):
+        """ Set the timeline controller
+
+        @param controller: The controller which the C{TimelineModel}
+                           should be linked to.
+        """
+        self.__controller = controller
+
+    def add_timeable(self, timeable, track_id):
+        # Todo: check if track_id exists
+        # Todo: set track id of timeable
+        self.timeline.addClip(timeable.clip)
+        self.timeables[timeable.clip.Id()] = timeable
+        timeable.set_controller(self.__controller)
+        self.__controller.timeable_model_added(timeable)
 
     def get_clip_by_id(self, clip_id):
         """
@@ -169,17 +189,50 @@ class TimelineModel:
 
         w.Close()
 
-    def remove_track(self, number):
-        """
-        Removes all Clips with the same layer as numer.
+    def add_track(self, track_model, layer):
+        track_id = track_model.get_track_id()
+        if track_id in self.tracks.keys():
+            raise ValueError(
+                "Can't add track: There's already a track existing with ID={}"
+                .format(track_id)
+            )
+        elif layer in self.tracks.values():
+            raise ValueError(
+                "Can't add track: There's already a track existing with"
+                "layer={}"
+                .format(layer)
+            )
+        else:
+            self.tracks[track_id] = track_model
+            track_model.set_timeline_model(self)
+            for timeable in track_model.get_timeables().values():
+                self.timeline.addClip(timeable.clip)
+            self.__controller.track_added(track_id)
 
-        @param number: the Layer of the clips that will be removed
+    def remove_track(self, track_id):
         """
-        for c in self.timeline.Clips():
-            if c.Layer() == number:
-                self.change("delete", ["clips", {"id": c.Id()}], {})
+        Remove the specified track together with all the timeables in
+        it. The track itself remains unchanged.
 
-    def remove_all_clips(self):
-        """ Deletes all clips in the timeline (but not the views!!!) """
-        for c in self.timeline.Clips():
-            self.change("delete", ["clips", {"id": c.Id()}], {})
+        @param track_id: The ID of the track to be removed.
+
+        """
+        try:
+            track = self.tracks[track_id]
+        except KeyError:
+            raise KeyError(
+                "Track doesn't exist: track_id = {}".format(track_id)
+            )
+        finally:
+            for c in self.timeline.Clips():
+                if c.Layer() == track.get_layer():
+                    self.change("delete", ["clips", {"id": c.Id()}], {})
+            track.set_timeline_controller(None)
+            self.tracks.pop(track_id)
+            self.__controller.track_removed(track_id)
+
+    def remove_all_timeables(self):
+        """ Remove all timeables from all the tracks. """
+        for track in self.tracks:
+            track.remove_all_timeables()
+            # self.change("delete", ["clips", {"id": t.clip.Id()}], {})

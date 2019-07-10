@@ -1,5 +1,7 @@
 from model.project import Operation
-from util.timeline_utils import pos_to_seconds
+from model.data import TimeableModel
+from config import Settings
+from util.timeline_utils import pos_to_seconds, generate_id
 
 
 def make_timeable_model(filename, id):
@@ -12,33 +14,46 @@ def make_timeable_model(filename, id):
 class CreationOperation(Operation):
     """ Creates a new timeable """
 
-    def __init__(self, track_id, name, width, x_pos, model, id,
-                 res_left, res_right, mouse_pos, group, is_drag, controller):
+    def __init__(self, filepath, track_id, name, x_pos, res_left, res_right, group, is_drag, controller,
+                 timeline_model):
+        self.filepath = filepath
         self.track_id = track_id
         self.name = name
-        self.width = width
         self.x_pos = x_pos
-        self.model = model
-        self.id = id
         self.res_left = res_left
         self.res_right = res_right
-        self.mouse_pos = mouse_pos
         self.group = group
         self.is_drag = is_drag
         self.controller = controller
+        self.timeline_model = timeline_model
+
+        self.timeable_models = dict()  # {id: TimeableModel}
 
     def do(self):
-        self.model.move(self.x_pos)
-        timeline_view = self.controller.get_timelineview()
-        timeline_view.create_timeable(self.track_id, self.name, self.width,
-                                      self.x_pos, self.model, self.id,
-                                      self.res_left, self.res_right, self.group,
-                                      self.mouse_pos, is_drag=self.is_drag)
+        if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
+            timeable_id_video = generate_id()
+            self.timeable_models[timeable_id_video] = TimeableModel(self.filepath, timeable_id_video, True)
+            timeable_id_audio = generate_id()
+            self.timeable_models[timeable_id_audio] = TimeableModel(self.filepath, timeable_id_audio, False)
+        else:
+            timeable_id = generate_id()
+            self.timeable_models[timeable_id] = TimeableModel(self.file_path, timeable_id)
+        for timeable_model in self.timeable_models.values():
+            timeable_model.move(self.x_pos)
+            timeable_model.add_to_timeline()
 
+        # Controller should already get notified when a TimeableModel is added
+        # to the TimelineModel. Therefore deactivate this code:
+        # timeline_view = self.controller.get_timelineview()
+        # timeline_view.create_timeable(None, self.track_id, self.name, self.x_pos, self.res_left, self.res_right,
+        #                               self.mouse_pos)
+
+        # Todo: Bring this to the model.
         self.controller.get_timelinemodel().update_duration()
 
     def undo(self):
-        self.controller.get_timeable_by_id(self.id).delete(hist=False)
+        for timeable_model in self.timeable_models.values():
+            timeable_model.delete(hist=False)
 
 
 class DeleteOperation(Operation):
@@ -63,12 +78,10 @@ class DeleteOperation(Operation):
         model.set_end(self.model_info["end"], is_sec=True)
         model.move(self.model_info["position"], is_sec=True)
 
-        self.controller.create_timeable(
-            self.view_info["track_id"], self.view_info["name"],
-            self.view_info["width"], self.view_info["x_pos"], model,
-            self.view_info["view_id"], res_left=self.view_info["resizable_left"],
-            res_right=self.view_info["resizable_right"],
-            group=self.view_info["group_id"], hist=False)
+        self.controller.create_timeable(None, self.view_info["track_id"], self.view_info["name"],
+                                        self.view_info["x_pos"], res_left=self.view_info["resizable_left"],
+                                        res_right=self.view_info["resizable_right"], hist=False,
+                                        group=self.view_info["group_id"])
 
         self.controller.add_timeable_to_group(self.view_info["group_id"],
                                               self.view_info["view_id"])
@@ -103,11 +116,9 @@ class CutOperation(Operation):
                        is_sec=True)
         new_model.set_layer(timeable_left.model.clip.Layer())
 
-        self.controller.create_timeable(timeable_left.track_id, timeable_left.name,
-                                        timeable_left.width - self.pos,
-                                        self.pos + timeable_left.x_pos, new_model,
-                                        self.new_view_id, hist=False,
-                                        res_right=timeable_left.resizable_right)
+        self.controller.create_timeable(None, timeable_left.track_id, timeable_left.name,
+                                        self.pos + timeable_left.x_pos, res_right=timeable_left.resizable_right,
+                                        hist=False)
 
         timeable_left.set_width(self.pos)
         timeable_left.setPos(timeable_left.x_pos, 0)
@@ -225,22 +236,18 @@ class DragOperation(Operation):
         if self.was_created:
             return
 
-        self.controller.create_timeable(
-            self.view_info_new["track_id"], self.view_info_new["name"],
-            self.view_info_new["width"], self.view_info_new["x_pos"], self.model_new,
-            self.view_info_new["view_id"], res_left=self.view_info_new["resizable_left"],
-            res_right=self.view_info_new["resizable_right"],
-            group=self.view_info_new["group_id"], hist=False)
+        self.controller.create_timeable(None, self.view_info_new["track_id"], self.view_info_new["name"],
+                                        self.view_info_new["x_pos"], res_left=self.view_info_new["resizable_left"],
+                                        res_right=self.view_info_new["resizable_right"], hist=False,
+                                        group=self.view_info_new["group_id"])
         self.controller.delete_timeable(
             self.view_info_old, self.model_old.get_info_dict(), hist=False)
 
     def undo(self):
-        self.controller.create_timeable(
-            self.view_info_old["track_id"], self.view_info_old["name"],
-            self.view_info_old["width"], self.view_info_old["x_pos"], self.model_old,
-            self.view_info_old["view_id"], res_left=self.view_info_old["resizable_left"],
-            res_right=self.view_info_old["resizable_right"],
-            group=self.view_info_old["group_id"], hist=False)
+        self.controller.create_timeable(None, self.view_info_old["track_id"], self.view_info_old["name"],
+                                        self.view_info_old["x_pos"], res_left=self.view_info_old["resizable_left"],
+                                        res_right=self.view_info_old["resizable_right"], hist=False,
+                                        group=self.view_info_old["group_id"])
         self.controller.delete_timeable(
             self.view_info_new, self.model_new.get_info_dict(), hist=False)
         self.was_created = False
@@ -286,15 +293,15 @@ class CreateTrackOperation(Operation):
 
     def do(self):
         if self.is_video:
-            self.controller.create_video_track(
+            self.controller.video_track_created(
                 self.name, self.width, self.height, self.track_id, index=self.index)
         else:
-            self.controller.create_audio_track(
+            self.controller.audio_track_created(
                 self.name, self.width, self.height, self.track_id, index=self.index)
 
     def undo(self):
-        self.controller.get_timelinemodel().remove_track(self.track_id)
-        self.controller.get_timelineview().remove_track(self.track_id)
+        self.controller.get_timelinemodel().remove_track(None)
+        self.controller.get_timelineview().remove_track(None)
 
 
 class DeleteTrackOperation(Operation):
@@ -315,19 +322,19 @@ class DeleteTrackOperation(Operation):
 
     def do(self):
         # removes clips from timeline model
-        self.controller.get_timelinemodel().remove_track(self.track_id)
+        self.controller.get_timelinemodel().remove_track(None)
 
         # remove track view
-        self.controller.get_timelineview().remove_track(self.track_id)
+        self.controller.get_timelineview().remove_track(None)
 
     def undo(self):
         if self.track_data["type"]:
-            self.controller.create_video_track(
+            self.controller.video_track_created(
                 self.track_data["name"], self.track_data["width"],
                 self.track_data["height"], self.track_data["num"], index=self.index,
                 is_overlay=self.track_data["is_overlay"])
         else:
-            self.controller.create_audio_track(
+            self.controller.audio_track_created(
                 self.track_data["name"], self.track_data["width"],
                 self.track_data["height"], self.track_data["num"], index=self.index)
 
@@ -338,7 +345,5 @@ class DeleteTrackOperation(Operation):
             model.set_end(m["end"], is_sec=True)
             model.move(m["position"], is_sec=True)
 
-            self.controller.create_timeable(
-                self.track_id, t["name"], t["width"], t["x_pos"], model, t["view_id"],
-                res_left=t["resizable_left"], res_right=t["resizable_right"],
-                group=t["group_id"], hist=False)
+            self.controller.create_timeable(None, self.track_id, t["name"], t["x_pos"], res_left=t["resizable_left"],
+                                            res_right=t["resizable_right"], hist=False, group=t["group_id"])

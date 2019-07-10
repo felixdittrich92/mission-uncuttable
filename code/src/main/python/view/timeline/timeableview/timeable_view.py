@@ -33,8 +33,14 @@ class TimeableView(QGraphicsRectItem):
 
     update_previewplayer = pyqtSignal()
 
-    def __init__(self, name, width, height, x_pos, res_left, res_right,
-                 model, view_id, track_id, group_id=None, parent=None):
+    def __init__(
+            self,
+            name,
+            width, height, x_pos,
+            res_left, res_right,
+            view_id,
+            track_id, group_id=None,
+            parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
@@ -45,8 +51,9 @@ class TimeableView(QGraphicsRectItem):
         """
         super(TimeableView, self).__init__(parent)
 
-        self.model = model 
-        self.model.add_to_timeline()
+        # Todo: Do this in the TimelineController or the TimelineModel
+        self.model = model
+        # self.model.add_to_timeline()
 
         self.name = name
         self.width = width
@@ -59,8 +66,9 @@ class TimeableView(QGraphicsRectItem):
 
         self.__controller = TimelineController.get_instance()
 
-        if self.__controller.is_overlay_track(self.track_id):
-            self.model.corner(True)
+        # Todo: Do this in the TimelineController or the TimelineModel
+        # if self.__controller.is_overlay_track(self.track_id):
+        #     self.model.corner(True)
 
         self.set_pixmap()
 
@@ -122,26 +130,38 @@ class TimeableView(QGraphicsRectItem):
             "x_pos": self.x_pos,
             "view_id": self.view_id,
             "track_id": self.track_id,
-            "group_id": self.group_id,
-            "model": self.model.get_info_dict()
+            "group_id": self.group_id
         }
 
     def set_pixmap(self):
         """ Sets the pixmap to the first frame """
-        frame = self.model.get_first_frame()
+        # Todo: Implement pixmap setter correctly.
+        #  The pixmap setter shouldn't grab the pixmap on its own.
+        #  Instead it should be called with a pixmap which is then
+        #  displayed on the GUI.
+        raise RuntimeWarning(
+            "Tried to set pixmap but at the moment there's no way to"
+            "get the pixmap from anywhere."
+        )
 
-        QApplication.processEvents()
-
-        px = get_pixmap_from_file(self.model.file_name, frame)
-        if px is not None:
-            if self.model.is_video or (self.model.is_video is None):
-                
-                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
-            else:
-                px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
-                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)   
-        else:
-            self.pixmap = None
+        # This code was here before. It reads the first frame from the
+        # model and sets it as the pixmap. But the model shouldn't
+        # actually be known to the view.
+        #
+        # frame = self.model.get_first_frame()
+        #
+        # QApplication.processEvents()
+        #
+        # px = get_pixmap_from_file(self.model.file_name, frame)
+        # if px is not None:
+        #     if self.model.is_video or (self.model.is_video is None):
+        #
+        #         self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+        #     else:
+        #         px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
+        #         self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+        # else:
+        #     self.pixmap = None
 
     def set_width(self, new_width):
         """ Sets the width of the timeable """
@@ -187,14 +207,19 @@ class TimeableView(QGraphicsRectItem):
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def settings(self):
-        volume_dialog = TimeableSettingsView()
-        current_clip_volume = self.model.clip.volume.GetValue(0)
-        volume_dialog.set_data(current_clip_volume)
-        volume_dialog.exec_()
-        self.model.clip.volume = openshot.Keyframe(volume_dialog.current_volume_value)
+        # Todo: Implement volume setting through the TimelineController
+        raise RuntimeWarning(
+            "Can't show volume settings because there's no valid code for that."
+        )
+        # volume_dialog = TimeableSettingsView()
+        # current_clip_volume = self.model.clip.volume.GetValue(0)
+        # volume_dialog.set_data(current_clip_volume)
+        # volume_dialog.exec_()
+        # self.model.clip.volume = openshot.Keyframe(volume_dialog.current_volume_value)
 
     def delete(self, hist=True):
         """ deletes the model from the timeline """
+
         self.__controller.delete_timeable(self.get_info_dict(),
                                           self.model.get_info_dict(), hist=hist)
 
@@ -218,6 +243,8 @@ class TimeableView(QGraphicsRectItem):
         if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
             return
 
+        # Change note: The model parameter gets removed when
+        # split_timeable is refactored
         self.__controller.split_timeable(self.view_id, self.resizable_right,
                                          self.width, self.model.clip.End(), pos)
 

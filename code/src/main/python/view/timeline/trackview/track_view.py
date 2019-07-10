@@ -35,7 +35,10 @@ class TrackView(QGraphicsView):
         self.num = num
         self.name = name
         self.button = button
+
+        # Todo: Move this to the model
         self.is_overlay = is_overlay
+
         self.is_video = is_video
 
         # set button context menu policy so you can get a rightclick menu on the button
@@ -48,7 +51,7 @@ class TrackView(QGraphicsView):
         self.drag_from_track = False
         self.dragged_timeable_id = None
 
-        self.__controller = TimelineController.get_instance()
+        self.__timeline_controller = TimelineController.get_instance()
 
         self.setAcceptDrops(True)
 
@@ -110,19 +113,19 @@ class TrackView(QGraphicsView):
         This method is only for the context menu on the track button
         """
         view = AddTrackView()
-        AddTrackController(self.__controller, view).start()
+        AddTrackController(self.__timeline_controller, view).start()
 
     def delete(self):
         """
         Calls the TimelineController to removes this track.
         This method is only for the context menu on the track button
         """
-        self.__controller.delete_track(self.num)
+        self.__timeline_controller.delete_track(self.num)
 
     def overlay_toggle(self):
         """ Toggles the Overlay state of this Track. """
         self.is_overlay = not self.is_overlay
-        self.__controller.set_track_overlay(self.num, self.is_overlay)
+        self.__timeline_controller.set_track_overlay(self.num, self.is_overlay)
 
         QApplication.processEvents()
 
@@ -180,27 +183,32 @@ class TrackView(QGraphicsView):
         colliding = self.scene().items(rect)
         # add the timeable when there are no colliding items
         if not colliding:
-            model = TimeableModel(path, generate_id(), is_video=True)
-            model_withoutgroup = TimeableModel(path, generate_id())
-            model_audio = TimeableModel(path, generate_id(), is_video=False)
-            model.move(x_pos)
-            model.set_end(width) 
-            name = os.path.basename(path)
-
-            clip_id = generate_id()
-            clip_id_audio = generate_id()
-
-            
-
-            if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
-                self.__controller.create_timeable(self.num, name, width, x_pos,
-                                              model, clip_id, is_drag=True)
-                self.__controller.create_timeable(None, name, width, x_pos,
-                                                model_audio, clip_id_audio, is_drag=True)
-                self.__controller.create_group([clip_id, clip_id_audio])
-            else:
-                self.__controller.create_timeable(self.num, name, width, x_pos,
-                                              model_withoutgroup, clip_id, is_drag=True)
+            self.__timeline_controller.create_timeable(
+                path,
+                self.num,
+                "timeable",
+                x_pos,
+                0, 0,
+                True,
+                None)
+            # model = TimeableModel(path, generate_id(), is_video=True)
+            # model_withoutgroup = TimeableModel(path, generate_id())
+            # model_audio = TimeableModel(path, generate_id(), is_video=False)
+            # model.move(x_pos)
+            # model.set_end(width)
+            # name = os.path.basename(path)
+            #
+            # clip_id = generate_id()
+            # clip_id_audio = generate_id()
+            #
+            #
+            #
+            # if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
+            #     self.__controller.create_timeable(None, self.num, name, x_pos)
+            #     self.__controller.create_timeable(None, None, name, x_pos)
+            #     self.__controller.create_group([clip_id, clip_id_audio])
+            # else:
+            #     self.__controller.create_timeable(None, self.num, name, x_pos)
 
 
             self.item_dropped = True
@@ -213,7 +221,7 @@ class TrackView(QGraphicsView):
         stream = QDataStream(item_data, QIODevice.ReadOnly)
 
         view_id = QDataStream.readString(stream).decode()
-        timeable = self.__controller.get_timeable_by_id(view_id)
+        timeable = self.__timeline_controller.get_timeable_by_id(view_id)
 
         self.dragged_timeable_id = view_id
 
@@ -251,16 +259,15 @@ class TrackView(QGraphicsView):
             new_id = generate_id()
 
             # add the timeable to the track
-            self.__controller.create_timeable(
-                self.num, name, width, start_pos, model, new_id, res_left=res_left,
-                res_right=res_right, mouse_pos=pos, hist=False, is_drag=True)
+            self.__timeline_controller.create_timeable(None, self.num, name, start_pos, res_left=res_left, res_right=res_right,
+                                                       hist=False)
             self.drag_from_track = True
 
             if group_id is not None:
                 new_pos = -(old_pos - (start_pos - pos))
-                self.__controller.remove_timeable_from_group(group_id, view_id)
-                self.__controller.try_group_move(group_id,new_pos)
-                self.__controller.add_timeable_to_group(group_id, new_id)
+                self.__timeline_controller.remove_timeable_from_group(group_id, view_id)
+                self.__timeline_controller.try_group_move(group_id, new_pos)
+                self.__timeline_controller.add_timeable_to_group(group_id, new_id)
 
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
