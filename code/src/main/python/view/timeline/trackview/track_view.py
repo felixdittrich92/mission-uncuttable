@@ -183,7 +183,6 @@ class TrackView(QGraphicsView):
             name = os.path.basename(path)
 
             clip_id = generate_id()
-            clip_id_audio = generate_id()
 
             if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
                 model = TimeableModel(path, generate_id(), is_video=True)
@@ -195,6 +194,7 @@ class TrackView(QGraphicsView):
                 model_audio = TimeableModel(path, generate_id(), is_video=False)
                 model_audio.move(x_pos)
                 model_audio.set_end(width)
+                clip_id_audio = generate_id()
                 self.__controller.create_timeable(None, name, width, x_pos, model_audio,
                                                   clip_id_audio, is_drag=True)
 
