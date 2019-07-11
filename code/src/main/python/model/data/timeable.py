@@ -23,10 +23,6 @@ class TimeableModel:
             else:
                 self.clip.has_video = openshot.Keyframe(0)
                 self.clip.has_audio = openshot.Keyframe(1)
-    
-
-
-        
 
         self.file_name = file_name
         self.file_type = get_file_type(self.file_name)
@@ -123,7 +119,7 @@ class TimeableModel:
         """ Sets the end of the clip """
         new_end = pos
         if is_sec:
-            self.clip.End(pos)
+            self.clip.End(new_end)
         else:
             new_end = pos_to_seconds(pos)
             self.clip.End(new_end)
