@@ -1,3 +1,6 @@
+import os
+
+import openshot
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
 from PyQt5.QtGui import QBrush, QColor, QDrag, QTransform, QPixmap
@@ -9,8 +12,6 @@ from model.data import FileType
 from config import Language, Resources, Settings
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
-import openshot
-import os
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
@@ -45,7 +46,7 @@ class TimeableView(QGraphicsRectItem):
         """
         super(TimeableView, self).__init__(parent)
 
-        self.model = model 
+        self.model = model
         self.model.add_to_timeline()
 
         self.name = name
@@ -135,11 +136,12 @@ class TimeableView(QGraphicsRectItem):
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
             if self.model.is_video or (self.model.is_video is None):
-                
-                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio,
+                                        transformMode=1)
             else:
                 px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
-                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)   
+                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio,
+                                        transformMode=1)
         else:
             self.pixmap = None
 
@@ -159,7 +161,7 @@ class TimeableView(QGraphicsRectItem):
         menu = QMenu()
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
         if current_stylesheet == 0:
-            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         elif current_stylesheet == 1:
             menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 

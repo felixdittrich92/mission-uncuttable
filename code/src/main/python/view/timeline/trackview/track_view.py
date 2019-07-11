@@ -81,7 +81,7 @@ class TrackView(QGraphicsView):
         button_menu = QMenu()
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
         if current_stylesheet == 0:
-            button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+            button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         elif current_stylesheet == 1:
             button_menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
@@ -184,27 +184,23 @@ class TrackView(QGraphicsView):
             model_withoutgroup = TimeableModel(path, generate_id())
             model_audio = TimeableModel(path, generate_id(), is_video=False)
             model.move(x_pos)
-            model.set_end(width) 
+            model.set_end(width)
             name = os.path.basename(path)
 
             clip_id = generate_id()
             clip_id_audio = generate_id()
 
-            
-
             if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
                 self.__controller.create_timeable(self.num, name, width, x_pos,
-                                              model, clip_id, is_drag=True)
+                                                  model, clip_id, is_drag=True)
                 self.__controller.create_timeable(None, name, width, x_pos,
-                                                model_audio, clip_id_audio, is_drag=True)
+                                                  model_audio, clip_id_audio, is_drag=True)
                 self.__controller.create_group([clip_id, clip_id_audio])
             else:
                 self.__controller.create_timeable(self.num, name, width, x_pos,
-                                              model_withoutgroup, clip_id, is_drag=True)
-
+                                                  model_withoutgroup, clip_id, is_drag=True)
 
             self.item_dropped = True
-
 
     def add_from_track(self, drag_event):
         """ Adds a timeable when a drag was started from a timeable on a track """
@@ -259,7 +255,7 @@ class TrackView(QGraphicsView):
             if group_id is not None:
                 new_pos = -(old_pos - (start_pos - pos))
                 self.__controller.remove_timeable_from_group(group_id, view_id)
-                self.__controller.try_group_move(group_id,new_pos)
+                self.__controller.try_group_move(group_id, new_pos)
                 self.__controller.add_timeable_to_group(group_id, new_id)
 
             # set item_dropped to True because the timeable was succesfully created
