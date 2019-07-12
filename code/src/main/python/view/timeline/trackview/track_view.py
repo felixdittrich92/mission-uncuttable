@@ -302,14 +302,12 @@ class TrackView(QGraphicsView):
 
     def dragLeaveEvent(self, event):
         """ Gets called when something is dragged out of the track """
-        print(self.current_timeable_2)
         if self.current_timeable is not None:
             # delete dragged timeable if mouse leaves track
             self.current_timeable.delete(hist=False)
             if not self.drag_from_track:
                 Project.get_instance().get_history().remove_last_operation()
             if self.current_timeable_2 is not None:
-                print("track_view_delete_2")
                 self.current_timeable_2.delete(hist=False)
 
             # clear data
