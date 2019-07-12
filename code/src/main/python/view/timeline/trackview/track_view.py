@@ -277,7 +277,6 @@ class TrackView(QGraphicsView):
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         ct2=self.current_timeable_2
-        print("dragenter")
         print(ct2)
         if event.mimeData().hasFormat('ubicut/timeable'):
             if self.is_video:
