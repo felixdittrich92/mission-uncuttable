@@ -13,7 +13,7 @@ class CreationOperation(Operation):
     """ Creates a new timeable """
 
     def __init__(self, track_id, name, width, x_pos, model, id,
-                 res_left, res_right, mouse_pos, group, is_drag, controller):
+                 res_left, res_right, mouse_pos, group, is_drag, auto_audio, controller):
         self.track_id = track_id
         self.name = name
         self.width = width
@@ -25,6 +25,7 @@ class CreationOperation(Operation):
         self.mouse_pos = mouse_pos
         self.group = group
         self.is_drag = is_drag
+        self.auto_audio = auto_audio
         self.controller = controller
 
     def do(self):
@@ -33,7 +34,7 @@ class CreationOperation(Operation):
         timeline_view.create_timeable(self.track_id, self.name, self.width,
                                       self.x_pos, self.model, self.id,
                                       self.res_left, self.res_right, self.group,
-                                      self.mouse_pos, is_drag=self.is_drag)
+                                      self.mouse_pos, is_drag=self.is_drag, auto_audio=self.auto_audio)
 
         self.controller.get_timelinemodel().update_duration()
 
