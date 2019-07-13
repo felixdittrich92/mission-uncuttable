@@ -9,12 +9,13 @@ from util.timeline_utils import get_file_type, pos_to_seconds
 class TimeableModel:
 
     # Todo: Write documentation
-    def __init__(self, file_name, clip_id, is_video=None):
+    def __init__(self, clip_id, file_name, name="timeable", is_video=None):
         # otherwhise there is a json parse error
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
         self.clip.Id(clip_id)
+        self.name = name
 
         self.is_video = is_video
 
@@ -27,9 +28,6 @@ class TimeableModel:
                 self.clip.has_audio = openshot.Keyframe(1)
 
         self.track = None
-
-        self.timeline_controller = None
-        self.timeline_model = TimelineModel.get_instance()
 
         self.file_name = file_name
         self.file_type = get_file_type(self.file_name)
@@ -49,24 +47,31 @@ class TimeableModel:
         }
 
     def get_id(self):
-        """ Return the timeable's ID. """
+        """Return the timeable's ID."""
         return self.clip.Id()
 
-    def set_controller(self, controller):
-        """
-        Set the C{TimelineController} which the C{TimeableModel} should
-        be linked to.
+    def get_timeline_model(self):
+        """Return the C{TimelineModel} which this timeable belongs to."""
+        if self.track is not None:
+            return self.track.get_timeline_model()
+        else:
+            return None
 
-        @param controller: The controller.
-        @type controller:  controller.TimelineController
-        """
-        self.timeline_controller = controller
+    def get_timeline_controller(self):
+        """Return the C{TimelineController} which this timeable belongs to."""
+        if self.track is not None:
+            return self.track.get_timeline_controller()
+        else:
+            return None
 
-    def set_track(self, track):
+    def _set_track(self, track):
         """
         Set the track of the timeable and update its properties
         according to the track. C{track=None} means that the timeable
         should not belong to any track.
+
+        This method is only for convenience and internal use. It won't
+        notify about the changes.
 
         Updated properties
         ==================
@@ -76,65 +81,96 @@ class TimeableModel:
             layer will be set to C{-1} because the Openshot layer
             parameter can't be C{None}.
 
+          - The overlay state (called 'corner')
+
         @param track: The track.
         @type track:  model.data.TrackModel
         """
+        if self.track is not None:
+            self.track.remove_timeable(self.get_id())
         self.track = track
-        layer = track.get_layer()
-        if layer is not None:
-            self.set_layer(layer)
-        else:
-            self.set_layer(-1)
+        self.update_layer()
+
+        self.corner(track.is_overlay())
+
+        track.add_timeable(self)
 
     def is_first_vid(self):
         """ Returns True if this is the first video in the timeline, False otherwhise """
-        if not self.clip.Reader().info.has_video:
-            return False
-
-        for c in list(self.timeline_model.timeline.Clips()):
-            if c.Reader().info.has_video:
+        if self.get_timeline_model() is not None:
+            if not self.clip.Reader().info.has_video:
                 return False
 
-        return True
+            for c in list(self.get_timeline_model().timeline.Clips()):
+                if c.Reader().info.has_video:
+                    return False
+            return True
+        else:
+            return False
 
     def set_timeline_data(self):
         """ Sets the data of the timeline to data of this clip """
-        fps_data = {
-            "num": self.clip.Reader().info.fps.num,
-            "den": self.clip.Reader().info.fps.den
-        }
-        self.timeline_model.change("update", ["fps", ""], fps_data)
-
-        self.timeline_model.change(
-            "update", ["width"], self.clip.Reader().info.width)
-        self.timeline_model.change(
-            "update", ["height"], self.clip.Reader().info.height)
+        if self.get_timeline_model() is not None:
+            fps_data = {
+                "num": self.clip.Reader().info.fps.num,
+                "den": self.clip.Reader().info.fps.den
+            }
+            self.get_timeline_model().change("update", ["fps", ""], fps_data)
+            self.get_timeline_model().change(
+                "update", ["width"], self.clip.Reader().info.width)
+            self.get_timeline_model().change(
+                "update", ["height"], self.clip.Reader().info.height)
 
     def get_first_frame(self):
         """ Returns the frame that would be seen first """
         return int((self.clip.Start() * self.clip.Reader().info.fps.ToFloat()) + 1)
 
-    def set_layer(self, layer):
+    def update_layer(self):
+        """Update the layer of the timeable from its track."""
+        layer = self.track.get_layer()
+        if layer is not None:
+            self._set_layer(layer)
+        else:
+            self._set_layer(-1)
+
+    def _set_layer(self, layer):
         """ Sets the layer of the clip """
         self.clip.Layer(layer)
         data = {"layer": layer}
-        self.timeline_model.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+    def get_width(self):
+        return self.clip.Duration()
 
+    # Todo: Test for specification in the docstring
+    # Todo: Specify the case for inverse arguments when the first
+    #  operation isn't possible because either (if pos is negative)
+    #  the timeable's base file is not long enough or (if pos is
+    #  positive) the timeable is shorter than abs(pos).
+    #  This can also be done by handling such cases as an Error
     def trim_start(self, pos):
-        """ start = start + sec(pos) """
+        """start = start + sec(pos)
+
+        Specification
+        =============
+          - Executing C{trim_start(n)} and C{trim_start(-n)} on the same
+            C{TimeableModel} without any operation in-between will lead
+            back to the state which the C{TimeableModel} had before the
+            first of the two trim calls i.e. the state of the timeable
+            will be the same as if the two calls wouldn't have happened.
+        """
         new_start = self.clip.Start() + pos_to_seconds(pos)
         self.clip.Start(new_start)
 
         data = {"start": new_start}
-        self.timeline_model.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+        if self.get_timeline_controller():
+            self.get_timeline_controller().timeable_model_changed(self)
 
     def set_start(self, pos, is_sec=False):
         """ Sets the start of the clip """
@@ -146,23 +182,40 @@ class TimeableModel:
             self.clip.Start(new_start)
 
         data = {"start": new_start}
-        self.timeline_model.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+        if self.get_timeline_controller():
+            self.get_timeline_controller().timeable_model_changed(self)
 
+    # Todo: Test for specification in docstring
+    # Todo: Specify the case for inverse arguments when the first
+    #  operation isn't possible because either (if pos is positive)
+    #  the timeable's base file is not long enough or (if pos is
+    #  negative) the timeable is shorter than abs(pos).
+    #  This can also be done by handling such cases as an Error
     def trim_end(self, pos):
-        """ end = end + sec(pos) """
+        """end = end + sec(pos)
+
+        Specification
+        =============
+          - Executing C{trim_end(n)} and C{trim_end(-n)} on the same
+            C{TimeableModel} without any operation in-between will lead
+            back to the state which the C{TimeableModel} had before the
+            first of the two trim calls i.e. the state of the timeable
+            will be the same as if the two calls wouldn't have happened.
+        """
         new_end = self.clip.End() + pos_to_seconds(pos)
         self.clip.End(new_end)
 
         data = {"end": new_end}
-        self.timeline_model.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+        if self.get_timeline_controller():
+            self.get_timeline_controller().timeable_model_changed(self)
 
     def set_end(self, pos, is_sec=False):
         """ Sets the end of the clip """
@@ -174,14 +227,42 @@ class TimeableModel:
             self.clip.End(new_end)
 
         data = {"end": new_end}
-        self.timeline_model.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+        if self.get_timeline_controller():
+            self.get_timeline_controller().timeable_model_changed(self)
 
-    def move(self, pos, is_sec=False):
-        """ Sets the position of the clip """
+    def get_position(self):
+        """Return the position of the timeable on its track."""
+        return self.clip.Position()
+
+    def move(self, track_model, pos, is_sec=False):
+        """
+        Set the position of the timeable in its timeline.
+
+        B{Warning:} This method will only work properly for moving a
+        timeable inside one single timeline and not from one to another.
+
+        @param track_model: The track which the timeable should be moved
+                            to or C{None} if it should stay in its
+                            current track.
+        @type track_model:  model.data.TrackModel
+        @param pos:         The position which the timeable should be
+                            moved to.
+        @param is_sec:      Specifies if C{pos} is given in seconds
+                            or in frames. C{False} means frames.
+        """
+        # Currently this method only provides movement _inside_ a
+        # timeline and not between different ones. So the TimelineModel
+        # and the TimelineController shouldn't change during the
+        # movement. Therefore we don't need to store them before moving
+        # for notification after finishing.
+
+        if track_model is not None:
+            self._set_track(track_model)
+
         new_position = pos
         if is_sec:
             self.clip.Position(new_position)
@@ -190,11 +271,33 @@ class TimeableModel:
             self.clip.Position(new_position)
 
         data = {"position": new_position}
-        self.timeline_model.change(
-            "update", ["clips", {"id": self.clip.Id()}], data)
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+        if self.get_timeline_controller():
+            self.get_timeline_controller().timeable_model_changed(self)
+
+    def remove(self):
+        """Remove the timeable from its track."""
+        self.track.remove_timeable(self)
+        self.track = None
+
+    def set_volume(self, volume):
+        """ Set the volume of the timeable.
+
+        @param volume: The volume level from 0 to 1.
+        @type volume:  float
+        """
+        if volume < 0 or volume > 1:
+            raise ValueError(
+                "Can't set volume because it's not between 0 and 1: "
+                "volume={}"
+                    .format(volume)
+            )
+        else:
+            self.clip.volume = openshot.Keyframe(volume)
+            self.get_timeline_controller().timeable_model_changed(self)
 
     def corner(self, val):
         """ moves the clip to the bottom right """
@@ -216,5 +319,5 @@ class TimeableModel:
         self.clip.scale_y = k1
         self.clip.scale = openshot.SCALE_FIT
 
-        if self.timeline_controller:
-            self.timeline_controller.timeable_model_changed(self)
+        if self.get_timeline_controller():
+            self.get_timeline_controller().timeable_model_changed(self)

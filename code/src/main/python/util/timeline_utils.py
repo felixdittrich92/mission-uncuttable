@@ -93,6 +93,7 @@ def seconds_to_pos(sec):
     return int(math.ceil(sec * get_px_per_second()))
 
 
+# Todo: Check if string conversion of ID is necessary.
 def generate_id():
     return str(uuid.uuid4())
 

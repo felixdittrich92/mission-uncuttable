@@ -59,9 +59,15 @@ class TimelineModel:
 
         self.timeline.Open()
 
-        self.timeables = dict()
-        self.tracks = dict()  # {track_id: layer}
-        self.groups = dict()
+        # Containers for tracks. Redundancy is needed for quick access.
+        self.track_id_map = dict()      # {track_id: track_model}
+        self.track_layer_list = list()  # [track_model]
+
+        # self.groups = dict()
+
+    def get_controller(self):
+        """ Return the timeline controller """
+        return self.__controller
 
     def set_controller(self, controller):
         """ Set the timeline controller
@@ -71,13 +77,13 @@ class TimelineModel:
         """
         self.__controller = controller
 
-    def add_timeable(self, timeable, track_id):
-        # Todo: check if track_id exists
-        # Todo: set track id of timeable
-        self.timeline.addClip(timeable.clip)
-        self.timeables[timeable.clip.Id()] = timeable
-        timeable.set_controller(self.__controller)
-        self.__controller.timeable_model_added(timeable)
+    # def add_timeable(self, timeable, track_id):
+    #     # _Todo: check if track_id exists
+    #     # _Todo: set track id of timeable
+    #     self.timeline.addClip(timeable.clip)
+    #     self.timeables[timeable.clip.Id()] = timeable
+    #     timeable.set_controller(self.__controller)
+    #     self.__controller.timeable_model_added(timeable)
 
     def get_clip_by_id(self, clip_id):
         """
@@ -89,18 +95,21 @@ class TimelineModel:
 
         return None
 
+    def get_group_dict(self):
+        return dict()
+
     def getTimeline(self):
         return self.timeline
 
     def get_fps(self):
         return self.timeline.info.fps.num / self.timeline.info.fps.den
 
-    def get_group_dict(self):
-        res = dict()
-        for g in list(self.groups.keys()):
-            res[g] = self.groups[g].get_timeable_ids()
-
-        return res
+    # def get_group_dict(self):
+    #     res = dict()
+    #     for g in list(self.groups.keys()):
+    #         res[g] = self.groups[g].get_timeable_ids()
+    #
+    #     return res
 
     def change(self, change_type, key, data):
         """
@@ -125,18 +134,18 @@ class TimelineModel:
         new_duration = self.get_last_frame() / self.get_fps()
         self.change("update", ["duration"], new_duration)
 
-    def create_group(self, group_id, timeables):
-        """
-        Create a TimeableGroup with all timeables in ids in it.
-        The group will be added to the timeline model.
-
-        @param ids: list of ids of timeable views
-        @return: Nothing
-        """
-        self.groups[group_id] = TimeableGroup(group_id, timeables)
-        project = Project.get_instance()
-        if not project.changed:
-            project.changed = True
+    # def create_group(self, group_id, timeables):
+    #     """
+    #     Create a TimeableGroup with all timeables in ids in it.
+    #     The group will be added to the timeline model.
+    #
+    #     @param ids: list of ids of timeable views
+    #     @return: Nothing
+    #     """
+    #     self.groups[group_id] = TimeableGroup(group_id, timeables)
+    #     project = Project.get_instance()
+    #     if not project.changed:
+    #         project.changed = True
 
     def get_last_frame(self):
         """ returns the number of the last frame in the timeline """
@@ -189,50 +198,58 @@ class TimelineModel:
 
         w.Close()
 
+    # Todo: Tidy-up call sequence by placing layer updating somewhere
+    #  else. Search for more places where call sequences are a
+    #  little bit tangled and fix these issues too.
     def add_track(self, track_model, layer):
         track_id = track_model.get_track_id()
-        if track_id in self.tracks.keys():
+        if track_id in self.track_id_map:
             raise ValueError(
                 "Can't add track: There's already a track existing with ID={}"
                 .format(track_id)
             )
-        elif layer in self.tracks.values():
-            raise ValueError(
-                "Can't add track: There's already a track existing with"
-                "layer={}"
-                .format(layer)
-            )
         else:
-            self.tracks[track_id] = track_model
-            track_model.set_timeline_model(self)
-            for timeable in track_model.get_timeables().values():
-                self.timeline.addClip(timeable.clip)
-            self.__controller.track_added(track_id)
+            self.track_id_map[track_id] = track_model
+            self.track_layer_list.insert(layer, track_model)
+            for t in track_model.get_timeables().values():
+                self.timeline.AddClip(t.clip)
+                t.update_layer()
+            self.__controller.track_added(track_model)
 
     def remove_track(self, track_id):
-        """
-        Remove the specified track together with all the timeables in
+        """Remove the specified track together with all the timeables in
         it. The track itself remains unchanged.
 
         @param track_id: The ID of the track to be removed.
-
         """
         try:
-            track = self.tracks[track_id]
+            track = self.track_id_map[track_id]
         except KeyError:
             raise KeyError(
                 "Track doesn't exist: track_id = {}".format(track_id)
             )
         finally:
-            for c in self.timeline.Clips():
-                if c.Layer() == track.get_layer():
-                    self.change("delete", ["clips", {"id": c.Id()}], {})
-            track.set_timeline_controller(None)
-            self.tracks.pop(track_id)
+            # Iterating over track.get_timeables() gives us the IDs of
+            #  the timeables. But these are identical to the IDs of the
+            #  corresponding Openshot clips. Therefore we don't have
+            #  to use track.get_timeables().values() and t.get_id().
+            for timeable_id in track.get_timeables():
+                self.change("delete", ["clips", {"id": timeable_id}], {})
+            self.track_id_map.pop(track_id)
+            self.track_layer_list.remove(track)
             self.__controller.track_removed(track_id)
+
+    def get_track_layer(self, track):
+        return self.track_layer_list.index(track)
+
+    def get_timeables(self):
+        timeables = dict()
+        for track in self.track_layer_list:
+            timeables.update(track.get_timeables())
+        return timeables
 
     def remove_all_timeables(self):
         """ Remove all timeables from all the tracks. """
-        for track in self.tracks:
+        for track in self.track_layer_list:
             track.remove_all_timeables()
             # self.change("delete", ["clips", {"id": t.clip.Id()}], {})

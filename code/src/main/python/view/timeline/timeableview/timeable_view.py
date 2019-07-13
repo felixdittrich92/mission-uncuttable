@@ -33,17 +33,12 @@ class TimeableView(QGraphicsRectItem):
 
     update_previewplayer = pyqtSignal()
 
-    def __init__(
-            self,
-            name,
-            width, height, x_pos,
-            res_left, res_right,
-            view_id,
-            track_id, group_id=None,
-            parent=None):
+    def __init__(self, name, width, height, x_pos, res_left, res_right, view_id, track_id, pixmap, group_id=None,
+                 parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
+        @param pixmap:
         @param name: the name that is displayed in the top left corner of the timeable
         @param width: timeable width, can be changed while resizing
         @param height: timeable height, should be the same as track height
@@ -51,14 +46,11 @@ class TimeableView(QGraphicsRectItem):
         """
         super(TimeableView, self).__init__(parent)
 
-        # Todo: Do this in the TimelineController or the TimelineModel
-        self.model = model
-        # self.model.add_to_timeline()
-
         self.name = name
         self.width = width
         self.height = height
         self.x_pos = x_pos
+        self.volume = 0
 
         self.view_id = view_id
         self.track_id = track_id
@@ -66,10 +58,7 @@ class TimeableView(QGraphicsRectItem):
 
         self.__controller = TimelineController.get_instance()
 
-        # Todo: Do this in the TimelineController or the TimelineModel
-        # if self.__controller.is_overlay_track(self.track_id):
-        #     self.model.corner(True)
-
+        self.pixmap_untouched = pixmap
         self.set_pixmap()
 
         self.resizable_left = res_left
@@ -135,33 +124,16 @@ class TimeableView(QGraphicsRectItem):
 
     def set_pixmap(self):
         """ Sets the pixmap to the first frame """
-        # Todo: Implement pixmap setter correctly.
-        #  The pixmap setter shouldn't grab the pixmap on its own.
-        #  Instead it should be called with a pixmap which is then
-        #  displayed on the GUI.
-        raise RuntimeWarning(
-            "Tried to set pixmap but at the moment there's no way to"
-            "get the pixmap from anywhere."
-        )
-
-        # This code was here before. It reads the first frame from the
-        # model and sets it as the pixmap. But the model shouldn't
-        # actually be known to the view.
-        #
-        # frame = self.model.get_first_frame()
-        #
-        # QApplication.processEvents()
-        #
-        # px = get_pixmap_from_file(self.model.file_name, frame)
-        # if px is not None:
-        #     if self.model.is_video or (self.model.is_video is None):
-        #
-        #         self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
-        #     else:
-        #         px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
-        #         self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
-        # else:
-        #     self.pixmap = None
+        if self.pixmap_untouched is not None:
+            self.pixmap = self.pixmap_untouched.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode=1)
+            # if self.model.is_video or (self.model.is_video is None):
+            #
+            #     self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+            # else:
+            #     px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
+            #     self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio, transformMode = 1)
+        else:
+            self.pixmap = None
 
     def set_width(self, new_width):
         """ Sets the width of the timeable """
@@ -185,15 +157,18 @@ class TimeableView(QGraphicsRectItem):
 
         cut_timeneedle = QAction(str(Language.current.timeable.cut_timeneedle))
         menu.addAction(cut_timeneedle)
-        cut_timeneedle.triggered.connect(self.cut_timeneedle)
+        cut_timeneedle.triggered.connect(
+            lambda: self.__controller.split_timeable_at_focus(self.view_id))
 
         cut_here = QAction(str(Language.current.timeable.cut_here))
         menu.addAction(cut_here)
-        cut_here.triggered.connect(lambda: self.cut_here(event.pos().x()))
+        cut_here.triggered.connect(
+            lambda: self.__controller)
 
         delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
-        delete.triggered.connect(lambda: self.delete(hist=True))
+        delete.triggered.connect(
+            lambda: self.__controller.delete_timeable(self.view_id))
 
         settings = QAction(str(Language.current.timeable.settings))
         menu.addAction(settings)
@@ -202,74 +177,65 @@ class TimeableView(QGraphicsRectItem):
         if self.group_id is not None:
             remove_from_group = QAction(str(Language.current.timeable.group_remove))
             menu.addAction(remove_from_group)
-            remove_from_group.triggered.connect(self.remove_from_group)
+            remove_from_group.triggered.connect(
+                lambda: self.__controller.ungroup(self.view_id))
 
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def settings(self):
-        # Todo: Implement volume setting through the TimelineController
-        raise RuntimeWarning(
-            "Can't show volume settings because there's no valid code for that."
-        )
-        # volume_dialog = TimeableSettingsView()
-        # current_clip_volume = self.model.clip.volume.GetValue(0)
-        # volume_dialog.set_data(current_clip_volume)
-        # volume_dialog.exec_()
-        # self.model.clip.volume = openshot.Keyframe(volume_dialog.current_volume_value)
-
-    def delete(self, hist=True):
-        """ deletes the model from the timeline """
-
-        self.__controller.delete_timeable(self.get_info_dict(),
-                                          self.model.get_info_dict(), hist=hist)
-
-    def remove_from_group(self):
-        if self.group_id is None:
-            return
-
-        self.__controller.remove_timeable_from_group(self.group_id, self.view_id)
-        self.group_id = None
+        volume_dialog = TimeableSettingsView()
+        volume_dialog.set_data(self.volume)
+        volume_dialog.exec_()
+        self.__controller\
+            .set_timeable_volume(volume_dialog.current_volume_value)
 
     def remove_from_scene(self):
         """ Removes the timeableview from the track """
         self.scene().removeItem(self)
 
-    def cut_here(self, pos):
-        """
-        cuts the timeable in two parts
+    # For cutting the timeable at the mouse position when there is no
+    #  timeline zoom this method should not be needed. We simply pass
+    #  the mouse position relative to the TimeableView to the
+    #  controller.
+    #
+    # def cut_here(self, pos):
+    #     """
+    #     cuts the timeable in two parts
+    #
+    #     @param pos: x position on the timeable where it's cut
+    #     """
+    #     if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
+    #         return
+    #
+    #     self.__controller.split_timeable(self.view_id, pos)
 
-        @param pos: x position on the timeable where it's cut
-        """
-        if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
-            return
-
-        # Change note: The model parameter gets removed when
-        # split_timeable is refactored
-        self.__controller.split_timeable(self.view_id, self.resizable_right,
-                                         self.width, self.model.clip.End(), pos)
-
-    def cut_timeneedle(self):
-        """
-        Cuts the Timeable at the position of the Timeneedle, but only if the
-        Timeneedle is on this Timeable.
-        """
-        # get the Timeneedle object
-        needle = self.__controller.get_timelineview().track_frame_frame.findChild(
-            QWidget, "needle_bottom")
-
-        pos = needle.x()
-
-        # do nothing if the Timeneedle is not on this Timeable
-        if not self.scene().itemAt(QPoint(pos, 0), QTransform()) is self:
-            return
-
-        pos -= self.x_pos
-
-        if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
-            return
-
-        self.__controller.split_timeable(self.view_id, self.resizable_right,
-                                         self.width, self.model.clip.End(), pos)
+    # For cutting the timeable at the needle position this method is not
+    #  needed. The controller has a focus which corresponds to the
+    #  needle's position (to be exact, the needle displays the focus).
+    #  So we simply can ask the controller to split the timeable at the
+    #  focus. This happens directly inside the event handler.
+    #
+    # def cut_timeneedle(self):
+    #     """
+    #     Cuts the Timeable at the position of the Timeneedle, but only if the
+    #     Timeneedle is on this Timeable.
+    #     """
+    #     # get the Timeneedle object
+    #     needle = self.__controller.get_timelineview().track_frame_frame.findChild(
+    #         QWidget, "needle_bottom")
+    #
+    #     pos = needle.x()
+    #
+    #     # do nothing if the Timeneedle is not on this Timeable
+    #     if not self.scene().itemAt(QPoint(pos, 0), QTransform()) is self:
+    #         return
+    #
+    #     pos -= self.x_pos
+    #
+    #     if pos < TIMEABLE_MIN_WIDTH and self.width >= 2 * TIMEABLE_MIN_WIDTH:
+    #         return
+    #
+    #     self.__controller.split_timeable(self.view_id, pos)
 
     def update_handles_pos(self):
         """
@@ -303,10 +269,14 @@ class TimeableView(QGraphicsRectItem):
 
         return None
 
-    def collides_with_other_timeable(self, rect):
-        """ Returns trueif rect collides with any timeable, false otherwhise """
-        colliding = self.scene().items(rect)
-        return (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self]))
+    # Collisions should only be checked in the model. So this method is
+    #  not allowed to be used here. Okay---maybe later when there is
+    #  more complex stuff happening. But still not for blocking moves.
+    #
+    # def collides_with_other_timeable(self, rect):
+    #     """ Returns trueif rect collides with any timeable, false otherwhise """
+    #     colliding = self.scene().items(rect)
+    #     return (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self]))
 
     def resize(self, pos):
         """
@@ -431,35 +401,40 @@ class TimeableView(QGraphicsRectItem):
         called from mouseMoveEvent() when mouse leaves current track,
         deletes the current timeable if drop was succesfull
         """
-        # hide timeable while dragging
-        self.setVisible(False)
 
         # write timeable data
         item_data = QByteArray()
         data_stream = QDataStream(item_data, QIODevice.WriteOnly)
         QDataStream.writeString(data_stream, str.encode(self.view_id))
 
-        mimeData = QMimeData()
-        mimeData.setData('ubicut/timeable', item_data)
-        if self.model.is_video or (self.model.is_video is None):
-            mimeData.setText("is_video")
-        else:
-            mimeData.setText("is_audio")
+        mime_data = QMimeData()
+        mime_data.setData('ubicut/timeable', item_data)
 
-        # set first frame as pixmap
-        frame = self.model.get_first_frame()
-        pixmap = get_pixmap_from_file(self.model.file_name, frame)
+        # Todo: Implement timeable type checking through the controller
+        #  and the model
+        #  OR
+        #  Implement two different subclasses of TimeableView for video
+        #  and audio. With this solution the model should still check
+        #  for correct types because it must have the ability to work
+        #  properly on its own. But it wouldn't be needed anymore to
+        #  ask the controller if a timeable is allowed to go to a track.
+        # if self.model.is_video or (self.model.is_video is None):
+        #     mime_data.setText("is_video")
+        # else:
+        #     mime_data.setText("is_audio")
+
+        # The pixmap setting is impossible at the moment because the
+        #  TimeableView doesn't know a pixmap.
+        # # set first frame as pixmap
+        # frame = self.model.get_first_frame()
+        # pixmap = get_pixmap_from_file(self.model.file_name, frame)
 
         # start drag
         drag = QDrag(self.scene())
-        drag.setMimeData(mimeData)
-        drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
+        drag.setMimeData(mime_data)
+        # drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
 
-        # delete the timeable if the the item was succesfully dropped
-        if (drag.exec_(Qt.MoveAction) == Qt.MoveAction):
-            self.delete(hist=False)
-        else:
-            self.setVisible(True)
+        drag.exec_(Qt.MoveAction)
 
     def hoverMoveEvent(self, event):
         """
@@ -508,13 +483,16 @@ class TimeableView(QGraphicsRectItem):
         """
         if self.handle_selected == HANDLE_MIDDLE:
             self.setCursor(Qt.ClosedHandCursor)
+            self.start_drag()
 
-            # start drag event only when cursor leaves current track
-            if event.pos().y() < 0 or event.pos().y() > self.height:
-                self.start_drag(event)
-            else:
-                pos = event.scenePos().x() - self.mouse_press_pos
-                self.move_on_track(pos)
+            # Here, we don't need to differentiate between leaving the
+            # track or not because the track will handle all cases
+            # # start drag event only when cursor leaves current track
+            # if event.pos().y() < 0 or event.pos().y() > self.height:
+            #     self.start_drag(event)
+            # else:
+            #     pos = event.scenePos().x() - self.mouse_press_pos
+            #     self.move_on_track(pos)
 
         else:
             self.resize(event.pos().x())
@@ -530,14 +508,15 @@ class TimeableView(QGraphicsRectItem):
 
         self.set_pixmap()
 
+        # This clip position change should already be done by the drag
+        #  event handlers in TrackView.
         # update clip position if changed
-        if self.x_pos != self.mouse_press_start_pos:
-            if self.group_id is None:
-                self.__controller.move_timeable(self.view_id, self.mouse_press_start_pos,
-                                                self.x_pos)
-            else:
-                diff = self.x_pos - self.mouse_press_start_pos
-                self.__controller.group_move_operation(self.group_id, diff)
+        # if self.x_pos != self.mouse_press_start_pos:
+        #     if self.group_id is None:
+        #         self.__controller.move_timeable(self.view_id, None, self.x_pos)
+        #     else:
+        #         diff = self.x_pos - self.mouse_press_start_pos
+        #         self.__controller.group_move_operation(self.group_id, diff)
 
         # trim start or end if resize happened
         if (self.resizable_right != self.infos_on_click["resizable_right"]

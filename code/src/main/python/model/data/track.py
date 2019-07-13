@@ -8,7 +8,7 @@ class TrackModel:
     and more flexible handling of the Openshot layers.
     """
 
-    def __init__(self, track_id, name="Track"):
+    def __init__(self, track_id, name="Track", is_overlay=False):
         """
         Create a C{TrackModel} with the given ID which contains no
         timeables and has no layer specified.
@@ -19,10 +19,10 @@ class TrackModel:
         self.__name = name
 
         self.__layer = None
+        self.__is_overlay = is_overlay
         self.__timeables = dict()  # {timeable_id: timeable}
 
         self.__timeline_model = None
-        self.__timeline_controller = None
 
     def get_track_id(self):
         """ Return the id of the C{TrackModel}.
@@ -47,6 +47,9 @@ class TrackModel:
         """
         self.__name = name
 
+    def get_timeables(self):
+        return self.__timeables
+
     def add_timeable(self, timeable):
         """ Add a C{TimeableModel} to the C{TrackModel}.
 
@@ -65,11 +68,11 @@ class TrackModel:
             )
         else:
             self.__timeables[timeable_id] = timeable
-            timeable.set_track(self)
             if self.__timeline_model is not None:
-                self.__timeline_model.timeline.addClip(timeable.clip)
-            if self.__timeline_controller is not None:
-                self.__timeline_controller.timeable_added(timeable)
+                self.__timeline_model.timeline.AddClip(timeable.clip)
+                self.__timeline_model.update_duration()
+            if self.get_timeline_controller() is not None:
+                self.get_timeline_controller().timeable_model_added(timeable)
 
     def remove_timeable(self, timeable_id):
         """ Remove a timeable from the C{TrackModel}.
@@ -86,35 +89,58 @@ class TrackModel:
                 .format(timeable_id)
             )
         finally:
-            t.set_track(None)
             self.__timeables.pop(timeable_id)
             if self.__timeline_model is not None:
                 self.__timeline_model\
                     .change("delete", ["clips", {"id": t.clip.Id()}], {})
-            if self.__timeline_controller is not None:
-                self.__timeline_controller.timeable_removed(timeable_id)
+            if self.get_timeline_controller() is not None:
+                self.get_timeline_controller().timeable_model_removed(timeable_id)
 
     def remove_all_timeables(self):
-        """ Remove all timeables from the C{TrackModel}. """
-        for timeable_id in self.__timeables.keys():
-            self.remove_timeable(timeable_id)
+        """Remove all timeables from the C{TrackModel}."""
+        for timeable in self.__timeables.values():
+            timeable.remove()
 
     def get_layer(self):
         """ Return the layer of the C{TrackModel}.
 
         @return: The layer.
         """
-        return self.__layer
+        return self.__timeline_model.get_track_layer(self)
 
-    def set_layer(self, layer):
-        """ Set the layer of the C{TrackModel}.
+    def is_overlay(self):
+        """ Return the overlay property.
 
-        @param layer: The new layer.
-        @type layer:  int
+        @return: The overlay property. True means that the track is an
+                 overlay track while False means that it is not.
+        @rtype:  bool
         """
-        self.__layer = layer
-        for t in self.__timeables.values():
-            t.set_layer(self.__layer)
+        return self.__is_overlay
+
+    def set_overlay(self, is_overlay=True):
+        """
+        Set the overlay property of the track and update all its
+        timeables accordingly.
+
+        @param is_overlay: Specifies if the track should be an overlay
+                           track.
+        @type is_overlay:  bool
+        """
+        if self.__is_overlay != is_overlay:
+            self.__is_overlay = is_overlay
+            for t in self.__timeables.values():
+                t.corner(self.__is_overlay)
+
+    def get_timeline_controller(self):
+        """
+        Return the C{TimelineController} of the C{TimelineModel} which
+        the track belongs to or C{None} if is has no C{TimelineModel}.
+        """
+        return self.__timeline_model.get_controller()
+
+    def get_timeline_model(self):
+        """ Return the C{TimelineModel} which this track belongs to. """
+        return self.__timeline_model
 
     def set_timeline_model(self, model):
         """ Set the timeline model of the C{TrackModel}
@@ -123,6 +149,32 @@ class TrackModel:
         @type model:  model.data.TimelineModel
         """
         self.__timeline_model = model
+        for timeable in self.__timeables.values():
+            timeable.set_timeline_model(self.__timeline_model)
+
+    def move(self, timeline_model, layer):
+        """Move the track to the specified layer in the specified
+        timeline.
+
+        @param timeline_model: The C{TimelineModel} which the track
+                               should be moved to.
+        @type timeline_model:  model.data.TimelineModel
+        @param layer:          The layer to which the track should be
+                               moved. The index is handled like it is
+                               done at the insertion into Python lists.
+                               So, positive values mean counting from
+                               the beginning of the track layer list
+                               while negative values count from the end.
+        """
+        if self.__timeline_model is not None:
+            self.__timeline_model.remove_track(self.__track_id)
+        self.__timeline_model = timeline_model
+        self.__timeline_model.add_track(self, layer)
+
+    def remove(self):
+        """Remove the track from its C{TimelineModel}"""
+        self.__timeline_model.remove_track(self.__track_id)
+        self.__timeline_model = None
 
 
 class VideoTrack(TrackModel):
