@@ -89,7 +89,7 @@ class TimelineView(classmaker(QFrame, View)):
             t.set_width(max_width)
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
-                        res_left, res_right, group, mouse_pos=0, is_drag=False):
+                        res_left, res_right, group, mouse_pos=0, is_drag=False, auto_audio=None):
         """ Creates and adds a timeable to the specified track """
         is_empty = False
         lastrack = None
@@ -129,7 +129,11 @@ class TimelineView(classmaker(QFrame, View)):
         track.add_timeable(timeable)
    
         if is_drag:
-            track.current_timeable = timeable
+            if auto_audio is not None:
+                track2 = self.tracks[auto_audio]
+                track2.current_timeable_2 = timeable
+            else:
+                track.current_timeable = timeable
         
 
         # add timeable to dict

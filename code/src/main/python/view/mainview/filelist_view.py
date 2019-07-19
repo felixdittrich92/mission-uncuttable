@@ -3,7 +3,7 @@ from PyQt5.QtCore import (QByteArray, QDataStream, QMimeData, QIODevice, Qt, QSi
                           pyqtSignal)
 from PyQt5.QtGui import QDrag
 
-from util.timeline_utils import get_pixmap_from_file, get_width_from_file, get_file_type
+from util.timeline_utils import get_pixmap_from_file, get_width_from_file
 
 
 class FileListView(QListWidget):
@@ -21,7 +21,7 @@ class FileListView(QListWidget):
         """ Starts the drag to the timeline """
         # do nothing if there is no item at the event position
         item = self.itemAt(event.pos())
-        
+
         if item is None:
             return
 
