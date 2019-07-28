@@ -7,12 +7,22 @@ from util.timeline_utils import get_file_type, pos_to_seconds
 
 
 class TimeableModel:
-    def __init__(self, file_name, clip_id):
+    def __init__(self, file_name, clip_id, is_video=None):
         # otherwhise there is a json parse error
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
         self.clip = openshot.Clip(file_name)
         self.clip.Id(clip_id)
+
+        self.is_video = is_video
+
+        if self.is_video is not None:
+            if self.is_video:
+                self.clip.has_video = openshot.Keyframe(1)
+                self.clip.has_audio = openshot.Keyframe(0)
+            else:
+                self.clip.has_video = openshot.Keyframe(0)
+                self.clip.has_audio = openshot.Keyframe(1)
 
         self.file_name = file_name
         self.file_type = get_file_type(self.file_name)
@@ -109,7 +119,7 @@ class TimeableModel:
         """ Sets the end of the clip """
         new_end = pos
         if is_sec:
-            self.clip.End(pos)
+            self.clip.End(new_end)
         else:
             new_end = pos_to_seconds(pos)
             self.clip.End(new_end)

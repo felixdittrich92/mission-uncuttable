@@ -37,7 +37,7 @@ class TimelineController:
 
     def create_timeable(self, track_id, name, width, x_pos, model, id,
                         res_left=0, res_right=0, mouse_pos=0, hist=True,
-                        group=None, is_drag=False):
+                        group=None, is_drag=False, auto_audio=None):
         """
         Create a new object in the timeline model to represent a new timeable.
 
@@ -49,7 +49,7 @@ class TimelineController:
         @return:     Nothing.
         """
         op = CreationOperation(track_id, name, width, x_pos, model, id, res_left,
-                               res_right, mouse_pos, group, is_drag, self)
+                               res_right, mouse_pos, group, is_drag, auto_audio, self)
 
         if hist:
             self.__history.do_operation(op)
@@ -430,6 +430,7 @@ class TimelineController:
         @param diff: the difference between the old and new position of the timeables
         @return: Nothing
         """
+
         try:
             group = self.get_group_by_id(group_id)
             if group.is_move_possible(diff):

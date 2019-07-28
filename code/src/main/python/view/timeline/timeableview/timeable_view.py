@@ -1,6 +1,9 @@
+import os
+
+import openshot
 from PyQt5.QtCore import (QPoint, QRectF, QByteArray, QDataStream, QIODevice,
                           QMimeData, Qt, QSize, pyqtSignal)
-from PyQt5.QtGui import QBrush, QColor, QDrag, QTransform
+from PyQt5.QtGui import QBrush, QColor, QDrag, QTransform, QPixmap
 from PyQt5.QtWidgets import (QMenu, QAction, QApplication, QGraphicsItem,
                              QGraphicsRectItem, QWidget)
 
@@ -9,7 +12,6 @@ from model.data import FileType
 from config import Language, Resources, Settings
 from util.timeline_utils import get_pixmap_from_file
 from .timeable_settings_view import TimeableSettingsView
-import openshot
 
 TIMEABLE_MIN_WIDTH = 8
 RESIZE_AREA_WIDTH = 3
@@ -133,8 +135,13 @@ class TimeableView(QGraphicsRectItem):
 
         px = get_pixmap_from_file(self.model.file_name, frame)
         if px is not None:
-            self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio,
-                                    transformMode=1)
+            if self.model.is_video or (self.model.is_video is None):
+                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio,
+                                        transformMode=1)
+            else:
+                px = QPixmap(os.path.join(Resources.images.media_symbols, "mp3.png"))
+                self.pixmap = px.scaled(QSize(100, self.height - 4.0), Qt.KeepAspectRatio,
+                                        transformMode=1)
         else:
             self.pixmap = None
 
@@ -154,7 +161,7 @@ class TimeableView(QGraphicsRectItem):
         menu = QMenu()
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
         if current_stylesheet == 0:
-            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         elif current_stylesheet == 1:
             menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
@@ -346,9 +353,12 @@ class TimeableView(QGraphicsRectItem):
         # check if theres another Timeable at the given position
         r = QRectF(pos, 0, self.width, self.height)
         colliding = self.scene().items(r)
-        if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])) \
-                and not self.__controller.is_same_group(self.group_id,
-                                                        colliding[0].group_id):
+        if len(colliding) > 1:
+            return False
+
+        if (len(colliding) == 1 and colliding != [self]) \
+            and not self.__controller.is_same_group(self.group_id,
+                                                    colliding[0].group_id):
             return False
 
         # move only if the new position is still inside the track
@@ -409,6 +419,10 @@ class TimeableView(QGraphicsRectItem):
 
         mimeData = QMimeData()
         mimeData.setData('ubicut/timeable', item_data)
+        if self.model.is_video or (self.model.is_video is None):
+            mimeData.setText("is_video")
+        else:
+            mimeData.setText("is_audio")
 
         # set first frame as pixmap
         frame = self.model.get_first_frame()

@@ -45,6 +45,7 @@ class TrackView(QGraphicsView):
         # for drag and drop handling
         self.item_dropped = False
         self.current_timeable = None
+        self.current_timeable_2 = None
         self.drag_from_track = False
         self.dragged_timeable_id = None
 
@@ -81,7 +82,7 @@ class TrackView(QGraphicsView):
         button_menu = QMenu()
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
         if current_stylesheet == 0:
-            button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+            button_menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         elif current_stylesheet == 1:
             button_menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
@@ -153,7 +154,7 @@ class TrackView(QGraphicsView):
         """
         self.width = new_width
         self.resize()
-        self.update_player()
+        
 
     def add_timeable(self, timeable):
         """ Adds a TimeableView to the GraphicsScene """
@@ -163,7 +164,7 @@ class TrackView(QGraphicsView):
             timeable.model.set_layer(0)
 
         self.scene().addItem(timeable)
-        self.update_player()
+        
 
     def add_from_filemanager(self, drag_event):
         """ Adds a timeable when item from filemanager is dragged into the track """
@@ -180,13 +181,33 @@ class TrackView(QGraphicsView):
         colliding = self.scene().items(rect)
         # add the timeable when there are no colliding items
         if not colliding:
-            model = TimeableModel(path, generate_id())
-            model.move(x_pos)
-            model.set_end(width)
-
             name = os.path.basename(path)
-            self.__controller.create_timeable(self.num, name, width, x_pos,
-                                              model, generate_id(), is_drag=True)
+
+            clip_id = generate_id()
+
+            if Settings.get_instance().get_dict_settings()["general"]["autoaudio"]["current"]:
+                model = TimeableModel(path, generate_id(), is_video=True)
+                model.move(x_pos)
+                model.set_end(width)
+                self.__controller.create_timeable(self.num, name, width, x_pos,
+                                                  model, clip_id, is_drag=True)
+
+                model_audio = TimeableModel(path, generate_id(), is_video=False)
+                model_audio.move(x_pos)
+                model_audio.set_end(width)
+                clip_id_audio = generate_id()
+                self.__controller.create_timeable(None, name, width, x_pos, model_audio,
+                                                  clip_id_audio, is_drag=True, auto_audio=self.num)
+
+                self.__controller.create_group([clip_id, clip_id_audio])
+            else:
+                model_withoutgroup = TimeableModel(path, generate_id())
+                model_withoutgroup.move(x_pos)
+                model_withoutgroup.set_end(width)
+
+                self.__controller.create_timeable(self.num, name, width, x_pos,
+                                                  model_withoutgroup, clip_id, is_drag=True)
+
             self.item_dropped = True
 
     def add_from_track(self, drag_event):
@@ -203,6 +224,7 @@ class TrackView(QGraphicsView):
         name = timeable.name
         width = timeable.width
         pos = timeable.mouse_press_pos
+        group_id = timeable.group_id
 
         # get a list of items at the position where the timeable would be added
         start_pos = drag_event.pos().x()
@@ -218,9 +240,10 @@ class TrackView(QGraphicsView):
             res_left = timeable.resizable_left
             res_right = timeable.resizable_right
             file_name = timeable.model.file_name
+            old_pos = timeable.x_pos
 
             # create new timeable
-            model = TimeableModel(file_name, generate_id())
+            model = TimeableModel(file_name, generate_id(), is_video=timeable.model.is_video)
 
             old_clip = timeable.model.clip
 
@@ -229,15 +252,23 @@ class TrackView(QGraphicsView):
             model.set_end(old_clip.End(), is_sec=True)
             model.move(start_pos - pos)
 
+            new_id = generate_id()
+
             # add the timeable to the track
             self.__controller.create_timeable(
-                self.num, name, width, start_pos, model, generate_id(), res_left=res_left,
+                self.num, name, width, start_pos, model, new_id, res_left=res_left,
                 res_right=res_right, mouse_pos=pos, hist=False, is_drag=True)
             self.drag_from_track = True
 
+            if group_id is not None:
+                new_pos = -(old_pos - (start_pos - pos))
+                self.__controller.remove_timeable_from_group(group_id, view_id)
+                self.__controller.try_group_move(group_id, new_pos)
+                self.__controller.add_timeable_to_group(group_id, new_id)
+
             # set item_dropped to True because the timeable was succesfully created
             self.item_dropped = True
-        self.update_player()
+        
 
     def move_dropped_timeable(self, event):
         pos = event.pos().x() - self.current_timeable.mouse_press_pos
@@ -246,10 +277,20 @@ class TrackView(QGraphicsView):
     def dragEnterEvent(self, event):
         """ Gets called when something is dragged into the track """
         if event.mimeData().hasFormat('ubicut/timeable'):
-            # try to add a timeable
-            self.add_from_track(event)
+            if self.is_video:
+                if event.mimeData().text() == "is_video":
+                    # try to add a timeable
+                    self.add_from_track(event)
+                    event.accept()
+                else:
+                    event.ignore()
+            else:
+                if event.mimeData().text() == "is_audio":
+                    self.add_from_track(event)
+                    event.accept()
+                else:
+                    event.ignore()
 
-            event.accept()
         elif event.mimeData().hasFormat('ubicut/file'):
             # try to add a timeable
             self.add_from_filemanager(event)
@@ -257,7 +298,7 @@ class TrackView(QGraphicsView):
             event.accept()
         else:
             event.ignore()
-        self.update_player()
+        
 
     def dragLeaveEvent(self, event):
         """ Gets called when something is dragged out of the track """
@@ -266,16 +307,19 @@ class TrackView(QGraphicsView):
             self.current_timeable.delete(hist=False)
             if not self.drag_from_track:
                 Project.get_instance().get_history().remove_last_operation()
+            if self.current_timeable_2 is not None:
+                self.current_timeable_2.delete(hist=False)
 
             # clear data
             self.item_dropped = False
             self.current_timeable = None
+            self.current_timeable_2 = None
 
             event.ignore()
 
         self.update()
         event.accept()
-        self.update_player()
+        
 
     def dragMoveEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets moved """
@@ -301,7 +345,7 @@ class TrackView(QGraphicsView):
             event.accept()
         else:
             event.ignore()
-        self.update_player()
+        
 
     def dropEvent(self, event):
         """ Gets called when there is an active drag and the mouse gets released """
@@ -319,12 +363,13 @@ class TrackView(QGraphicsView):
                 event.acceptProposedAction()
 
                 self.current_timeable = None
+                self.current_timeable_2 = None
                 self.dragged_timeable_id = None
 
             # set item_dropped to false for next drag
             self.item_dropped = False
             self.update()
-            self.update_player()
+            
 
         elif event.mimeData().hasFormat('ubicut/file'):
             # clear data for next drag
@@ -332,13 +377,8 @@ class TrackView(QGraphicsView):
             if self.current_timeable is not None:
                 self.current_timeable.model.move(self.current_timeable.x_pos)
                 self.current_timeable = None
+                self.current_timeable_2 = None
             self.update()
 
         else:
             event.ignore()
-
-        self.update_player()
-
-    def update_player(self):
-        # self.parent().parent().parent().parent().parent().parent().parent().parent().connect_update()
-        pass

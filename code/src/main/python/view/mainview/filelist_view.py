@@ -21,6 +21,7 @@ class FileListView(QListWidget):
         """ Starts the drag to the timeline """
         # do nothing if there is no item at the event position
         item = self.itemAt(event.pos())
+
         if item is None:
             return
 

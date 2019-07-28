@@ -24,6 +24,11 @@ default_settings = {
             "values": [1, 100],  # min and max history size
             "current": 30
         },
+        "autoaudio":{
+            "type": "checkbox",
+            "values": [True, False],
+            "current": False
+        },
     },
     "design": {
         "color_theme": {
