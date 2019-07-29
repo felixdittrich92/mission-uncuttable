@@ -86,12 +86,12 @@ class DeleteOperation(Operation):
             try:
                 self.timeable_model = self.timeline_model\
                     .get_timeables()[self.timeable_id]
-            except KeyError:
+            except KeyError as E:
                 raise KeyError(
                     "Timeable doesn't exist in the TimelineModel: ID={}"
                     .format(self.timeable_id)
-                )
-            finally:
+                ) from E
+            else:
                 self.position = self.timeable_model.get_position()
                 self.track = self.timeable_model.track
                 self.timeable_model.remove()
@@ -137,19 +137,18 @@ class CutOperation(Operation):
         try:
             self.first_part =\
                 self.timeline_model.get_timeables()[self.timeable_id]
-        except KeyError:
+        except KeyError as E:
             raise KeyError(
-                "Timeable doesn't exist in the TimelineModel: ID={}"
-                .format(self.timeable_id)
-            )
-        finally:
+                    "Timeable doesn't exist in the TimelineModel: ID={}"
+                    .format(self.timeable_id)
+                ) from E
+        else:
             pos_untrimmed = self.pos + self.first_part.get_start()
             self.second_part \
-                = TimeableModel(
-                    generate_id(), self.first_part.file_name, "Part two")
-            self.second_part.set_start(pos_untrimmed + 1)
-            self.second_part.set_end(self.first_part.get_end())
-            self.first_part.set_end(pos_untrimmed)
+                = TimeableModel(generate_id(), self.first_part.file_name, "Part two")
+            self.second_part.set_trim_start(pos_untrimmed + 1)
+            self.second_part.set_trim_end(self.first_part.get_end())
+            self.first_part.set_trim_end(pos_untrimmed)
             self.second_part.move(
                 self.first_part.track,
                 self.first_part.get_start() + pos_untrimmed + 1
@@ -158,7 +157,7 @@ class CutOperation(Operation):
     def undo(self):
         original_end = self.second_part.get_end()
         self.second_part.remove()
-        self.first_part.set_end(original_end)
+        self.first_part.set_trim_end(original_end)
 
 
 class MoveOperation(Operation):
@@ -178,18 +177,20 @@ class MoveOperation(Operation):
         try:
             self.timeable\
                 = self.timeline_model.get_timeables()[self.timeable_id]
-        except KeyError:
+        except KeyError as E:
             raise KeyError(
-                "Timeable doesn't exist in the TimelineModel: ID={}"
-                .format(self.timeable_id))
-        finally:
+                    "Timeable doesn't exist in the TimelineModel: ID={}"
+                    .format(self.timeable_id)
+                ) from E
+        else:
             try:
                 track = self.timeline_model.track_id_map[self.track_id]
-            except KeyError:
+            except KeyError as E:
                 raise KeyError(
-                    "Track doesn't exist in the TimelineModel: ID={}"
-                    .format(self.track_id))
-            finally:
+                        "Track doesn't exist in the TimelineModel: ID={}"
+                        .format(self.track_id)
+                    ) from E
+            else:
                 self.original_track = self.timeable.track
                 self.original_pos = self.timeable.get_position()
                 self.timeable.move(track, self.pos)
@@ -212,11 +213,12 @@ class TrimStartOperation(Operation):
         try:
             self.timeable\
                 = self.timeline_model.get_timeables()[self.timeable_id]
-        except KeyError:
+        except KeyError as E:
             raise KeyError(
-                "Timeable doesn't exist in the TimelineModel: ID={}"
-                .format(self.timeable_id))
-        finally:
+                    "Timeable doesn't exist in the TimelineModel: ID={}"
+                    .format(self.timeable_id)
+                ) from E
+        else:
             self.timeable.trim_start(self.trim_length)
 
     def undo(self):
@@ -237,11 +239,12 @@ class TrimEndOperation(Operation):
         try:
             self.timeable\
                 = self.timeline_model.get_timeables()[self.timeable_id]
-        except KeyError:
+        except KeyError as E:
             raise KeyError(
-                "Timeable doesn't exist in the TimelineModel: ID={}"
-                .format(self.timeable_id))
-        finally:
+                    "Timeable doesn't exist in the TimelineModel: ID={}"
+                    .format(self.timeable_id)
+                ) from E
+        else:
             self.timeable.trim_end(self.trim_length)
 
     def undo(self):
@@ -397,11 +400,12 @@ class DeleteTrackOperation(Operation):
     def do(self):
         try:
             self.track = self.timeline_model.track_id_map[self.track_id]
-        except KeyError:
+        except KeyError as E:
             raise KeyError(
-                "Track doesn't exist in the TimelineModel: ID={}"
-                .format(self.track_id))
-        finally:
+                    "Track doesn't exist in the TimelineModel: ID={}"
+                    .format(self.track_id)
+                ) from E
+        else:
             self.track.remove()
 
     def undo(self):

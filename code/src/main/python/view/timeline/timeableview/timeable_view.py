@@ -33,40 +33,50 @@ class TimeableView(QGraphicsRectItem):
 
     update_previewplayer = pyqtSignal()
 
-    def __init__(self, name, width, height, x_pos, res_left, res_right, view_id, track_id, pixmap, group_id=None,
+    def __init__(self, name, length, height, start, res_left, res_right, view_id, track_id, pixmap, group_id=None,
                  parent=None):
         """
         Creates a new TimeableView at the specified position on a TrackView.
 
         @param pixmap:
         @param name: the name that is displayed in the top left corner of the timeable
-        @param width: timeable width, can be changed while resizing
+        @param length: timeable length, can be changed while resizing
         @param height: timeable height, should be the same as track height
-        @param x_pos: position on the track
+        @param start: position on the track
         """
         super(TimeableView, self).__init__(parent)
 
+        # logical properties (data from the model)
         self.name = name
-        self.width = width
-        self.height = height
-        self.x_pos = x_pos
+        self.length = length
+        self.start = start
+        self.resizable_left = res_left
+        self.resizable_right = res_right
+        self.pixmap_untouched = pixmap
         self.volume = 0
 
         self.view_id = view_id
         self.track_id = track_id
         self.group_id = group_id
 
+        # physical properties
+        self.height = height
+        self.width = self.length
+        self.track = None
+
+        # Flags for suppressing updates of physical properties when
+        #  logical properties change (e.g. to give the mouse control
+        #  over the position, when the timeable is dragged)
+        self.position_controlled_by_mouse = False
+
         self.__controller = TimelineController.get_instance()
 
-        self.pixmap_untouched = pixmap
         self.set_pixmap()
 
-        self.resizable_left = res_left
-        self.resizable_right = res_right
         self.name_visible = False
 
         self.setRect(self.boundingRect())
-        self.setPos(self.x_pos, 0)
+        self.setPos(self.start, 0)
 
         self.setFlag(QGraphicsRectItem.ItemIsSelectable, True)
         self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges, True)
@@ -80,6 +90,29 @@ class TimeableView(QGraphicsRectItem):
 
         self.handles = dict()
         self.update_handles_pos()
+
+    def set_length(self, length):
+        """Set the logical length of the timeable in frames.
+
+        @param length: The logical length.
+        @type length:  int
+        """
+        self.length = length
+        self.update_physical_properties()
+
+    def set_start(self, start):
+        """Set the logical start of the timeable in frames.
+
+        @param start: The logical start.
+        @type start:  int
+        """
+        self.start = start
+        self.update_physical_properties()
+
+    def update_physical_properties(self):
+        self.width = self.length
+        if not self.position_controlled_by_mouse:
+            self.setPos(self.start, 0)
 
     def boundingRect(self):
         """
@@ -96,12 +129,12 @@ class TimeableView(QGraphicsRectItem):
         painter.drawRect(self.rect())
 
         # show thumbnail if there is enough space
-        if self.width > 101 and self.pixmap is not None:
+        if self.length > 101 and self.pixmap is not None:
             painter.drawPixmap(QPoint(1, 1), self.pixmap)
 
         # only draw name if it fits on the timeable
         # if it doesn't fit a tooltip will be shown (see hoverMoveEvent)
-        if painter.fontMetrics().width(self.name) + 100 <= self.width:
+        if painter.fontMetrics().width(self.name) + 100 <= self.length:
             painter.setPen(QColor(245, 245, 245))
             painter.drawText(QPoint(100, 20), self.name)
 
@@ -112,11 +145,11 @@ class TimeableView(QGraphicsRectItem):
     def get_info_dict(self):
         return {
             "name": self.name,
-            "width": self.width,
+            "length": self.length,
             "height": self.height,
             "resizable_right": self.resizable_right,
             "resizable_left": self.resizable_left,
-            "x_pos": self.x_pos,
+            "start": self.start,
             "view_id": self.view_id,
             "track_id": self.track_id,
             "group_id": self.group_id
@@ -136,12 +169,12 @@ class TimeableView(QGraphicsRectItem):
             self.pixmap = None
 
     def set_width(self, new_width):
-        """ Sets the width of the timeable """
+        """ Sets the length of the timeable """
         # the bounding rect is dependent on the width
         # so we have to call prepareGeometryChange
         # otherwhise the program can randomly crash
         self.prepareGeometryChange()
-        self.width = new_width
+        self.length = new_width
         self.setRect(self.boundingRect())
 
     def contextMenuEvent(self, event):
@@ -151,7 +184,7 @@ class TimeableView(QGraphicsRectItem):
         menu = QMenu()
         current_stylesheet = Settings.get_instance().get_settings().design.color_theme.current
         if current_stylesheet == 0:
-            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())     
+            menu.setStyleSheet(open(Resources.files.qss_dark, "r").read())
         elif current_stylesheet == 1:
             menu.setStyleSheet(open(Resources.files.qss_light, "r").read())
 
@@ -186,12 +219,13 @@ class TimeableView(QGraphicsRectItem):
         volume_dialog = TimeableSettingsView()
         volume_dialog.set_data(self.volume)
         volume_dialog.exec_()
-        self.__controller\
+        self.__controller \
             .set_timeable_volume(volume_dialog.current_volume_value)
 
     def remove_from_scene(self):
         """ Removes the timeableview from the track """
-        self.scene().removeItem(self)
+        if self.scene() is not None:
+            self.scene().removeItem(self)
 
     # For cutting the timeable at the mouse position when there is no
     #  timeline zoom this method should not be needed. We simply pass
@@ -255,7 +289,7 @@ class TimeableView(QGraphicsRectItem):
         # handle for moving
         self.handles[HANDLE_MIDDLE] = QRectF(
             self.rect().left() + RESIZE_AREA_WIDTH, 0,
-            self.width - (2 * RESIZE_AREA_WIDTH), self.height)
+            self.length - (2 * RESIZE_AREA_WIDTH), self.height)
 
     def handle_at(self, point):
         """
@@ -290,39 +324,39 @@ class TimeableView(QGraphicsRectItem):
         is_image = self.model.file_type == FileType.IMAGE_FILE
         if self.handle_selected == HANDLE_LEFT:
             diff = pos - self.mouse_press_pos
-            w = self.width - diff
+            w = self.length - diff
 
             if ((w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0)
                     or (diff < self.resizable_left and not is_image)):
                 return
 
-            new_x_pos = self.x_pos + diff
+            new_x_pos = self.start + diff
             if self.collides_with_other_timeable(QRectF(new_x_pos, 0, w, self.height)):
                 return
 
             self.resizable_left -= diff
 
             self.prepareGeometryChange()
-            self.width = w
-            self.x_pos = self.x_pos + diff
-            self.setPos(self.x_pos, 0)
+            self.length = w
+            self.start = self.start + diff
+            self.setPos(self.start, 0)
 
         elif self.handle_selected == HANDLE_RIGHT:
             diff = (self.mouse_press_rect.right() + pos
-                    - self.mouse_press_pos - self.width)
-            w = self.width + diff
+                    - self.mouse_press_pos - self.length)
+            w = self.length + diff
 
             if ((w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH)
                     or (diff > self.resizable_right and not is_image)):
                 return
 
-            if self.collides_with_other_timeable(QRectF(self.x_pos, 0, w, self.height)):
+            if self.collides_with_other_timeable(QRectF(self.start, 0, w, self.height)):
                 return
 
             self.resizable_right -= diff
 
             self.prepareGeometryChange()
-            self.width = w
+            self.length = w
 
         self.setRect(self.boundingRect())
         self.update_handles_pos()
@@ -331,10 +365,10 @@ class TimeableView(QGraphicsRectItem):
         """
         Checks if timeable can be moved by value in diff.
 
-        @param diff: the difference between the x_pos before and after move.
+        @param diff: the difference between the start before and after move.
         @return: True if move is possible, False otherwhise.
         """
-        pos = self.x_pos + diff
+        pos = self.start + diff
 
         return self.is_move_possible_position(pos)
 
@@ -346,7 +380,7 @@ class TimeableView(QGraphicsRectItem):
         @return: True if move is possible, False otherwhise.
         """
         # check if theres another Timeable at the given position
-        r = QRectF(pos, 0, self.width, self.height)
+        r = QRectF(pos, 0, self.length, self.height)
         colliding = self.scene().items(r)
         if (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self])) \
                 and not self.__controller.is_same_group(self.group_id,
@@ -358,8 +392,8 @@ class TimeableView(QGraphicsRectItem):
             return False
 
         # make track longer when new width is bigger than width
-        if pos + self.width > self.scene().width():
-            self.__controller.set_track_width(self.track_id, self.width + pos)
+        if pos + self.length > self.scene().width():
+            self.__controller.set_track_width(self.track_id, self.length + pos)
 
         return True
 
@@ -367,12 +401,12 @@ class TimeableView(QGraphicsRectItem):
         """
         Changes the position of the timeables view.
 
-        @param pos: the new x_pos.
+        @param pos: the new start.
         @return: Nothing.
         """
         # self.x_pos = 0 if pos < 5 else pos
-        self.x_pos = pos
-        self.setPos(self.x_pos, 0)
+        self.start = pos
+        self.setPos(self.start, 0)
 
     def move_on_track(self, pos):
         """
@@ -382,15 +416,17 @@ class TimeableView(QGraphicsRectItem):
         possible (when theres another timeable or the beginning or end of the track
         is reached)
 
-        @param pos: the new x_pos of the timeable
+        @param pos: the new start of the timeable
         """
-        if self.group_id is not None:
-            diff = pos - self.x_pos
-            self.__controller.try_group_move(self.group_id, diff)
+        # if self.group_id is not None:
+        #     diff = pos - self.start
+        #     self.__controller.try_group_move(self.group_id, diff)
 
         # make move if its possible
-        elif self.is_move_possible_position(pos):
-            self.do_move(pos)
+        # elif self.is_move_possible_position(pos):
+        # self.do_move(pos)
+
+        self.setPos(pos, 0)
 
         # model gets changed on mouseReleaseEvent
 
@@ -434,7 +470,10 @@ class TimeableView(QGraphicsRectItem):
         drag.setMimeData(mime_data)
         # drag.setPixmap(pixmap.scaled(QSize(100, 100), Qt.KeepAspectRatio))
 
+        self.position_controlled_by_mouse = True
         drag.exec_(Qt.MoveAction)
+        self.position_controlled_by_mouse = False
+        self.update_physical_properties()
 
     def hoverMoveEvent(self, event):
         """
@@ -451,6 +490,7 @@ class TimeableView(QGraphicsRectItem):
         cursor = Qt.OpenHandCursor if handle == HANDLE_MIDDLE else Qt.SizeHorCursor
         self.setCursor(cursor)
 
+        # Todo: Is calling super().hoverMoveEvent better?
         QGraphicsItem.hoverMoveEvent(self, event)
 
     def hoverLeaveEvent(self, event):
@@ -460,6 +500,7 @@ class TimeableView(QGraphicsRectItem):
         """
         self.setCursor(Qt.ArrowCursor)
 
+        # Todo: Is calling super().hoverLeaveEvent better?
         QGraphicsItem.hoverLeaveEvent(self, event)
 
     def mousePressEvent(self, event):
@@ -469,11 +510,13 @@ class TimeableView(QGraphicsRectItem):
         (important for moving and resizing)
         """
         self.handle_selected = self.handle_at(event.pos())
+        # Todo: Is the conversion to int necessary?
         self.mouse_press_pos = int(event.pos().x())
-        self.mouse_press_start_pos = self.x_pos
+        self.mouse_press_start_pos = self.pos().x()
         self.mouse_press_rect = self.rect()
         self.infos_on_click = self.get_info_dict()
 
+        # Todo: Is calling super().mousePressEvent better?
         QGraphicsItem.mousePressEvent(self, event)
 
     def mouseMoveEvent(self, event):
@@ -483,7 +526,7 @@ class TimeableView(QGraphicsRectItem):
         """
         if self.handle_selected == HANDLE_MIDDLE:
             self.setCursor(Qt.ClosedHandCursor)
-            self.start_drag()
+            self.start_drag(event)
 
             # Here, we don't need to differentiate between leaving the
             # track or not because the track will handle all cases
@@ -494,6 +537,8 @@ class TimeableView(QGraphicsRectItem):
             #     pos = event.scenePos().x() - self.mouse_press_pos
             #     self.move_on_track(pos)
 
+        # No need to check if another handle is selected because resize
+        #  will do that. Therefore only an else.
         else:
             self.resize(event.pos().x())
 

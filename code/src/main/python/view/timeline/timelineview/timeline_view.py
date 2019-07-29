@@ -1,6 +1,9 @@
 from PyQt5.QtWidgets import QFrame, QPushButton
 from PyQt5 import uic
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import (
+    Qt, QObject, QDataStream, QIODevice, pyqtSignal, QMimeData,
+    QByteArray)
+from PyQt5.QtGui import QDrag
 from config import Resources
 from .timeline_scroll_area import TimelineScrollArea
 from view.timeline.trackview import TrackView
@@ -29,6 +32,8 @@ class TimelineView(classmaker(QFrame, View)):
         """
         super(TimelineView, self).__init__(parent)
 
+        self.__timeline_controller = None
+
         uic.loadUi(Resources.files.timeline_view, self)
 
         timeline_scroll_area = self.findChild(QObject, 'timeline_scroll_area')
@@ -48,6 +53,51 @@ class TimelineView(classmaker(QFrame, View)):
         self.timeables = dict()
         self.tracks = dict()
 
+        # self.preview_timeable = None
+
+        self.setAcceptDrops(True)
+
+    def set_timeline_controller(self, controller):
+        self.__timeline_controller = controller
+
+    # def dragEnterEvent(self, event):
+    #     print("drag enter in TimelineView")
+    #     if event.mimeData().hasFormat("ubicut/file"):
+    #         event.accept()
+    #
+    #         item_data = event.mimeData().data('ubicut/file')
+    #         stream = QDataStream(item_data, QIODevice.ReadOnly)
+    #         file_path = QDataStream.readString(stream).decode()
+    #         self.preview_timeable\
+    #             = self.__timeline_controller.create_preview_timeable(file_path)
+    #         print(self.preview_timeable.view_id)
+    #
+    #         # item_data = QByteArray()
+    #         # data_stream = QDataStream(item_data, QIODevice.WriteOnly)
+    #         # QDataStream.writeString(data_stream, str.encode(self.preview_timeable.view_id))
+    #         #
+    #         # mime_data = QMimeData()
+    #         # mime_data.setData('ubicut/timeable', item_data)
+    #         # mime_data.setText("is_video")
+    #         #
+    #         # timeable_drag = QDrag(self)
+    #         # timeable_drag.setMimeData(mime_data)
+    #         # timeable_drag.exec_(Qt.MoveAction)
+    #         #
+    #         # # Forget preview timeable after drag is completed
+    #         # self.preview_timeable = None
+    #
+    #     else:
+    #         event.ignore()
+
+    # def dragMoveEvent(self, event):
+    #     pass
+
+    # def dragLeaveEvent(self, event):
+    #     print("drag leave in timelineview")
+    #     self.preview_timeable.remove_from_scene()
+    #     self.preview_timeable = None
+
     def create_video_track(self, track_id, width, height, layer, name, is_overlay):
         btn = QPushButton(name)
         btn.setFixedSize(90, height)
@@ -57,6 +107,7 @@ class TimelineView(classmaker(QFrame, View)):
         self.tracks[track_id] = track
 
         self.video_track_frame.add_track(track, layer)
+        track.set_timeline_view(self)
 
         self.adjust_track_sizes()
 
@@ -156,18 +207,78 @@ class TimelineView(classmaker(QFrame, View)):
         self.timeables[view_id] = t
         return t
 
-    def remove_timeable(self, id):
+    def remove_timeable(self, timeable_id):
         """ Removes the timeable from the view and deletes it from the dict """
         try:
-            timeable = self.timeables[id]
+            timeable = self.timeables[timeable_id]
         except KeyError:
-            return
-
-        timeable.remove_from_scene()
-        self.timeables.pop(id, None)
+            raise KeyError(
+                "Timeable doesn't exist in TimelineView: ID={}"
+                .format(timeable_id))
+        else:
+            timeable.remove_from_scene()
+            del self.timeables[timeable_id]
 
     def get_timeable_view_by_id(self, timeable_id):
         return self.timeables[timeable_id]
+
+    def set_timeable_trimming(self, timeable_id, trim_start, trim_end):
+        """Set the trimming of a TimeableView.
+
+        B{Warning:} Calling this method must be followed by calling
+        C{move_timeable} to adapt the position of the timeable if the
+        start trimming gets changed. This is because trimming is defined
+        as removing something at the start or the end of a timeable
+        without changing the position of the rest of it. A
+        C{TimeableView} doesn't take trimming into its position
+        calculations. That means, that the start position of a
+        C{TimeableView} won't change if you trim its start.
+        """
+        try:
+            timeable = self.timeables[timeable_id]
+        except KeyError:
+            raise KeyError(
+                "Timeable doesn't exist in TimelineView: ID={}"
+                .format(timeable_id))
+        else:
+            # The resizable values don't effect how the timeable will be
+            #  drawn but only how it reacts to resizing.
+            #  Therefore it's enough to set the parameters without a
+            #  method call.
+            timeable.resizable_left = trim_start
+            timeable.resizable_right = trim_end
+
+    def set_timeable_length(self, timeable_id, length):
+        try:
+            timeable = self.timeables[timeable_id]
+        except KeyError as E:
+            raise KeyError(
+                    "Timeable doesn't exist in TimelineView: ID={}"
+                    .format(timeable_id)
+                ) from E
+        else:
+            timeable.set_length(length)
+
+    def move_timeable(self, timeable_id, track_id, start):
+        try:
+            timeable = self.timeables[timeable_id]
+        except KeyError as E:
+            raise KeyError(
+                    "Timeable doesn't exist in TimelineView: ID={}"
+                    .format(timeable_id)
+                ) from E
+        else:
+            try:
+                track = self.tracks[track_id]
+            except KeyError as E:
+                raise KeyError(
+                        "Track doesn't exist in TimelineView: ID={}"
+                        .format(track_id)
+                    ) from E
+            else:
+                timeable.remove_from_scene()
+                track.add_timeable(timeable)
+                timeable.set_start(start)
 
     def get_selected_timeables(self):
         """ Returns a list of all selected items in the timeline """
@@ -193,17 +304,17 @@ class TimelineView(classmaker(QFrame, View)):
         try:
             track = self.tracks[track_id]
         except KeyError:
-            return
-
-        if track.is_video:
-            self.video_track_frame.remove_track(track)
-            self.video_track_button_frame.remove_button(track.button)
-
+            raise KeyError(
+                "Track doesn't exist in TimelineView: ID={}"
+                .format(track_id))
         else:
-            self.audio_track_frame.remove_track(track)
-            self.audio_track_button_frame.remove_button(track.button)
-
-        self.tracks.pop(track_id)
+            if track.is_video:
+                self.video_track_frame.remove_track(track)
+                self.video_track_button_frame.remove_button(track.button)
+            else:
+                self.audio_track_frame.remove_track(track)
+                self.audio_track_button_frame.remove_button(track.button)
+            del self.tracks[track_id]
 
     def update_timecode(self, timecode):
         self.time_label = self.findChild(QObject, 'time_label')

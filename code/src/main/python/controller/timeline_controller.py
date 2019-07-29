@@ -13,7 +13,8 @@ from model.data.operations import (
     CutOperation,
     TrimStartOperation, TrimEndOperation,
     CreateTrackOperation, DeleteTrackOperation)
-from util.timeline_utils import generate_id, seconds_to_pos
+from util.timeline_utils import\
+    (generate_id, seconds_to_pos, pos_to_seconds)
 
 
 class TimelineController:
@@ -34,6 +35,7 @@ class TimelineController:
         TimelineController.__instance = self
 
         self.__timeline_view = timeline_view
+        self.__timeline_view.set_timeline_controller(self)
         self.__timeline_model = TimelineModel.get_instance()
         self.__timeline_model.set_controller(self)
         self.__history = Project.get_instance().get_history()
@@ -52,11 +54,11 @@ class TimelineController:
     # =========================================================================
 
     # Todo: Add documentation for parameters
-    def create_timeable(self, filepath, track_id, name, x_pos, hist=True, group=None):
+    def create_timeable(self, file_path, track_id, name, x_pos, hist=True):
         """
         Create a new object in the timeline model to represent a new timeable.
 
-        @param filepath: The path of the file which the timeable should
+        @param file_path: The path of the file which the timeable should
                          use.
         @param data: The data needed to now what the timeable has to
                      contain and what track it has to be added to.
@@ -65,7 +67,7 @@ class TimelineController:
                      this method.
         @return:     Nothing.
         """
-        op = CreationOperation(filepath, track_id, name, x_pos, self.__timeline_model)
+        op = CreationOperation(file_path, track_id, name, x_pos, self.__timeline_model)
 
         if hist:
             self.__history.do_operation(op)
@@ -107,20 +109,27 @@ class TimelineController:
         #  be the one which notifies about them.
         self.__timeline_view.changed.emit()
 
-    # def create_preview_timeable(self, filepath, name="preview timeable"):
-    #     self.__preview_timeable =\
-    #         TimeableModel(generate_id(), filepath, name)
-    #     self.__preview_timeable.set_controller(self)
-    #     timeable_view = self.__timeline_view.create_preview_timeable(
-    #         self.__preview_timeable.name,
-    #         self.__preview_timeable.get_width(),
-    #         50,
-    #         0,
-    #         0, 0,
-    #         self.__preview_timeable.get_id(),
-    #         None
-    #     )
-    #     return timeable_view
+    def create_preview_timeable(self, filepath, name="preview timeable"):
+        self.__preview_timeable = \
+            TimeableModel(generate_id(), filepath, name)
+        timeable_view = self.__timeline_view.create_preview_timeable(
+            self.__preview_timeable.name,
+            self.__preview_timeable.get_width(),
+            50,
+            0,
+            0, 0,
+            self.__preview_timeable.get_id(),
+            None
+        )
+        return timeable_view
+
+    def add_preview_timeable(self, track_id, name, x_pos):
+        self.create_timeable(
+            self.__preview_timeable.file_path,
+            track_id,
+            name,
+            x_pos
+        )
 
     # def remove_timeable_view(self, id):
     #     """
@@ -347,19 +356,42 @@ class TimelineController:
             50,
             timeable_model.get_position(),
             timeable_model.get_id(),
-            0, 0  # trim values
+            0,
+            0
         )
-        # print("TimeableModel added: ID={}".format(timeable_model.get_id()))
-        # self.__timeline_view.create_timeable(track_id, name, width, x_pos, model, id,
-        #                 res_left, res_right, group, mouse_pos=0, is_drag=False)
+        print(
+            "[DEBUG] TimeableModel added: ID={}"
+            .format(timeable_model.get_id()))
 
-    # Todo: Implement timeable_model_removed
     def timeable_model_removed(self, timeable_id):
-        print("TimeableModel removed: ID={}".format(timeable_id))
+        self.__timeline_view.remove_timeable(timeable_id)
+        print("[DEBUG] TimeableModel removed: ID={}".format(timeable_id))
 
-    # Todo: implement timeable_model_changed
     def timeable_model_changed(self, timeable_model):
-        print("TimeableModel changed: ID={}".format(timeable_model.get_id()))
+        # Try statement as a simple solution to not quite perfect call
+        #  sequences: When a timeable gets moved to a new timeline there
+        #  are update notifications occurring before the timeable has
+        #  been added to the view. Obviously, it's inevitable to find a
+        #  real solution to that but for now it's easier this way and
+        #  shouldn't have any effect on how tangled things get.
+        try:
+            self.__timeline_view.set_timeable_trimming(
+                timeable_model.get_id(),
+                timeable_model.get_trim_start(),
+                timeable_model.get_trim_end()
+            )
+            self.__timeline_view.set_timeable_length(
+                timeable_model.get_id(),
+                timeable_model.get_width())
+            self.__timeline_view.move_timeable(
+                timeable_model.get_id(),
+                timeable_model.track.get_track_id(),
+                timeable_model.get_position())
+        except KeyError:
+            pass
+        print(
+            "[DEBUG] TimeableModel changed: ID={}"
+            .format(timeable_model.get_id()))
 
     # =========================================================================
     # Todo: Sort these methods to one of the groups above
@@ -423,15 +455,15 @@ class TimelineController:
         for t in data["timeables"]:
             m = t["model"]
             model = TimeableModel(m["id"], m["file_name"])
-            model.set_start(m["start"], is_sec=True)
-            model.set_end(m["end"], is_sec=True)
+            model.set_trim_start(m["start"])
+            model.set_trim_end(m["end"])
             model.move(None, m["position"], is_sec=True)
 
             group = None
             if "group" in t:
                 group = t["group"]
 
-            self.create_timeable(None, t["track_id"], t["name"], t["x_pos"], hist=False, group=group)
+            self.create_timeable(None, t["track_id"], t["name"], t["start"], hist=False)
 
     def create_project_groups(self, data):
         """ Recreates all groups when the project is loaded """
@@ -464,8 +496,8 @@ class TimelineController:
         """
         for start, end in data:
             model = TimeableModel(generate_id(), file_path)
-            model.set_start(start, is_sec=True)
-            model.set_end(end, is_sec=True)
+            model.set_trim_start(start)
+            model.set_trim_end(end)
             model.move(None, start, is_sec=True)
 
             width = seconds_to_pos(model.clip.Duration())

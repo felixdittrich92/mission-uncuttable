@@ -1,23 +1,25 @@
 import locale
-
 import openshot
-
-from .timeline import TimelineModel
-from util.timeline_utils import get_file_type, pos_to_seconds
+from util.timeline_utils import (
+    get_file_type, pos_to_seconds, seconds_to_pos)
 
 
 class TimeableModel:
 
     # Todo: Write documentation
-    def __init__(self, clip_id, file_name, name="timeable", is_video=None):
+    def __init__(self, timeable_id, file_path, name="timeable", is_video=None):
         # otherwhise there is a json parse error
         locale.setlocale(locale.LC_NUMERIC, 'en_US.utf8')
 
-        self.clip = openshot.Clip(file_name)
-        self.clip.Id(clip_id)
+        self.clip = openshot.Clip(file_path)
+        self.clip.Id(timeable_id)
         self.name = name
-
         self.is_video = is_video
+
+        self.__original_length = seconds_to_pos(self.clip.Duration())
+        self.__start = 0
+        self.__trim_start = 0
+        self.__trim_end = 0
 
         if self.is_video is not None:
             if self.is_video:
@@ -29,8 +31,8 @@ class TimeableModel:
 
         self.track = None
 
-        self.file_name = file_name
-        self.file_type = get_file_type(self.file_name)
+        self.file_path = file_path
+        self.file_type = get_file_type(self.file_path)
 
         # if the timeline has no clips, set some timeline data to the data of this clip
         if self.is_first_vid():
@@ -38,7 +40,7 @@ class TimeableModel:
 
     def get_info_dict(self):
         return {
-            "file_name": self.file_name,
+            "file_name": self.file_path,
             "id": self.clip.Id(),
             "position": self.clip.Position(),
             "start": self.clip.Start(),
@@ -63,37 +65,6 @@ class TimeableModel:
             return self.track.get_timeline_controller()
         else:
             return None
-
-    def _set_track(self, track):
-        """
-        Set the track of the timeable and update its properties
-        according to the track. C{track=None} means that the timeable
-        should not belong to any track.
-
-        This method is only for convenience and internal use. It won't
-        notify about the changes.
-
-        Updated properties
-        ==================
-          - The layer.
-
-            If the track's layer is C{None} the timeable's
-            layer will be set to C{-1} because the Openshot layer
-            parameter can't be C{None}.
-
-          - The overlay state (called 'corner')
-
-        @param track: The track.
-        @type track:  model.data.TrackModel
-        """
-        if self.track is not None:
-            self.track.remove_timeable(self.get_id())
-        self.track = track
-        self.update_layer()
-
-        self.corner(track.is_overlay())
-
-        track.add_timeable(self)
 
     def is_first_vid(self):
         """ Returns True if this is the first video in the timeline, False otherwhise """
@@ -133,16 +104,8 @@ class TimeableModel:
         else:
             self._set_layer(-1)
 
-    def _set_layer(self, layer):
-        """ Sets the layer of the clip """
-        self.clip.Layer(layer)
-        data = {"layer": layer}
-        if self.get_timeline_model() is not None:
-            self.get_timeline_model().change(
-                "update", ["clips", {"id": self.clip.Id()}], data)
-
     def get_width(self):
-        return self.clip.Duration()
+        return seconds_to_pos(self.clip.Duration())
 
     # Todo: Test for specification in the docstring
     # Todo: Specify the case for inverse arguments when the first
@@ -160,11 +123,17 @@ class TimeableModel:
             back to the state which the C{TimeableModel} had before the
             first of the two trim calls i.e. the state of the timeable
             will be the same as if the two calls wouldn't have happened.
-        """
-        new_start = self.clip.Start() + pos_to_seconds(pos)
-        self.clip.Start(new_start)
 
-        data = {"start": new_start}
+        @param pos: The amount to trim in frames.
+        @type pos:  int
+        """
+        self.__trim_start += pos
+        self.__start += pos
+
+        new_clip_start = pos_to_seconds(self.__trim_start)
+        self.clip.Start(new_clip_start)
+
+        data = {"start": new_clip_start}
         if self.get_timeline_model() is not None:
             self.get_timeline_model().change(
                 "update", ["clips", {"id": self.clip.Id()}], data)
@@ -172,16 +141,24 @@ class TimeableModel:
         if self.get_timeline_controller():
             self.get_timeline_controller().timeable_model_changed(self)
 
-    def set_start(self, pos, is_sec=False):
-        """ Sets the start of the clip """
-        new_start = pos
-        if is_sec:
-            self.clip.Start(pos)
-        else:
-            new_start = pos_to_seconds(pos)
-            self.clip.Start(new_start)
+    def get_trim_start(self):
+        return self.__trim_start
 
-        data = {"start": new_start}
+    def set_trim_start(self, pos):
+        """Set the full length which is trimmed at the start of the
+        timeable.
+
+        @param pos: The amount to trim in frames.
+        @type pos:  int
+        """
+        self.__start += pos - self.__trim_start
+        self.__trim_start = pos
+
+        new_clip_start = pos_to_seconds(self.__trim_start)
+
+        self.clip.Start(new_clip_start)
+
+        data = {"start": new_clip_start}
         if self.get_timeline_model() is not None:
             self.get_timeline_model().change(
                 "update", ["clips", {"id": self.clip.Id()}], data)
@@ -205,8 +182,14 @@ class TimeableModel:
             back to the state which the C{TimeableModel} had before the
             first of the two trim calls i.e. the state of the timeable
             will be the same as if the two calls wouldn't have happened.
+
+        @param pos: The amount to trim in frames. Must be negative to
+                    remove frames.
+        @type pos:  int
         """
-        new_end = self.clip.End() + pos_to_seconds(pos)
+        self.__trim_end -= pos
+        new_end = pos_to_seconds(self.__original_length - self.__trim_end)
+
         self.clip.End(new_end)
 
         data = {"end": new_end}
@@ -217,14 +200,20 @@ class TimeableModel:
         if self.get_timeline_controller():
             self.get_timeline_controller().timeable_model_changed(self)
 
-    def set_end(self, pos, is_sec=False):
-        """ Sets the end of the clip """
-        new_end = pos
-        if is_sec:
-            self.clip.End(pos)
-        else:
-            new_end = pos_to_seconds(pos)
-            self.clip.End(new_end)
+    def get_trim_end(self):
+        return self.__trim_end
+
+    def set_trim_end(self, pos):
+        """Set the full length which is trimmed at the end of the
+        timeable.
+
+        @param pos: The amount to trim in frames.
+        @type pos:  int
+        """
+        self.__trim_end = pos
+        new_end = pos_to_seconds(self.__original_length - self.__trim_end)
+
+        self.clip.End(new_end)
 
         data = {"end": new_end}
         if self.get_timeline_model() is not None:
@@ -236,7 +225,7 @@ class TimeableModel:
 
     def get_position(self):
         """Return the position of the timeable on its track."""
-        return self.clip.Position()
+        return seconds_to_pos(self.clip.Position())
 
     def move(self, track_model, pos, is_sec=False):
         """
@@ -280,7 +269,7 @@ class TimeableModel:
 
     def remove(self):
         """Remove the timeable from its track."""
-        self.track.remove_timeable(self)
+        self.track.remove_timeable(self.get_id())
         self.track = None
 
     def set_volume(self, volume):
@@ -321,3 +310,42 @@ class TimeableModel:
 
         if self.get_timeline_controller():
             self.get_timeline_controller().timeable_model_changed(self)
+
+    def _set_track(self, track):
+        """Set the track of the timeable and update its properties
+        according to the track. C{track=None} means that the timeable
+        should not belong to any track.
+
+        This method is only for convenience and internal use. It won't
+        notify about the changes.
+
+        Updated properties
+        ==================
+          - The layer.
+
+            If the track's layer is C{None} the timeable's
+            layer will be set to C{-1} because the Openshot layer
+            parameter can't be C{None}.
+
+          - The overlay state (called 'corner')
+
+        @param track: The track.
+        @type track:  model.data.TrackModel
+        """
+        if self.track is not None:
+            self.track.remove_timeable(self.get_id())
+        self.track = track
+        self.update_layer()
+
+        self.corner(track.is_overlay())
+
+        track.add_timeable(self)
+
+    def _set_layer(self, layer):
+        """ Sets the layer of the clip """
+        self.clip.Layer(layer)
+        data = {"layer": layer}
+        if self.get_timeline_model() is not None:
+            self.get_timeline_model().change(
+                "update", ["clips", {"id": self.clip.Id()}], data)
+

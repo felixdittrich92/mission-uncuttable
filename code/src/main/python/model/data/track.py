@@ -82,13 +82,13 @@ class TrackModel:
                             specified timeable.
         """
         try:
-            t = self.__timeables[id]
+            t = self.__timeables[timeable_id]
         except KeyError:
             raise KeyError(
                 "Timeable doesn't exist in this track: ID = {}"
                 .format(timeable_id)
             )
-        finally:
+        else:
             self.__timeables.pop(timeable_id)
             if self.__timeline_model is not None:
                 self.__timeline_model\

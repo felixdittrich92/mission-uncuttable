@@ -228,7 +228,7 @@ class TimelineModel:
             raise KeyError(
                 "Track doesn't exist: track_id = {}".format(track_id)
             )
-        finally:
+        else:
             # Iterating over track.get_timeables() gives us the IDs of
             #  the timeables. But these are identical to the IDs of the
             #  corresponding Openshot clips. Therefore we don't have
