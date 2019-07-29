@@ -363,9 +363,11 @@ class TrackView(QGraphicsView):
         if self.file_drag_active:
             self.__preview_timeable.remove_from_scene()
             self.__preview_timeable = None
+            self.file_drag_active = False
         elif self.timeable_drag_active:
             self.current_timeable.remove_from_scene()
             self.current_timeable = None
+            self.timeable_drag_active = False
 
         # if self.current_timeable is not None:
         #     if event.mimeData().hasFormat('ubicut/file'):
@@ -404,6 +406,7 @@ class TrackView(QGraphicsView):
                 self.__preview_timeable = None
             self.__timeline_controller\
                 .add_preview_timeable(self.__track_id, "Timeable", pos)
+            self.file_drag_active = False
             event.acceptProposedAction()
         elif event.mimeData().hasFormat("ubicut/timeable"):
             if self.current_timeable is not None:
@@ -415,6 +418,7 @@ class TrackView(QGraphicsView):
             pos = event.pos().x()
             self.__timeline_controller\
                 .move_timeable(timeable_id, self.__track_id, pos)
+            self.timeable_drag_active = False
             event.accept()
 
         # if event.mimeData().hasFormat('ubicut/timeable')\
