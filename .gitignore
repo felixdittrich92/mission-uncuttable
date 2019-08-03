@@ -66,3 +66,6 @@ video\.webm
 code/playertest2\.py
 
 code/test\.py
+code/src/build/settings/secret.json
+code/src/sign/linux/private-key.gpg
+code/src/sign/linux/public-key.gpg

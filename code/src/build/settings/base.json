@@ -2,5 +2,7 @@
     "app_name": "UbiCut",
     "main_module": "src/main/python/main.py",
     "author": "mission-uncuttable",
-    "version": "0.9.0"
+    "version": "0.9.0",
+    "gpg_key": "354780CC9935D1723536D8DD78A124E0084EBA1B",
+    "gpg_name": "mission-uncuttable"
 }
