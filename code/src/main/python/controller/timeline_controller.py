@@ -31,8 +31,10 @@ class TimelineController:
 
         return TimelineController.__instance
 
-    def __init__(self, timeline_view):
+    def __init__(self, video_editor_controller, timeline_view):
         TimelineController.__instance = self
+
+        self.__video_editor_controller = video_editor_controller
 
         self.__timeline_view = timeline_view
         self.__timeline_view.set_timeline_controller(self)
@@ -121,6 +123,8 @@ class TimelineController:
             self.__preview_timeable.get_id(),
             None
         )
+        print("Preview Timeable created: ID={}"
+              .format(self.__preview_timeable.get_id()))
         return timeable_view
 
     def add_preview_timeable(self, track_id, name, x_pos):
@@ -185,9 +189,10 @@ class TimelineController:
         This means that the time-th frame will belong to the first but
         not the second one of the resulting timeables.
 
-        @param id:   The timeable's unique ID.
-        @param pos:  The position at which the timeable should be split.
-        @return:     Nothing.
+        @param timeable_id:   The timeable's unique ID.
+        @param pos:           The position at which the timeable should
+                              be split.
+        @return:              Nothing.
         """
         op = CutOperation(timeable_id, pos, self.__timeline_model)
         self.__history.do_operation(op)
@@ -382,11 +387,11 @@ class TimelineController:
             )
             self.__timeline_view.set_timeable_length(
                 timeable_model.get_id(),
-                timeable_model.get_width())
+                timeable_model.get_length())
             self.__timeline_view.move_timeable(
                 timeable_model.get_id(),
                 timeable_model.track.get_track_id(),
-                timeable_model.get_position())
+                timeable_model.get_start())
         except KeyError:
             pass
         print(

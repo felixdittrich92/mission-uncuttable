@@ -87,6 +87,8 @@ class TimeableView(QGraphicsRectItem):
         self.handle_selected = None
         self.mouse_press_rect = None
         self.infos_on_click = dict()
+        self.__x_on_mouse_press = None
+        self.__width_on_mouse_press = None
 
         self.handles = dict()
         self.update_handles_pos()
@@ -111,8 +113,11 @@ class TimeableView(QGraphicsRectItem):
 
     def update_physical_properties(self):
         self.width = self.length
+        self.prepareGeometryChange()
+        self.setRect(self.boundingRect())
         if not self.position_controlled_by_mouse:
             self.setPos(self.start, 0)
+        self.update_handles_pos()
 
     def boundingRect(self):
         """
@@ -174,8 +179,9 @@ class TimeableView(QGraphicsRectItem):
         # so we have to call prepareGeometryChange
         # otherwhise the program can randomly crash
         self.prepareGeometryChange()
-        self.length = new_width
+        self.width = new_width
         self.setRect(self.boundingRect())
+        self.update_handles_pos()
 
     def contextMenuEvent(self, event):
         """shows a menu on rightclick"""
@@ -196,7 +202,8 @@ class TimeableView(QGraphicsRectItem):
         cut_here = QAction(str(Language.current.timeable.cut_here))
         menu.addAction(cut_here)
         cut_here.triggered.connect(
-            lambda: self.__controller)
+            lambda: self.__controller
+                .split_timeable(self.view_id, event.pos().x()))
 
         delete = QAction(str(Language.current.timeable.delete))
         menu.addAction(delete)
@@ -216,6 +223,9 @@ class TimeableView(QGraphicsRectItem):
         menu.exec_(event.screenPos() + QPoint(0, 5))
 
     def settings(self):
+        # Todo: Use the DialogResult (return value of QDialog.exec_())
+        #  to determine if the volume has to be changed. See also the
+        #  TimeableSettingsView class.
         volume_dialog = TimeableSettingsView()
         volume_dialog.set_data(self.volume)
         volume_dialog.exec_()
@@ -247,7 +257,8 @@ class TimeableView(QGraphicsRectItem):
     #  needed. The controller has a focus which corresponds to the
     #  needle's position (to be exact, the needle displays the focus).
     #  So we simply can ask the controller to split the timeable at the
-    #  focus. This happens directly inside the event handler.
+    #  focus. This happens directly inside the event handler of the
+    #  context menu event.
     #
     # def cut_timeneedle(self):
     #     """
@@ -312,7 +323,7 @@ class TimeableView(QGraphicsRectItem):
     #     colliding = self.scene().items(rect)
     #     return (len(colliding) > 1 or (len(colliding) == 1 and colliding != [self]))
 
-    def resize(self, pos):
+    def resize(self, event):
         """
         called from mouseMoveEvent() when left or right handle is selected
 
@@ -321,44 +332,52 @@ class TimeableView(QGraphicsRectItem):
 
         @param pos: the position of the mouse
         """
-        is_image = self.model.file_type == FileType.IMAGE_FILE
+        # is_image = self.model.file_type == FileType.IMAGE_FILE
+        diff = (event.scenePos().x() - self.mouse_press_pos)
         if self.handle_selected == HANDLE_LEFT:
-            diff = pos - self.mouse_press_pos
-            w = self.length - diff
-
-            if ((w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0)
-                    or (diff < self.resizable_left and not is_image)):
-                return
-
-            new_x_pos = self.start + diff
-            if self.collides_with_other_timeable(QRectF(new_x_pos, 0, w, self.height)):
-                return
-
-            self.resizable_left -= diff
-
-            self.prepareGeometryChange()
-            self.length = w
-            self.start = self.start + diff
-            self.setPos(self.start, 0)
+            if self.resizable_left + diff < 0:
+                diff = - self.resizable_left
+            self.setPos(self.__x_on_mouse_press + diff, 0)
+            self.set_width(self.__width_on_mouse_press - diff)
+            # diff = pos - self.mouse_press_pos
+            # w = self.length - diff
+            #
+            # if ((w <= TIMEABLE_MIN_WIDTH or diff + self.scenePos().x() < 0)
+            #         or (diff < self.resizable_left and not is_image)):
+            #     return
+            #
+            # new_x_pos = self.start + diff
+            # if self.collides_with_other_timeable(QRectF(new_x_pos, 0, w, self.height)):
+            #     return
+            #
+            # self.resizable_left -= diff
+            #
+            # self.prepareGeometryChange()
+            # self.length = w
+            # self.start = self.start + diff
+            # self.setPos(self.start, 0)
 
         elif self.handle_selected == HANDLE_RIGHT:
-            diff = (self.mouse_press_rect.right() + pos
-                    - self.mouse_press_pos - self.length)
-            w = self.length + diff
+            if diff > self.resizable_right:
+                diff = self.resizable_right
+            self.set_width(self.__width_on_mouse_press + diff)
+            # diff = (self.mouse_press_rect.right() + pos
+            #         - self.mouse_press_pos - self.length)
+            # w = self.length + diff
+            #
+            # if ((w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH)
+            #         or (diff > self.resizable_right and not is_image)):
+            #     return
+            #
+            # if self.collides_with_other_timeable(QRectF(self.start, 0, w, self.height)):
+            #     return
+            #
+            # self.resizable_right -= diff
+            #
+            # self.prepareGeometryChange()
+            # self.length = w
 
-            if ((w > self.scene().width() or w <= TIMEABLE_MIN_WIDTH)
-                    or (diff > self.resizable_right and not is_image)):
-                return
-
-            if self.collides_with_other_timeable(QRectF(self.start, 0, w, self.height)):
-                return
-
-            self.resizable_right -= diff
-
-            self.prepareGeometryChange()
-            self.length = w
-
-        self.setRect(self.boundingRect())
+        # self.setRect(self.boundingRect())
         self.update_handles_pos()
 
     def is_move_possible_diff(self, diff):
@@ -498,6 +517,9 @@ class TimeableView(QGraphicsRectItem):
         Called when mouse leaves the timeable.
         Sets cursor back to normal arrow cursor
         """
+        # Todo: Do we need this? The method is called on the
+        #  TimeableView itself. So it shouldn't have an effect outside
+        #  the timeable.
         self.setCursor(Qt.ArrowCursor)
 
         # Todo: Is calling super().hoverLeaveEvent better?
@@ -511,10 +533,12 @@ class TimeableView(QGraphicsRectItem):
         """
         self.handle_selected = self.handle_at(event.pos())
         # Todo: Is the conversion to int necessary?
-        self.mouse_press_pos = int(event.pos().x())
+        self.mouse_press_pos = int(event.scenePos().x())
         self.mouse_press_start_pos = self.pos().x()
         self.mouse_press_rect = self.rect()
         self.infos_on_click = self.get_info_dict()
+        self.__x_on_mouse_press = self.pos().x()
+        self.__width_on_mouse_press = self.width
 
         # Todo: Is calling super().mousePressEvent better?
         QGraphicsItem.mousePressEvent(self, event)
@@ -540,7 +564,7 @@ class TimeableView(QGraphicsRectItem):
         # No need to check if another handle is selected because resize
         #  will do that. Therefore only an else.
         else:
-            self.resize(event.pos().x())
+            self.resize(event)
 
         QGraphicsItem.mouseMoveEvent(self, event)
 
@@ -564,9 +588,19 @@ class TimeableView(QGraphicsRectItem):
         #         self.__controller.group_move_operation(self.group_id, diff)
 
         # trim start or end if resize happened
-        if (self.resizable_right != self.infos_on_click["resizable_right"]
-                or self.resizable_left != self.infos_on_click["resizable_left"]):
-            self.__controller.resize_timeable(self.infos_on_click, self.get_info_dict())
+        # if (self.resizable_right != self.infos_on_click["resizable_right"]
+        #         or self.resizable_left != self.infos_on_click["resizable_left"]):
+        #     self.__controller.resize_timeable(self.infos_on_click, self.get_info_dict())
+
+        diff = event.scenePos().x() - self.mouse_press_pos
+        if self.handle_selected == HANDLE_LEFT:
+            if self.resizable_left + diff < 0:
+                diff = - self.resizable_left
+            self.__controller.trim_timeable_start(self.view_id, round(diff))
+        elif self.handle_selected == HANDLE_RIGHT:
+            if diff > self.resizable_right:
+                diff = self.resizable_right
+            self.__controller.trim_timeable_end(self.view_id, round(diff))
 
         self.mouse_press_pos = 0
         self.handle_selected = None

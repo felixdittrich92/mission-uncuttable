@@ -98,7 +98,7 @@ class VideoEditorView(classmaker(QMainWindow, View)):
         splitter = self.findChild(QObject, 'horizontalSplitter')
         bottom_frame = self.findChild(QObject, 'bottomFrame')
         i = splitter.indexOf(bottom_frame)
-        TimelineController(self.timeline_view)
+        TimelineController(None, self.timeline_view)
         splitter.replaceWidget(i, self.timeline_view)
         self.timeline_view.show()
 

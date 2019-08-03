@@ -143,15 +143,18 @@ class CutOperation(Operation):
                     .format(self.timeable_id)
                 ) from E
         else:
-            pos_untrimmed = self.pos + self.first_part.get_start()
+            pos_untrimmed = self.pos + self.first_part.get_trim_start()
             self.second_part \
-                = TimeableModel(generate_id(), self.first_part.file_name, "Part two")
-            self.second_part.set_trim_start(pos_untrimmed + 1)
-            self.second_part.set_trim_end(self.first_part.get_end())
-            self.first_part.set_trim_end(pos_untrimmed)
+                = TimeableModel(generate_id(), self.first_part.file_path, "Part two")
+            self.second_part.set_trim_start(pos_untrimmed)
+            self.second_part.set_trim_end(self.first_part.get_trim_end())
+            # The parameter to trim_end currently has to be negative
+            #  to remove frames. Will be changed in the future.
+            self.first_part.trim_end(
+                -(self.first_part.get_length() - self.pos))
             self.second_part.move(
                 self.first_part.track,
-                self.first_part.get_start() + pos_untrimmed + 1
+                self.first_part.get_end() + 1
             )
 
     def undo(self):

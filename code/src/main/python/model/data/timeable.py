@@ -2,6 +2,7 @@ import locale
 import openshot
 from util.timeline_utils import (
     get_file_type, pos_to_seconds, seconds_to_pos)
+from model.data.filetype import FileType
 
 
 class TimeableModel:
@@ -21,6 +22,16 @@ class TimeableModel:
         self.__trim_start = 0
         self.__trim_end = 0
 
+        self.track = None
+
+        self.file_path = file_path
+        self.file_type = get_file_type(self.file_path)
+
+        # Default length for image timeables
+        if self.file_type == FileType.IMAGE_FILE:
+            self.clip.Start(0)
+            self.clip.End(1)
+
         if self.is_video is not None:
             if self.is_video:
                 self.clip.has_video = openshot.Keyframe(1)
@@ -28,11 +39,6 @@ class TimeableModel:
             else:
                 self.clip.has_video = openshot.Keyframe(0)
                 self.clip.has_audio = openshot.Keyframe(1)
-
-        self.track = None
-
-        self.file_path = file_path
-        self.file_type = get_file_type(self.file_path)
 
         # if the timeline has no clips, set some timeline data to the data of this clip
         if self.is_first_vid():
@@ -103,6 +109,15 @@ class TimeableModel:
             self._set_layer(layer)
         else:
             self._set_layer(-1)
+
+    def get_start(self):
+        return self.__start
+
+    def get_length(self):
+        return self.__original_length - self.__trim_start - self.__trim_end
+
+    def get_end(self):
+        return self.__start + self.get_length() - 1
 
     def get_width(self):
         return seconds_to_pos(self.clip.Duration())
@@ -252,14 +267,15 @@ class TimeableModel:
         if track_model is not None:
             self._set_track(track_model)
 
-        new_position = pos
         if is_sec:
-            self.clip.Position(new_position)
+            self.__start = seconds_to_pos(pos)
         else:
-            new_position = pos_to_seconds(pos)
-            self.clip.Position(new_position)
+            self.__start = pos
 
-        data = {"position": new_position}
+        new_clip_pos = pos_to_seconds(self.__start)
+        self.clip.Position(new_clip_pos)
+
+        data = {"position": new_clip_pos}
         if self.get_timeline_model() is not None:
             self.get_timeline_model().change(
                 "update", ["clips", {"id": self.clip.Id()}], data)

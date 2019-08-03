@@ -51,6 +51,9 @@ class TimeableSettingsView(QDialog):
         self.accept()
 
     def cancel_settings(self):
+        # Todo: Remove the value reset and instead use the DialogResult
+        #  to determine if the volume has to be changed or not. See also
+        #  the usages of this dialog.
         self.current_volume_value = self.old_value
         self.reject()
 
