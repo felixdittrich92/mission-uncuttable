@@ -14,17 +14,17 @@
 ## Zusammenfassung
 (diverse Organisatorische Dinge wie zum Beispiel Meetingzeiten oder Doodleumfragen)
 
-## Retrospektive
+## Review
 
 ### Abgeschlossene Tasks
-#### Verschiedene Modi für Video
+#### \#36 Verschiedene Modi für Video
   * 51
   * 213
-#### Preview Videoplayer
+#### \#27 Preview Videoplayer
   * 68
   * 86
   * 87
-#### Technologierecherche
+#### \#2 Technologierecherche
   * 17
   * 19
   * 18
@@ -34,9 +34,9 @@
   * 23
   * 24
   * 26
-#### Preview "Nadel"
+#### \#155 Preview "Nadel"
   * 136
-#### Programm Design
+#### \#175 Programm Design
   * 158
   * 171
   * 172
@@ -46,21 +46,21 @@
   * 214
   * 217
   * 244
-#### Timeable Hinzufügen
+#### \#153 Timeable hinzufügen
   * 169
   * 170
   * 202
-#### Timeable zerschneiden
+#### \#149 Timeable zerschneiden
   * 164
   * 168
   * 203
-#### ShortCuts
+#### \#61 ShortCuts
   * 105
-#### Sprintdokumentation
+#### \#115 Sprintdokumentation
   * 116
   * 118
   * 127
-#### Timeable verschieben
+#### \#148 Timeable verschieben
   * 165
   * 204
 #### Andere Vorgänge
@@ -74,7 +74,7 @@
   * \#219
   * \#245
   
-### Sprintbewertung
+## Retrospektive
 #### Positiv
   * Sichtbare Fortschritte (+++++)
       - Zeitnadel
