@@ -23,7 +23,7 @@ pefile==2018.8.8
 Pillow==5.4.1
 pluggy==0.8.0
 proglog==0.1.9
-py==1.7.0
+py==1.10.0
 PyInstaller==3.4
 PyQt5==5.12.2
 PyQt5-sip==4.19.17
