@@ -20,7 +20,7 @@ numpy==1.15.4
 opencv-contrib-python==4.1.0.25
 pdf2image==1.4.2
 pefile==2018.8.8
-Pillow==5.4.1
+Pillow==9.0.1
 pluggy==0.8.0
 proglog==0.1.9
 py==1.7.0
